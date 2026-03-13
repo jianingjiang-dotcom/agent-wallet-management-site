@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Claude_Preview__preview_start",
+      "Bash(npm install:*)",
+      "WebFetch(domain:knowledge-hub.1cobo.com)",
+      "Bash(find '/Users/jianing.jiang/Downloads/Agent Wallet Management Site/src/app' -type f \\\\\\(-name *i18n* -o -name *translation* -o -name *locales* \\\\\\))",
+      "Bash(ls -la \"/Users/oliviatay/Desktop/Agentic Wallet/Management Site/Agent Wallet Management Site \\(13 Mar\\)/\")",
+      "Bash(find \"/Users/oliviatay/Desktop/Agentic Wallet/Management Site/Agent Wallet Management Site \\(13 Mar\\)/src\" -maxdepth 2 -type f -name \"*.tsx\" -o -name \"*.ts\")",
+      "Bash(ls -la \"/Users/oliviatay/Desktop/Agentic Wallet/Management Site/Agent Wallet Management Site \\(13 Mar\\)/src/app/components/\")",
+      "Bash(ls \"/Users/oliviatay/Desktop/Agentic Wallet/Management Site/Agent Wallet Management Site \\(13 Mar\\)/.claude\")",
+      "Bash(rm -rf node_modules package-lock.json)",
+      "Bash(npm i:*)",
+      "WebSearch",
+      "WebFetch(domain:www.moesif.com)",
+      "WebFetch(domain:docs.stripe.com)",
+      "Bash(npx -p typescript tsc --noEmit --jsx react-jsx src/app/components/Onboarding.tsx)",
+      "Bash(gh auth:*)",
+      "Bash(brew install:*)"
+    ]
+  }
+}
