@@ -9,6 +9,18 @@ import {
   Plus,
   Pencil,
   Check,
+  Send,
+  FileCode,
+  RefreshCw,
+  Lock,
+  AlertTriangle,
+  CheckCircle,
+  XCircle,
+  UserPlus,
+  ToggleRight,
+  Settings,
+  Snowflake,
+  type LucideIcon,
 } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -289,19 +301,7 @@ export default function WalletDetail({
       />
 
       {/* Activity Log */}
-      <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[12px] p-5">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="font-['Inter',sans-serif] font-semibold text-[16px] text-[#0a0a0a]">
-            {t('walletAgent.activityLog')}
-          </h2>
-        </div>
-        <div className="text-center py-10 text-[#b0b0b0]">
-          <Clock className="w-8 h-8 mx-auto mb-2 opacity-40" />
-          <div className="font-['Inter',sans-serif] font-normal text-[14px]">
-            {t('walletAgent.noActivity')}
-          </div>
-        </div>
-      </div>
+      <ActivityLog t={t} walletCreatedAt={wallet.createdAt} />
 
       {/* Revoke Confirmation Modal */}
       {showRevokeConfirm && (
@@ -346,6 +346,120 @@ export default function WalletDetail({
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+// --- Activity Log Component ---
+
+interface LogEntry {
+  id: string;
+  actionType: string;
+  actor: 'user' | 'agent' | 'system';
+  labelKey: string;
+  detailKey: string;
+  status: 'success' | 'failed' | 'pending';
+  icon: LucideIcon;
+  iconColor: string;
+  minutesAgo: number;
+}
+
+const MOCK_LOGS: LogEntry[] = [
+  { id: '1',  actionType: 'wallet_created',      actor: 'system', labelKey: 'log.walletCreated',      detailKey: 'log.detail.walletCreated',      status: 'success', icon: Wallet,        iconColor: '#4f5eff', minutesAgo: 4320 },
+  { id: '2',  actionType: 'agent_delegated',      actor: 'user',   labelKey: 'log.agentDelegated',      detailKey: 'log.detail.agentDelegated',      status: 'success', icon: UserPlus,      iconColor: '#4f5eff', minutesAgo: 4310 },
+  { id: '3',  actionType: 'transfer_executed',    actor: 'agent',  labelKey: 'log.transferExecuted',    detailKey: 'log.detail.transferExecuted',    status: 'success', icon: Send,          iconColor: '#22c55e', minutesAgo: 3600 },
+  { id: '4',  actionType: 'contract_called',      actor: 'agent',  labelKey: 'log.contractCalled',      detailKey: 'log.detail.contractCalled',      status: 'success', icon: FileCode,      iconColor: '#22c55e', minutesAgo: 3000 },
+  { id: '5',  actionType: 'permission_updated',   actor: 'user',   labelKey: 'log.permissionUpdated',   detailKey: 'log.detail.permissionEnabled',   status: 'success', icon: ToggleRight,   iconColor: '#4f5eff', minutesAgo: 2800 },
+  { id: '6',  actionType: 'swap_executed',         actor: 'agent',  labelKey: 'log.swapExecuted',        detailKey: 'log.detail.swapExecuted',        status: 'success', icon: RefreshCw,     iconColor: '#22c55e', minutesAgo: 2400 },
+  { id: '7',  actionType: 'policy_updated',        actor: 'user',   labelKey: 'log.policyUpdated',       detailKey: 'log.detail.policyLimitUpdated',  status: 'success', icon: Settings,      iconColor: '#4f5eff', minutesAgo: 2000 },
+  { id: '8',  actionType: 'policy_updated',        actor: 'user',   labelKey: 'log.policyUpdated',       detailKey: 'log.detail.dailyLimitUpdated',   status: 'success', icon: Settings,      iconColor: '#4f5eff', minutesAgo: 1999 },
+  { id: '9',  actionType: 'transfer_rejected',     actor: 'system', labelKey: 'log.transferRejected',    detailKey: 'log.detail.transferRejected',    status: 'failed',  icon: AlertTriangle, iconColor: '#ef4444', minutesAgo: 1500 },
+  { id: '10', actionType: 'approval_requested',    actor: 'agent',  labelKey: 'log.approvalRequested',   detailKey: 'log.detail.approvalRequested',   status: 'pending', icon: Clock,         iconColor: '#f59e0b', minutesAgo: 1200 },
+  { id: '11', actionType: 'approval_granted',      actor: 'user',   labelKey: 'log.approvalGranted',     detailKey: 'log.detail.approvalGranted',     status: 'success', icon: CheckCircle,   iconColor: '#22c55e', minutesAgo: 1180 },
+  { id: '12', actionType: 'stake_executed',         actor: 'agent',  labelKey: 'log.stakeExecuted',       detailKey: 'log.detail.stakeExecuted',       status: 'success', icon: Lock,          iconColor: '#22c55e', minutesAgo: 900  },
+  { id: '13', actionType: 'wallet_renamed',         actor: 'user',   labelKey: 'log.walletRenamed',       detailKey: 'log.detail.walletRenamed',       status: 'success', icon: Pencil,        iconColor: '#7c7c7c', minutesAgo: 600  },
+  { id: '14', actionType: 'delegation_frozen',      actor: 'user',   labelKey: 'log.delegationFrozen',    detailKey: 'log.detail.delegationFrozen',    status: 'success', icon: Snowflake,     iconColor: '#eab308', minutesAgo: 300  },
+  { id: '15', actionType: 'delegation_resumed',     actor: 'user',   labelKey: 'log.delegationResumed',   detailKey: 'log.detail.delegationResumed',   status: 'success', icon: Play,          iconColor: '#22c55e', minutesAgo: 120  },
+  { id: '16', actionType: 'permission_updated',    actor: 'user',   labelKey: 'log.permissionUpdated',   detailKey: 'log.detail.permissionDisabled',  status: 'success', icon: ToggleRight,   iconColor: '#4f5eff', minutesAgo: 60   },
+  { id: '17', actionType: 'approval_requested',    actor: 'agent',  labelKey: 'log.approvalRequested',   detailKey: 'log.detail.approvalRequested',   status: 'pending', icon: Clock,         iconColor: '#f59e0b', minutesAgo: 30   },
+  { id: '18', actionType: 'approval_denied',        actor: 'user',   labelKey: 'log.approvalDenied',      detailKey: 'log.detail.approvalDenied',      status: 'success', icon: XCircle,       iconColor: '#ef4444', minutesAgo: 25   },
+  { id: '19', actionType: 'delegation_revoked',     actor: 'user',   labelKey: 'log.delegationRevoked',   detailKey: 'log.detail.delegationRevoked',   status: 'success', icon: Ban,           iconColor: '#ef4444', minutesAgo: 10   },
+];
+
+function formatTimeAgo(minutesAgo: number, baseDate: string): string {
+  const base = new Date(baseDate).getTime();
+  const ts = new Date(base + (4320 - minutesAgo) * 60000);
+  const month = String(ts.getMonth() + 1).padStart(2, '0');
+  const day = String(ts.getDate()).padStart(2, '0');
+  const hours = String(ts.getHours()).padStart(2, '0');
+  const mins = String(ts.getMinutes()).padStart(2, '0');
+  return `${month}-${day} ${hours}:${mins}`;
+}
+
+const STATUS_STYLES: Record<string, { bg: string; text: string }> = {
+  success: { bg: 'bg-[#22c55e]/10', text: 'text-[#22c55e]' },
+  failed:  { bg: 'bg-[#ef4444]/10', text: 'text-[#ef4444]' },
+  pending: { bg: 'bg-[#f59e0b]/10', text: 'text-[#f59e0b]' },
+};
+
+const ACTOR_STYLES: Record<string, { bg: string; text: string }> = {
+  user:   { bg: 'bg-[#4f5eff]/10', text: 'text-[#4f5eff]' },
+  agent:  { bg: 'bg-[#22c55e]/10', text: 'text-[#22c55e]' },
+  system: { bg: 'bg-[#7c7c7c]/10', text: 'text-[#7c7c7c]' },
+};
+
+function ActivityLog({ t, walletCreatedAt }: { t: (key: string) => string; walletCreatedAt: string }) {
+  return (
+    <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[12px] p-5">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="font-['Inter',sans-serif] font-semibold text-[16px] text-[#0a0a0a]">
+          {t('walletAgent.activityLog')}
+        </h2>
+        <span className="font-['Inter',sans-serif] font-normal text-[12px] text-[#b0b0b0]">
+          {MOCK_LOGS.length} entries
+        </span>
+      </div>
+      <div className="divide-y divide-[rgba(10,10,10,0.06)]">
+        {[...MOCK_LOGS].reverse().map((log) => {
+          const Icon = log.icon;
+          const statusStyle = STATUS_STYLES[log.status];
+          const actorStyle = ACTOR_STYLES[log.actor];
+          return (
+            <div key={log.id} className="flex items-start gap-3 py-3 first:pt-0 last:pb-0">
+              {/* Icon */}
+              <div
+                className="w-8 h-8 rounded-[8px] flex items-center justify-center shrink-0 mt-0.5"
+                style={{ backgroundColor: `${log.iconColor}14` }}
+              >
+                <Icon className="w-4 h-4" style={{ color: log.iconColor }} />
+              </div>
+
+              {/* Content */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="font-['Inter',sans-serif] font-medium text-[13px] text-[#0a0a0a]">
+                    {t(log.labelKey)}
+                  </span>
+                  <span className={`inline-flex px-1.5 py-0.5 rounded-[4px] font-['Inter',sans-serif] font-medium text-[10px] ${actorStyle.bg} ${actorStyle.text}`}>
+                    {t(`log.actor.${log.actor}`)}
+                  </span>
+                  <span className={`inline-flex px-1.5 py-0.5 rounded-[4px] font-['Inter',sans-serif] font-medium text-[10px] ${statusStyle.bg} ${statusStyle.text}`}>
+                    {t(`log.status.${log.status}`)}
+                  </span>
+                </div>
+                <p className="font-['Inter',sans-serif] font-normal text-[12px] text-[#7c7c7c] mt-0.5 truncate">
+                  {t(log.detailKey)}
+                </p>
+              </div>
+
+              {/* Timestamp */}
+              <span className="font-['JetBrains_Mono','SF_Mono','Consolas',monospace] text-[11px] text-[#b0b0b0] shrink-0 mt-1">
+                {formatTimeAgo(log.minutesAgo, walletCreatedAt)}
+              </span>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
