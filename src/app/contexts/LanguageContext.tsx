@@ -690,9 +690,9 @@ const translations = {
     // Prompt card
     "onboarding.promptLabel": "配对指令",
     "onboarding.expiresIn": "有效期",
-    "onboarding.copyPrompt": "复制指令",
+    "onboarding.copyPrompt": "复制全部指令",
     "onboarding.copyPromptDone": "已复制！",
-    "onboarding.copyTokenOnly": "仅复制 Token",
+    "onboarding.copyTokenOnly": "复制 Token",
     "onboarding.copyTokenDone": "已复制！",
     "onboarding.regenerate": "重新生成指令",
     // Spending limits
