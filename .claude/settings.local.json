@@ -16,7 +16,20 @@
       "WebFetch(domain:docs.stripe.com)",
       "Bash(npx -p typescript tsc --noEmit --jsx react-jsx src/app/components/Onboarding.tsx)",
       "Bash(gh auth:*)",
-      "Bash(brew install:*)"
+      "Bash(brew install:*)",
+      "Bash(xattr -d com.apple.quarantine /Users/jiayi.liu/Desktop/agent-wallet-management-site/node_modules/@rollup/rollup-darwin-arm64/rollup.darwin-arm64.node)",
+      "Bash(xattr -dr com.apple.quarantine /Users/jiayi.liu/Desktop/agent-wallet-management-site/node_modules)",
+      "Bash(git checkout:*)",
+      "Bash(source ~/.nvm/nvm.sh)",
+      "Bash(source ~/.zshrc)",
+      "Read(//usr/local/lib/node_modules/npm/bin/**)",
+      "Read(//usr/local/bin/**)",
+      "Read(//Users/jiayi.liu/**)",
+      "Read(//opt/homebrew/lib/node_modules/npm/bin/**)",
+      "Bash(/opt/homebrew/bin/node -e \"console.log\\(process.execPath\\)\")",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ]
   }
 }

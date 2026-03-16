@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "dev",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeExecutable": "/opt/homebrew/bin/node",
+      "runtimeArgs": ["/Users/jiayi.liu/Desktop/agent-wallet-management-site/node_modules/.bin/vite", "--port", "5173"],
       "port": 5173,
       "autoPort": true
     }
