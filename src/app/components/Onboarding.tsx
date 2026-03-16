@@ -276,7 +276,7 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
     }
   }, [isPaired]);
 
-  // ─── Canvas Confetti (physics-based, industry-standard) ───
+  // ─── Canvas Confetti (multi-wave celebration) ───
   const launchConfetti = (container: HTMLDivElement) => {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
@@ -292,12 +292,17 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
 
     const W = rect.width;
     const H = rect.height;
-    const colors = [
-      "#4f5eff", "#7B8AFF", "#22c55e", "#4ade80",
-      "#f59e0b", "#fbbf24", "#ef4444", "#f87171",
-      "#8b5cf6", "#a78bfa", "#06b6d4", "#22d3ee",
-      "#ec4899", "#f472b6",
+
+    // Refined palette — harmonious, celebratory, not garish
+    const palettes = [
+      ["#4f5eff", "#7B8AFF", "#A5AEFF"], // brand blue
+      ["#22c55e", "#4ade80", "#86efac"], // success green
+      ["#f59e0b", "#fbbf24", "#fde68a"], // warm gold
+      ["#8b5cf6", "#a78bfa", "#c4b5fd"], // purple
+      ["#ec4899", "#f472b6", "#f9a8d4"], // pink
+      ["#06b6d4", "#22d3ee", "#67e8f9"], // cyan
     ];
+    const colors = palettes.flat();
 
     interface Particle {
       x: number; y: number;
@@ -310,77 +315,122 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
       tiltSpeed: number;
       wobble: number;
       wobbleSpeed: number;
+      wobbleRadius: number;
       opacity: number;
       gravity: number;
       drag: number;
-      shape: "rect" | "circle" | "strip";
+      shape: "rect" | "circle" | "strip" | "star";
+      delay: number; // ms before particle becomes active
+      life: number; // 0..1 progress through lifetime
     }
 
     const particles: Particle[] = [];
-    const PARTICLE_COUNT = 80;
 
-    // Burst from two points at left-top and right-top
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
-      const fromLeft = i < PARTICLE_COUNT / 2;
-      const originX = fromLeft ? W * 0.12 : W * 0.88;
-      const originY = H * 0.08;
+    // Create a burst of particles from a given origin
+    const createBurst = (
+      originX: number, originY: number,
+      count: number, angleMin: number, angleMax: number,
+      speedMin: number, speedMax: number, delay: number
+    ) => {
+      const shapes: Particle["shape"][] = ["rect", "circle", "strip", "star"];
+      for (let i = 0; i < count; i++) {
+        const angle = angleMin + Math.random() * (angleMax - angleMin);
+        const speed = speedMin + Math.random() * (speedMax - speedMin);
+        const shape = shapes[Math.floor(Math.random() * shapes.length)];
+        const palette = palettes[Math.floor(Math.random() * palettes.length)];
+        const color = palette[Math.floor(Math.random() * palette.length)];
 
-      // Spread angle: left bursts right-downward, right bursts left-downward
-      const baseAngle = fromLeft
-        ? -Math.PI * 0.25 + Math.random() * Math.PI * 0.55
-        : -Math.PI * 0.3 - Math.random() * Math.PI * 0.55;
-      const speed = 4 + Math.random() * 8;
+        particles.push({
+          x: originX + (Math.random() - 0.5) * 16,
+          y: originY + (Math.random() - 0.5) * 8,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - 1.5 - Math.random() * 2,
+          w: shape === "strip" ? 2.5 + Math.random() * 2 : shape === "star" ? 4 + Math.random() * 3 : 4 + Math.random() * 5,
+          h: shape === "strip" ? 12 + Math.random() * 16 : 4 + Math.random() * 5,
+          color,
+          rotation: Math.random() * Math.PI * 2,
+          rotationSpeed: (Math.random() - 0.5) * 0.2,
+          tiltAngle: Math.random() * Math.PI * 2,
+          tiltSpeed: 0.015 + Math.random() * 0.04,
+          wobble: Math.random() * Math.PI * 2,
+          wobbleSpeed: 0.02 + Math.random() * 0.04,
+          wobbleRadius: 0.5 + Math.random() * 1.5,
+          opacity: 0,
+          gravity: 0.08 + Math.random() * 0.05,
+          drag: 0.975 + Math.random() * 0.015,
+          shape,
+          delay,
+          life: 0,
+        });
+      }
+    };
 
-      const shapes: Particle["shape"][] = ["rect", "circle", "strip"];
-      const shape = shapes[Math.floor(Math.random() * shapes.length)];
+    // Wave 1: Two corner bursts (immediate)
+    createBurst(W * 0.1, H * 0.05, 45, -Math.PI * 0.15, Math.PI * 0.5, 5, 11, 0);
+    createBurst(W * 0.9, H * 0.05, 45, Math.PI * 0.5, Math.PI * 1.15, 5, 11, 0);
 
-      particles.push({
-        x: originX + (Math.random() - 0.5) * 20,
-        y: originY + (Math.random() - 0.5) * 10,
-        vx: Math.cos(baseAngle) * speed,
-        vy: Math.sin(baseAngle) * speed - 2 - Math.random() * 3,
-        w: shape === "strip" ? 3 + Math.random() * 2 : 5 + Math.random() * 5,
-        h: shape === "strip" ? 10 + Math.random() * 14 : 5 + Math.random() * 5,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        rotation: Math.random() * Math.PI * 2,
-        rotationSpeed: (Math.random() - 0.5) * 0.15,
-        tiltAngle: Math.random() * Math.PI * 2,
-        tiltSpeed: 0.02 + Math.random() * 0.04,
-        wobble: 0,
-        wobbleSpeed: 0.03 + Math.random() * 0.05,
-        opacity: 1,
-        gravity: 0.12 + Math.random() * 0.06,
-        drag: 0.97 + Math.random() * 0.02,
-        shape,
-      });
+    // Wave 2: Center fountain burst (delayed 300ms)
+    createBurst(W * 0.5, H * 0.12, 35, -Math.PI * 0.85, -Math.PI * 0.15, 4, 9, 300);
+
+    // Wave 3: Gentle rain from wider spread (delayed 700ms)
+    for (let i = 0; i < 25; i++) {
+      createBurst(
+        W * (0.15 + Math.random() * 0.7),
+        -5,
+        1,
+        Math.PI * 0.3, Math.PI * 0.7,
+        1, 3,
+        700 + Math.random() * 600
+      );
     }
 
     let frameId: number;
-    let elapsed = 0;
-    const DURATION = 3500; // ms
+    let startTime = 0;
+    const DURATION = 4500;
 
-    const draw = () => {
-      elapsed += 16;
+    const drawStar = (cx: number, cy: number, r: number) => {
+      ctx.beginPath();
+      for (let i = 0; i < 5; i++) {
+        const angle = (i * 4 * Math.PI) / 5 - Math.PI / 2;
+        const method = i === 0 ? "moveTo" : "lineTo";
+        ctx[method](cx + r * Math.cos(angle), cy + r * Math.sin(angle));
+      }
+      ctx.closePath();
+      ctx.fill();
+    };
+
+    const draw = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+
       ctx.clearRect(0, 0, W, H);
 
       let alive = false;
       for (const p of particles) {
+        // Skip if not yet active
+        if (elapsed < p.delay) { alive = true; continue; }
+
+        const activeTime = elapsed - p.delay;
+        const particleDuration = DURATION - p.delay;
+        p.life = Math.min(1, activeTime / particleDuration);
+
+        // Fade in quickly at start
+        const fadeIn = Math.min(1, activeTime / 150);
+        // Fade out smoothly in last 35%
+        const fadeOut = p.life > 0.65 ? 1 - (p.life - 0.65) / 0.35 : 1;
+        p.opacity = fadeIn * fadeOut;
+
         // Physics
         p.vy += p.gravity;
         p.vx *= p.drag;
         p.vy *= p.drag;
-        p.x += p.vx + Math.sin(p.wobble) * 0.8;
+        p.x += p.vx + Math.sin(p.wobble) * p.wobbleRadius;
         p.y += p.vy;
         p.rotation += p.rotationSpeed;
         p.tiltAngle += p.tiltSpeed;
         p.wobble += p.wobbleSpeed;
 
-        // Fade out in last 30%
-        if (elapsed > DURATION * 0.7) {
-          p.opacity = Math.max(0, p.opacity - 0.025);
-        }
-
-        if (p.opacity <= 0 || p.y > H + 20) continue;
+        if (p.opacity <= 0.01 || p.y > H + 30) continue;
         alive = true;
 
         ctx.save();
@@ -388,20 +438,32 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
         ctx.translate(p.x, p.y);
         ctx.rotate(p.rotation);
 
-        // 3D-like tilt effect
-        const scaleX = Math.cos(p.tiltAngle);
+        // 3D tilt illusion
+        const scaleX = 0.3 + 0.7 * Math.abs(Math.cos(p.tiltAngle));
         ctx.scale(scaleX, 1);
 
         ctx.fillStyle = p.color;
+
         if (p.shape === "circle") {
           ctx.beginPath();
           ctx.arc(0, 0, p.w / 2, 0, Math.PI * 2);
           ctx.fill();
         } else if (p.shape === "strip") {
-          // Streamer / ribbon
-          ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+          // Ribbon with subtle curve
+          const hw = p.w / 2;
+          const hh = p.h / 2;
+          ctx.beginPath();
+          ctx.moveTo(-hw, -hh);
+          ctx.quadraticCurveTo(hw * 2, -hh * 0.3, hw, 0);
+          ctx.quadraticCurveTo(-hw * 2, hh * 0.3, -hw + 1, hh);
+          ctx.lineTo(hw, hh);
+          ctx.quadraticCurveTo(-hw * 2, hh * 0.6, hw, 0);
+          ctx.quadraticCurveTo(hw * 2, -hh * 0.6, -hw, -hh);
+          ctx.fill();
+        } else if (p.shape === "star") {
+          drawStar(0, 0, p.w / 2);
         } else {
-          // Rectangle with rounded corners
+          // Rounded rectangle
           const r = 1.5;
           const hw = p.w / 2, hh = p.h / 2;
           ctx.beginPath();
@@ -422,7 +484,6 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
       if (alive && elapsed < DURATION) {
         frameId = requestAnimationFrame(draw);
       } else {
-        // Cleanup
         canvas.remove();
       }
     };
