@@ -60,6 +60,7 @@ export default function OnboardingModal({
   const [limitsExpanded, setLimitsExpanded] = useState(false);
   const [limitsChanged, setLimitsChanged] = useState(false);
   const [regenerating, setRegenerating] = useState(false);
+  const [regenerated, setRegenerated] = useState(false);
   const [waitingPhase, setWaitingPhase] = useState<WaitingPhase>("idle");
   const [walletId, setWalletId] = useState("");
   const [agentId, setAgentId] = useState("");
@@ -514,9 +515,9 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
         <DialogTitle className="sr-only">{t("onboarding.title")}</DialogTitle>
 
         {/* ═══════════ SETUP VIEW ═══════════ */}
-          <div className="p-5 sm:p-8 w-full min-w-0 max-h-[90vh] overflow-y-auto overflow-x-hidden scrollbar-hidden relative">
+          <div className="px-5 py-6 sm:px-8 sm:py-6 w-full min-w-0 max-h-[90vh] overflow-y-auto overflow-x-hidden scrollbar-hidden relative">
             {/* ─── 1. Header ─── */}
-            <div className="mb-4 pr-6 sm:pr-0">
+            <div className="mb-6 pr-6 sm:pr-0">
               <h2
                 className="font-['Inter',sans-serif] font-semibold text-[24px] leading-[32px] text-[#0a0a0a] cursor-pointer"
                 onClick={startWaitingFlow}
@@ -525,7 +526,9 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
               </h2>
             </div>
             <div className="bg-[rgba(79,94,255,0.06)] border border-[rgba(79,94,255,0.15)] rounded-[10px] px-4 py-3 mb-4 flex items-center gap-2">
-              <Info className="w-4 h-4 text-[#4f5eff] flex-shrink-0" />
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 flex-shrink-0">
+                <path d="M10 20C15.51 20 20 15.51 20 10C20 4.49 15.51 3.92528e-07 10 8.74228e-07C4.49 1.35593e-06 -1.35593e-06 4.49 -8.74228e-07 10C-3.92528e-07 15.51 4.49 20 10 20ZM10.75 14C10.75 14.41 10.41 14.75 10 14.75C9.59 14.75 9.25 14.41 9.25 14L9.25 9C9.25 8.59 9.59 8.25 10 8.25C10.41 8.25 10.75 8.59 10.75 9L10.75 14ZM9.08 5.62C9.13 5.49 9.2 5.39 9.29 5.29C9.39 5.2 9.5 5.13 9.62 5.08C9.74 5.03 9.87 5 10 5C10.13 5 10.26 5.03 10.38 5.08C10.5 5.13 10.61 5.2 10.71 5.29C10.8 5.39 10.87 5.49 10.92 5.62C10.97 5.74 11 5.87 11 6C11 6.13 10.97 6.26 10.92 6.38C10.87 6.5 10.8 6.61 10.71 6.71C10.61 6.8 10.5 6.87 10.38 6.92C10.14 7.02 9.86 7.02 9.62 6.92C9.5 6.87 9.39 6.8 9.29 6.71C9.2 6.61 9.13 6.5 9.08 6.38C9.03 6.26 9 6.13 9 6C9 5.87 9.03 5.74 9.08 5.62Z" fill="#4f5eff"/>
+              </svg>
               <p className="font-['Inter',sans-serif] font-medium text-[14px] text-[#4f5eff] leading-[20px]">
                 复制下方指令并发送给 AI Agent，将自动完成 Agent Wallet 钱包配置。
               </p>
@@ -535,10 +538,10 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
             <div>
               <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[10px] mb-4 overflow-hidden">
                 {/* Header: timer left, actions right */}
-                <div className="flex items-center justify-between px-4 py-3">
+                <div className="flex items-center justify-between px-4 py-3 bg-white">
                   <span className="font-['Inter',sans-serif] text-[12px] leading-[16px]">
                     <span className="text-[#7c7c7c]">指令剩余有效时间: </span>
-                    <span className={`font-semibold tabular-nums ${
+                    <span className={`font-semibold tabular-nums text-[14px] leading-[16px] ${
                       timeRemaining < 300 ? "text-[#ef4444]" : "text-[#4f5eff]"
                     }`}>
                       {formatTime(timeRemaining)}
@@ -551,38 +554,41 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
                         setTimeout(() => {
                           handleRefreshToken();
                           setRegenerating(false);
+                          setRegenerated(true);
+                          setTimeout(() => setRegenerated(false), 2000);
                         }, 400);
                       }}
                       disabled={!!showPairingToast}
-                      className="flex items-center gap-1 font-['Inter',sans-serif] font-normal text-[12px] leading-[16px] text-[#7c7c7c] hover:text-[#4f5eff] transition-colors disabled:opacity-50 disabled:pointer-events-none"
+                      className={`flex items-center gap-[6px] font-['Inter',sans-serif] font-normal text-[12px] leading-[16px] transition-colors disabled:opacity-50 disabled:pointer-events-none ${
+                        regenerated ? "text-[#26C165]" : "text-[#7c7c7c] hover:text-[#4f5eff]"
+                      }`}
                     >
+                      {regenerated ? <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="w-3.5 h-3.5"><path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg> : <RefreshCw className="w-3.5 h-3.5" />}
                       {t("onboarding.regenerate")}
                     </button>
                     <div className="w-px h-4 bg-[rgba(10,10,10,0.12)]" />
                     <button
                       onClick={handleCopyToken}
                       disabled={!!showPairingToast}
-                      className={`flex items-center gap-1 font-['Inter',sans-serif] font-normal text-[12px] leading-[16px] transition-colors disabled:opacity-50 disabled:pointer-events-none ${
-                        copiedType === "token"
-                          ? "text-[#22c55e]"
-                          : "text-[#7c7c7c] hover:text-[#4f5eff]"
+                      className={`flex items-center gap-[6px] font-['Inter',sans-serif] font-normal text-[12px] leading-[16px] transition-colors disabled:opacity-50 disabled:pointer-events-none ${
+                        copiedType === "token" ? "text-[#26C165]" : "text-[#7c7c7c] hover:text-[#4f5eff]"
                       }`}
                     >
-                      {copiedType === "token"
-                        ? t("onboarding.copyTokenDone")
-                        : t("onboarding.copyTokenOnly")}
+                      {copiedType === "token" ? <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="w-3.5 h-3.5"><path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg> : <Copy className="w-3.5 h-3.5" />}
+                      {t("onboarding.copyTokenOnly")}
                     </button>
                   </div>
                 </div>
 
+                <div className="border-t border-[rgba(10,10,10,0.08)]" />
                 {/* Code block */}
                 <div
-                  className={`relative bg-[#1a1a2e] rounded-b-[10px] transition-all duration-300 ${
+                  className={`relative bg-[#f5f5f7] rounded-b-[10px] transition-all duration-300 ${
                     regenerating ? "opacity-40" : "opacity-100"
                   }`}
                 >
                   <div className="p-4">
-                    <pre className="font-['JetBrains_Mono','SF_Mono','Consolas',monospace] text-[11px] sm:text-[12px] text-[#e0e0e0] leading-relaxed whitespace-pre-wrap break-words">
+                    <pre className="font-['Inter',sans-serif] font-normal text-[14px] text-[#333333] leading-[20px] whitespace-pre-wrap break-words">
                       {buildPromptText()}
                     </pre>
                   </div>
@@ -595,21 +601,21 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
                 disabled={regenerating || !!showPairingToast}
                 className={`w-full flex items-center justify-center gap-2 h-[38px] sm:h-[40px] rounded-[8px] font-['Inter',sans-serif] font-medium text-[13px] sm:text-[14px] transition-all shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)] disabled:opacity-50 text-white ${
                   copiedType === "prompt"
-                    ? "bg-[#22c55e] hover:bg-[#16a34a]"
+                    ? "bg-[#4f5eff] hover:bg-[#3d4dd9]"
                     : "bg-[#4f5eff] hover:bg-[#3d4dd9]"
                 }`}
               >
                 {copiedType === "prompt" ? (
-                  <>
-                    <CheckCircle className="w-4 h-4" />
-                    {t("onboarding.copyPromptDone")}
-                  </>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4">
+                    <path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
                 ) : (
-                  <>
-                    <Copy className="w-4 h-4" />
-                    {t("onboarding.copyPrompt")}
-                  </>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+                  </svg>
                 )}
+                {t("onboarding.copyPrompt")}
               </button>
             </div>
 
@@ -783,7 +789,7 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
                 <div className="flex items-center gap-3 bg-white border border-[rgba(10,10,10,0.1)] rounded-[12px] px-5 py-3 shadow-lg pointer-events-auto">
                   {showPairingToast === "done" ? (
                     <>
-                      <CheckCircle className="w-5 h-5 text-[#22c55e]" />
+                      <CheckCircle className="w-5 h-5 text-[#26C165]" />
                       <span className="font-['Inter',sans-serif] font-medium text-[14px] text-[#0a0a0a]">
                         已完成配对
                       </span>
