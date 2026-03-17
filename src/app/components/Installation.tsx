@@ -52,7 +52,7 @@ const wallet = new AgentWallet({
           return (
             <div
               key={index}
-              className="bg-white border border-slate-200 rounded-2xl p-6 hover:shadow-md transition-shadow"
+              className="bg-white border border-[#EDEEF3] rounded-2xl p-6 hover:shadow-md transition-shadow"
             >
               <div className="flex items-start mb-4">
                 <div className="bg-gradient-to-br from-amber-500 to-orange-600 p-3 rounded-xl mr-4 shadow-sm">
@@ -85,7 +85,7 @@ const wallet = new AgentWallet({
       </div>
 
       {/* Additional Resources */}
-      <div className="mt-8 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+      <div className="mt-8 bg-white border border-[#EDEEF3] rounded-2xl p-6 shadow-sm">
         <h2 className="text-xl font-semibold text-slate-900 mb-4">{t('install.additionalResources')}</h2>
         <div className="space-y-3">
           <a

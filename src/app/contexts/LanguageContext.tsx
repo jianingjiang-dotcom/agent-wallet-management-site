@@ -637,7 +637,7 @@ const translations = {
 
     // Navigation
     "nav.overview": "概览",
-    "nav.chat": "聊天",
+    "nav.chat": "AI 对话",
     "nav.delegation": "委托与策略",
     "nav.aiAssistant": "AI 助手",
     "nav.gasless": "无 Gas",
