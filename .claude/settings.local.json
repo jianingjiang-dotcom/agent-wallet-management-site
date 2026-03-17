@@ -17,19 +17,16 @@
       "Bash(npx -p typescript tsc --noEmit --jsx react-jsx src/app/components/Onboarding.tsx)",
       "Bash(gh auth:*)",
       "Bash(brew install:*)",
-      "Bash(xattr -d com.apple.quarantine /Users/jiayi.liu/Desktop/agent-wallet-management-site/node_modules/@rollup/rollup-darwin-arm64/rollup.darwin-arm64.node)",
-      "Bash(xattr -dr com.apple.quarantine /Users/jiayi.liu/Desktop/agent-wallet-management-site/node_modules)",
-      "Bash(git checkout:*)",
-      "Bash(source ~/.nvm/nvm.sh)",
-      "Bash(source ~/.zshrc)",
-      "Read(//usr/local/lib/node_modules/npm/bin/**)",
-      "Read(//usr/local/bin/**)",
-      "Read(//Users/jiayi.liu/**)",
-      "Read(//opt/homebrew/lib/node_modules/npm/bin/**)",
-      "Bash(/opt/homebrew/bin/node -e \"console.log\\(process.execPath\\)\")",
-      "Bash(git add:*)",
-      "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(find \"/Users/jianing.jiang/Downloads/Agent Wallet Management Site \\(13 Mar\\)\" -type f -name \"*.json\" -o -name \"*.ts\" -o -name \"*.tsx\" -o -name \"*.js\" -o -name \"*.jsx\")",
+      "Bash(ls -la \"/Users/jianing.jiang/Downloads/Agent Wallet Management Site \\(13 Mar\\)\")",
+      "Bash(find \"/Users/jianing.jiang/Downloads/Agent Wallet Management Site \\(13 Mar\\)/src\" -type f \\\\\\( -name \"*.ts\" -o -name \"*.tsx\" -o -name \"*.js\" -o -name \"*.jsx\" \\\\\\))",
+      "Bash(find \"/Users/jianing.jiang/Downloads/Agent Wallet Management Site \\(13 Mar\\)/src\" -type d)",
+      "Bash(find \"/Users/jianing.jiang/Downloads/Agent Wallet Management Site \\(13 Mar\\)/src/app/components\" -type f -name \"*.tsx\")",
+      "Bash(find \"/Users/jianing.jiang/Downloads/Agent Wallet Management Site \\(13 Mar\\)/src/app/components\" -maxdepth 1 -name \"*.tsx\")",
+      "Bash(ls -la \"/Users/jianing.jiang/Downloads/Agent Wallet Management Site \\(13 Mar\\)/src/app/components/ui/\")",
+      "Bash(ls -la \"/Users/jianing.jiang/Downloads/Agent Wallet Management Site \\(13 Mar\\)/src/app/components/\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5173/)",
+      "Bash(gh pr:*)"
     ]
   }
 }
