@@ -5,6 +5,9 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useWalletStore } from '../hooks/useWalletStore';
 import LanguageSwitcher from './LanguageSwitcher';
 import OnboardingModal from './Onboarding';
+import AgentPairingModal from './AgentPairingModal';
+import ClaimWalletModal from './ClaimWalletModal';
+import WalletDelegationModal from './WalletDelegationModal';
 import svgPaths from "../../imports/svg-zu39gs7vho";
 
 export default function DashboardLayout() {
@@ -16,6 +19,9 @@ export default function DashboardLayout() {
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showAgentPairing, setShowAgentPairing] = useState(false);
+  const [showClaimWallet, setShowClaimWallet] = useState(false);
+  const [delegationTarget, setDelegationTarget] = useState<{ open: boolean; walletId: string }>({ open: false, walletId: "" });
 
   useEffect(() => {
     const currentUser = localStorage.getItem('agent_wallet_current_user');
@@ -43,16 +49,39 @@ export default function DashboardLayout() {
     navigate('/login');
   };
 
-  const { addWallet } = useWalletStore();
+  const { addWalletWithAgent, addAgent, addWallet, addDelegation, agents, delegations, getDelegationsForWallet } = useWalletStore();
 
-  const handleWalletCreated = (wallet: { address: string; policy: { singleTxLimit: number; dailyLimit: number }; walletId: string; agentId: string }) => {
-    addWallet({
-      id: wallet.walletId,
-      address: wallet.address,
-      withAgent: true,
+  const handleWalletCreated = (wallet: { policy: { singleTxLimit: number; dailyLimit: number }; walletId: string; agentId: string }) => {
+    addWalletWithAgent({
+      walletId: wallet.walletId,
       agentId: wallet.agentId,
       policy: wallet.policy,
     });
+  };
+
+  const handleAgentPaired = (agent: { agentId: string; agentName: string }) => {
+    addAgent({ id: agent.agentId, name: agent.agentName });
+  };
+
+  const handleWalletClaimed = (data: { walletId: string; agentId: string; agentName: string }) => {
+    addWalletWithAgent({
+      walletId: data.walletId,
+      agentId: data.agentId,
+      agentName: data.agentName,
+    });
+  };
+
+  const handleDelegate = (data: { agentId: string; permissions: import('../hooks/useWalletStore').Permission[]; policy: Partial<import('../hooks/useWalletStore').Policy> }) => {
+    addDelegation({
+      walletId: delegationTarget.walletId,
+      agentId: data.agentId,
+      permissions: data.permissions,
+      policy: data.policy,
+    });
+  };
+
+  const handleDelegationNewAgent = (agent: { agentId: string; agentName: string }) => {
+    addAgent({ id: agent.agentId, name: agent.agentName });
   };
 
   const primaryItems = [
@@ -283,7 +312,12 @@ export default function DashboardLayout() {
         </div>
 
         <main className="flex-1 p-4 sm:p-6 lg:p-8">
-          <Outlet context={{ onSetupWallet: () => setShowOnboarding(true) }} />
+          <Outlet context={{
+            onSetupWallet: () => setShowOnboarding(true),
+            onPairAgent: () => setShowAgentPairing(true),
+            onClaimWallet: () => setShowClaimWallet(true),
+            onDelegateWallet: (walletId: string) => setDelegationTarget({ open: true, walletId }),
+          }} />
         </main>
       </div>
 
@@ -354,7 +388,37 @@ export default function DashboardLayout() {
       )}
 
       {/* Onboarding Modal */}
-      <OnboardingModal open={showOnboarding} onClose={handleOnboardingClose} onWalletCreated={handleWalletCreated} />
+      <OnboardingModal
+        open={showOnboarding}
+        onClose={handleOnboardingClose}
+        onWalletCreated={handleWalletCreated}
+        onClaimWallet={() => { setShowOnboarding(false); setShowClaimWallet(true); }}
+      />
+
+      {/* Agent Pairing Modal */}
+      <AgentPairingModal
+        open={showAgentPairing}
+        onClose={() => setShowAgentPairing(false)}
+        onAgentPaired={handleAgentPaired}
+      />
+
+      {/* Claim Wallet Modal */}
+      <ClaimWalletModal
+        open={showClaimWallet}
+        onClose={() => setShowClaimWallet(false)}
+        onWalletClaimed={handleWalletClaimed}
+      />
+
+      {/* Wallet Delegation Modal */}
+      <WalletDelegationModal
+        open={delegationTarget.open}
+        onClose={() => setDelegationTarget({ open: false, walletId: "" })}
+        walletId={delegationTarget.walletId}
+        agents={agents}
+        existingAgentIds={delegationTarget.walletId ? getDelegationsForWallet(delegationTarget.walletId).map(d => d.agentId) : []}
+        onDelegate={handleDelegate}
+        onNewAgentPaired={handleDelegationNewAgent}
+      />
 
       {/* Logout Confirmation Modal */}
       {showLogoutConfirm && (
