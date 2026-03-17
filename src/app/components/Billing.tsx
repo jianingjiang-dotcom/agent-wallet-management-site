@@ -12,7 +12,7 @@ export default function Billing() {
       </div>
 
       {/* Coming Soon Card */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-12 shadow-sm text-center">
+      <div className="bg-white border border-[#EDEEF3] rounded-2xl p-12 shadow-sm text-center">
         <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-amber-100 to-orange-200 rounded-2xl mb-6">
           <Calendar className="w-10 h-10 text-amber-700" />
         </div>
