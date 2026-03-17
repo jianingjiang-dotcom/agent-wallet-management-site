@@ -142,7 +142,7 @@ export default function Gasless() {
 
       {/* Balance Card */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-        <div className="lg:col-span-2 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+        <div className="lg:col-span-2 bg-white border border-[#EDEEF3] rounded-2xl p-6 shadow-sm">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center">
               <div className="bg-blue-50 p-3 rounded-xl mr-4">
@@ -174,7 +174,7 @@ export default function Gasless() {
         </div>
 
         {/* Alert Settings */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+        <div className="bg-white border border-[#EDEEF3] rounded-2xl p-6 shadow-sm">
           <div className="flex items-center mb-4">
             <AlertCircle className="w-5 h-5 text-[#4f5eff] mr-2" />
             <h3 className="font-semibold text-slate-900">{t('gasless.alertSettings')}</h3>
@@ -186,14 +186,14 @@ export default function Gasless() {
               type="number"
               value={alertThreshold}
               onChange={(e) => setAlertThreshold(Number(e.target.value))}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#4f5eff] focus:border-transparent"
+              className="w-full bg-slate-50 border border-[#EDEEF3] rounded-xl px-4 py-3 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#4f5eff] focus:border-transparent"
             />
           </div>
           <div className="mb-4 relative">
             <label className="text-sm text-slate-700 mb-2 block">{t('gasAccount.notifyMethod')}</label>
             <button
               onClick={() => setShowNotificationDropdown(!showNotificationDropdown)}
-              className="w-full flex items-center justify-between bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 hover:bg-slate-100 transition-colors"
+              className="w-full flex items-center justify-between bg-slate-50 border border-[#EDEEF3] rounded-xl px-4 py-3 text-slate-900 hover:bg-slate-100 transition-colors"
             >
               <div className="flex items-center">
                 {notificationMethod === 'page' ? (
@@ -211,7 +211,7 @@ export default function Gasless() {
               <ChevronDown className="w-4 h-4" />
             </button>
             {showNotificationDropdown && (
-              <div className="absolute left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-lg z-10">
+              <div className="absolute left-0 right-0 mt-1 bg-white border border-[#EDEEF3] rounded-xl shadow-lg z-10">
                 <button
                   onClick={() => {
                     setNotificationMethod('page');
@@ -245,7 +245,7 @@ export default function Gasless() {
       </div>
 
       {/* Deposit Address */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm mb-6">
+      <div className="bg-white border border-[#EDEEF3] rounded-2xl p-6 shadow-sm mb-6">
         <div className="mb-4">
           <h2 className="text-xl font-semibold text-slate-900">{t('gasless.depositAddress')}</h2>
         </div>
@@ -258,13 +258,13 @@ export default function Gasless() {
               <select
                 value={selectedChain}
                 onChange={(e) => setSelectedChain(e.target.value as Chain)}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#4f5eff] focus:border-transparent"
+                className="w-full bg-slate-50 border border-[#EDEEF3] rounded-xl px-4 py-3 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#4f5eff] focus:border-transparent"
               >
                 <option value="ETH">Ethereum (ETH)</option>
                 <option value="SOL">Solana (SOL)</option>
               </select>
             </div>
-            <div className="bg-slate-50 rounded-xl p-4 border border-slate-200 mb-4">
+            <div className="bg-slate-50 rounded-xl p-4 border border-[#EDEEF3] mb-4">
               <code className="text-sm text-slate-900 break-all font-mono">{depositAddresses[selectedChain]}</code>
             </div>
             <button
@@ -286,7 +286,7 @@ export default function Gasless() {
           </div>
           
           <div className="flex items-center justify-center">
-            <div className="bg-white border-2 border-slate-200 rounded-2xl p-4 w-48 h-48 flex items-center justify-center">
+            <div className="bg-white border-2 border-[#EDEEF3] rounded-2xl p-4 w-48 h-48 flex items-center justify-center">
               <QrCode className="w-32 h-32 text-slate-300" />
             </div>
           </div>
@@ -304,12 +304,12 @@ export default function Gasless() {
       </div>
 
       {/* Transaction History */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+      <div className="bg-white border border-[#EDEEF3] rounded-2xl p-6 shadow-sm">
         <h2 className="text-xl font-semibold text-slate-900 mb-4">{t('gasless.transactionHistory')}</h2>
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-slate-200">
+              <tr className="border-b border-[#EDEEF3]">
                 <th className="text-left py-3 px-4 text-sm font-medium text-slate-600">{t('gasless.time')}</th>
                 <th className="text-left py-3 px-4 text-sm font-medium text-slate-600">{t('gasless.chain')}</th>
                 <th className="text-left py-3 px-4 text-sm font-medium text-slate-600">{t('gasless.txHash')}</th>
@@ -319,7 +319,7 @@ export default function Gasless() {
             </thead>
             <tbody>
               {paginatedTransactions.map((tx) => (
-                <tr key={tx.id} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                <tr key={tx.id} className="border-b border-[#EDEEF3] hover:bg-slate-50 transition-colors">
                   <td className="py-3 px-4 text-sm text-slate-700">{tx.time}</td>
                   <td className="py-3 px-4">
                     <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getChainColor(tx.chain)}`}>
@@ -351,7 +351,7 @@ export default function Gasless() {
           <button
             onClick={() => setCurrentPage(currentPage - 1)}
             disabled={currentPage === 1}
-            className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 transition-colors disabled:opacity-50"
+            className="bg-slate-50 border border-[#EDEEF3] rounded-xl px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 transition-colors disabled:opacity-50"
           >
             {t('gasless.previous')}
           </button>
@@ -361,7 +361,7 @@ export default function Gasless() {
           <button
             onClick={() => setCurrentPage(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 transition-colors disabled:opacity-50"
+            className="bg-slate-50 border border-[#EDEEF3] rounded-xl px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 transition-colors disabled:opacity-50"
           >
             {t('gasless.next')}
           </button>
@@ -371,7 +371,7 @@ export default function Gasless() {
       {/* Deposit Modal */}
       {showDepositModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xl max-w-md w-full mx-4">
+          <div className="bg-white border border-[#EDEEF3] rounded-2xl p-6 shadow-xl max-w-md w-full mx-4">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold text-slate-900">{t('gasless.deposit')}</h2>
               <button
@@ -387,17 +387,17 @@ export default function Gasless() {
               <select
                 value={selectedChain}
                 onChange={(e) => setSelectedChain(e.target.value as Chain)}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#4f5eff] focus:border-transparent"
+                className="w-full bg-slate-50 border border-[#EDEEF3] rounded-xl px-4 py-3 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#4f5eff] focus:border-transparent"
               >
                 <option value="ETH">Ethereum (ETH)</option>
                 <option value="SOL">Solana (SOL)</option>
               </select>
             </div>
-            <div className="bg-slate-50 rounded-xl p-4 border border-slate-200 mb-4">
+            <div className="bg-slate-50 rounded-xl p-4 border border-[#EDEEF3] mb-4">
               <code className="text-sm text-slate-900 break-all font-mono">{depositAddresses[selectedChain]}</code>
             </div>
             <div className="flex items-center justify-center mb-4">
-              <div className="bg-white border-2 border-slate-200 rounded-2xl p-4">
+              <div className="bg-white border-2 border-[#EDEEF3] rounded-2xl p-4">
                 <QrCode className="w-32 h-32 text-slate-300" />
               </div>
             </div>

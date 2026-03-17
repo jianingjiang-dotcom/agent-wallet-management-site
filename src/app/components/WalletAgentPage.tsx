@@ -37,13 +37,12 @@ export default function WalletAgentPage() {
     return () => window.removeEventListener('wallet-store-updated', handler);
   }, []);
 
-  // Auto-trigger onboarding if no wallets on first render
-  useEffect(() => {
-    if (!hasWallets) {
-      onSetupWallet();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // Auto-trigger onboarding is disabled - user must click the button manually
+  // useEffect(() => {
+  //   if (!hasWallets) {
+  //     onSetupWallet();
+  //   }
+  // }, []);
 
   const handleSelectWallet = useCallback((walletId: string) => {
     setSelectedWalletId(walletId);

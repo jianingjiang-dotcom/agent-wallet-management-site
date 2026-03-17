@@ -667,7 +667,7 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
                               value={val}
                               checked={perTxLimit === val}
                               onChange={() => handleLimitChange("perTx", val)}
-                              className="w-4 h-4 text-[#4f5eff] border-[#d1d1d1] focus:ring-[#4f5eff] focus:ring-2"
+                              className="w-4 h-4 text-[#4f5eff] border-[#EDEEF3] focus:ring-[#4f5eff] focus:ring-2"
                             />
                             <span className="ml-1.5 font-['Inter',sans-serif] font-normal text-[13px] text-[#0a0a0a]">
                               ${val}
@@ -681,7 +681,7 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
                             value="custom"
                             checked={perTxLimit === "custom"}
                             onChange={() => handleLimitChange("perTx", "custom")}
-                            className="w-4 h-4 text-[#4f5eff] border-[#d1d1d1] focus:ring-[#4f5eff] focus:ring-2"
+                            className="w-4 h-4 text-[#4f5eff] border-[#EDEEF3] focus:ring-[#4f5eff] focus:ring-2"
                           />
                           <span className="ml-1.5 font-['Inter',sans-serif] font-normal text-[13px] text-[#0a0a0a]">
                             {t("onboarding.limits.others")}:
@@ -697,7 +697,7 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
                             onChange={(e) => handleCustomChange("perTx", e.target.value)}
                             onFocus={() => { setPerTxLimit("custom"); setLimitsChanged(true); }}
                             placeholder="0"
-                            className="w-16 bg-white border border-[rgba(10,10,10,0.15)] rounded-[6px] px-2 py-1 font-['Inter',sans-serif] font-normal text-[13px] text-[#0a0a0a] focus:outline-none focus:border-[#4f5eff] focus:ring-1 focus:ring-[#4f5eff]"
+                            className="w-16 bg-white border border-[#EDEEF3] rounded-[6px] px-2 py-1 font-['Inter',sans-serif] font-normal text-[13px] text-[#0a0a0a] focus:outline-none focus:border-[#4f5eff] focus:ring-1 focus:ring-[#4f5eff]"
                           />
                         </div>
                       </div>
@@ -717,7 +717,7 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
                               value={val}
                               checked={dailyLimit === val}
                               onChange={() => handleLimitChange("daily", val)}
-                              className="w-4 h-4 text-[#4f5eff] border-[#d1d1d1] focus:ring-[#4f5eff] focus:ring-2"
+                              className="w-4 h-4 text-[#4f5eff] border-[#EDEEF3] focus:ring-[#4f5eff] focus:ring-2"
                             />
                             <span className="ml-1.5 font-['Inter',sans-serif] font-normal text-[13px] text-[#0a0a0a]">
                               ${val}
@@ -731,7 +731,7 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
                             value="custom"
                             checked={dailyLimit === "custom"}
                             onChange={() => handleLimitChange("daily", "custom")}
-                            className="w-4 h-4 text-[#4f5eff] border-[#d1d1d1] focus:ring-[#4f5eff] focus:ring-2"
+                            className="w-4 h-4 text-[#4f5eff] border-[#EDEEF3] focus:ring-[#4f5eff] focus:ring-2"
                           />
                           <span className="ml-1.5 font-['Inter',sans-serif] font-normal text-[13px] text-[#0a0a0a]">
                             {t("onboarding.limits.others")}:
@@ -747,7 +747,7 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
                             onChange={(e) => handleCustomChange("daily", e.target.value)}
                             onFocus={() => { setDailyLimit("custom"); setLimitsChanged(true); }}
                             placeholder="0"
-                            className="w-16 bg-white border border-[rgba(10,10,10,0.15)] rounded-[6px] px-2 py-1 font-['Inter',sans-serif] font-normal text-[13px] text-[#0a0a0a] focus:outline-none focus:border-[#4f5eff] focus:ring-1 focus:ring-[#4f5eff]"
+                            className="w-16 bg-white border border-[#EDEEF3] rounded-[6px] px-2 py-1 font-['Inter',sans-serif] font-normal text-[13px] text-[#0a0a0a] focus:outline-none focus:border-[#4f5eff] focus:ring-1 focus:ring-[#4f5eff]"
                           />
                         </div>
                       </div>
