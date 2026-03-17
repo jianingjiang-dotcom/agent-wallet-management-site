@@ -5,7 +5,6 @@ import {
   CheckCircle,
   ChevronDown,
   ChevronRight,
-  AlertTriangle,
   RefreshCw,
   ExternalLink,
   Loader2,
@@ -58,7 +57,8 @@ export default function OnboardingModal({
   const [customPerTx, setCustomPerTx] = useState("");
   const [customDaily, setCustomDaily] = useState("");
   const [limitsExpanded, setLimitsExpanded] = useState(false);
-  const [limitsChanged, setLimitsChanged] = useState(false);
+  const [confirmedPerTx, setConfirmedPerTx] = useState("10");
+  const [confirmedDaily, setConfirmedDaily] = useState("50");
   const [regenerating, setRegenerating] = useState(false);
   const [waitingPhase, setWaitingPhase] = useState<WaitingPhase>("idle");
   const [walletId, setWalletId] = useState("");
@@ -84,7 +84,8 @@ export default function OnboardingModal({
       setCustomPerTx("");
       setCustomDaily("");
       setLimitsExpanded(false);
-      setLimitsChanged(false);
+      setConfirmedPerTx("10");
+      setConfirmedDaily("50");
       setRegenerating(false);
       setWaitingPhase("idle");
       setWalletId("");
@@ -200,21 +201,23 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
   const handleLimitChange = (type: "perTx" | "daily", value: string) => {
     if (type === "perTx") { setPerTxLimit(value); setCustomPerTx(""); }
     else { setDailyLimit(value); setCustomDaily(""); }
-    setLimitsChanged(true);
   };
 
   const handleCustomChange = (type: "perTx" | "daily", value: string) => {
     if (type === "perTx") { setCustomPerTx(value); setPerTxLimit("custom"); }
     else { setCustomDaily(value); setDailyLimit("custom"); }
-    setLimitsChanged(true);
   };
+
+  const hasActualChange =
+    getEffectivePerTx() !== confirmedPerTx || getEffectiveDaily() !== confirmedDaily;
 
   const handleConfirmLimits = () => {
     setRegenerating(true);
     setTimeout(() => {
+      setConfirmedPerTx(getEffectivePerTx());
+      setConfirmedDaily(getEffectiveDaily());
       setSetupToken(generateSetupToken());
       setTimeRemaining(15 * 60);
-      setLimitsChanged(false);
       setRegenerating(false);
       setCopiedType(null);
       setLimitsExpanded(false);
@@ -623,7 +626,7 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
                       {t("onboarding.limits.title")}
                     </span>
                     <span className="font-['Inter',sans-serif] font-normal text-[14px] leading-[20px] text-[#7c7c7c]">
-                      ${getEffectivePerTx()}/tx · ${getEffectiveDaily()}/day
+                      ${confirmedPerTx}/tx · ${confirmedDaily}/day
                     </span>
                     {limitsExpanded ? (
                       <ChevronDown className="w-4 h-4 text-[#7c7c7c]" />
@@ -661,7 +664,7 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
                               value={val}
                               checked={perTxLimit === val}
                               onChange={() => handleLimitChange("perTx", val)}
-                              className="w-4 h-4 text-[#4f5eff] border-[#d1d1d1] focus:ring-[#4f5eff] focus:ring-2"
+                              className="w-4 h-4 text-[#4f5eff] border-[#d1d1d1] focus:ring-0 focus:ring-offset-0"
                             />
                             <span className="ml-1.5 font-['Inter',sans-serif] font-normal text-[13px] text-[#0a0a0a]">
                               ${val}
@@ -675,7 +678,7 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
                             value="custom"
                             checked={perTxLimit === "custom"}
                             onChange={() => handleLimitChange("perTx", "custom")}
-                            className="w-4 h-4 text-[#4f5eff] border-[#d1d1d1] focus:ring-[#4f5eff] focus:ring-2"
+                            className="w-4 h-4 text-[#4f5eff] border-[#d1d1d1] focus:ring-0 focus:ring-offset-0"
                           />
                           <span className="ml-1.5 font-['Inter',sans-serif] font-normal text-[13px] text-[#0a0a0a]">
                             {t("onboarding.limits.others")}:
@@ -689,7 +692,7 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
                             type="number"
                             value={customPerTx}
                             onChange={(e) => handleCustomChange("perTx", e.target.value)}
-                            onFocus={() => { setPerTxLimit("custom"); setLimitsChanged(true); }}
+                            onFocus={() => { setPerTxLimit("custom"); }}
                             placeholder="0"
                             className="w-16 bg-white border border-[rgba(10,10,10,0.15)] rounded-[6px] px-2 py-1 font-['Inter',sans-serif] font-normal text-[13px] text-[#0a0a0a] focus:outline-none focus:border-[#4f5eff] focus:ring-1 focus:ring-[#4f5eff]"
                           />
@@ -711,7 +714,7 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
                               value={val}
                               checked={dailyLimit === val}
                               onChange={() => handleLimitChange("daily", val)}
-                              className="w-4 h-4 text-[#4f5eff] border-[#d1d1d1] focus:ring-[#4f5eff] focus:ring-2"
+                              className="w-4 h-4 text-[#4f5eff] border-[#d1d1d1] focus:ring-0 focus:ring-offset-0"
                             />
                             <span className="ml-1.5 font-['Inter',sans-serif] font-normal text-[13px] text-[#0a0a0a]">
                               ${val}
@@ -725,7 +728,7 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
                             value="custom"
                             checked={dailyLimit === "custom"}
                             onChange={() => handleLimitChange("daily", "custom")}
-                            className="w-4 h-4 text-[#4f5eff] border-[#d1d1d1] focus:ring-[#4f5eff] focus:ring-2"
+                            className="w-4 h-4 text-[#4f5eff] border-[#d1d1d1] focus:ring-0 focus:ring-offset-0"
                           />
                           <span className="ml-1.5 font-['Inter',sans-serif] font-normal text-[13px] text-[#0a0a0a]">
                             {t("onboarding.limits.others")}:
@@ -739,7 +742,7 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
                             type="number"
                             value={customDaily}
                             onChange={(e) => handleCustomChange("daily", e.target.value)}
-                            onFocus={() => { setDailyLimit("custom"); setLimitsChanged(true); }}
+                            onFocus={() => { setDailyLimit("custom"); }}
                             placeholder="0"
                             className="w-16 bg-white border border-[rgba(10,10,10,0.15)] rounded-[6px] px-2 py-1 font-['Inter',sans-serif] font-normal text-[13px] text-[#0a0a0a] focus:outline-none focus:border-[#4f5eff] focus:ring-1 focus:ring-[#4f5eff]"
                           />
@@ -747,31 +750,23 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
                       </div>
                     </div>
 
-                    {/* Warning + Confirm */}
-                    {limitsChanged && (
-                      <div className="mt-2">
-                        <div className="flex items-center gap-2 mb-2">
-                          <AlertTriangle className="w-3.5 h-3.5 text-[#f59e0b]" />
-                          <span className="font-['Inter',sans-serif] font-normal text-[12px] text-[#92400e]">
-                            {t("onboarding.limits.warning")}
-                          </span>
-                        </div>
-                        <button
-                          onClick={handleConfirmLimits}
-                          disabled={regenerating}
-                          className="w-full bg-[#4f5eff] hover:bg-[#3d4dd9] h-[36px] rounded-[8px] transition-colors font-['Inter',sans-serif] font-medium text-[13px] text-white flex items-center justify-center gap-2 disabled:opacity-70"
-                        >
-                          {regenerating ? (
-                            <>
-                              <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                              {t("onboarding.limits.regenerating")}
-                            </>
-                          ) : (
-                            t("onboarding.limits.confirm")
-                          )}
-                        </button>
-                      </div>
-                    )}
+                    {/* Confirm */}
+                    <div className="mt-2">
+                      <button
+                        onClick={handleConfirmLimits}
+                        disabled={regenerating || !hasActualChange}
+                        className="w-full bg-[#4f5eff] hover:bg-[#3d4dd9] h-[36px] rounded-[8px] transition-colors font-['Inter',sans-serif] font-medium text-[13px] text-white flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {regenerating ? (
+                          <>
+                            <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                            {t("onboarding.limits.regenerating")}
+                          </>
+                        ) : (
+                          t("onboarding.limits.confirm")
+                        )}
+                      </button>
+                    </div>
                   </div>
                 </CollapsibleContent>
               </Collapsible>
