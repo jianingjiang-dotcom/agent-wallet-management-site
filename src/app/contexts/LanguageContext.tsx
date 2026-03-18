@@ -567,6 +567,16 @@ const translations = {
     "claimWallet.claimedAt": "Claimed At",
     "claimWallet.confirmBtn": "Claim Wallet",
 
+    // Invitation Code
+    "onboarding.inviteTitle": "Enter Invitation Code",
+    "onboarding.inviteDesc": "Please enter your invitation code to get started.",
+    "onboarding.inviteNext": "Verify",
+    "onboarding.inviteBack": "Change invitation code",
+    "onboarding.inviteCodeInvalid": "Invalid invitation code. Please check and try again.",
+    "onboarding.inviteCodeUsed": "This invitation code has already been used.",
+    "onboarding.noInviteCode": "Don't have an invitation code?",
+    "onboarding.getInviteCode": "Get one here",
+
     // Delegation Card
     "delegationCard.delegatedAt": "Delegated",
     "delegationCard.permissions": "permissions",
@@ -1116,6 +1126,16 @@ const translations = {
     "claimWallet.claimedBy": "认领者",
     "claimWallet.claimedAt": "认领时间",
     "claimWallet.confirmBtn": "认领钱包",
+
+    // Invitation Code
+    "onboarding.inviteTitle": "输入邀请码",
+    "onboarding.inviteDesc": "请输入邀请码以开始使用",
+    "onboarding.inviteNext": "验证",
+    "onboarding.inviteBack": "修改邀请码",
+    "onboarding.inviteCodeInvalid": "邀请码无效，请检查后重试。",
+    "onboarding.inviteCodeUsed": "该邀请码已被使用。",
+    "onboarding.noInviteCode": "还没有邀请码？",
+    "onboarding.getInviteCode": "点击获取",
 
     // Delegation Card
     "delegationCard.delegatedAt": "委托于",

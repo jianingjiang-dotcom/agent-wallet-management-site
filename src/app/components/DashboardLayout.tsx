@@ -49,7 +49,7 @@ export default function DashboardLayout() {
     navigate('/login');
   };
 
-  const { addWalletWithAgent, addAgent, addWallet, addDelegation, agents, delegations, getDelegationsForWallet } = useWalletStore();
+  const { addWalletWithAgent, addAgent, addWallet, addDelegation, agents, delegations, getDelegationsForWallet, hasWallets } = useWalletStore();
 
   const handleWalletCreated = (wallet: { policy: { singleTxLimit: number; dailyLimit: number }; walletId: string; agentId: string }) => {
     addWalletWithAgent({
@@ -393,6 +393,7 @@ export default function DashboardLayout() {
         onClose={handleOnboardingClose}
         onWalletCreated={handleWalletCreated}
         onClaimWallet={() => { setShowOnboarding(false); setShowClaimWallet(true); }}
+        isFirstWallet={!hasWallets}
       />
 
       {/* Agent Pairing Modal */}

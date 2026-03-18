@@ -10,7 +10,8 @@ import {
   Loader2,
   Zap,
   Link2,
-  Info,
+  ArrowLeft,
+  AlertCircle,
 } from "lucide-react";
 import { useLanguage } from "../contexts/LanguageContext";
 import {
@@ -33,6 +34,7 @@ interface OnboardingModalProps {
     agentId: string;
   }) => void;
   onClaimWallet?: () => void;
+  isFirstWallet?: boolean;
 }
 
 type WaitingPhase = "idle" | "waiting" | "connected" | "configuring" | "success";
@@ -45,6 +47,7 @@ export default function OnboardingModal({
   onClose,
   onWalletCreated,
   onClaimWallet,
+  isFirstWallet = false,
 }: OnboardingModalProps) {
   const { t, language } = useLanguage();
 
@@ -69,6 +72,10 @@ export default function OnboardingModal({
   const [successAnimated, setSuccessAnimated] = useState(false);
   const [createdAt, setCreatedAt] = useState<Date | null>(null);
   const [showPairingToast, setShowPairingToast] = useState<"pairing" | "done" | null>(null);
+  const [onboardingStep, setOnboardingStep] = useState<"invite" | "command">("invite");
+  const [inviteCode, setInviteCode] = useState("");
+  const [inviteError, setInviteError] = useState("");
+  const [inviteValidating, setInviteValidating] = useState(false);
   const waitingTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const confettiRef = useRef<HTMLDivElement>(null);
 
@@ -96,10 +103,14 @@ export default function OnboardingModal({
       setSuccessAnimated(false);
       setCreatedAt(null);
       setShowPairingToast(null);
+      setOnboardingStep(isFirstWallet ? "invite" : "command");
+      setInviteCode("");
+      setInviteError("");
+      setInviteValidating(false);
       waitingTimers.current.forEach(clearTimeout);
       waitingTimers.current = [];
     }
-  }, [open]);
+  }, [open, isFirstWallet]);
 
   // ─── Timer with auto-refresh ───
   useEffect(() => {
@@ -142,8 +153,30 @@ export default function OnboardingModal({
   const getEffectiveDaily = () =>
     dailyLimit === "custom" ? customDaily || "0" : dailyLimit;
 
+  // ─── Mock invite code validation ───
+  const validateInviteCode = async (code: string): Promise<{ valid: boolean; error?: string }> => {
+    await new Promise((r) => setTimeout(r, 600));
+    if (code === "1111-1111") return { valid: false, error: "onboarding.inviteCodeInvalid" };
+    if (code === "2222-2222") return { valid: false, error: "onboarding.inviteCodeUsed" };
+    return { valid: true };
+  };
+
+  const handleInviteNext = async () => {
+    if (!inviteCode.trim()) return;
+    setInviteError("");
+    setInviteValidating(true);
+    const result = await validateInviteCode(inviteCode.trim());
+    setInviteValidating(false);
+    if (result.valid) {
+      setOnboardingStep("command");
+    } else {
+      setInviteError(result.error || "onboarding.inviteCodeInvalid");
+    }
+  };
+
   // ─── Prompt builder ───
   const buildPromptText = useCallback(() => {
+    const cmdSuffix = isFirstWallet && inviteCode ? ` --COBO-${inviteCode}` : "";
     if (language === "zh") {
       return `请帮我配置 Cobo Agentic Wallet，按以下步骤执行：
 
@@ -151,7 +184,7 @@ export default function OnboardingModal({
 pip install /path/to/cobo-agent-wallet/sdk
 
 2. 运行配对命令：
-caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
+caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
     }
     return `Please help me set up Cobo Agentic Wallet by following these steps:
 
@@ -159,8 +192,8 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
 pip install /path/to/cobo-agent-wallet/sdk
 
 2. Run the pairing command:
-caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
-  }, [language, setupToken]);
+caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
+  }, [language, setupToken, isFirstWallet, inviteCode]);
 
   // ─── Clipboard ───
   const copyToClipboard = (text: string, type: "prompt" | "token") => {
@@ -649,8 +682,99 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
         ) : (
           /* ═══════════ SETUP VIEW ═══════════ */
           <div className="px-5 py-6 sm:px-8 sm:py-6 w-full min-w-0 max-h-[90vh] overflow-y-auto overflow-x-hidden scrollbar-hidden relative">
+
+            {isFirstWallet && onboardingStep === "invite" ? (
+              /* ─── Step 1: Invitation Code Input ─── */
+              <div className="flex flex-col items-center">
+                {/* Ticket icon */}
+                <div className="w-16 h-16 rounded-2xl bg-[rgba(79,94,255,0.08)] border border-[rgba(79,94,255,0.12)] flex items-center justify-center mb-5">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2 9V7C2 5.89543 2.89543 5 4 5H20C21.1046 5 22 5.89543 22 7V9C20.8954 9 20 9.89543 20 11C20 12.1046 20.8954 13 22 13V15C22 16.1046 21.1046 17 20 17H4C2.89543 17 2 16.1046 2 15V13C3.10457 13 4 12.1046 4 11C4 9.89543 3.10457 9 2 9Z" stroke="#4f5eff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M9 5V17" stroke="#4f5eff" strokeWidth="1.8" strokeLinecap="round" strokeDasharray="2.5 2.5"/>
+                  </svg>
+                </div>
+
+                {/* Title & subtitle */}
+                <h2 className="font-['Inter',sans-serif] font-semibold text-[22px] leading-[28px] text-[#0a0a0a] mb-2 text-center">
+                  {t("onboarding.inviteTitle")}
+                </h2>
+                <p className="font-['Inter',sans-serif] font-normal text-[14px] text-[#9a9a9a] mb-8 text-center">
+                  {t("onboarding.inviteDesc")}
+                </p>
+
+                {/* Input with COBO- prefix */}
+                <div className="w-full mb-2">
+                  <div className={`flex items-center w-full h-[52px] bg-white border rounded-[12px] overflow-hidden transition-colors ${
+                    inviteError
+                      ? "border-[#ef4444] ring-2 ring-[rgba(239,68,68,0.15)]"
+                      : "border-[rgba(79,94,255,0.3)] focus-within:ring-2 focus-within:ring-[rgba(79,94,255,0.2)] focus-within:border-[#4f5eff]"
+                  }`}>
+                    <span className="font-['JetBrains_Mono','SF_Mono','Consolas',monospace] font-medium text-[16px] text-[#4f5eff] pl-4 pr-0.5 flex-shrink-0 select-none">
+                      COBO-
+                    </span>
+                    <input
+                      type="text"
+                      value={inviteCode}
+                      onChange={(e) => { setInviteCode(e.target.value); setInviteError(""); }}
+                      onKeyDown={(e) => { if (e.key === "Enter") handleInviteNext(); }}
+                      placeholder="0000-0000"
+                      className="flex-1 h-full bg-transparent font-['JetBrains_Mono','SF_Mono','Consolas',monospace] font-normal text-[16px] text-[#0a0a0a] placeholder:text-[#c0c0c0] focus:outline-none pr-4"
+                    />
+                  </div>
+                  {inviteError && (
+                    <div className="flex items-center gap-1.5 mt-2 px-1">
+                      <AlertCircle className="w-3.5 h-3.5 text-[#ef4444] flex-shrink-0" />
+                      <span className="font-['Inter',sans-serif] font-normal text-[12px] text-[#ef4444]">
+                        {t(inviteError)}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Verify button */}
+                <button
+                  onClick={handleInviteNext}
+                  disabled={!inviteCode.trim() || inviteValidating}
+                  className="w-full flex items-center justify-center gap-2 h-[48px] rounded-[12px] font-['Inter',sans-serif] font-semibold text-[15px] transition-all disabled:opacity-40 disabled:cursor-not-allowed text-white bg-[#4f5eff] hover:bg-[#3d4dd9] mt-4"
+                >
+                  {inviteValidating ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    t("onboarding.inviteNext")
+                  )}
+                </button>
+
+                {/* Get invitation code link */}
+                <div className="mt-4 text-center">
+                  <span className="font-['Inter',sans-serif] text-[13px] text-[#999]">
+                    {t("onboarding.noInviteCode")}{" "}
+                  </span>
+                  <a
+                    href="https://cobo.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-0.5 font-['Inter',sans-serif] text-[13px] text-[#4f5eff] hover:text-[#3d4dd9] transition-colors"
+                  >
+                    {t("onboarding.getInviteCode")}
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                </div>
+
+              </div>
+            ) : (
+            /* ─── Step 2: Command View ─── */
+            <>
             {/* ─── 1. Header ─── */}
             <div className="mb-6 pr-6 sm:pr-0">
+              {isFirstWallet && (
+                <button
+                  onClick={() => setOnboardingStep("invite")}
+                  className="flex items-center gap-1 font-['Inter',sans-serif] font-normal text-[13px] text-[#7c7c7c] hover:text-[#4f5eff] transition-colors mb-3"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5" />
+                  {t("onboarding.inviteBack")}
+                </button>
+              )}
               <h2
                 className="font-['Inter',sans-serif] font-semibold text-[24px] leading-[32px] text-[#0a0a0a]"
               >
@@ -721,7 +845,23 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
                 >
                   <div className="p-4">
                     <pre className="font-['Inter',sans-serif] font-normal text-[14px] text-[#333333] leading-[20px] whitespace-pre-wrap break-words">
-                      {buildPromptText()}
+                      {isFirstWallet && inviteCode ? (
+                        (() => {
+                          const text = buildPromptText();
+                          const marker = `--COBO-${inviteCode}`;
+                          const idx = text.indexOf(marker);
+                          if (idx === -1) return text;
+                          return (
+                            <>
+                              {text.slice(0, idx)}
+                              <span className="bg-[rgba(245,158,11,0.18)] text-[#b45309] rounded px-0.5">{marker}</span>
+                              {text.slice(idx + marker.length)}
+                            </>
+                          );
+                        })()
+                      ) : (
+                        buildPromptText()
+                      )}
                     </pre>
                   </div>
                 </div>
@@ -916,18 +1056,6 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
               </Collapsible>
             </div>
 
-            {/* ─── Claim wallet entry ─── */}
-            {onClaimWallet && (
-              <div className="text-center mt-3">
-                <button
-                  onClick={onClaimWallet}
-                  className="font-['Inter',sans-serif] font-normal text-[12px] text-[#7c7c7c] hover:text-[#4f5eff] transition-colors underline"
-                >
-                  {t("onboarding.claimEntry")}
-                </button>
-              </div>
-            )}
-
             {/* ─── Pairing overlay toast ─── */}
             {showPairingToast && (
               <div className="absolute inset-0 z-10 flex items-center justify-center rounded-xl pointer-events-none bg-white/40">
@@ -949,6 +1077,8 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
                   )}
                 </div>
               </div>
+            )}
+            </>
             )}
           </div>
         )}
