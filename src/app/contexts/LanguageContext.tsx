@@ -336,14 +336,9 @@ const translations = {
     // Gas Account
     "gasAccount.title": "Gas Account",
     "gasAccount.subtitle": "Keep your Agent fueled for on-chain transactions",
-    "gasAccount.intro": "Your Agent needs gas to execute on-chain transactions. Top up your gas balance to keep things running smoothly.",
-    "gasAccount.criticalLow": "Fuel balance is critically low",
-    "gasAccount.criticalLowDesc": "Please deposit funds to continue using gasless transactions",
-    "gasAccount.depositNow": "Deposit Now",
-    "gasAccount.alertTriggered": "Balance alert triggered",
-    "gasAccount.alertTriggeredDesc": "Your Fuel balance is below the alert threshold of",
-    "gasAccount.topUp": "Top Up",
-    "gasAccount.notifyMethod": "Notification Method",
+    "gasAccount.comingSoonBadge": "Coming Soon",
+    "gasAccount.comingSoonTitle": "Gas Account is under development",
+    "gasAccount.comingSoonDesc": "We're building a unified gas management solution so your Agents can execute on-chain transactions seamlessly. Stay tuned!",
 
     // Step-up Auth
     "stepUp.title": "Identity Verification Required",
@@ -439,12 +434,10 @@ const translations = {
     "permissions.desc": "Define operation types your Agent can perform",
     "permissions.transfer": "Transfer",
     "permissions.contractCall": "Contract Call",
-    "permissions.swap": "Swap",
-    "permissions.stake": "Stake",
+    "permissions.walletManagement": "Wallet Management",
     "permissions.transferDesc": "Send and receive tokens",
     "permissions.contractCallDesc": "Interact with smart contracts",
-    "permissions.swapDesc": "Exchange between tokens",
-    "permissions.stakeDesc": "Participate in PoS staking",
+    "permissions.walletManagementDesc": "Manage wallet settings and configuration",
     "permissions.save": "Save Permissions",
     "permissions.needAgent": "Delegate an Agent first",
     "policy.emptyStateDesc": "Delegate an Agent to configure risk control rules",
@@ -456,6 +449,9 @@ const translations = {
     // Wallet Detail
     "walletDetail.back": "Back to wallets",
     "walletDetail.delegateAgent": "Delegate Agent",
+    "walletDetail.addresses": "Addresses",
+    "walletDetail.noAddresses": "No addresses yet",
+    "walletDetail.copyAddress": "Copy address",
 
     // Wallet Agent Page
     "walletPage.title": "Wallets",
@@ -515,6 +511,82 @@ const translations = {
     "log.detail.approvalRequested": "Agent requests approval: send 2 ETH to 0xAbCd…eF01",
     "log.detail.approvalGranted": "Approved: send 2 ETH to 0xAbCd…eF01",
     "log.detail.approvalDenied": "Denied: send 2 ETH to 0xAbCd…eF01 — amount too high",
+
+    // Agent Pairing
+    "agentPairing.title": "Pair New Agent",
+    "agentPairing.subtitle": "Send the pairing instructions to your AI Agent to establish a connection",
+    "agentPairing.promptLabel": "Pairing Instructions",
+    "agentPairing.copyToken": "Copy Token",
+    "agentPairing.copyPrompt": "Copy Full Instructions",
+    "agentPairing.copied": "Copied!",
+    "agentPairing.expiresIn": "Expires in",
+    "agentPairing.regenerate": "Regenerate",
+    "agentPairing.waiting": "Waiting for Agent to connect...",
+    "agentPairing.connected": "Agent connected!",
+    "agentPairing.success": "Agent Paired Successfully",
+    "agentPairing.successDesc": "Your Agent is now paired and can be delegated to manage wallets.",
+    "agentPairing.agentId": "Agent ID",
+    "agentPairing.done": "Done",
+
+    // Wallet Delegation
+    "walletDelegation.title": "Delegate Wallet to Agent",
+    "walletDelegation.subtitle": "Choose an Agent to manage this wallet",
+    "walletDelegation.selectAgent": "Select Paired Agent",
+    "walletDelegation.noAgents": "No paired Agents yet",
+    "walletDelegation.noAgentsDesc": "Pair an Agent first, then you can delegate wallets to it.",
+    "walletDelegation.pairNew": "Pair New Agent",
+    "walletDelegation.pairNewDesc": "Pair a new Agent and delegate this wallet in one step",
+    "walletDelegation.configurePermissions": "Configure Permissions",
+    "walletDelegation.configurePolicy": "Configure Risk Controls",
+    "walletDelegation.confirm": "Confirm Delegation",
+    "walletDelegation.delegating": "Delegating...",
+    "walletDelegation.success": "Wallet Delegated Successfully",
+    "walletDelegation.successDesc": "The Agent can now operate this wallet within the configured permissions.",
+    "walletDelegation.alreadyDelegated": "Already delegated to this Agent",
+
+    // Claim Wallet
+    "claimWallet.title": "Claim Existing Wallet",
+    "claimWallet.subtitle": "Claim a wallet that was created by an Agent",
+    "claimWallet.tip": "Copy the instructions below and send them to the AI Agent to complete the wallet claim.",
+    "claimWallet.copyPrompt": "Copy Instructions",
+    "claimWallet.verifying": "Verifying claim request...",
+    "claimWallet.transferring": "Transferring ownership...",
+    "claimWallet.success": "Wallet Claimed Successfully",
+    "claimWallet.successDesc": "The wallet has been transferred to your account.",
+    "claimWallet.walletId": "Wallet ID",
+    "claimWallet.agentId": "Agent ID",
+    "claimWallet.done": "Done",
+    "claimWallet.confirmTitle": "Confirm Wallet Claim",
+    "claimWallet.confirmDesc": "Please verify the details below before claiming",
+    "claimWallet.agentInfo": "Agent Info",
+    "claimWallet.agentName": "Agent Name",
+    "claimWallet.walletInfo": "Wallet Info",
+    "claimWallet.walletName": "Wallet Name",
+    "claimWallet.userInfo": "Claim Identity",
+    "claimWallet.claimedBy": "Claimed By",
+    "claimWallet.claimedAt": "Claimed At",
+    "claimWallet.confirmBtn": "Claim Wallet",
+
+    // Delegation Card
+    "delegationCard.delegatedAt": "Delegated",
+    "delegationCard.permissions": "permissions",
+    "delegationCard.frozen": "Frozen",
+    "delegationCard.signer": "Signer",
+    "delegationCard.expand": "Manage",
+    "delegationCard.collapse": "Close",
+
+    // Wallet Page new entries
+    "walletPage.pairAgent": "Pair Agent",
+    "walletPage.claimWallet": "Claim Wallet",
+    "walletPage.agents": "agents",
+    "walletPage.noAgents": "No agents",
+
+    // Welcome page new entries
+    "welcome.claimWallet": "Have a wallet created by an Agent?",
+    "welcome.claimAction": "Claim Wallet",
+
+    // Onboarding claim entry
+    "onboarding.claimEntry": "Already have a wallet? Claim it",
 
     // Common
     "common.copyright":
@@ -821,14 +893,9 @@ const translations = {
     // Gas 账户
     "gasAccount.title": "Gas 账户",
     "gasAccount.subtitle": "为 Agent 的链上交易保持充足的 Gas",
-    "gasAccount.intro": "你的 Agent 需要 Gas 来执行链上交易。充值 Gas 余额以保持正常运行。",
-    "gasAccount.criticalLow": "Gas 余额严重不足",
-    "gasAccount.criticalLowDesc": "请充值以继续使用无 Gas 交易",
-    "gasAccount.depositNow": "立即充值",
-    "gasAccount.alertTriggered": "余额警报已触发",
-    "gasAccount.alertTriggeredDesc": "你的 Gas 余额低于警报阈值",
-    "gasAccount.topUp": "充值",
-    "gasAccount.notifyMethod": "通知方式",
+    "gasAccount.comingSoonBadge": "即将上线",
+    "gasAccount.comingSoonTitle": "Gas 账户功能开发中",
+    "gasAccount.comingSoonDesc": "我们正在打造统一的 Gas 管理方案，让你的 Agent 无缝执行链上交易。敬请期待！",
 
     // Step-up Auth
     "stepUp.title": "需要身份验证",
@@ -917,12 +984,10 @@ const translations = {
     "permissions.desc": "定义 Agent 可以执行的操作类型",
     "permissions.transfer": "转账",
     "permissions.contractCall": "合约调用",
-    "permissions.swap": "兑换",
-    "permissions.stake": "质押",
+    "permissions.walletManagement": "钱包管理",
     "permissions.transferDesc": "发送和接收代币",
     "permissions.contractCallDesc": "与智能合约交互",
-    "permissions.swapDesc": "在不同代币间兑换",
-    "permissions.stakeDesc": "参与 PoS 质押",
+    "permissions.walletManagementDesc": "管理钱包设置和配置",
     "permissions.save": "保存权限",
     "permissions.needAgent": "需要先委托 Agent",
     "policy.emptyStateDesc": "委托 Agent 后即可配置风控规则",
@@ -934,6 +999,9 @@ const translations = {
     // Wallet Detail
     "walletDetail.back": "返回钱包列表",
     "walletDetail.delegateAgent": "委托 Agent",
+    "walletDetail.addresses": "地址",
+    "walletDetail.noAddresses": "暂无地址",
+    "walletDetail.copyAddress": "复制地址",
 
     // Wallet Agent Page
     "walletPage.title": "钱包",
@@ -993,6 +1061,82 @@ const translations = {
     "log.detail.approvalRequested": "Agent 请求审批：发送 2 ETH 至 0xAbCd…eF01",
     "log.detail.approvalGranted": "已批准：发送 2 ETH 至 0xAbCd…eF01",
     "log.detail.approvalDenied": "已拒绝：发送 2 ETH 至 0xAbCd…eF01 — 金额过高",
+
+    // Agent Pairing
+    "agentPairing.title": "配对新 Agent",
+    "agentPairing.subtitle": "将配对指令发送给你的 AI Agent 以建立连接",
+    "agentPairing.promptLabel": "配对指令",
+    "agentPairing.copyToken": "复制 Token",
+    "agentPairing.copyPrompt": "复制完整指令",
+    "agentPairing.copied": "已复制！",
+    "agentPairing.expiresIn": "有效期",
+    "agentPairing.regenerate": "重新生成",
+    "agentPairing.waiting": "等待 Agent 连接中...",
+    "agentPairing.connected": "Agent 已连接！",
+    "agentPairing.success": "Agent 配对成功",
+    "agentPairing.successDesc": "你的 Agent 已配对成功，现在可以将钱包委托给它管理。",
+    "agentPairing.agentId": "Agent ID",
+    "agentPairing.done": "完成",
+
+    // Wallet Delegation
+    "walletDelegation.title": "委托钱包给 Agent",
+    "walletDelegation.subtitle": "选择一个 Agent 来管理此钱包",
+    "walletDelegation.selectAgent": "选择已配对的 Agent",
+    "walletDelegation.noAgents": "暂无已配对的 Agent",
+    "walletDelegation.noAgentsDesc": "请先配对一个 Agent，然后才能将钱包委托给它。",
+    "walletDelegation.pairNew": "配对新 Agent",
+    "walletDelegation.pairNewDesc": "配对新 Agent 并一步完成钱包委托",
+    "walletDelegation.configurePermissions": "配置权限",
+    "walletDelegation.configurePolicy": "配置风控规则",
+    "walletDelegation.confirm": "确认委托",
+    "walletDelegation.delegating": "委托中...",
+    "walletDelegation.success": "钱包委托成功",
+    "walletDelegation.successDesc": "Agent 现在可以在配置的权限范围内操作此钱包。",
+    "walletDelegation.alreadyDelegated": "已委托给此 Agent",
+
+    // Claim Wallet
+    "claimWallet.title": "认领已有钱包",
+    "claimWallet.subtitle": "认领由 Agent 创建的钱包",
+    "claimWallet.tip": "复制下方指令并发送给 AI Agent，即可完成钱包认领与所有权转移。",
+    "claimWallet.copyPrompt": "复制指令",
+    "claimWallet.verifying": "验证认领请求...",
+    "claimWallet.transferring": "转移所有权...",
+    "claimWallet.success": "钱包认领成功",
+    "claimWallet.successDesc": "钱包已成功转入你的账户。",
+    "claimWallet.walletId": "钱包 ID",
+    "claimWallet.agentId": "Agent ID",
+    "claimWallet.done": "完成",
+    "claimWallet.confirmTitle": "确认认领钱包",
+    "claimWallet.confirmDesc": "请确认以下信息无误后完成认领",
+    "claimWallet.agentInfo": "代理信息",
+    "claimWallet.agentName": "Agent 名称",
+    "claimWallet.walletInfo": "钱包信息",
+    "claimWallet.walletName": "钱包名称",
+    "claimWallet.userInfo": "认领身份",
+    "claimWallet.claimedBy": "认领者",
+    "claimWallet.claimedAt": "认领时间",
+    "claimWallet.confirmBtn": "认领钱包",
+
+    // Delegation Card
+    "delegationCard.delegatedAt": "委托于",
+    "delegationCard.permissions": "项权限",
+    "delegationCard.frozen": "已暂停",
+    "delegationCard.signer": "签名人",
+    "delegationCard.expand": "管理",
+    "delegationCard.collapse": "收起",
+
+    // Wallet Page new entries
+    "walletPage.pairAgent": "配对 Agent",
+    "walletPage.claimWallet": "认领钱包",
+    "walletPage.agents": "个 Agent",
+    "walletPage.noAgents": "无 Agent",
+
+    // Welcome page new entries
+    "welcome.claimWallet": "已有 Agent 创建的钱包？",
+    "welcome.claimAction": "认领钱包",
+
+    // Onboarding claim entry
+    "onboarding.claimEntry": "已有钱包？去认领",
 
     // Common
     "common.copyright": "© 2026 Agent Wallet. 保留所有权利。",

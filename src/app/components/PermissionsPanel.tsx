@@ -1,4 +1,4 @@
-import { Shield, ArrowLeftRight, Code, RefreshCw, Lock } from 'lucide-react';
+import { Shield, ArrowLeftRight, Code, Settings } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Permission } from '../hooks/useWalletStore';
 import { useState, useEffect } from 'react';
@@ -17,8 +17,7 @@ const PERMISSION_ITEMS: {
 }[] = [
   { key: 'transfer', icon: ArrowLeftRight, labelKey: 'permissions.transfer', descKey: 'permissions.transferDesc' },
   { key: 'contractCall', icon: Code, labelKey: 'permissions.contractCall', descKey: 'permissions.contractCallDesc' },
-  { key: 'swap', icon: RefreshCw, labelKey: 'permissions.swap', descKey: 'permissions.swapDesc' },
-  { key: 'stake', icon: Lock, labelKey: 'permissions.stake', descKey: 'permissions.stakeDesc' },
+  { key: 'walletManagement', icon: Settings, labelKey: 'permissions.walletManagement', descKey: 'permissions.walletManagementDesc' },
 ];
 
 export default function PermissionsPanel({ permissions, onUpdate, disabled }: PermissionsPanelProps) {

@@ -1,26 +1,19 @@
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Users } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Wallet } from '../hooks/useWalletStore';
 
 interface WalletCardProps {
   wallet: Wallet;
+  delegationCount: number;
   onSelect: (walletId: string) => void;
 }
 
-export default function WalletCard({ wallet, onSelect }: WalletCardProps) {
+export default function WalletCard({ wallet, delegationCount, onSelect }: WalletCardProps) {
   const { t } = useLanguage();
 
-  const delegation = wallet.delegation;
-  const statusColor = delegation
-    ? delegation.status === 'active'
-      ? 'bg-[#22c55e]'
-      : 'bg-[#eab308]'
-    : 'bg-[#d4d4d4]';
-
-  const isFrozen = delegation?.status === 'frozen';
-  const borderClass = isFrozen
-    ? 'border-[#eab308]/30 hover:border-[#eab308]/50'
-    : 'border-[rgba(10,10,10,0.08)] hover:border-[rgba(79,94,255,0.2)]';
+  const hasAgents = delegationCount > 0;
+  const statusColor = hasAgents ? 'bg-[#22c55e]' : 'bg-[#d4d4d4]';
+  const borderClass = 'border-[rgba(10,10,10,0.08)] hover:border-[rgba(79,94,255,0.2)]';
 
   return (
     <button
@@ -33,11 +26,6 @@ export default function WalletCard({ wallet, onSelect }: WalletCardProps) {
           {wallet.name}
         </span>
         <div className="flex items-center gap-1.5">
-          {isFrozen && (
-            <span className="font-['Inter',sans-serif] font-medium text-[10px] text-[#eab308] uppercase tracking-wider">
-              {t('delegation.paused')}
-            </span>
-          )}
           <div className={`w-2.5 h-2.5 rounded-full ${statusColor}`} />
         </div>
       </div>
@@ -52,20 +40,21 @@ export default function WalletCard({ wallet, onSelect }: WalletCardProps) {
             {wallet.id}
           </code>
         </div>
-        {delegation ? (
-          <div className="flex items-center justify-between">
-            <span className="font-['Inter',sans-serif] font-normal text-[11px] text-[#b0b0b0] uppercase tracking-wider">
-              Agent ID
+        <div className="flex items-center justify-between">
+          <span className="font-['Inter',sans-serif] font-normal text-[11px] text-[#b0b0b0] uppercase tracking-wider">
+            Agents
+          </span>
+          {hasAgents ? (
+            <span className="flex items-center gap-1 font-['Inter',sans-serif] font-medium text-[12px] text-[#4f5eff]">
+              <Users className="w-3 h-3" />
+              {delegationCount} {t('walletPage.agents')}
             </span>
-            <code className="font-['JetBrains_Mono','SF_Mono','Consolas',monospace] text-[12px] text-[#0a0a0a]">
-              {delegation.agentId}
-            </code>
-          </div>
-        ) : (
-          <div className="font-['Inter',sans-serif] font-normal text-[12px] text-[#b0b0b0]">
-            {t('walletCard.noAgent')}
-          </div>
-        )}
+          ) : (
+            <span className="font-['Inter',sans-serif] font-normal text-[12px] text-[#b0b0b0]">
+              {t('walletPage.noAgents')}
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Bottom Right: Manage link */}

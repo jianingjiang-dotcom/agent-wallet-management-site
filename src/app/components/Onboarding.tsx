@@ -28,11 +28,11 @@ interface OnboardingModalProps {
   open: boolean;
   onClose: () => void;
   onWalletCreated?: (wallet: {
-    address: string;
     policy: { singleTxLimit: number; dailyLimit: number };
     walletId: string;
     agentId: string;
   }) => void;
+  onClaimWallet?: () => void;
 }
 
 type WaitingPhase = "idle" | "waiting" | "connected" | "configuring" | "success";
@@ -44,6 +44,7 @@ export default function OnboardingModal({
   open,
   onClose,
   onWalletCreated,
+  onClaimWallet,
 }: OnboardingModalProps) {
   const { t, language } = useLanguage();
 
@@ -229,30 +230,17 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
   const startWaitingFlow = () => {
     setWaitingPhase("waiting");
     setShowPairingToast("pairing");
-    // Step 1: After 3s, show "已完成配对"
+    // Step 1: After 3s, generate data and transition to success
     const t1 = setTimeout(() => {
-      setWalletAddress(generateAddress());
-      setWalletId(generateShortId());
-      setAgentId(generateShortId());
+      const addr = generateAddress();
+      const wId = generateShortId();
+      const aId = generateShortId();
+      setWalletAddress(addr);
+      setWalletId(wId);
+      setAgentId(aId);
       setCreatedAt(new Date());
       setWaitingPhase("success");
-      setShowPairingToast("done");
-      // Step 2: After 1.5s more, close dialog and trigger callback
-      const t2 = setTimeout(() => {
-        if (onWalletCreated) {
-          onWalletCreated({
-            address: walletAddress || generateAddress(),
-            walletId: walletId || generateShortId(),
-            agentId: agentId || generateShortId(),
-            policy: {
-              singleTxLimit: Number(getEffectivePerTx()),
-              dailyLimit: Number(getEffectiveDaily()),
-            },
-          });
-        }
-        onClose();
-      }, 1500);
-      waitingTimers.current.push(t2);
+      setShowPairingToast(null);
     }, 3000);
     waitingTimers.current.push(t1);
   };
@@ -261,7 +249,6 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
   const handleComplete = () => {
     if (onWalletCreated) {
       onWalletCreated({
-        address: walletAddress,
         walletId,
         agentId,
         policy: {
@@ -281,7 +268,18 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
 
   const isWaiting = waitingPhase !== "idle" && waitingPhase !== "success";
 
-  // (Success is now handled directly in startWaitingFlow)
+  // ─── Success transition + confetti ───
+  useEffect(() => {
+    if (isPaired) {
+      const t1 = setTimeout(() => setShowSuccess(true), 100);
+      const t2 = setTimeout(() => setSuccessAnimated(true), 200);
+      const t3 = setTimeout(() => {
+        if (confettiRef.current) launchConfetti(confettiRef.current);
+      }, 400);
+      return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isPaired]);
 
   // ─── Canvas Confetti (multi-wave celebration) ───
   const launchConfetti = (container: HTMLDivElement) => {
@@ -513,17 +511,148 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
 
   return (
     <>
-    <Dialog open={open} onOpenChange={(val) => { if (!val && !showPairingToast) onClose(); }}>
+    <Dialog open={open} onOpenChange={(val) => { if (!val && !showPairingToast) { if (isPaired) handleComplete(); else onClose(); } }}>
       <DialogContent className="!max-w-[calc(100vw-2rem)] sm:!max-w-[640px] max-h-[90vh] overflow-hidden p-0 gap-0 rounded-xl sm:rounded-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-[0.97] data-[state=open]:zoom-in-[0.97] data-[state=open]:slide-in-from-bottom-3 data-[state=closed]:slide-out-to-bottom-2 data-[state=open]:duration-300 data-[state=closed]:duration-200">
         <DialogTitle className="sr-only">{t("onboarding.title")}</DialogTitle>
 
-        {/* ═══════════ SETUP VIEW ═══════════ */}
+        {isPaired ? (
+          /* ═══════════ SUCCESS VIEW ═══════════ */
+          <div
+            ref={confettiRef}
+            className={`p-5 sm:p-8 w-full min-w-0 relative max-h-[90vh] overflow-y-auto overflow-x-hidden scrollbar-hidden transition-all duration-500 ease-out ${
+              showSuccess ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            }`}
+          >
+            {/* Header with bounce-in icon */}
+            <div className="text-center mb-5 sm:mb-6 pr-6 sm:pr-0">
+              <div
+                className={`inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-[rgba(34,197,94,0.1)] border-2 border-[rgba(34,197,94,0.2)] rounded-2xl mb-3 sm:mb-4 transition-transform duration-500 ease-out ${
+                  successAnimated ? "scale-100" : "scale-0"
+                }`}
+                style={{ transitionTimingFunction: "cubic-bezier(0.34, 1.56, 0.64, 1)" }}
+              >
+                <CheckCircle className="w-7 h-7 sm:w-8 sm:h-8 text-[#22c55e]" />
+              </div>
+              <h2 className="font-['Inter',sans-serif] font-semibold text-[20px] sm:text-[24px] leading-tight text-[#0a0a0a] mb-1.5 sm:mb-2">
+                {t("onboarding.success.title")}
+              </h2>
+              <p className="font-['Inter',sans-serif] font-normal text-[13px] sm:text-[14px] text-[#4f4f4f]">
+                {t("onboarding.success.desc")}
+              </p>
+              {createdAt && (
+                <p className="font-['Inter',sans-serif] font-normal text-[11px] text-[#b0b0b0] mt-1.5">
+                  {createdAt.toLocaleString(language === "zh" ? "zh-CN" : "en-US", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </p>
+              )}
+            </div>
+
+            {/* Wallet ID ↔ Agent ID relationship */}
+            <div className="mb-5 sm:mb-6">
+              <div className="rounded-[12px] border border-[rgba(10,10,10,0.08)] bg-white shadow-[0_1px_3px_rgba(0,0,0,0.04)] overflow-hidden">
+                <div className="flex items-center gap-3 px-3.5 sm:px-4 py-3 sm:py-3.5">
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-[10px] bg-[rgba(79,94,255,0.08)] flex items-center justify-center flex-shrink-0">
+                    <Shield className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#4f5eff]" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <span className="font-['Inter',sans-serif] font-medium text-[11px] text-[#9a9a9a] uppercase tracking-wider block mb-0.5">
+                      {t("onboarding.success.walletId")}
+                    </span>
+                    <code className="font-['JetBrains_Mono','SF_Mono','Consolas',monospace] text-[12px] sm:text-[13px] text-[#0a0a0a] break-words leading-snug">
+                      {walletId}
+                    </code>
+                  </div>
+                </div>
+                <div className="flex items-center px-3.5 sm:px-4">
+                  <div className="flex-1 h-px bg-[rgba(10,10,10,0.06)]" />
+                  <div className="flex items-center gap-1.5 px-3">
+                    <div className="w-5 h-5 rounded-full bg-[rgba(34,197,94,0.1)] flex items-center justify-center">
+                      <Link2 className="w-2.5 h-2.5 text-[#22c55e]" />
+                    </div>
+                    <span className="font-['Inter',sans-serif] font-medium text-[10px] text-[#22c55e]">
+                      {t("onboarding.success.linked")}
+                    </span>
+                  </div>
+                  <div className="flex-1 h-px bg-[rgba(10,10,10,0.06)]" />
+                </div>
+                <div className="flex items-center gap-3 px-3.5 sm:px-4 py-3 sm:py-3.5">
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-[10px] bg-[rgba(245,158,11,0.08)] flex items-center justify-center flex-shrink-0">
+                    <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#f59e0b]" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <span className="font-['Inter',sans-serif] font-medium text-[11px] text-[#9a9a9a] uppercase tracking-wider block mb-0.5">
+                      {t("onboarding.success.agentId")}
+                    </span>
+                    <code className="font-['JetBrains_Mono','SF_Mono','Consolas',monospace] text-[12px] sm:text-[13px] text-[#0a0a0a] break-words leading-snug">
+                      {agentId}
+                    </code>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Applied Limits */}
+            <div className="bg-[rgba(79,94,255,0.04)] border border-[rgba(79,94,255,0.12)] rounded-[10px] p-3 sm:p-4 mb-5 sm:mb-6">
+              <div className="flex items-center gap-2 mb-2">
+                <Shield className="w-4 h-4 text-[#4f5eff]" />
+                <span className="font-['Inter',sans-serif] font-medium text-[12px] sm:text-[13px] text-[#4f5eff]">
+                  {t("onboarding.success.limitsApplied")}
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-3 sm:gap-6 font-['Inter',sans-serif] text-[12px] sm:text-[13px] text-[#4f4f4f]">
+                <span>{t("onboarding.limits.perTx")}: ${getEffectivePerTx()}</span>
+                <span>{t("onboarding.limits.daily")}: ${getEffectiveDaily()}</span>
+              </div>
+            </div>
+
+            {/* Next Steps */}
+            <div className="border-t border-[rgba(10,10,10,0.08)] pt-4 sm:pt-5 mb-5 sm:mb-6">
+              <h3 className="font-['Inter',sans-serif] font-semibold text-[14px] sm:text-[15px] text-[#0a0a0a] mb-3">
+                {t("onboarding.success.nextSteps")}
+              </h3>
+              <div className="space-y-2.5">
+                {[
+                  t("onboarding.success.step1"),
+                  t("onboarding.success.step2"),
+                  t("onboarding.success.step3"),
+                ].map((step, i) => (
+                  <div key={i} className="flex items-start gap-2.5 sm:gap-3">
+                    <div className="w-[20px] h-[20px] sm:w-[22px] sm:h-[22px] rounded-[6px] bg-[#4f5eff] flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="font-['Inter',sans-serif] font-semibold text-[10px] sm:text-[11px] text-white">
+                        {i + 1}
+                      </span>
+                    </div>
+                    <span className="font-['Inter',sans-serif] font-normal text-[12px] sm:text-[13px] text-[#4f4f4f] leading-[20px] sm:leading-[22px]">
+                      {step}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Enter Dashboard button */}
+            <button
+              onClick={handleComplete}
+              className="w-full bg-[#4f5eff] hover:bg-[#3d4dd9] h-[42px] sm:h-[44px] rounded-[8px] transition-colors shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)] relative overflow-hidden group"
+            >
+              <span className="font-['Inter',sans-serif] font-medium text-[13px] sm:text-[14px] text-white relative z-10">
+                {t("onboarding.success.enter")}
+              </span>
+              <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+            </button>
+          </div>
+        ) : (
+          /* ═══════════ SETUP VIEW ═══════════ */
           <div className="px-5 py-6 sm:px-8 sm:py-6 w-full min-w-0 max-h-[90vh] overflow-y-auto overflow-x-hidden scrollbar-hidden relative">
             {/* ─── 1. Header ─── */}
             <div className="mb-6 pr-6 sm:pr-0">
               <h2
-                className="font-['Inter',sans-serif] font-semibold text-[24px] leading-[32px] text-[#0a0a0a] cursor-pointer"
-                onClick={startWaitingFlow}
+                className="font-['Inter',sans-serif] font-semibold text-[24px] leading-[32px] text-[#0a0a0a]"
               >
                 {t("onboarding.title")}
               </h2>
@@ -604,7 +733,7 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
                 disabled={regenerating || !!showPairingToast}
                 className={`w-full flex items-center justify-center gap-2 h-[38px] sm:h-[40px] rounded-[8px] font-['Inter',sans-serif] font-medium text-[13px] sm:text-[14px] transition-all shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)] disabled:opacity-50 text-white ${
                   copiedType === "prompt"
-                    ? "bg-[#4f5eff] hover:bg-[#3d4dd9]"
+                    ? "bg-[#22c55e] hover:bg-[#16a34a]"
                     : "bg-[#4f5eff] hover:bg-[#3d4dd9]"
                 }`}
               >
@@ -619,6 +748,15 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
                   </svg>
                 )}
                 {t("onboarding.copyPrompt")}
+              </button>
+
+              {/* Simulate button (dev) */}
+              <button
+                onClick={startWaitingFlow}
+                disabled={!!showPairingToast}
+                className="w-full mt-2 h-[32px] rounded-[8px] border border-dashed border-[rgba(10,10,10,0.15)] font-['Inter',sans-serif] font-normal text-[11px] text-[#7c7c7c] hover:bg-[#f5f5f5] transition-colors disabled:opacity-50"
+              >
+                ⚡ Simulate Pairing
               </button>
             </div>
 
@@ -778,6 +916,18 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
               </Collapsible>
             </div>
 
+            {/* ─── Claim wallet entry ─── */}
+            {onClaimWallet && (
+              <div className="text-center mt-3">
+                <button
+                  onClick={onClaimWallet}
+                  className="font-['Inter',sans-serif] font-normal text-[12px] text-[#7c7c7c] hover:text-[#4f5eff] transition-colors underline"
+                >
+                  {t("onboarding.claimEntry")}
+                </button>
+              </div>
+            )}
+
             {/* ─── Pairing overlay toast ─── */}
             {showPairingToast && (
               <div className="absolute inset-0 z-10 flex items-center justify-center rounded-xl pointer-events-none bg-white/40">
@@ -801,6 +951,7 @@ caw --api-url ${API_URL} onboard provision --token ${setupToken}`;
               </div>
             )}
           </div>
+        )}
 
       </DialogContent>
     </Dialog>
