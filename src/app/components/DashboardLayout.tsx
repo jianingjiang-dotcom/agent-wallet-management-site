@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Outlet, useNavigate, Link, useLocation } from 'react-router';
-import { Wallet, MessageSquareMore, LogOut, Menu, X, User, Fuel, ReceiptJapaneseYen, Settings, Globe, ChevronRight } from 'lucide-react';
+import { Wallet, MessageSquareMore, LogOut, Menu, X, User, Fuel, ReceiptJapaneseYen, Settings, Globe, ChevronRight, Check, ChevronLeft, SquarePen } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useWalletStore } from '../hooks/useWalletStore';
-import LanguageSwitcher from './LanguageSwitcher';
 import OnboardingModal from './Onboarding';
 import AgentPairingModal from './AgentPairingModal';
 import ClaimWalletModal from './ClaimWalletModal';
@@ -17,7 +16,10 @@ export default function DashboardLayout() {
   const [user, setUser] = useState<any>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
+  const [languageFlyoutOpen, setLanguageFlyoutOpen] = useState(false);
+  const [mobileLangPanel, setMobileLangPanel] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const accountMenuRef = useRef<HTMLDivElement>(null);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showAgentPairing, setShowAgentPairing] = useState(false);
   const [showClaimWallet, setShowClaimWallet] = useState(false);
@@ -33,6 +35,19 @@ export default function DashboardLayout() {
       // Onboarding auto-open is now handled by WalletAgentPage
     }
   }, [navigate]);
+
+  // Close desktop account dropdown when clicking outside (desktop only — mobile uses backdrop)
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (window.innerWidth < 1024) return; // mobile handled by backdrop overlay
+      if (accountMenuRef.current && !accountMenuRef.current.contains(e.target as Node)) {
+        setAccountMenuOpen(false);
+        setLanguageFlyoutOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
 
   const handleOnboardingClose = () => {
     setShowOnboarding(false);
@@ -97,27 +112,27 @@ export default function DashboardLayout() {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-[#F8F9FC] flex">
+    <div className="min-h-screen bg-[#FAFAFA] flex">
       {/* Sidebar - Desktop: sticky, Mobile: slide-in drawer */}
       <aside
         className={`
-          fixed lg:sticky top-0 left-0 h-screen w-[280px] sm:w-[228px] lg:w-[220px] bg-white flex flex-col z-40 border-r border-[#EDEEF3]
+          fixed lg:sticky top-0 left-0 h-screen w-[280px] sm:w-[228px] lg:w-[220px] bg-white flex flex-col z-[60] lg:z-40 border-r border-[#EDEEF3]
           transition-transform duration-300 ease-in-out
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
           shadow-xl lg:shadow-none
         `}
       >
         {/* Logo */}
-        <div className="bg-[#F8F9FC] pt-[32px] pb-[32px] flex items-center justify-between px-[24px]">
+        <div className="bg-[#FAFAFA] pt-[32px] pb-[32px] px-[24px]">
           <div className="h-[18px] relative w-[172px]">
             <svg className="absolute block size-full" fill="none" preserveAspectRatio="xMidYMid meet" viewBox="0 0 188.538 19.9998">
               <g>
-                <path d={svgPaths.p12420d80} fill="#1C1C1C" />
-                <path d={svgPaths.p19bafe80} fill="#1C1C1C" />
-                <path d={svgPaths.p161a0400} fill="#1C1C1C" />
-                <path d={svgPaths.p3456db00} fill="#1C1C1C" />
-                <path d={svgPaths.p5983200} fill="#1C1C1C" />
-                <path d={svgPaths.p35ddbb80} fill="#1C1C1C" />
+                <path d={svgPaths.p12420d80} fill="#0A0A0A" />
+                <path d={svgPaths.p19bafe80} fill="#0A0A0A" />
+                <path d={svgPaths.p161a0400} fill="#0A0A0A" />
+                <path d={svgPaths.p3456db00} fill="#0A0A0A" />
+                <path d={svgPaths.p5983200} fill="#0A0A0A" />
+                <path d={svgPaths.p35ddbb80} fill="#0A0A0A" />
                 <path d={svgPaths.p192f4b80} fill="#4F5EFF" />
                 <path d={svgPaths.p2c193100} fill="#4F5EFF" />
                 <path d={svgPaths.p357a0d00} fill="#4F5EFF" />
@@ -125,23 +140,17 @@ export default function DashboardLayout() {
                 <path d={svgPaths.pf8ab380} fill="#4F5EFF" />
                 <path d={svgPaths.p25b8a100} fill="#4F5EFF" />
                 <path d={svgPaths.p1a427e00} fill="#4F5EFF" />
-                <path d={svgPaths.p37c6db00} fill="#1C1C1C" />
-                <path d={svgPaths.p16c2cc00} fill="#1C1C1C" />
-                <path d={svgPaths.p2ed1f700} fill="#1C1C1C" />
-                <path d={svgPaths.p123d8680} fill="#1C1C1C" />
+                <path d={svgPaths.p37c6db00} fill="#0A0A0A" />
+                <path d={svgPaths.p16c2cc00} fill="#0A0A0A" />
+                <path d={svgPaths.p2ed1f700} fill="#0A0A0A" />
+                <path d={svgPaths.p123d8680} fill="#0A0A0A" />
               </g>
             </svg>
           </div>
-          <button
-            onClick={() => setSidebarOpen(false)}
-            className="lg:hidden p-2 -mr-2 rounded-lg hover:bg-slate-100 transition-colors"
-          >
-            <X className="w-5 h-5 text-slate-600" />
-          </button>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 bg-[#F8F9FC] px-[8px] pt-[0px] pb-[16px] flex flex-col gap-[8px] overflow-y-auto">
+        <nav className="flex-1 bg-[#FAFAFA] px-[8px] pt-[0px] pb-[16px] flex flex-col gap-[8px] overflow-y-auto">
           {/* Primary Nav */}
           {primaryItems.map((item) => {
             const isActive = item.path === '/dashboard'
@@ -156,8 +165,8 @@ export default function DashboardLayout() {
                 className={`
                   flex items-center gap-[8px] px-[16px] h-[44px] rounded-[10px] transition-colors font-['Inter',sans-serif] text-[14px] leading-[20px] whitespace-nowrap
                   ${isActive
-                    ? 'bg-[#EDEEF3] text-[#4F5EFF] font-semibold'
-                    : 'text-[#1C1C1C] font-normal hover:bg-[#EDEEF3]'
+                    ? 'bg-[#EDEEF3] text-[#4F5EFF] font-medium'
+                    : 'text-[#0A0A0A] font-normal hover:bg-[rgba(79,94,255,0.05)]'
                   }
                 `}
               >
@@ -183,13 +192,13 @@ export default function DashboardLayout() {
                   flex items-center gap-[8px] px-[16px] h-[44px] rounded-[10px] transition-colors font-['Inter',sans-serif] text-[14px] leading-[20px] whitespace-nowrap
                   ${isActive
                     ? 'bg-[#EDEEF3] text-[#4F5EFF] font-semibold'
-                    : 'text-[#1C1C1C] font-normal hover:bg-[#EDEEF3] hover:text-[#1C1C1C]'
+                    : 'text-[#0A0A0A] font-normal hover:bg-[rgba(79,94,255,0.05)]'
                   }
                 `}
               >
                 <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#4F5EFF]' : ''}`} strokeWidth={2} />
                 <span>{item.label}</span>
-                <span className="ml-auto font-['Inter',sans-serif] font-normal text-[10px] text-[#73798B] bg-[#EDEEF3] px-1.5 py-0.5 rounded">
+                <span className="ml-auto font-['Inter',sans-serif] font-normal text-[10px] text-[#7C7C7C] bg-[#EDEEF3] px-1.5 py-0.5 rounded">
                   {t('nav.comingSoon')}
                 </span>
               </Link>
@@ -199,59 +208,83 @@ export default function DashboardLayout() {
         </nav>
 
         {/* User Profile */}
-        <div className="bg-[#F8F9FC] border-t border-[rgba(10,10,10,0.08)] relative">
+        <div ref={accountMenuRef} className="bg-[#FAFAFA] border-t border-[rgba(10,10,10,0.08)] relative">
           <button
-            onClick={() => setAccountMenuOpen(!accountMenuOpen)}
-            className="w-full p-[16px] flex items-center gap-[8px] hover:bg-[#F8F9FC] transition-colors"
+            onClick={() => {
+              setAccountMenuOpen(!accountMenuOpen);
+              setLanguageFlyoutOpen(false);
+              setMobileLangPanel(false);
+              // On mobile, close sidebar so the bottom sheet is visible
+              if (window.innerWidth < 1024) setSidebarOpen(false);
+            }}
+            className="w-full p-[16px] flex items-center gap-[8px]"
           >
-            <div className="w-[40px] h-[40px] bg-[rgba(79,94,255,0.1)] border-[1.25px] border-[rgba(79,94,255,0.2)] rounded-full flex items-center justify-center shrink-0">
-              <User className="w-5 h-5 text-[#4f5eff]" />
+            <div className="w-[40px] h-[40px] bg-[#4F4F4F] rounded-full flex items-center justify-center shrink-0">
+              <User className="w-5 h-5 text-white" />
             </div>
             <div className="flex-1 min-w-0 text-left">
-              <div className="font-['Inter',sans-serif] font-semibold text-[14px] text-[#1C1C1C] truncate">{user.name}</div>
-              <div className="font-['Inter',sans-serif] font-normal text-[12px] text-[#1C1C1C] truncate">{user.email}</div>
+              <div className="font-['Inter',sans-serif] font-semibold text-[14px] text-[#0A0A0A] truncate">{user.name}</div>
+              <div className="font-['Inter',sans-serif] font-normal text-[12px] text-[#7c7c7c] truncate">{user.email}</div>
             </div>
-            <ChevronRight className={`w-4 h-4 text-[#1C1C1C] shrink-0 transition-transform ${accountMenuOpen ? 'rotate-90' : ''}`} />
+            <ChevronRight className="w-4 h-4 text-[#7c7c7c] shrink-0" />
           </button>
 
-          {/* Account Menu Dropdown */}
+          {/* Account Menu Dropdown — desktop only (mobile uses bottom sheet) */}
           {accountMenuOpen && (
-            <div className="absolute bottom-full left-0 right-0 mb-1 bg-white rounded-[8px] border border-[rgba(10,10,10,0.08)] shadow-[0px_8px_24px_0px_rgba(0,0,0,0.12)] mx-2">
+            <div className="hidden lg:block absolute bottom-full left-0 right-0 mb-1 bg-white rounded-[8px] border border-[rgba(10,10,10,0.08)] shadow-[0px_8px_24px_0px_rgba(0,0,0,0.12)] mx-2">
               <div className="p-[8px] flex flex-col gap-[4px]">
                 <Link
                   to="/dashboard/settings"
-                  onClick={() => {
-                    setAccountMenuOpen(false);
-                    setSidebarOpen(false);
-                  }}
-                  className="flex items-center gap-[8px] px-[12px] py-[8px] rounded-[10px] hover:bg-[#F8F9FC] transition-colors"
+                  onClick={() => { setAccountMenuOpen(false); setSidebarOpen(false); }}
+                  className="flex items-center gap-[8px] p-2 rounded-[6px] hover:bg-[rgba(79,94,255,0.05)] transition-colors"
                 >
-                  <Settings className="w-4 h-4 text-[#4f4f4f]" />
-                  <span className="font-['Inter',sans-serif] font-medium text-[14px] text-[#1C1C1C]">
+                  <Settings className="w-4 h-4 text-[#0a0a0a]" />
+                  <span className="font-['Inter',sans-serif] font-normal text-[14px] text-[#0a0a0a]">
                     {t('nav.settings')}
                   </span>
                 </Link>
-                <button
-                  onClick={() => setLanguage(language === 'zh' ? 'en' : 'zh')}
-                  className="flex items-center gap-[8px] px-[12px] py-[8px] rounded-[10px] hover:bg-[#F8F9FC] transition-colors w-full"
+
+                {/* Language with hover flyout */}
+                <div
+                  className="relative"
+                  onMouseEnter={() => setLanguageFlyoutOpen(true)}
+                  onMouseLeave={() => setLanguageFlyoutOpen(false)}
                 >
-                  <Globe className="w-4 h-4 text-[#4f4f4f]" />
-                  <span className="font-['Inter',sans-serif] font-medium text-[14px] text-[#1C1C1C] mr-2">
-                    {t('nav.language')}
-                  </span>
-                  <div className="ml-auto">
-                    <LanguageSwitcher compact />
-                  </div>
-                </button>
+                  <button className={`flex items-center gap-[8px] p-2 rounded-[6px] transition-colors w-full ${languageFlyoutOpen ? 'bg-[rgba(79,94,255,0.05)]' : 'hover:bg-[rgba(79,94,255,0.05)]'}`}>
+                    <Globe className="w-4 h-4 text-[#0a0a0a]" />
+                    <span className="font-['Inter',sans-serif] font-normal text-[14px] text-[#0a0a0a]">{t('nav.language')}</span>
+                    <ChevronRight className="w-3.5 h-3.5 text-[#0a0a0a] ml-auto" />
+                  </button>
+                  {languageFlyoutOpen && (
+                    <div className="absolute left-full top-0 pl-2 z-10">
+                      <div className="bg-white rounded-[8px] border border-[rgba(10,10,10,0.08)] shadow-[0px_8px_24px_0px_rgba(0,0,0,0.12)] min-w-[140px]">
+                        <div className="p-[8px] flex flex-col gap-[4px]">
+                          <button
+                            onClick={() => { setLanguage('en'); setLanguageFlyoutOpen(false); setAccountMenuOpen(false); }}
+                            className="flex items-center gap-[8px] p-2 rounded-[6px] hover:bg-[rgba(79,94,255,0.05)] transition-colors w-full"
+                          >
+                            <Check className={`w-3.5 h-3.5 shrink-0 ${language === 'en' ? 'text-[#4f5eff]' : 'text-transparent'}`} />
+                            <span className={`font-['Inter',sans-serif] text-[13px] ${language === 'en' ? 'font-medium text-[#4f5eff]' : 'font-normal text-[#0a0a0a]'}`}>English</span>
+                          </button>
+                          <button
+                            onClick={() => { setLanguage('zh'); setLanguageFlyoutOpen(false); setAccountMenuOpen(false); }}
+                            className="flex items-center gap-[8px] p-2 rounded-[6px] hover:bg-[rgba(79,94,255,0.05)] transition-colors w-full"
+                          >
+                            <Check className={`w-3.5 h-3.5 shrink-0 ${language === 'zh' ? 'text-[#4f5eff]' : 'text-transparent'}`} />
+                            <span className={`font-['Inter',sans-serif] text-[13px] ${language === 'zh' ? 'font-medium text-[#4f5eff]' : 'font-normal text-[#0a0a0a]'}`}>中文</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
                 <button
-                  onClick={() => {
-                    setAccountMenuOpen(false);
-                    setShowLogoutConfirm(true);
-                  }}
-                  className="flex items-center gap-[8px] px-[12px] py-[8px] rounded-[10px] hover:bg-[#F8F9FC] transition-colors w-full"
+                  onClick={() => { setAccountMenuOpen(false); setShowLogoutConfirm(true); }}
+                  className="flex items-center gap-[8px] p-2 rounded-[6px] hover:bg-[rgba(79,94,255,0.05)] transition-colors w-full"
                 >
-                  <LogOut className="w-4 h-4 text-[#4f4f4f]" />
-                  <span className="font-['Inter',sans-serif] font-medium text-[14px] text-[#1C1C1C]">
+                  <LogOut className="w-4 h-4 text-[#0a0a0a]" />
+                  <span className="font-['Inter',sans-serif] font-normal text-[14px] text-[#0a0a0a]">
                     {t('auth.logout')}
                   </span>
                 </button>
@@ -264,31 +297,24 @@ export default function DashboardLayout() {
       {/* Overlay for mobile sidebar */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/40 z-30 lg:hidden backdrop-blur-sm"
+          className="fixed inset-0 bg-black/40 z-[55] lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Mobile Header with Hamburger */}
-        <div className="lg:hidden bg-white border-b border-[rgba(10,10,10,0.08)] px-4 py-3 flex items-center justify-between sticky top-0 z-20 shadow-sm">
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="text-[#1C1C1C] p-2 -ml-2 hover:bg-slate-100 rounded-lg transition-colors"
-            aria-label="Open menu"
-          >
-            <Menu className="w-6 h-6" />
-          </button>
-          <div className="h-[16px] relative w-[152px]">
+        {/* Mobile Header — logo left, hamburger/X right (Privy pattern) */}
+        <div className="lg:hidden bg-white border-b border-[rgba(10,10,10,0.08)] px-4 py-3 flex items-center justify-between z-50">
+          <div className="h-[18px] relative w-[172px]">
             <svg className="absolute block size-full" fill="none" preserveAspectRatio="xMidYMid meet" viewBox="0 0 188.538 19.9998">
               <g>
-                <path d={svgPaths.p12420d80} fill="#1C1C1C" />
-                <path d={svgPaths.p19bafe80} fill="#1C1C1C" />
-                <path d={svgPaths.p161a0400} fill="#1C1C1C" />
-                <path d={svgPaths.p3456db00} fill="#1C1C1C" />
-                <path d={svgPaths.p5983200} fill="#1C1C1C" />
-                <path d={svgPaths.p35ddbb80} fill="#1C1C1C" />
+                <path d={svgPaths.p12420d80} fill="#0A0A0A" />
+                <path d={svgPaths.p19bafe80} fill="#0A0A0A" />
+                <path d={svgPaths.p161a0400} fill="#0A0A0A" />
+                <path d={svgPaths.p3456db00} fill="#0A0A0A" />
+                <path d={svgPaths.p5983200} fill="#0A0A0A" />
+                <path d={svgPaths.p35ddbb80} fill="#0A0A0A" />
                 <path d={svgPaths.p192f4b80} fill="#4F5EFF" />
                 <path d={svgPaths.p2c193100} fill="#4F5EFF" />
                 <path d={svgPaths.p357a0d00} fill="#4F5EFF" />
@@ -296,18 +322,19 @@ export default function DashboardLayout() {
                 <path d={svgPaths.pf8ab380} fill="#4F5EFF" />
                 <path d={svgPaths.p25b8a100} fill="#4F5EFF" />
                 <path d={svgPaths.p1a427e00} fill="#4F5EFF" />
-                <path d={svgPaths.p37c6db00} fill="#1C1C1C" />
-                <path d={svgPaths.p16c2cc00} fill="#1C1C1C" />
-                <path d={svgPaths.p2ed1f700} fill="#1C1C1C" />
-                <path d={svgPaths.p123d8680} fill="#1C1C1C" />
+                <path d={svgPaths.p37c6db00} fill="#0A0A0A" />
+                <path d={svgPaths.p16c2cc00} fill="#0A0A0A" />
+                <path d={svgPaths.p2ed1f700} fill="#0A0A0A" />
+                <path d={svgPaths.p123d8680} fill="#0A0A0A" />
               </g>
             </svg>
           </div>
           <button
-            onClick={() => setAccountMenuOpen(!accountMenuOpen)}
-            className="w-8 h-8 bg-[rgba(79,94,255,0.1)] border border-[rgba(79,94,255,0.2)] rounded-full flex items-center justify-center"
+            onClick={() => setSidebarOpen(true)}
+            className="text-[#0A0A0A] p-2 -mr-2 hover:bg-slate-100 rounded-lg transition-colors shrink-0"
+            aria-label="Open menu"
           >
-            <User className="w-4 h-4 text-[#4f5eff]" />
+            <Menu className="w-6 h-6" strokeWidth={1.5} />
           </button>
         </div>
 
@@ -326,62 +353,88 @@ export default function DashboardLayout() {
         <>
           <div
             className="lg:hidden fixed inset-0 bg-black/30 z-40"
-            onClick={() => setAccountMenuOpen(false)}
+            onClick={() => { setAccountMenuOpen(false); setMobileLangPanel(false); }}
           />
-          <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl z-50 shadow-2xl animate-slide-up">
-            <div className="p-6">
-              {/* User Info */}
-              <div className="flex items-center gap-3 mb-6 pb-6 border-b border-[#EDEEF3]">
-                <div className="w-12 h-12 bg-[rgba(79,94,255,0.1)] border-2 border-[rgba(79,94,255,0.2)] rounded-full flex items-center justify-center">
-                  <User className="w-6 h-6 text-[#4f5eff]" />
-                </div>
-                <div>
-                  <div className="font-semibold text-base text-slate-900">{user.name}</div>
-                  <div className="text-sm text-slate-500">{user.email}</div>
-                </div>
-              </div>
+          <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl z-50 shadow-2xl animate-slide-up overflow-hidden">
+            {/* Two-panel container */}
+            <div className={`flex transition-transform duration-300 ease-in-out ${mobileLangPanel ? '-translate-x-1/2' : 'translate-x-0'}`} style={{ width: '200%' }}>
 
-              {/* Menu Items */}
-              <div className="space-y-2 mb-6">
-                <Link
-                  to="/dashboard/settings"
-                  onClick={() => setAccountMenuOpen(false)}
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-50 transition-colors active:bg-slate-100"
-                >
-                  <Settings className="w-5 h-5 text-slate-600" />
-                  <span className="font-medium text-slate-900">{t('nav.settings')}</span>
-                </Link>
-
-                <button
-                  onClick={() => setLanguage(language === 'zh' ? 'en' : 'zh')}
-                  className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl bg-slate-50 hover:bg-slate-100 transition-colors"
-                >
-                  <div className="flex items-center gap-3">
-                    <Globe className="w-5 h-5 text-slate-600" />
-                    <span className="font-medium text-slate-900">{t('nav.language')}</span>
+              {/* Panel 1: Main menu */}
+              <div className="w-1/2 p-6">
+                <div className="flex items-center gap-3 mb-6 pb-6 border-b border-[#EDEEF3]">
+                  <div className="w-12 h-12 bg-[#4F4F4F] rounded-full flex items-center justify-center">
+                    <User className="w-6 h-6 text-white" />
                   </div>
-                  <LanguageSwitcher compact />
-                </button>
+                  <div>
+                    <div className="font-['Inter',sans-serif] font-semibold text-[15px] text-[#0a0a0a]">{user.name}</div>
+                    <div className="font-['Inter',sans-serif] text-[13px] text-[#7c7c7c]">{user.email}</div>
+                  </div>
+                </div>
+
+                <div className="space-y-[4px] mb-6">
+                  <Link
+                    to="/dashboard/settings"
+                    onClick={() => { setAccountMenuOpen(false); setMobileLangPanel(false); }}
+                    className="flex items-center gap-[10px] px-[12px] py-[12px] rounded-[10px] hover:bg-[rgba(79,94,255,0.05)] transition-colors"
+                  >
+                    <Settings className="w-[18px] h-[18px] text-[#0a0a0a]" />
+                    <span className="font-['Inter',sans-serif] font-normal text-[14px] text-[#0a0a0a]">{t('nav.settings')}</span>
+                  </Link>
+
+                  <button
+                    onClick={() => setMobileLangPanel(true)}
+                    className="w-full flex items-center gap-[10px] px-[12px] py-[12px] rounded-[10px] hover:bg-[rgba(79,94,255,0.05)] transition-colors"
+                  >
+                    <Globe className="w-[18px] h-[18px] text-[#0a0a0a]" />
+                    <span className="font-['Inter',sans-serif] font-normal text-[14px] text-[#0a0a0a]">{t('nav.language')}</span>
+                    <ChevronRight className="w-4 h-4 text-[#7c7c7c] ml-auto" />
+                  </button>
+
+                  <button
+                    onClick={() => { setAccountMenuOpen(false); setMobileLangPanel(false); setShowLogoutConfirm(true); }}
+                    className="w-full flex items-center gap-[10px] px-[12px] py-[12px] rounded-[10px] hover:bg-[rgba(79,94,255,0.05)] transition-colors"
+                  >
+                    <LogOut className="w-[18px] h-[18px] text-[#0a0a0a]" />
+                    <span className="font-['Inter',sans-serif] font-normal text-[14px] text-[#0a0a0a]">{t('auth.logout')}</span>
+                  </button>
+                </div>
 
                 <button
-                  onClick={() => {
-                    setAccountMenuOpen(false);
-                    setShowLogoutConfirm(true);
-                  }}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-50 transition-colors active:bg-red-100"
+                  onClick={() => { setAccountMenuOpen(false); setMobileLangPanel(false); }}
+                  className="w-full bg-[rgba(10,10,10,0.05)] hover:bg-[rgba(10,10,10,0.08)] text-[#0a0a0a] font-['Inter',sans-serif] font-medium text-[14px] py-[12px] rounded-[10px] transition-colors"
                 >
-                  <LogOut className="w-5 h-5 text-red-600" />
-                  <span className="font-medium text-red-600">{t('auth.logout')}</span>
+                  {t('account.cancel')}
                 </button>
               </div>
 
-              {/* Close Button */}
-              <button
-                onClick={() => setAccountMenuOpen(false)}
-                className="w-full bg-slate-100 hover:bg-slate-200 text-slate-900 font-medium py-3 rounded-xl transition-colors"
-              >
-                Close
-              </button>
+              {/* Panel 2: Language picker */}
+              <div className="w-1/2 p-6">
+                <button
+                  onClick={() => setMobileLangPanel(false)}
+                  className="flex items-center gap-[6px] mb-6 font-['Inter',sans-serif] font-medium text-[14px]"
+                >
+                  <ChevronLeft className="w-4 h-4 text-[#0a0a0a]" />
+                  <span className="text-[#0a0a0a]">{t('nav.language')}</span>
+                </button>
+
+                <div className="space-y-[4px]">
+                  <button
+                    onClick={() => { setLanguage('en'); setMobileLangPanel(false); setAccountMenuOpen(false); }}
+                    className="w-full flex items-center gap-[10px] px-[12px] py-[12px] rounded-[10px] hover:bg-[rgba(79,94,255,0.05)] transition-colors"
+                  >
+                    <Check className={`w-4 h-4 shrink-0 ${language === 'en' ? 'text-[#4f5eff]' : 'text-transparent'}`} />
+                    <span className={`font-['Inter',sans-serif] text-[14px] ${language === 'en' ? 'font-medium text-[#4f5eff]' : 'font-normal text-[#0a0a0a]'}`}>English</span>
+                  </button>
+                  <button
+                    onClick={() => { setLanguage('zh'); setMobileLangPanel(false); setAccountMenuOpen(false); }}
+                    className="w-full flex items-center gap-[10px] px-[12px] py-[12px] rounded-[10px] hover:bg-[rgba(79,94,255,0.05)] transition-colors"
+                  >
+                    <Check className={`w-4 h-4 shrink-0 ${language === 'zh' ? 'text-[#4f5eff]' : 'text-transparent'}`} />
+                    <span className={`font-['Inter',sans-serif] text-[14px] ${language === 'zh' ? 'font-medium text-[#4f5eff]' : 'font-normal text-[#0a0a0a]'}`}>中文</span>
+                  </button>
+                </div>
+              </div>
+
             </div>
           </div>
         </>

@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Send, Paperclip, Plus, MessageSquare, AlertTriangle, CheckCircle, XCircle, ChevronDown, Search, MoreHorizontal, PanelLeftClose, PanelLeftOpen, Bot, Trash2 } from 'lucide-react';
+import { Send, Paperclip, Plus, MessageSquare, AlertTriangle, CheckCircle, XCircle, ChevronDown, Search, MoreHorizontal, PanelLeftClose, PanelLeftOpen, Bot, Trash2, History, X, SquarePen } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
 interface Message {
@@ -40,6 +40,7 @@ export default function AIAssistant() {
   const [chatTitle, setChatTitle] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [mobileHistoryOpen, setMobileHistoryOpen] = useState(false);
   const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -126,6 +127,13 @@ export default function AIAssistant() {
       return () => document.removeEventListener('mousedown', handleClickOutside);
     }
   }, [menuOpenId]);
+
+  // Listen for new-chat event from DashboardLayout header button
+  useEffect(() => {
+    const handler = () => handleNewChat();
+    window.addEventListener('ai-new-chat', handler);
+    return () => window.removeEventListener('ai-new-chat', handler);
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -238,8 +246,44 @@ export default function AIAssistant() {
     setActiveChatId('current');
   };
 
+  // Shared input box — History & New Chat icons live in the toolbar (mobile only), matching ChatGPT/Claude pattern
+  const inputBox = (
+    <div className="bg-white border border-[#EDEEF3] rounded-xl shadow-[0px_4px_16px_0px_rgba(0,0,0,0.08)] flex flex-col">
+      <textarea
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
+        placeholder={t('ai.inputPlaceholder')}
+        className="w-full h-[80px] bg-transparent px-4 pt-3 pb-1 text-[14px] text-slate-900 placeholder-[#C0C0C0] focus:outline-none resize-none"
+      />
+      <div className="flex items-center justify-between px-3 pb-3">
+        {/* Left: attach + mobile-only history */}
+        <div className="flex items-center gap-[2px]">
+          <button onClick={() => fileInputRef.current?.click()} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] text-[#7C7C7C] hover:bg-[#FAFAFA] transition-colors">
+            <Plus className="w-5 h-5" strokeWidth={1.5} />
+          </button>
+          <button
+            onClick={() => setMobileHistoryOpen(true)}
+            className="lg:hidden w-[32px] h-[32px] flex items-center justify-center rounded-[8px] text-[#7C7C7C] hover:bg-[#FAFAFA] transition-colors"
+            aria-label={language === 'zh' ? '对话历史' : 'Chat history'}
+          >
+            <History className="w-[18px] h-[18px]" strokeWidth={1.5} />
+          </button>
+        </div>
+        {/* Right: send */}
+        <button
+          onClick={handleSendMessage}
+          disabled={!inputValue.trim() || isTyping}
+          className="w-[32px] h-[32px] flex items-center justify-center rounded-[10px] bg-[#4f5eff] hover:bg-[#3d4dd9] disabled:bg-slate-200 disabled:cursor-not-allowed text-white transition-all"
+        >
+          <Send className="w-4 h-4" />
+        </button>
+      </div>
+    </div>
+  );
+
   return (
-    <div className="flex -m-4 sm:-m-6 lg:-m-8" style={{ height: 'calc(100vh)' }}>
+    <div className="flex -m-4 sm:-m-6 lg:-m-8 h-screen" style={{ WebkitOverflowScrolling: 'touch' }}>
       <input
         ref={fileInputRef}
         type="file"
@@ -248,16 +292,15 @@ export default function AIAssistant() {
         onChange={(e) => {
           const file = e.target.files?.[0];
           if (file) {
-            // Handle file upload here
             console.log('Selected file:', file.name);
           }
           e.target.value = '';
         }}
       />
-      {/* Chat history sidebar - Monica style */}
+
+      {/* Desktop chat history sidebar */}
       {sidebarOpen && (
-      <div className="w-[280px] bg-white border-r border-[#EDEEF3] flex flex-col shrink-0">
-        {/* Search bar + collapse */}
+      <div className="hidden lg:flex w-[280px] bg-white border-r border-[#EDEEF3] flex-col shrink-0">
         <div className="px-4 pt-5 flex items-center gap-2" style={{ paddingBottom: '16px' }}>
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -266,19 +309,16 @@ export default function AIAssistant() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={language === 'zh' ? '搜索对话...' : 'Search chats...'}
-              className="w-full h-[40px] pl-9 pr-3 text-sm bg-[#F8F9FC] border border-[#EDEEF3] rounded-[10px] text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-[#4f5eff] focus:border-[#4f5eff] transition-colors"
+              className="w-full h-[40px] pl-9 pr-3 text-sm bg-[#FAFAFA] border border-[#EDEEF3] rounded-[10px] text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-[#4f5eff] focus:border-[#4f5eff] transition-colors"
             />
           </div>
           <button
             onClick={() => setSidebarOpen(false)}
-            className="w-[32px] h-[32px] flex items-center justify-center rounded-[6px] hover:bg-[#F8F9FC] transition-colors shrink-0"
-            title={language === 'zh' ? '收起侧边栏' : 'Collapse sidebar'}
+            className="w-[32px] h-[32px] flex items-center justify-center rounded-[6px] hover:bg-[#FAFAFA] transition-colors shrink-0"
           >
-            <PanelLeftClose className="w-5 h-5 text-[#73798B]" strokeWidth={1.5} />
+            <PanelLeftClose className="w-5 h-5 text-[#7C7C7C]" strokeWidth={1.5} />
           </button>
         </div>
-
-        {/* New chat button */}
         <div className="px-4" style={{ paddingBottom: '24px' }}>
           <button
             onClick={handleNewChat}
@@ -288,24 +328,18 @@ export default function AIAssistant() {
             {t('ai.newChat')}
           </button>
         </div>
-
-        {/* Chat list */}
         <div className="flex-1 overflow-y-auto px-2">
           <div className="border-t border-[#EDEEF3] mx-2" style={{ marginBottom: '8px' }} />
           <div className="px-2 py-2">
-            <span className="text-xs text-slate-500">
-              {language === 'zh' ? '对话历史' : 'History'}
-            </span>
+            <span className="text-xs text-slate-500">{language === 'zh' ? '对话历史' : 'History'}</span>
           </div>
           {filteredSessions.map((session) => (
             <div key={session.id} className="relative group">
               <button
                 onClick={() => handleSwitchSession(session)}
-                style={{ paddingTop: '10px', paddingBottom: '10px', fontWeight: activeChatId === session.id ? 500 : 400 }}
+                style={{ paddingTop: '10px', paddingBottom: '10px', fontWeight: 400 }}
                 className={`w-full text-left px-3 pr-8 rounded-[10px] text-sm transition-colors truncate ${
-                  activeChatId === session.id
-                    ? 'bg-[#EDEEF3] text-[#4f5eff]'
-                    : 'text-slate-700 hover:bg-[#EDEEF3]'
+                  activeChatId === session.id ? 'bg-[#EDEEF3] text-[#4f5eff]' : 'text-slate-700 hover:bg-[#EDEEF3]'
                 }`}
               >
                 {session.title}
@@ -316,13 +350,13 @@ export default function AIAssistant() {
                   activeChatId === session.id || menuOpenId === session.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
                 }`}
               >
-                <MoreHorizontal style={{ width: '14px', height: '14px', color: '#73798B' }} />
+                <MoreHorizontal style={{ width: '14px', height: '14px', color: '#7C7C7C' }} />
               </button>
               {menuOpenId === session.id && (
                 <div ref={menuRef} className="absolute right-0 top-full mt-1 bg-white rounded-lg shadow-lg border border-[#EDEEF3] py-1 z-50" style={{ minWidth: '120px' }}>
                   <button
                     onClick={(e) => { e.stopPropagation(); setDeleteConfirmId(session.id); setMenuOpenId(null); }}
-                    className="w-full text-left px-3 py-2 text-sm text-red-500 hover:bg-[#F8F9FC] flex items-center gap-2"
+                    className="w-full text-left px-3 py-2 text-sm text-red-500 hover:bg-[#FAFAFA] flex items-center gap-2"
                   >
                     <Trash2 style={{ width: '14px', height: '14px' }} />
                     {language === 'zh' ? '删除' : 'Delete'}
@@ -331,27 +365,16 @@ export default function AIAssistant() {
               )}
             </div>
           ))}
-          {/* Delete confirmation dialog */}
           {deleteConfirmId && (
             <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50" onClick={() => setDeleteConfirmId(null)}>
               <div className="bg-white rounded-xl p-6 shadow-xl" style={{ maxWidth: '360px', width: '90%' }} onClick={e => e.stopPropagation()}>
-                <p className="text-base font-medium text-slate-900 mb-2">
-                  {language === 'zh' ? '确认删除' : 'Confirm Delete'}
-                </p>
-                <p className="text-sm text-slate-500 mb-6">
-                  {language === 'zh' ? '确定要删除这条对话历史吗？此操作不可撤销。' : 'Are you sure you want to delete this conversation? This action cannot be undone.'}
-                </p>
+                <p className="text-base font-medium text-slate-900 mb-2">{language === 'zh' ? '确认删除' : 'Confirm Delete'}</p>
+                <p className="text-sm text-slate-500 mb-6">{language === 'zh' ? '确定要删除这条对话历史吗？此操作不可撤销。' : 'Are you sure you want to delete this conversation? This action cannot be undone.'}</p>
                 <div className="flex gap-3 justify-end">
-                  <button
-                    onClick={() => setDeleteConfirmId(null)}
-                    className="px-4 py-2 text-sm text-slate-700 bg-[#F8F9FC] rounded-lg hover:bg-[#EDEEF3] transition-colors"
-                  >
+                  <button onClick={() => setDeleteConfirmId(null)} className="px-4 py-2 text-sm text-slate-700 bg-[#FAFAFA] rounded-lg hover:bg-[#EDEEF3] transition-colors">
                     {language === 'zh' ? '取消' : 'Cancel'}
                   </button>
-                  <button
-                    onClick={() => handleDeleteSession(deleteConfirmId)}
-                    className="px-4 py-2 text-sm text-white bg-red-500 rounded-lg hover:bg-red-600 transition-colors"
-                  >
+                  <button onClick={() => handleDeleteSession(deleteConfirmId)} className="px-4 py-2 text-sm text-white bg-red-500 rounded-lg hover:bg-red-600 transition-colors">
                     {language === 'zh' ? '删除' : 'Delete'}
                   </button>
                 </div>
@@ -363,187 +386,213 @@ export default function AIAssistant() {
       )}
 
       {/* Chat area */}
-      <div className={`flex-1 flex flex-col bg-white overflow-hidden relative ${messages.length === 0 ? 'justify-center' : ''}`}>
-          {/* Expand sidebar button */}
-          {!sidebarOpen && (
-            <div className={`px-4 ${messages.length === 0 ? 'absolute top-0 left-0' : ''}`} style={{ paddingTop: '24px' }}>
-              <button
-                onClick={() => setSidebarOpen(true)}
-                className="w-[32px] h-[32px] flex items-center justify-center rounded-[6px] hover:bg-[#F8F9FC] transition-colors"
-                title={language === 'zh' ? '展开侧边栏' : 'Expand sidebar'}
-              >
-                <PanelLeftOpen className="w-5 h-5 text-[#73798B]" strokeWidth={1.5} />
-              </button>
-            </div>
-          )}
+      <div className="flex-1 flex flex-col bg-white overflow-hidden relative">
 
-          {/* Messages area */}
-          {messages.length > 0 && (
-          <div className="flex-1 overflow-y-auto px-6 pb-6 flex flex-col items-center" style={{ gap: '32px', paddingTop: '32px' }}>
-            <div className="w-full max-w-[768px] flex-1" style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+        {/* Desktop: expand sidebar button */}
+        {!sidebarOpen && (
+          <div className={`hidden lg:block px-4 ${messages.length === 0 ? 'absolute top-0 left-0' : ''}`} style={{ paddingTop: '24px' }}>
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="w-[32px] h-[32px] flex items-center justify-center rounded-[6px] hover:bg-[#FAFAFA] transition-colors"
+            >
+              <PanelLeftOpen className="w-5 h-5 text-[#7C7C7C]" strokeWidth={1.5} />
+            </button>
+          </div>
+        )}
 
-            {messages.map((message) => (
-              <div key={message.id}>
-                {message.role === 'approval' && message.approvalData ? (
-                  <div className="flex justify-center">
-                    <div className="bg-white border-2 border-yellow-300 rounded-xl p-4 w-full max-w-md shadow-sm">
-                      <div className="flex items-center mb-3">
-                        <AlertTriangle className="w-5 h-5 text-yellow-600 mr-2" />
-                        <h4 className="font-semibold text-slate-900">{t('ai.approvalRequest')}</h4>
+        {/* Messages — scrollable, fills remaining space */}
+        {messages.length > 0 && (
+          <div className="flex-1 overflow-y-auto px-4 lg:px-6 pb-4 flex flex-col items-center" style={{ gap: '24px', paddingTop: '24px' }}>
+            <div className="w-full max-w-[768px]" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              {messages.map((message) => (
+                <div key={message.id}>
+                  {message.role === 'approval' && message.approvalData ? (
+                    <div className="flex justify-center">
+                      <div className="bg-white border-2 border-yellow-300 rounded-xl p-4 w-full max-w-md shadow-sm">
+                        <div className="flex items-center mb-3">
+                          <AlertTriangle className="w-5 h-5 text-yellow-600 mr-2" />
+                          <h4 className="font-semibold text-slate-900">{t('ai.approvalRequest')}</h4>
+                        </div>
+                        <div className="space-y-2 mb-4">
+                          <div className="flex justify-between text-sm">
+                            <span className="text-slate-500">{t('ai.operation')}:</span>
+                            <span className="font-medium text-slate-900">{message.approvalData.operation}</span>
+                          </div>
+                          <div className="flex justify-between text-sm">
+                            <span className="text-slate-500">{t('ai.amount')}:</span>
+                            <span className="font-medium text-slate-900">{message.approvalData.amount}</span>
+                          </div>
+                          <div className="flex justify-between text-sm">
+                            <span className="text-slate-500">{t('ai.target')}:</span>
+                            <span className="font-medium text-slate-900 font-mono">{message.approvalData.target}</span>
+                          </div>
+                          <div className="border-t border-[#EDEEF3] pt-2 mt-2">
+                            <span className="text-xs text-slate-500">{t('ai.reason')}: </span>
+                            <span className="text-xs text-yellow-700">{message.approvalData.reason}</span>
+                          </div>
+                        </div>
+                        {message.approvalData.status === 'pending' ? (
+                          <div className="flex gap-2">
+                            <button onClick={() => handleApproval(message.id, 'approved')} className="flex-1 bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
+                              <CheckCircle className="w-4 h-4" />{t('ai.approve')}
+                            </button>
+                            <button onClick={() => handleApproval(message.id, 'rejected')} className="flex-1 bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
+                              <XCircle className="w-4 h-4" />{t('ai.reject')}
+                            </button>
+                          </div>
+                        ) : (
+                          <div className={`text-center py-2 px-4 rounded-lg ${message.approvalData.status === 'approved' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                            <div className="flex items-center justify-center gap-2">
+                              {message.approvalData.status === 'approved'
+                                ? <><CheckCircle className="w-4 h-4" /><span className="font-medium">{t('ai.approved')}</span></>
+                                : <><XCircle className="w-4 h-4" /><span className="font-medium">{t('ai.rejected')}</span></>}
+                            </div>
+                          </div>
+                        )}
                       </div>
-                      <div className="space-y-2 mb-4">
-                        <div className="flex justify-between text-sm">
-                          <span className="text-slate-500">{t('ai.operation')}:</span>
-                          <span className="font-medium text-slate-900">{message.approvalData.operation}</span>
-                        </div>
-                        <div className="flex justify-between text-sm">
-                          <span className="text-slate-500">{t('ai.amount')}:</span>
-                          <span className="font-medium text-slate-900">{message.approvalData.amount}</span>
-                        </div>
-                        <div className="flex justify-between text-sm">
-                          <span className="text-slate-500">{t('ai.target')}:</span>
-                          <span className="font-medium text-slate-900 font-mono">{message.approvalData.target}</span>
-                        </div>
-                        <div className="border-t border-[#EDEEF3] pt-2 mt-2">
-                          <span className="text-xs text-slate-500">{t('ai.reason')}: </span>
-                          <span className="text-xs text-yellow-700">{message.approvalData.reason}</span>
-                        </div>
-                      </div>
-                      {message.approvalData.status === 'pending' ? (
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => handleApproval(message.id, 'approved')}
-                            className="flex-1 bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
-                          >
-                            <CheckCircle className="w-4 h-4" />
-                            {t('ai.approve')}
-                          </button>
-                          <button
-                            onClick={() => handleApproval(message.id, 'rejected')}
-                            className="flex-1 bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
-                          >
-                            <XCircle className="w-4 h-4" />
-                            {t('ai.reject')}
-                          </button>
+                    </div>
+                  ) : (
+                    <div className={`flex items-start ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                      {message.role === 'assistant' ? (
+                        <div className="bg-transparent text-slate-900 w-full">
+                          <div style={{ fontSize: '14px', lineHeight: '20px', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: '#4f5eff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                              <Bot style={{ width: '12px', height: '12px', color: 'white' }} />
+                            </div>
+                            <span style={{ fontWeight: 600 }}>Cobo<span style={{ color: '#4f5eff' }}>Agentic</span>Wallet</span>
+                          </div>
+                          <div className="whitespace-pre-wrap" style={{ fontSize: '14px', lineHeight: '20px' }}>{message.content}</div>
                         </div>
                       ) : (
-                        <div className={`text-center py-2 px-4 rounded-lg ${
-                          message.approvalData.status === 'approved'
-                            ? 'bg-green-100 text-green-700'
-                            : 'bg-red-100 text-red-700'
-                        }`}>
-                          <div className="flex items-center justify-center gap-2">
-                            {message.approvalData.status === 'approved'
-                              ? <><CheckCircle className="w-4 h-4" /><span className="font-medium">{t('ai.approved')}</span></>
-                              : <><XCircle className="w-4 h-4" /><span className="font-medium">{t('ai.rejected')}</span></>
-                            }
-                          </div>
+                        <div className="bg-[#EDEEF3] text-slate-900 max-w-[80%] rounded-[10px] px-4 py-3">
+                          <div className="whitespace-pre-wrap" style={{ fontSize: '14px', lineHeight: '20px' }}>{message.content}</div>
                         </div>
                       )}
                     </div>
-                  </div>
-                ) : (
-                  <div className={`flex items-start ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                    {message.role === 'assistant' ? (
-                      <div className="bg-transparent text-slate-900 w-full">
-                        <div style={{ fontSize: '14px', lineHeight: '20px', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: '#4f5eff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                            <Bot style={{ width: '12px', height: '12px', color: 'white' }} />
-                          </div>
-                          <span style={{ fontWeight: 600 }}>Cobo<span style={{ color: '#4f5eff' }}>Agentic</span>Wallet</span>
-                        </div>
-                        <div className="whitespace-pre-wrap" style={{ fontSize: '14px', lineHeight: '20px' }}>{message.content}</div>
-                      </div>
-                    ) : (
-                      <div className="bg-[#EDEEF3] text-slate-900 max-w-[80%] rounded-[10px] px-4 py-3">
-                        <div className="whitespace-pre-wrap" style={{ fontSize: '14px', lineHeight: '20px' }}>{message.content}</div>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            ))}
-
-            {isTyping && (
-              <div className="flex items-start">
-                <div className="bg-white border border-[#EDEEF3] rounded-2xl px-4 py-3">
-                  <div className="flex space-x-1.5">
-                    <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                    <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                    <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                  )}
+                </div>
+              ))}
+              {isTyping && (
+                <div className="flex items-start">
+                  <div className="px-1 py-3">
+                    <div className="flex space-x-1">
+                      <div className="w-1.5 h-1.5 bg-[#4f5eff]/30 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                      <div className="w-1.5 h-1.5 bg-[#4f5eff]/30 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                      <div className="w-1.5 h-1.5 bg-[#4f5eff]/30 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
-            <div ref={messagesEndRef} />
+              )}
+              <div ref={messagesEndRef} />
             </div>
           </div>
-          )}
+        )}
 
-          {/* Empty state: welcome text + input centered together */}
-          {messages.length === 0 && (
-            <div className="flex justify-center px-6" style={{ marginTop: '-60px' }}>
-              <div className="w-full max-w-[768px]">
-                <p style={{ fontSize: '36px', lineHeight: '46px', color: '#1C1C1C', marginBottom: '40px', textAlign: 'center' }}>
-                  {language === 'zh' ? '有什么可以帮到您？' : 'How can I help you?'}
-                </p>
-                <div className="bg-white border border-[#EDEEF3] rounded-xl shadow-[0px_4px_16px_0px_rgba(0,0,0,0.08)] flex flex-col">
-                  <textarea
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
-                    placeholder={t('ai.inputPlaceholder')}
-                    className="w-full h-[80px] bg-transparent px-4 pt-3 pb-1 text-sm text-slate-900 placeholder-slate-400 focus:outline-none resize-none"
-                  />
-                  <div className="flex items-center justify-between px-3 pb-3">
-                    <button onClick={() => fileInputRef.current?.click()} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] text-slate-500 hover:bg-[#F8F9FC] transition-colors">
-                      <Plus className="w-5 h-5" strokeWidth={1.5} />
-                    </button>
-                    <button
-                      onClick={handleSendMessage}
-                      disabled={!inputValue.trim() || isTyping}
-                      className="w-[32px] h-[32px] flex items-center justify-center rounded-[10px] bg-[#4f5eff] hover:bg-[#3d4dd9] disabled:bg-slate-200 disabled:cursor-not-allowed text-white transition-all"
-                    >
-                      <Send className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Input area - only shown when there are messages */}
-          {messages.length > 0 && (
-          <div className="bg-white px-6 pb-[24px] flex justify-center">
-            <div className="w-full max-w-[768px]">
-            {/* Text input with toolbar + send */}
-            <div className="bg-white border border-[#EDEEF3] rounded-xl shadow-[0px_4px_16px_0px_rgba(0,0,0,0.08)] flex flex-col">
-              {/* Textarea */}
-              <textarea
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
-                placeholder={t('ai.inputPlaceholder')}
-                className="w-full h-[80px] bg-transparent px-4 pt-3 pb-1 text-sm text-slate-900 placeholder-slate-400 focus:outline-none resize-none"
-              />
-              {/* Bottom toolbar: model selector + file upload + send */}
-              <div className="flex items-center justify-between px-3 pb-3">
-                <button onClick={() => fileInputRef.current?.click()} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] text-slate-500 hover:bg-[#F8F9FC] transition-colors">
-                  <Plus className="w-5 h-5" strokeWidth={1.5} />
-                </button>
+        {/* Empty state: welcome + starter prompts */}
+        {messages.length === 0 && (
+          <div className="flex-1 flex flex-col items-center justify-center px-6 pb-2">
+            <p className="text-[26px] sm:text-[32px] lg:text-[36px] font-semibold text-[#0A0A0A] text-center leading-tight">
+              {language === 'zh' ? '有什么可以帮到您？' : 'How can I help you?'}
+            </p>
+            <div className="flex flex-wrap justify-center gap-2 mt-6 max-w-[560px]">
+              {(language === 'zh'
+                ? [
+                    { icon: '🚀', label: '如何安装 Agent' },
+                    { icon: '🔐', label: '设置安全策略' },
+                    { icon: '💸', label: '查看转账权限' },
+                    { icon: '⛽', label: 'Gas 费用优化' },
+                  ]
+                : [
+                    { icon: '🚀', label: 'How to install Agent' },
+                    { icon: '🔐', label: 'Set up security policies' },
+                    { icon: '💸', label: 'Check transfer permissions' },
+                    { icon: '⛽', label: 'Optimize gas fees' },
+                  ]
+              ).map((prompt) => (
                 <button
-                  onClick={handleSendMessage}
-                  disabled={!inputValue.trim() || isTyping}
-                  className="w-[32px] h-[32px] flex items-center justify-center rounded-[10px] bg-[#4f5eff] hover:bg-[#3d4dd9] disabled:bg-slate-200 disabled:cursor-not-allowed text-white transition-all"
+                  key={prompt.label}
+                  onClick={() => { setInputValue(prompt.label); }}
+                  className="flex items-center gap-2 px-4 py-2.5 bg-[#F5F5F7] hover:bg-[#EDEEF3] text-sm text-[#0A0A0A] rounded-full transition-colors"
                 >
-                  <Send className="w-4 h-4" />
+                  <span>{prompt.icon}</span>
+                  <span>{prompt.label}</span>
                 </button>
-              </div>
-            </div>
+              ))}
             </div>
           </div>
+        )}
+
+        {/* Input — always pinned at bottom */}
+        <div className="bg-white px-4 lg:px-6 pb-4 lg:pb-6 pt-2 flex justify-center shrink-0">
+          <div className="w-full max-w-[768px]">
+            {inputBox}
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile history — right-side drawer (left reserved for main nav) */}
+      <div
+        className={`lg:hidden fixed top-0 right-0 h-screen w-[80vw] max-w-[320px] bg-white z-[60] flex flex-col shadow-2xl border-l border-[#EDEEF3] transition-transform duration-300 ease-in-out ${
+          mobileHistoryOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between px-4 pt-5 pb-3 shrink-0 border-b border-[#EDEEF3]">
+          <span className="font-['Inter',sans-serif] font-semibold text-[15px] text-[#0A0A0A]">
+            {language === 'zh' ? '对话历史' : 'Chat History'}
+          </span>
+          <button onClick={() => setMobileHistoryOpen(false)} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] hover:bg-[#FAFAFA] transition-colors">
+            <X className="w-[18px] h-[18px] text-[#7C7C7C]" strokeWidth={1.5} />
+          </button>
+        </div>
+        {/* New chat */}
+        <div className="px-4 pt-3 pb-2 shrink-0">
+          <button
+            onClick={() => { handleNewChat(); setMobileHistoryOpen(false); }}
+            className="w-full h-[38px] flex items-center justify-center gap-2 text-[13px] font-medium text-[#4f5eff] border border-[#4f5eff] rounded-[10px] hover:bg-[rgba(79,94,255,0.04)] transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            {t('ai.newChat')}
+          </button>
+        </div>
+        {/* Search */}
+        <div className="px-4 pb-3 shrink-0">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={language === 'zh' ? '搜索对话...' : 'Search chats...'}
+              className="w-full h-[36px] pl-9 pr-3 text-sm bg-[#FAFAFA] border border-[#EDEEF3] rounded-[8px] text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-[#4f5eff] transition-colors"
+            />
+          </div>
+        </div>
+        {/* Session list — scrolls top-down, newest first */}
+        <div className="overflow-y-auto flex-1 px-2 pb-6">
+          {filteredSessions.length === 0 ? (
+            <p className="text-center text-[13px] text-[#7C7C7C] pt-8">
+              {language === 'zh' ? '暂无对话记录' : 'No conversations yet'}
+            </p>
+          ) : (
+            filteredSessions.map((session) => (
+              <button
+                key={session.id}
+                onClick={() => { handleSwitchSession(session); setMobileHistoryOpen(false); }}
+                className={`w-full text-left px-3 py-[10px] rounded-[8px] text-[14px] mb-[2px] transition-colors truncate ${
+                  activeChatId === session.id ? 'bg-[#EDEEF3] text-[#4f5eff] font-normal' : 'text-[#0A0A0A] font-normal hover:bg-[#FAFAFA]'
+                }`}
+              >
+                {session.title}
+              </button>
+            ))
           )}
         </div>
       </div>
+      {/* Backdrop — sits below top nav */}
+      {mobileHistoryOpen && (
+        <div className="lg:hidden fixed inset-0 bg-black/20 z-[55]" onClick={() => setMobileHistoryOpen(false)} />
+      )}
+    </div>
   );
 }

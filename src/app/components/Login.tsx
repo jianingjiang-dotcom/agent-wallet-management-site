@@ -14,13 +14,18 @@ export default function Login() {
   const [magicLinkSent, setMagicLinkSent] = useState(false);
 
   const handleSocialLogin = (provider: string) => {
-    // Simulate social login
+    // Simulate social login with realistic mock data
+    const mockData: Record<string, { name: string; email: string }> = {
+      Google: { name: 'Olivia Tay', email: 'olivia.tay@gmail.com' },
+      Apple:  { name: 'Olivia Tay', email: 'olivia.tay@icloud.com' },
+    };
+    const { name, email } = mockData[provider] ?? { name: provider + ' User', email: `user@${provider.toLowerCase()}.com` };
     const socialUser = {
       id: Date.now().toString(),
-      name: 'Account',
-      email: `user@${provider.toLowerCase()}.com`,
-      createdAt: new Date().toISOString(),
-      walletPaired: false, // New user needs onboarding
+      name,
+      email,
+      createdAt: '2025-08-14T09:23:00.000Z',
+      walletPaired: false,
     };
     // Clear previous wallet data for a fresh start
     localStorage.removeItem('agent_wallet_wallets');
@@ -39,10 +44,10 @@ export default function Login() {
   const handleMagicLinkLogin = () => {
     const magicLinkUser = {
       id: Date.now().toString(),
-      name: 'Account',
+      name: magicLinkEmail.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
       email: magicLinkEmail,
-      createdAt: new Date().toISOString(),
-      walletPaired: false, // New user needs onboarding
+      createdAt: '2025-08-14T09:23:00.000Z',
+      walletPaired: false,
     };
     localStorage.setItem('agent_wallet_current_user', JSON.stringify(magicLinkUser));
     navigate('/dashboard');
@@ -56,13 +61,50 @@ export default function Login() {
     if (newCount >= 5) {
       const defaultUser = {
         id: 'default',
-        name: 'Demo User',
-        email: '111',
-        createdAt: new Date().toISOString(),
+        name: 'Olivia Tay',
+        email: 'olivia.tay@gmail.com',
+        createdAt: '2025-08-14T09:23:00.000Z',
+        walletPaired: true,
       };
       localStorage.setItem('agent_wallet_current_user', JSON.stringify(defaultUser));
       navigate('/dashboard');
     }
+  };
+
+  const loginAs = (type: 'new' | 'existing') => {
+    const mockUser = {
+      id: 'demo-' + type,
+      name: 'Olivia Tay',
+      email: 'olivia.tay@icloud.com',
+      createdAt: '2025-08-14T09:23:00.000Z',
+      walletPaired: type === 'existing',
+    };
+    localStorage.removeItem('agent_wallet_wallets');
+    localStorage.setItem('agent_wallet_current_user', JSON.stringify(mockUser));
+
+    if (type === 'existing') {
+      // Seed a realistic wallet so the dashboard loads without triggering onboarding
+      const mockWallet = {
+        wallets: [{
+          id: 'wallet-demo-1',
+          name: 'Main Wallet',
+          address: '0x3f5ce5fbfe3e9af3971dd833d26ba9b5c936f0be',
+          createdAt: '2025-08-14T09:23:00.000Z',
+          delegation: {
+            agentId: 'agent-demo-1',
+            agentName: 'Trading Agent',
+            status: 'active',
+            connectedAt: '2025-08-14T09:23:00.000Z',
+            permissions: ['transfer', 'contractCall', 'swap'],
+            policy: { singleTxLimit: 10, dailyLimit: 50, approvalRequired: true },
+          },
+        }],
+        selectedWalletId: null,
+      };
+      localStorage.setItem('agent_wallet_wallets', JSON.stringify(mockWallet));
+    }
+
+    navigate('/dashboard');
   };
 
   return (
@@ -211,6 +253,7 @@ export default function Login() {
                 {t('auth.privacyNotice')}
               </p>
             </div>
+
           </div>
         </div>
 
