@@ -28,7 +28,7 @@ export default function Gasless() {
             {t('gasAccount.comingSoonBadge')}
           </span>
         </div>
-        <h2 className="font-['Inter',sans-serif] font-semibold text-[20px] text-[#0a0a0a] mb-2">
+        <h2 className="font-['Inter',sans-serif] font-semibold text-[20px] text-[#0a0a0a] mb-2 text-center">
           {t('gasAccount.comingSoonTitle')}
         </h2>
         <p className="font-['Inter',sans-serif] font-normal text-[14px] text-[#7c7c7c] text-center max-w-md leading-relaxed">
