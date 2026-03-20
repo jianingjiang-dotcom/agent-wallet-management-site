@@ -88,6 +88,7 @@ export default function OnboardingMessageRenderer({ data, callbacks }: Props) {
             walletId={data.payload?.walletId || ''}
             agentId={data.payload?.agentId || ''}
             onComplete={callbacks.onComplete}
+            completed={data.status === 'completed'}
           />
         </div>
       );

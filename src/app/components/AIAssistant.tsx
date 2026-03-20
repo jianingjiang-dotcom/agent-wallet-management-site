@@ -70,12 +70,6 @@ export default function AIAssistant() {
     onCommandCopy: onboarding.handleCommandCopy,
     onCommandRefresh: onboarding.handleCommandRefresh,
     onComplete: () => {
-      // Preserve onboarding messages into the current chat session
-      const onboardingMsgs: Message[] = onboarding.onboardingMessages.map(msg => ({
-        ...msg,
-        role: msg.onboardingData ? 'onboarding' as const : msg.role as Message['role'],
-      }));
-
       const result = onboarding.handleComplete();
       if (result) {
         addWalletWithAgent({
@@ -84,14 +78,35 @@ export default function AIAssistant() {
           policy: result.policy,
         });
 
-        // Merge onboarding messages into current chat and create a session
-        setMessages(onboardingMsgs);
+        // Convert onboarding messages — mark success card as completed so button hides
+        const onboardingMsgs: Message[] = onboarding.onboardingMessages.map(msg => ({
+          ...msg,
+          role: msg.onboardingData ? 'onboarding' as const : msg.role as Message['role'],
+          onboardingData: msg.onboardingData?.step === 'success'
+            ? { ...msg.onboardingData, status: 'completed' as const }
+            : msg.onboardingData,
+        }));
+
+        // Add a welcome message after onboarding
+        const welcomeMsg: Message = {
+          id: 'welcome-' + Date.now(),
+          role: 'assistant',
+          content: language === 'zh'
+            ? '恭喜！你的 Agent Wallet 已经准备就绪 🎉\n\n现在你可以随时向我提问，例如：\n• 查看钱包状态和余额\n• 调整风控策略\n• 了解支持的功能\n\n有什么我可以帮你的吗？'
+            : 'Congratulations! Your Agent Wallet is ready 🎉\n\nYou can now ask me anything, for example:\n• Check wallet status and balance\n• Adjust risk control policies\n• Learn about supported features\n\nHow can I help you?',
+          timestamp: new Date(),
+        };
+
+        const allMsgs = [...onboardingMsgs, welcomeMsg];
+        setMessages(allMsgs);
+
+        // Create session entry in sidebar
         const sessionTitle = language === 'zh' ? '钱包创建' : 'Wallet Setup';
         const newSessionId = 'onboarding-' + Date.now();
         setActiveChatId(newSessionId);
         setChatTitle(sessionTitle);
         setChatSessions(prev => [
-          { id: newSessionId, title: sessionTitle, timestamp: new Date(), messages: onboardingMsgs },
+          { id: newSessionId, title: sessionTitle, timestamp: new Date(), messages: allMsgs },
           ...prev,
         ]);
       }
