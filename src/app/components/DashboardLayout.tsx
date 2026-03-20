@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Outlet, useNavigate, Link, useLocation } from 'react-router';
-import { Wallet, MessageSquareMore, LogOut, Menu, X, User, Fuel, ReceiptJapaneseYen, Settings, Globe, ChevronRight } from 'lucide-react';
+import { Wallet, LogOut, Menu, X, User, Fuel, ReceiptJapaneseYen, Settings, Globe, ChevronRight } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useWalletStore } from '../hooks/useWalletStore';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -8,6 +8,15 @@ import OnboardingModal from './Onboarding';
 import AgentPairingModal from './AgentPairingModal';
 import ClaimWalletModal from './ClaimWalletModal';
 import WalletDelegationModal from './WalletDelegationModal';
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from "./ui/dialog";
+import WalletAgentPage from './WalletAgentPage';
+import Gasless from './Gasless';
+import Billing from './Billing';
+import AccountSettings from './AccountSettings';
 import svgPaths from "../../imports/svg-zu39gs7vho";
 
 export default function DashboardLayout() {
@@ -22,6 +31,8 @@ export default function DashboardLayout() {
   const [showAgentPairing, setShowAgentPairing] = useState(false);
   const [showClaimWallet, setShowClaimWallet] = useState(false);
   const [delegationTarget, setDelegationTarget] = useState<{ open: boolean; walletId: string }>({ open: false, walletId: "" });
+  const [activeModal, setActiveModal] = useState<'wallet' | 'gas' | 'billing' | 'settings' | null>(null);
+  const accountMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const currentUser = localStorage.getItem('agent_wallet_current_user');
@@ -30,13 +41,24 @@ export default function DashboardLayout() {
     } else {
       const parsed = JSON.parse(currentUser);
       setUser(parsed);
-      // Onboarding auto-open is now handled by WalletAgentPage
     }
   }, [navigate]);
 
+  // Close account menu on click outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (accountMenuRef.current && !accountMenuRef.current.contains(e.target as Node)) {
+        setAccountMenuOpen(false);
+      }
+    };
+    if (accountMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [accountMenuOpen]);
+
   const handleOnboardingClose = () => {
     setShowOnboarding(false);
-    // Re-read user to reflect any changes from onboarding
     const currentUser = localStorage.getItem('agent_wallet_current_user');
     if (currentUser) {
       setUser(JSON.parse(currentUser));
@@ -84,53 +106,55 @@ export default function DashboardLayout() {
     addAgent({ id: agent.agentId, name: agent.agentName });
   };
 
-  const primaryItems = [
-    { path: '/dashboard', label: t('nav.walletAgent'), icon: Wallet },
-    { path: '/dashboard/chat', label: t('nav.chat'), icon: MessageSquareMore },
-    { path: '/dashboard/gas-account', label: t('nav.gasAccount'), icon: Fuel },
-  ];
-
-  const secondaryItems = [
-    { path: '/dashboard/billing', label: t('nav.billing'), icon: ReceiptJapaneseYen },
+  // Nav items for user menu — open modals instead of navigating
+  const navItems: { key: 'wallet' | 'gas' | 'billing' | 'settings'; label: string; icon: typeof Wallet }[] = [
+    { key: 'wallet', label: t('nav.walletAgent'), icon: Wallet },
+    { key: 'gas', label: t('nav.gasAccount'), icon: Fuel },
+    { key: 'billing', label: t('nav.billing'), icon: ReceiptJapaneseYen },
+    { key: 'settings', label: t('nav.settings'), icon: Settings },
   ];
 
   if (!user) return null;
 
+  const LogoSvg = () => (
+    <svg className="absolute block size-full" fill="none" preserveAspectRatio="xMidYMid meet" viewBox="0 0 188.538 19.9998">
+      <g>
+        <path d={svgPaths.p12420d80} fill="#1C1C1C" />
+        <path d={svgPaths.p19bafe80} fill="#1C1C1C" />
+        <path d={svgPaths.p161a0400} fill="#1C1C1C" />
+        <path d={svgPaths.p3456db00} fill="#1C1C1C" />
+        <path d={svgPaths.p5983200} fill="#1C1C1C" />
+        <path d={svgPaths.p35ddbb80} fill="#1C1C1C" />
+        <path d={svgPaths.p192f4b80} fill="#4F5EFF" />
+        <path d={svgPaths.p2c193100} fill="#4F5EFF" />
+        <path d={svgPaths.p357a0d00} fill="#4F5EFF" />
+        <path d={svgPaths.p26dee800} fill="#4F5EFF" />
+        <path d={svgPaths.pf8ab380} fill="#4F5EFF" />
+        <path d={svgPaths.p25b8a100} fill="#4F5EFF" />
+        <path d={svgPaths.p1a427e00} fill="#4F5EFF" />
+        <path d={svgPaths.p37c6db00} fill="#1C1C1C" />
+        <path d={svgPaths.p16c2cc00} fill="#1C1C1C" />
+        <path d={svgPaths.p2ed1f700} fill="#1C1C1C" />
+        <path d={svgPaths.p123d8680} fill="#1C1C1C" />
+      </g>
+    </svg>
+  );
+
   return (
-    <div className="min-h-screen bg-[#F8F9FC] flex">
-      {/* Sidebar - Desktop: sticky, Mobile: slide-in drawer */}
+    <div className="min-h-screen bg-[#FAFAFA] flex">
+      {/* Sidebar */}
       <aside
         className={`
-          fixed lg:sticky top-0 left-0 h-screen w-[280px] sm:w-[228px] lg:w-[220px] bg-white flex flex-col z-40 border-r border-[#EDEEF3]
+          fixed lg:sticky top-0 left-0 h-screen w-[280px] sm:w-[260px] lg:w-[260px] bg-[#FAFAFA] flex flex-col z-40 border-r border-[#EBEBEB]
           transition-transform duration-300 ease-in-out
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
           shadow-xl lg:shadow-none
         `}
       >
         {/* Logo */}
-        <div className="bg-[#F8F9FC] pt-[32px] pb-[32px] flex items-center justify-between px-[24px]">
+        <div className="pt-[24px] pb-[16px] flex items-center justify-between px-[20px]">
           <div className="h-[18px] relative w-[172px]">
-            <svg className="absolute block size-full" fill="none" preserveAspectRatio="xMidYMid meet" viewBox="0 0 188.538 19.9998">
-              <g>
-                <path d={svgPaths.p12420d80} fill="#1C1C1C" />
-                <path d={svgPaths.p19bafe80} fill="#1C1C1C" />
-                <path d={svgPaths.p161a0400} fill="#1C1C1C" />
-                <path d={svgPaths.p3456db00} fill="#1C1C1C" />
-                <path d={svgPaths.p5983200} fill="#1C1C1C" />
-                <path d={svgPaths.p35ddbb80} fill="#1C1C1C" />
-                <path d={svgPaths.p192f4b80} fill="#4F5EFF" />
-                <path d={svgPaths.p2c193100} fill="#4F5EFF" />
-                <path d={svgPaths.p357a0d00} fill="#4F5EFF" />
-                <path d={svgPaths.p26dee800} fill="#4F5EFF" />
-                <path d={svgPaths.pf8ab380} fill="#4F5EFF" />
-                <path d={svgPaths.p25b8a100} fill="#4F5EFF" />
-                <path d={svgPaths.p1a427e00} fill="#4F5EFF" />
-                <path d={svgPaths.p37c6db00} fill="#1C1C1C" />
-                <path d={svgPaths.p16c2cc00} fill="#1C1C1C" />
-                <path d={svgPaths.p2ed1f700} fill="#1C1C1C" />
-                <path d={svgPaths.p123d8680} fill="#1C1C1C" />
-              </g>
-            </svg>
+            <LogoSvg />
           </div>
           <button
             onClick={() => setSidebarOpen(false)}
@@ -140,118 +164,76 @@ export default function DashboardLayout() {
           </button>
         </div>
 
-        {/* Navigation */}
-        <nav className="flex-1 bg-[#F8F9FC] px-[8px] pt-[0px] pb-[16px] flex flex-col gap-[8px] overflow-y-auto">
-          {/* Primary Nav */}
-          {primaryItems.map((item) => {
-            const isActive = item.path === '/dashboard'
-              ? location.pathname === '/dashboard' || location.pathname === '/dashboard/'
-              : location.pathname.startsWith(item.path);
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                onClick={() => setSidebarOpen(false)}
-                className={`
-                  flex items-center gap-[8px] px-[16px] h-[44px] rounded-[10px] transition-colors font-['Inter',sans-serif] text-[14px] leading-[20px] whitespace-nowrap
-                  ${isActive
-                    ? 'bg-[#EDEEF3] text-[#4F5EFF] font-semibold'
-                    : 'text-[#1C1C1C] font-normal hover:bg-[#EDEEF3]'
-                  }
-                `}
-              >
-                <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#4F5EFF]' : ''}`} strokeWidth={2} />
-                <span>{item.label}</span>
-              </Link>
-            );
-          })}
-
-          {/* Divider */}
-          <div className="border-t border-[rgba(10,10,10,0.08)] my-0" />
-
-          {/* Secondary Nav */}
-          {secondaryItems.map((item) => {
-            const isActive = location.pathname === item.path;
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                onClick={() => setSidebarOpen(false)}
-                className={`
-                  flex items-center gap-[8px] px-[16px] h-[44px] rounded-[10px] transition-colors font-['Inter',sans-serif] text-[14px] leading-[20px] whitespace-nowrap
-                  ${isActive
-                    ? 'bg-[#EDEEF3] text-[#4F5EFF] font-semibold'
-                    : 'text-[#1C1C1C] font-normal hover:bg-[#EDEEF3] hover:text-[#1C1C1C]'
-                  }
-                `}
-              >
-                <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#4F5EFF]' : ''}`} strokeWidth={2} />
-                <span>{item.label}</span>
-                <span className="ml-auto font-['Inter',sans-serif] font-normal text-[10px] text-[#73798B] bg-[#EDEEF3] px-1.5 py-0.5 rounded">
-                  {t('nav.comingSoon')}
-                </span>
-              </Link>
-            );
-          })}
-
-        </nav>
+        {/* Chat sessions portal area - AIAssistant will render here */}
+        <div id="sidebar-chat-area" className="flex-1 overflow-hidden flex flex-col min-h-0" />
 
         {/* User Profile */}
-        <div className="bg-[#F8F9FC] border-t border-[rgba(10,10,10,0.08)] relative">
+        <div className="border-t border-[rgba(10,10,10,0.08)] relative" ref={accountMenuRef}>
           <button
             onClick={() => setAccountMenuOpen(!accountMenuOpen)}
-            className="w-full p-[16px] flex items-center gap-[8px] hover:bg-[#F8F9FC] transition-colors"
+            className="w-full p-[16px] flex items-center gap-[8px] hover:bg-[#EBEBEB] transition-colors rounded-none"
           >
-            <div className="w-[40px] h-[40px] bg-[rgba(79,94,255,0.1)] border-[1.25px] border-[rgba(79,94,255,0.2)] rounded-full flex items-center justify-center shrink-0">
-              <User className="w-5 h-5 text-[#4f5eff]" />
+            <div className="w-[36px] h-[36px] bg-[rgba(79,94,255,0.1)] border-[1.25px] border-[rgba(79,94,255,0.2)] rounded-full flex items-center justify-center shrink-0">
+              <User className="w-4 h-4 text-[#4f5eff]" />
             </div>
             <div className="flex-1 min-w-0 text-left">
-              <div className="font-['Inter',sans-serif] font-semibold text-[14px] text-[#1C1C1C] truncate">{user.name}</div>
-              <div className="font-['Inter',sans-serif] font-normal text-[12px] text-[#1C1C1C] truncate">{user.email}</div>
+              <div className="font-['Inter',sans-serif] font-semibold text-[13px] text-[#0A0A0A] truncate">{user.name}</div>
+              <div className="font-['Inter',sans-serif] font-normal text-[11px] text-[#4F4F4F] truncate">{user.email}</div>
             </div>
-            <ChevronRight className={`w-4 h-4 text-[#1C1C1C] shrink-0 transition-transform ${accountMenuOpen ? 'rotate-90' : ''}`} />
+            <ChevronRight className={`w-4 h-4 text-[#4F4F4F] shrink-0 transition-transform ${accountMenuOpen ? 'rotate-90' : ''}`} />
           </button>
 
-          {/* Account Menu Dropdown */}
+          {/* Account Menu Dropdown - upward popover */}
           {accountMenuOpen && (
-            <div className="absolute bottom-full left-0 right-0 mb-1 bg-white rounded-[8px] border border-[rgba(10,10,10,0.08)] shadow-[0px_8px_24px_0px_rgba(0,0,0,0.12)] mx-2">
-              <div className="p-[8px] flex flex-col gap-[4px]">
-                <Link
-                  to="/dashboard/settings"
-                  onClick={() => {
-                    setAccountMenuOpen(false);
-                    setSidebarOpen(false);
-                  }}
-                  className="flex items-center gap-[8px] px-[12px] py-[8px] rounded-[10px] hover:bg-[#F8F9FC] transition-colors"
-                >
-                  <Settings className="w-4 h-4 text-[#4f4f4f]" />
-                  <span className="font-['Inter',sans-serif] font-medium text-[14px] text-[#1C1C1C]">
-                    {t('nav.settings')}
-                  </span>
-                </Link>
+            <div className="absolute bottom-full left-0 right-0 mb-1 bg-white rounded-[10px] border border-[rgba(10,10,10,0.08)] shadow-[0px_8px_24px_0px_rgba(0,0,0,0.12)] mx-2 max-h-[70vh] overflow-y-auto">
+              <div className="p-[6px] flex flex-col gap-[2px]">
+                {/* Nav items — open modals */}
+                {navItems.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <button
+                      key={item.key}
+                      onClick={() => {
+                        setAccountMenuOpen(false);
+                        setSidebarOpen(false);
+                        setActiveModal(item.key);
+                      }}
+                      className="flex items-center gap-[8px] px-[12px] py-[8px] rounded-[8px] hover:bg-[#FAFAFA] transition-colors w-full text-[#0A0A0A]"
+                    >
+                      <Icon className="w-4 h-4 text-[#4F4F4F]" />
+                      <span className="font-['Inter',sans-serif] font-medium text-[13px]">
+                        {item.label}
+                      </span>
+                    </button>
+                  );
+                })}
+
+                <div className="border-t border-[rgba(10,10,10,0.06)] my-[2px]" />
+
+                {/* Language */}
                 <button
                   onClick={() => setLanguage(language === 'zh' ? 'en' : 'zh')}
-                  className="flex items-center gap-[8px] px-[12px] py-[8px] rounded-[10px] hover:bg-[#F8F9FC] transition-colors w-full"
+                  className="flex items-center gap-[8px] px-[12px] py-[8px] rounded-[8px] hover:bg-[#FAFAFA] transition-colors w-full"
                 >
-                  <Globe className="w-4 h-4 text-[#4f4f4f]" />
-                  <span className="font-['Inter',sans-serif] font-medium text-[14px] text-[#1C1C1C] mr-2">
+                  <Globe className="w-4 h-4 text-[#4F4F4F]" />
+                  <span className="font-['Inter',sans-serif] font-medium text-[13px] text-[#0A0A0A] mr-2">
                     {t('nav.language')}
                   </span>
                   <div className="ml-auto">
                     <LanguageSwitcher compact />
                   </div>
                 </button>
+
+                {/* Logout */}
                 <button
                   onClick={() => {
                     setAccountMenuOpen(false);
                     setShowLogoutConfirm(true);
                   }}
-                  className="flex items-center gap-[8px] px-[12px] py-[8px] rounded-[10px] hover:bg-[#F8F9FC] transition-colors w-full"
+                  className="flex items-center gap-[8px] px-[12px] py-[8px] rounded-[8px] hover:bg-[#FAFAFA] transition-colors w-full"
                 >
-                  <LogOut className="w-4 h-4 text-[#4f4f4f]" />
-                  <span className="font-['Inter',sans-serif] font-medium text-[14px] text-[#1C1C1C]">
+                  <LogOut className="w-4 h-4 text-[#4F4F4F]" />
+                  <span className="font-['Inter',sans-serif] font-medium text-[13px] text-[#0A0A0A]">
                     {t('auth.logout')}
                   </span>
                 </button>
@@ -271,37 +253,17 @@ export default function DashboardLayout() {
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Mobile Header with Hamburger */}
+        {/* Mobile Header */}
         <div className="lg:hidden bg-white border-b border-[rgba(10,10,10,0.08)] px-4 py-3 flex items-center justify-between sticky top-0 z-20 shadow-sm">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="text-[#1C1C1C] p-2 -ml-2 hover:bg-slate-100 rounded-lg transition-colors"
+            className="text-[#0A0A0A] p-2 -ml-2 hover:bg-slate-100 rounded-lg transition-colors"
             aria-label="Open menu"
           >
             <Menu className="w-6 h-6" />
           </button>
           <div className="h-[16px] relative w-[152px]">
-            <svg className="absolute block size-full" fill="none" preserveAspectRatio="xMidYMid meet" viewBox="0 0 188.538 19.9998">
-              <g>
-                <path d={svgPaths.p12420d80} fill="#1C1C1C" />
-                <path d={svgPaths.p19bafe80} fill="#1C1C1C" />
-                <path d={svgPaths.p161a0400} fill="#1C1C1C" />
-                <path d={svgPaths.p3456db00} fill="#1C1C1C" />
-                <path d={svgPaths.p5983200} fill="#1C1C1C" />
-                <path d={svgPaths.p35ddbb80} fill="#1C1C1C" />
-                <path d={svgPaths.p192f4b80} fill="#4F5EFF" />
-                <path d={svgPaths.p2c193100} fill="#4F5EFF" />
-                <path d={svgPaths.p357a0d00} fill="#4F5EFF" />
-                <path d={svgPaths.p26dee800} fill="#4F5EFF" />
-                <path d={svgPaths.pf8ab380} fill="#4F5EFF" />
-                <path d={svgPaths.p25b8a100} fill="#4F5EFF" />
-                <path d={svgPaths.p1a427e00} fill="#4F5EFF" />
-                <path d={svgPaths.p37c6db00} fill="#1C1C1C" />
-                <path d={svgPaths.p16c2cc00} fill="#1C1C1C" />
-                <path d={svgPaths.p2ed1f700} fill="#1C1C1C" />
-                <path d={svgPaths.p123d8680} fill="#1C1C1C" />
-              </g>
-            </svg>
+            <LogoSvg />
           </div>
           <button
             onClick={() => setAccountMenuOpen(!accountMenuOpen)}
@@ -311,81 +273,18 @@ export default function DashboardLayout() {
           </button>
         </div>
 
-        <main className="flex-1 p-4 sm:p-6 lg:p-8">
+        <main className="flex-1 flex flex-col min-h-0">
           <Outlet context={{
-            onSetupWallet: () => setShowOnboarding(true),
+            onSetupWallet: () => {
+              // Route to chat-based onboarding instead of modal
+              navigate('/dashboard/chat?startOnboarding=true');
+            },
             onPairAgent: () => setShowAgentPairing(true),
             onClaimWallet: () => setShowClaimWallet(true),
             onDelegateWallet: (walletId: string) => setDelegationTarget({ open: true, walletId }),
           }} />
         </main>
       </div>
-
-      {/* Mobile Account Menu - Bottom Sheet */}
-      {accountMenuOpen && (
-        <>
-          <div
-            className="lg:hidden fixed inset-0 bg-black/30 z-40"
-            onClick={() => setAccountMenuOpen(false)}
-          />
-          <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl z-50 shadow-2xl animate-slide-up">
-            <div className="p-6">
-              {/* User Info */}
-              <div className="flex items-center gap-3 mb-6 pb-6 border-b border-[#EDEEF3]">
-                <div className="w-12 h-12 bg-[rgba(79,94,255,0.1)] border-2 border-[rgba(79,94,255,0.2)] rounded-full flex items-center justify-center">
-                  <User className="w-6 h-6 text-[#4f5eff]" />
-                </div>
-                <div>
-                  <div className="font-semibold text-base text-slate-900">{user.name}</div>
-                  <div className="text-sm text-slate-500">{user.email}</div>
-                </div>
-              </div>
-
-              {/* Menu Items */}
-              <div className="space-y-2 mb-6">
-                <Link
-                  to="/dashboard/settings"
-                  onClick={() => setAccountMenuOpen(false)}
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-50 transition-colors active:bg-slate-100"
-                >
-                  <Settings className="w-5 h-5 text-slate-600" />
-                  <span className="font-medium text-slate-900">{t('nav.settings')}</span>
-                </Link>
-
-                <button
-                  onClick={() => setLanguage(language === 'zh' ? 'en' : 'zh')}
-                  className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl bg-slate-50 hover:bg-slate-100 transition-colors"
-                >
-                  <div className="flex items-center gap-3">
-                    <Globe className="w-5 h-5 text-slate-600" />
-                    <span className="font-medium text-slate-900">{t('nav.language')}</span>
-                  </div>
-                  <LanguageSwitcher compact />
-                </button>
-
-                <button
-                  onClick={() => {
-                    setAccountMenuOpen(false);
-                    setShowLogoutConfirm(true);
-                  }}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-50 transition-colors active:bg-red-100"
-                >
-                  <LogOut className="w-5 h-5 text-red-600" />
-                  <span className="font-medium text-red-600">{t('auth.logout')}</span>
-                </button>
-              </div>
-
-              {/* Close Button */}
-              <button
-                onClick={() => setAccountMenuOpen(false)}
-                className="w-full bg-slate-100 hover:bg-slate-200 text-slate-900 font-medium py-3 rounded-xl transition-colors"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </>
-      )}
 
       {/* Onboarding Modal */}
       <OnboardingModal
@@ -420,6 +319,27 @@ export default function DashboardLayout() {
         onDelegate={handleDelegate}
         onNewAgentPaired={handleDelegationNewAgent}
       />
+
+      {/* Feature Page Modals — unified sizing */}
+      {(['wallet', 'gas', 'billing', 'settings'] as const).map((key) => (
+        <Dialog key={key} open={activeModal === key} onOpenChange={(val) => { if (!val) setActiveModal(null); }}>
+          <DialogContent className="max-w-[calc(100vw-3rem)] sm:max-w-[860px] max-h-[90vh] overflow-y-auto p-6 sm:p-10 rounded-2xl">
+            <DialogTitle className="sr-only">
+              {key === 'wallet' ? t('nav.walletAgent') : key === 'gas' ? t('nav.gasAccount') : key === 'billing' ? t('nav.billing') : t('nav.settings')}
+            </DialogTitle>
+            {key === 'wallet' && (
+              <WalletAgentPage
+                onSetupWallet={() => { setActiveModal(null); setShowOnboarding(true); }}
+                onClaimWallet={() => { setActiveModal(null); setShowClaimWallet(true); }}
+                onDelegateWallet={(walletId) => { setActiveModal(null); setDelegationTarget({ open: true, walletId }); }}
+              />
+            )}
+            {key === 'gas' && <Gasless />}
+            {key === 'billing' && <Billing />}
+            {key === 'settings' && <AccountSettings />}
+          </DialogContent>
+        </Dialog>
+      ))}
 
       {/* Logout Confirmation Modal */}
       {showLogoutConfirm && (

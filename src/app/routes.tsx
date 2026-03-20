@@ -3,10 +3,6 @@ import { LanguageProvider } from "./contexts/LanguageContext";
 import DashboardLayout from "./components/DashboardLayout";
 import Login from "./components/Login";
 import AIAssistant from "./components/AIAssistant";
-import WalletAgentPage from "./components/WalletAgentPage";
-import AccountSettings from "./components/AccountSettings";
-import Gasless from "./components/Gasless";
-import Billing from "./components/Billing";
 
 export const router = createBrowserRouter([
   {
@@ -35,45 +31,44 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <WalletAgentPage />,
-      },
-      // Backward compat: old wallet-agent route → index
-      {
-        path: "wallet-agent",
-        element: <Navigate to="/dashboard" replace />,
+        element: <Navigate to="/dashboard/chat" replace />,
       },
       {
         path: "chat",
         element: <AIAssistant />,
       },
+      // Legacy routes → redirect to chat
+      {
+        path: "wallet-agent",
+        element: <Navigate to="/dashboard/chat" replace />,
+      },
       {
         path: "gas-account",
-        element: <Gasless />,
+        element: <Navigate to="/dashboard/chat" replace />,
       },
       {
         path: "settings",
-        element: <AccountSettings />,
+        element: <Navigate to="/dashboard/chat" replace />,
       },
       {
         path: "billing",
-        element: <Billing />,
-      },
-      // Legacy route aliases (backward compatibility)
-      {
-        path: "delegation",
-        element: <Navigate to="/dashboard/wallet-agent" replace />,
-      },
-      {
-        path: "gasless",
-        element: <Navigate to="/dashboard/gas-account" replace />,
+        element: <Navigate to="/dashboard/chat" replace />,
       },
       {
         path: "ai-assistant",
-        element: <AIAssistant />,
+        element: <Navigate to="/dashboard/chat" replace />,
       },
       {
         path: "account",
-        element: <AccountSettings />,
+        element: <Navigate to="/dashboard/chat" replace />,
+      },
+      {
+        path: "delegation",
+        element: <Navigate to="/dashboard/chat" replace />,
+      },
+      {
+        path: "gasless",
+        element: <Navigate to="/dashboard/chat" replace />,
       },
     ],
   },

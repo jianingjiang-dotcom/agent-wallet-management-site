@@ -186,6 +186,10 @@ const translations = {
     "ai.uploadFile": "Upload File",
     "ai.inputPlaceholder": "Enter message...",
     "ai.send": "Send",
+    "chat.welcome.firstWallet.title": "Your wallet is ready",
+    "chat.welcome.firstWallet.subtitle": "I'm your AI assistant, authorized to act on your behalf.",
+    "chat.welcome.returning.title": "Your AI Wallet Assistant",
+    "chat.welcome.returning.subtitle": "Manage wallets, check balances, configure agents, or adjust risk policies — just ask.",
     "ai.quickQuestions": "Quick Questions:",
     "ai.placeholder": "Type your question...",
     "ai.greeting":
@@ -221,10 +225,12 @@ const translations = {
     "onboarding.step1": "Click the \"Copy Instructions\" button",
     "onboarding.step2": "Paste into your AI Agent conversation",
     "onboarding.step3": "Agent will auto-install and pair. This page updates automatically.",
-    // Doc link
+    // Doc link & info banner
     "onboarding.docLink": "View full documentation",
+    "onboarding.infoBanner": "Copy the instructions below and send to AI Agent to automatically configure the Agent Wallet.",
+    "onboarding.validTime": "Valid time",
+    "onboarding.limits.walletTitle": "Wallet Limits",
     // Waiting phases
-    "onboarding.simulate": "Simulate Pairing (Demo)",
     "onboarding.cancel": "Cancel",
     "onboarding.waiting.waiting": "Waiting for Agent to create wallet...",
     "onboarding.waiting.connected": "Agent connected, creating wallet...",
@@ -567,6 +573,18 @@ const translations = {
     "claimWallet.claimedAt": "Claimed At",
     "claimWallet.confirmBtn": "Claim Wallet",
 
+    // Onboarding Chat Flow
+    "onboarding.chat.welcome": "Welcome! I'm your wallet setup assistant. Let's create your first Agent Wallet — it only takes a minute.",
+    "onboarding.chat.invitePrompt": "First, I'll need your invitation code. It should look like COBO-xxxx-xxxx.",
+    "onboarding.chat.inviteVerified": "Code verified!",
+    "onboarding.chat.limitsPrompt": "Now let's configure spending limits for your wallet. I've set some safe defaults — feel free to adjust.",
+    "onboarding.chat.limitsConfirmed": "Limits locked in.",
+    "onboarding.chat.commandPrompt": "Copy the instructions below and paste them into your AI Agent's conversation. The Agent will handle the rest.",
+    "onboarding.chat.pairingWaiting": "Waiting for your Agent to connect...",
+    "onboarding.chat.pairingSuccess": "Connected successfully!",
+    "onboarding.chat.successMessage": "Your Agent Wallet is ready! Here's a summary of what was created.",
+    "onboarding.chat.startChatting": "Start Chatting",
+
     // Invitation Code
     "onboarding.inviteTitle": "Enter Invitation Code",
     "onboarding.inviteDesc": "Please enter your invitation code to get started.",
@@ -764,6 +782,10 @@ const translations = {
     "ai.uploadFile": "上传文件",
     "ai.inputPlaceholder": "输入消息...",
     "ai.send": "发送",
+    "chat.welcome.firstWallet.title": "钱包已准备就绪",
+    "chat.welcome.firstWallet.subtitle": "我是你的 AI 助手，已获授权为你执行操作。",
+    "chat.welcome.returning.title": "你的 AI 钱包助手",
+    "chat.welcome.returning.subtitle": "管理钱包、查看余额、配置 Agent 或调整风控策略，随时告诉我。",
 
     // Onboarding
     "onboarding.title": "创建 Agent Wallet",
@@ -791,10 +813,12 @@ const translations = {
     "onboarding.step1": "点击「复制指令」按钮",
     "onboarding.step2": "将指令粘贴到你的 AI Agent 对话中",
     "onboarding.step3": "Agent 会自动安装工具并完成配对，此页面将自动更新",
-    // Doc link
+    // Doc link & info banner
     "onboarding.docLink": "查看完整文档",
+    "onboarding.infoBanner": "复制下方指令并发送给 Agent 完成钱包创建。",
+    "onboarding.validTime": "有效时间",
+    "onboarding.limits.walletTitle": "钱包限额",
     // Waiting phases
-    "onboarding.simulate": "模拟配对（演示）",
     "onboarding.cancel": "取消",
     "onboarding.waiting.waiting": "等待 Agent 创建钱包...",
     "onboarding.waiting.connected": "Agent 已连接，正在创建钱包...",
@@ -1126,6 +1150,18 @@ const translations = {
     "claimWallet.claimedBy": "认领者",
     "claimWallet.claimedAt": "认领时间",
     "claimWallet.confirmBtn": "认领钱包",
+
+    // Onboarding Chat Flow
+    "onboarding.chat.welcome": "欢迎！我是你的钱包助手，让我们花一分钟创建你的第一个 Agent Wallet。",
+    "onboarding.chat.invitePrompt": "首先，请输入你的邀请码（格式：COBO-xxxx-xxxx）。",
+    "onboarding.chat.inviteVerified": "邀请码验证通过！",
+    "onboarding.chat.limitsPrompt": "接下来配置钱包的支出限额。我已设置了安全的默认值，你可以自由调整。",
+    "onboarding.chat.limitsConfirmed": "限额已设定。",
+    "onboarding.chat.commandPrompt": "复制下面的指令并粘贴到你的 AI Agent 对话中，Agent 会自动完成配置。",
+    "onboarding.chat.pairingWaiting": "正在等待 Agent 连接...",
+    "onboarding.chat.pairingSuccess": "连接成功！",
+    "onboarding.chat.successMessage": "你的 Agent Wallet 已就绪！以下是创建摘要。",
+    "onboarding.chat.startChatting": "开始对话",
 
     // Invitation Code
     "onboarding.inviteTitle": "输入邀请码",

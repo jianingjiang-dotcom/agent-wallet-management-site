@@ -5,7 +5,7 @@ export default function Gasless() {
   const { t } = useLanguage();
 
   return (
-    <div className="max-w-5xl mx-auto">
+    <div>
       <div className="mb-6">
         <h1 className="font-['Inter',sans-serif] font-semibold text-[28px] text-[#0a0a0a] mb-1">
           {t('gasAccount.title')}

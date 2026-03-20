@@ -10,9 +10,9 @@ import {
   Loader2,
   Zap,
   Link2,
-  ArrowLeft,
   AlertCircle,
 } from "lucide-react";
+import { useNavigate } from "react-router";
 import { useLanguage } from "../contexts/LanguageContext";
 import {
   Dialog,
@@ -50,6 +50,7 @@ export default function OnboardingModal({
   isFirstWallet = false,
 }: OnboardingModalProps) {
   const { t, language } = useLanguage();
+  const navigate = useNavigate();
 
   // ─── State ───
   const [setupToken, setSetupToken] = useState("");
@@ -222,7 +223,13 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
     document.body.removeChild(ta);
   };
 
-  const handleCopyPrompt = () => copyToClipboard(buildPromptText(), "prompt");
+  const handleCopyPrompt = () => {
+    copyToClipboard(buildPromptText(), "prompt");
+    // Auto-trigger pairing flow 2 seconds after copy
+    setTimeout(() => {
+      startWaitingFlow();
+    }, 2000);
+  };
   const handleCopyToken = () => copyToClipboard(setupToken, "token");
 
   // ─── Token refresh ───
@@ -557,7 +564,7 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
             }`}
           >
             {/* Header with bounce-in icon */}
-            <div className="text-center mb-5 sm:mb-6 pr-6 sm:pr-0">
+            <div className="text-center mb-6 sm:mb-8 pr-6 sm:pr-0">
               <div
                 className={`inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-[rgba(34,197,94,0.1)] border-2 border-[rgba(34,197,94,0.2)] rounded-2xl mb-3 sm:mb-4 transition-transform duration-500 ease-out ${
                   successAnimated ? "scale-100" : "scale-0"
@@ -566,27 +573,13 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
               >
                 <CheckCircle className="w-7 h-7 sm:w-8 sm:h-8 text-[#22c55e]" />
               </div>
-              <h2 className="font-['Inter',sans-serif] font-semibold text-[20px] sm:text-[24px] leading-tight text-[#0a0a0a] mb-1.5 sm:mb-2">
+              <h2 className="font-['Inter',sans-serif] font-semibold text-[20px] sm:text-[24px] leading-tight text-[#0a0a0a]">
                 {t("onboarding.success.title")}
               </h2>
-              <p className="font-['Inter',sans-serif] font-normal text-[13px] sm:text-[14px] text-[#4f4f4f]">
-                {t("onboarding.success.desc")}
-              </p>
-              {createdAt && (
-                <p className="font-['Inter',sans-serif] font-normal text-[11px] text-[#b0b0b0] mt-1.5">
-                  {createdAt.toLocaleString(language === "zh" ? "zh-CN" : "en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </p>
-              )}
             </div>
 
             {/* Wallet ID ↔ Agent ID relationship */}
-            <div className="mb-5 sm:mb-6">
+            <div className="mb-6 sm:mb-8">
               <div className="rounded-[12px] border border-[rgba(10,10,10,0.08)] bg-white shadow-[0_1px_3px_rgba(0,0,0,0.04)] overflow-hidden">
                 <div className="flex items-center gap-3 px-3.5 sm:px-4 py-3 sm:py-3.5">
                   <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-[10px] bg-[rgba(79,94,255,0.08)] flex items-center justify-center flex-shrink-0">
@@ -629,52 +622,20 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
               </div>
             </div>
 
-            {/* Applied Limits */}
-            <div className="bg-[rgba(79,94,255,0.04)] border border-[rgba(79,94,255,0.12)] rounded-[10px] p-3 sm:p-4 mb-5 sm:mb-6">
-              <div className="flex items-center gap-2 mb-2">
-                <Shield className="w-4 h-4 text-[#4f5eff]" />
-                <span className="font-['Inter',sans-serif] font-medium text-[12px] sm:text-[13px] text-[#4f5eff]">
-                  {t("onboarding.success.limitsApplied")}
-                </span>
-              </div>
-              <div className="flex flex-wrap gap-3 sm:gap-6 font-['Inter',sans-serif] text-[12px] sm:text-[13px] text-[#4f4f4f]">
-                <span>{t("onboarding.limits.perTx")}: ${getEffectivePerTx()}</span>
-                <span>{t("onboarding.limits.daily")}: ${getEffectiveDaily()}</span>
-              </div>
-            </div>
-
-            {/* Next Steps */}
-            <div className="border-t border-[rgba(10,10,10,0.08)] pt-4 sm:pt-5 mb-5 sm:mb-6">
-              <h3 className="font-['Inter',sans-serif] font-semibold text-[14px] sm:text-[15px] text-[#0a0a0a] mb-3">
-                {t("onboarding.success.nextSteps")}
-              </h3>
-              <div className="space-y-2.5">
-                {[
-                  t("onboarding.success.step1"),
-                  t("onboarding.success.step2"),
-                  t("onboarding.success.step3"),
-                ].map((step, i) => (
-                  <div key={i} className="flex items-start gap-2.5 sm:gap-3">
-                    <div className="w-[20px] h-[20px] sm:w-[22px] sm:h-[22px] rounded-[6px] bg-[#4f5eff] flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="font-['Inter',sans-serif] font-semibold text-[10px] sm:text-[11px] text-white">
-                        {i + 1}
-                      </span>
-                    </div>
-                    <span className="font-['Inter',sans-serif] font-normal text-[12px] sm:text-[13px] text-[#4f4f4f] leading-[20px] sm:leading-[22px]">
-                      {step}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Enter Dashboard button */}
+            {/* Try in Assistant button */}
             <button
-              onClick={handleComplete}
+              onClick={() => {
+                const prefill = language === "zh"
+                  ? "请介绍一下我的钱包状态，并告诉我支持的能力。"
+                  : "Please describe my wallet status and tell me what capabilities are supported.";
+                navigate(`/dashboard/chat?prefill=${encodeURIComponent(prefill)}&welcome=first-wallet`);
+                // Delay handleComplete so navigation settles first
+                setTimeout(() => handleComplete(), 100);
+              }}
               className="w-full bg-[#4f5eff] hover:bg-[#3d4dd9] h-[42px] sm:h-[44px] rounded-[8px] transition-colors shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)] relative overflow-hidden group"
             >
               <span className="font-['Inter',sans-serif] font-medium text-[13px] sm:text-[14px] text-white relative z-10">
-                {t("onboarding.success.enter")}
+                Try in Assistant
               </span>
               <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
             </button>
@@ -766,15 +727,6 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
             <>
             {/* ─── 1. Header ─── */}
             <div className="mb-6 pr-6 sm:pr-0">
-              {isFirstWallet && (
-                <button
-                  onClick={() => setOnboardingStep("invite")}
-                  className="flex items-center gap-1 font-['Inter',sans-serif] font-normal text-[13px] text-[#7c7c7c] hover:text-[#4f5eff] transition-colors mb-3"
-                >
-                  <ArrowLeft className="w-3.5 h-3.5" />
-                  {t("onboarding.inviteBack")}
-                </button>
-              )}
               <h2
                 className="font-['Inter',sans-serif] font-semibold text-[24px] leading-[32px] text-[#0a0a0a]"
               >
@@ -786,55 +738,174 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
                 <path d="M10 20C15.51 20 20 15.51 20 10C20 4.49 15.51 3.92528e-07 10 8.74228e-07C4.49 1.35593e-06 -1.35593e-06 4.49 -8.74228e-07 10C-3.92528e-07 15.51 4.49 20 10 20ZM10.75 14C10.75 14.41 10.41 14.75 10 14.75C9.59 14.75 9.25 14.41 9.25 14L9.25 9C9.25 8.59 9.59 8.25 10 8.25C10.41 8.25 10.75 8.59 10.75 9L10.75 14ZM9.08 5.62C9.13 5.49 9.2 5.39 9.29 5.29C9.39 5.2 9.5 5.13 9.62 5.08C9.74 5.03 9.87 5 10 5C10.13 5 10.26 5.03 10.38 5.08C10.5 5.13 10.61 5.2 10.71 5.29C10.8 5.39 10.87 5.49 10.92 5.62C10.97 5.74 11 5.87 11 6C11 6.13 10.97 6.26 10.92 6.38C10.87 6.5 10.8 6.61 10.71 6.71C10.61 6.8 10.5 6.87 10.38 6.92C10.14 7.02 9.86 7.02 9.62 6.92C9.5 6.87 9.39 6.8 9.29 6.71C9.2 6.61 9.13 6.5 9.08 6.38C9.03 6.26 9 6.13 9 6C9 5.87 9.03 5.74 9.08 5.62Z" fill="#4f5eff"/>
               </svg>
               <p className="font-['Inter',sans-serif] font-medium text-[14px] text-[#4f5eff] leading-[20px]">
-                复制下方指令并发送给 AI Agent，将自动完成 Agent Wallet 钱包配置。
+                {t("onboarding.infoBanner")}{" "}
+                <a
+                  href={DOC_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-2 hover:text-[#3d4dd9] transition-colors"
+                >
+                  {t("onboarding.docLink")}
+                </a>
               </p>
             </div>
 
             {/* ─── 2. Prompt Card ─── */}
-            <div>
+            <Collapsible open={limitsExpanded} onOpenChange={setLimitsExpanded}>
               <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[10px] mb-4 overflow-hidden">
-                {/* Header: timer left, actions right */}
+                {/* Header: timer left, wallet limits right */}
                 <div className="flex items-center justify-between px-4 py-3 bg-white">
                   <span className="font-['Inter',sans-serif] text-[12px] leading-[16px]">
-                    <span className="text-[#7c7c7c]">指令剩余有效时间: </span>
+                    <span className="text-[#7c7c7c]">{t("onboarding.validTime")}: </span>
                     <span className={`font-semibold tabular-nums text-[14px] leading-[16px] ${
                       timeRemaining < 300 ? "text-[#ef4444]" : "text-[#4f5eff]"
                     }`}>
                       {formatTime(timeRemaining)}
                     </span>
                   </span>
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <button
-                      onClick={() => {
-                        setRegenerating(true);
-                        setTimeout(() => {
-                          handleRefreshToken();
-                          setRegenerating(false);
-                          setRegenerated(true);
-                          setTimeout(() => setRegenerated(false), 2000);
-                        }, 400);
-                      }}
-                      disabled={!!showPairingToast}
-                      className={`flex items-center gap-[6px] font-['Inter',sans-serif] font-normal text-[12px] leading-[16px] transition-colors disabled:opacity-50 disabled:pointer-events-none ${
-                        regenerated ? "text-[#26C165]" : "text-[#7c7c7c] hover:text-[#4f5eff]"
-                      }`}
-                    >
-                      {regenerated ? <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="w-3.5 h-3.5"><path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg> : <RefreshCw className="w-3.5 h-3.5" />}
-                      {t("onboarding.regenerate")}
-                    </button>
-                    <div className="w-px h-4 bg-[rgba(10,10,10,0.12)]" />
-                    <button
-                      onClick={handleCopyToken}
-                      disabled={!!showPairingToast}
-                      className={`flex items-center gap-[6px] font-['Inter',sans-serif] font-normal text-[12px] leading-[16px] transition-colors disabled:opacity-50 disabled:pointer-events-none ${
-                        copiedType === "token" ? "text-[#26C165]" : "text-[#7c7c7c] hover:text-[#4f5eff]"
-                      }`}
-                    >
-                      {copiedType === "token" ? <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="w-3.5 h-3.5"><path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg> : <Copy className="w-3.5 h-3.5" />}
-                      {t("onboarding.copyTokenOnly")}
-                    </button>
-                  </div>
+                  <CollapsibleTrigger className="flex items-center gap-1.5 hover:opacity-80 transition-opacity text-left">
+                    <Shield className="w-3.5 h-3.5 text-[#7c7c7c] flex-shrink-0" />
+                    <span className="font-['Inter',sans-serif] font-medium text-[12px] leading-[16px] text-[#4F4F4F]">
+                      {t("onboarding.limits.walletTitle")}
+                    </span>
+                    <span className="font-['Inter',sans-serif] font-normal text-[12px] leading-[16px] text-[#7c7c7c]">
+                      ${confirmedPerTx}/tx · ${confirmedDaily}/day
+                    </span>
+                    {limitsExpanded ? (
+                      <ChevronDown className="w-3.5 h-3.5 text-[#7c7c7c]" />
+                    ) : (
+                      <ChevronRight className="w-3.5 h-3.5 text-[#7c7c7c]" />
+                    )}
+                  </CollapsibleTrigger>
                 </div>
+
+                {/* Limits expansion panel */}
+                <CollapsibleContent>
+                  <div className="border-t border-[rgba(10,10,10,0.08)]" />
+                  <div className="px-4 pb-4 pt-3 bg-[rgba(79,94,255,0.02)]">
+                    <p className="font-['Inter',sans-serif] font-normal text-[12px] text-[#7c7c7c] mb-3">
+                      {t("onboarding.limits.desc")}
+                    </p>
+
+                    {/* Per-Transaction Limit */}
+                    <div className="mb-3">
+                      <div className="font-['Inter',sans-serif] font-medium text-[13px] text-[#4F4F4F] mb-2">
+                        {t("onboarding.limits.perTx")}
+                      </div>
+                      <div className="flex items-center gap-2.5 flex-wrap">
+                        {["2", "5", "10"].map((val) => (
+                          <label key={val} className="flex items-center cursor-pointer">
+                            <input
+                              type="radio"
+                              name="perTxLimit"
+                              value={val}
+                              checked={perTxLimit === val}
+                              onChange={() => handleLimitChange("perTx", val)}
+                              className="w-4 h-4 text-[#4f5eff] border-[#EBEBEB] focus:ring-0 focus:ring-offset-0"
+                            />
+                            <span className="ml-1.5 font-['Inter',sans-serif] font-normal text-[13px] text-[#0a0a0a]">
+                              ${val}
+                            </span>
+                          </label>
+                        ))}
+                        <label className="flex items-center cursor-pointer">
+                          <input
+                            type="radio"
+                            name="perTxLimit"
+                            value="custom"
+                            checked={perTxLimit === "custom"}
+                            onChange={() => handleLimitChange("perTx", "custom")}
+                            className="w-4 h-4 text-[#4f5eff] border-[#EBEBEB] focus:ring-0 focus:ring-offset-0"
+                          />
+                          <span className="ml-1.5 font-['Inter',sans-serif] font-normal text-[13px] text-[#0a0a0a]">
+                            {t("onboarding.limits.others")}:
+                          </span>
+                        </label>
+                        <div className="flex items-center">
+                          <span className="font-['Inter',sans-serif] font-normal text-[13px] text-[#7c7c7c] mr-1">
+                            $
+                          </span>
+                          <input
+                            type="number"
+                            value={customPerTx}
+                            onChange={(e) => handleCustomChange("perTx", e.target.value)}
+                            onFocus={() => { setPerTxLimit("custom"); }}
+                            placeholder="0"
+                            className="w-16 bg-white border border-[#EBEBEB] rounded-[6px] px-2 py-1 font-['Inter',sans-serif] font-normal text-[13px] text-[#0a0a0a] focus:outline-none focus:border-[#4f5eff] focus:ring-1 focus:ring-[#4f5eff]"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Daily Spending Limit */}
+                    <div className="mb-3">
+                      <div className="font-['Inter',sans-serif] font-medium text-[13px] text-[#4F4F4F] mb-2">
+                        {t("onboarding.limits.daily")}
+                      </div>
+                      <div className="flex items-center gap-2.5 flex-wrap">
+                        {["20", "50", "100"].map((val) => (
+                          <label key={val} className="flex items-center cursor-pointer">
+                            <input
+                              type="radio"
+                              name="dailyLimit"
+                              value={val}
+                              checked={dailyLimit === val}
+                              onChange={() => handleLimitChange("daily", val)}
+                              className="w-4 h-4 text-[#4f5eff] border-[#EBEBEB] focus:ring-0 focus:ring-offset-0"
+                            />
+                            <span className="ml-1.5 font-['Inter',sans-serif] font-normal text-[13px] text-[#0a0a0a]">
+                              ${val}
+                            </span>
+                          </label>
+                        ))}
+                        <label className="flex items-center cursor-pointer">
+                          <input
+                            type="radio"
+                            name="dailyLimit"
+                            value="custom"
+                            checked={dailyLimit === "custom"}
+                            onChange={() => handleLimitChange("daily", "custom")}
+                            className="w-4 h-4 text-[#4f5eff] border-[#EBEBEB] focus:ring-0 focus:ring-offset-0"
+                          />
+                          <span className="ml-1.5 font-['Inter',sans-serif] font-normal text-[13px] text-[#0a0a0a]">
+                            {t("onboarding.limits.others")}:
+                          </span>
+                        </label>
+                        <div className="flex items-center">
+                          <span className="font-['Inter',sans-serif] font-normal text-[13px] text-[#7c7c7c] mr-1">
+                            $
+                          </span>
+                          <input
+                            type="number"
+                            value={customDaily}
+                            onChange={(e) => handleCustomChange("daily", e.target.value)}
+                            onFocus={() => { setDailyLimit("custom"); }}
+                            placeholder="0"
+                            className="w-16 bg-white border border-[#EBEBEB] rounded-[6px] px-2 py-1 font-['Inter',sans-serif] font-normal text-[13px] text-[#0a0a0a] focus:outline-none focus:border-[#4f5eff] focus:ring-1 focus:ring-[#4f5eff]"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Confirm */}
+                    <div className="mt-2">
+                      <button
+                        onClick={handleConfirmLimits}
+                        disabled={regenerating || !hasActualChange}
+                        className="w-full bg-[#4f5eff] hover:bg-[#3d4dd9] h-[36px] rounded-[8px] transition-colors font-['Inter',sans-serif] font-medium text-[13px] text-white flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {regenerating ? (
+                          <>
+                            <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                            {t("onboarding.limits.regenerating")}
+                          </>
+                        ) : (
+                          t("onboarding.limits.confirm")
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                </CollapsibleContent>
 
                 <div className="border-t border-[rgba(10,10,10,0.08)]" />
                 {/* Code block */}
@@ -889,172 +960,7 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
                 )}
                 {t("onboarding.copyPrompt")}
               </button>
-
-              {/* Simulate button (dev) */}
-              <button
-                onClick={startWaitingFlow}
-                disabled={!!showPairingToast}
-                className="w-full mt-2 h-[32px] rounded-[8px] border border-dashed border-[rgba(10,10,10,0.15)] font-['Inter',sans-serif] font-normal text-[11px] text-[#7c7c7c] hover:bg-[#f5f5f5] transition-colors disabled:opacity-50"
-              >
-                ⚡ Simulate Pairing
-              </button>
-            </div>
-
-            {/* ─── 3. Footer: Risk Control + Doc Link ─── */}
-            <div className="border-t border-[rgba(10,10,10,0.08)] pt-4 mt-4">
-              <Collapsible open={limitsExpanded} onOpenChange={setLimitsExpanded}>
-                <div className="flex items-center justify-between">
-                  <CollapsibleTrigger className="flex items-center gap-2 hover:opacity-80 transition-opacity text-left">
-                    <Shield className="w-4 h-4 text-[#7c7c7c] flex-shrink-0" />
-                    <span className="font-['Inter',sans-serif] font-medium text-[14px] leading-[20px] text-[#4f4f4f]">
-                      {t("onboarding.limits.title")}
-                    </span>
-                    <span className="font-['Inter',sans-serif] font-normal text-[14px] leading-[20px] text-[#7c7c7c]">
-                      ${confirmedPerTx}/tx · ${confirmedDaily}/day
-                    </span>
-                    {limitsExpanded ? (
-                      <ChevronDown className="w-4 h-4 text-[#7c7c7c]" />
-                    ) : (
-                      <ChevronRight className="w-4 h-4 text-[#7c7c7c]" />
-                    )}
-                  </CollapsibleTrigger>
-                  <a
-                    href={DOC_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 font-['Inter',sans-serif] font-medium text-[14px] leading-[20px] text-[#4f5eff] hover:text-[#3d4dd9] transition-colors flex-shrink-0"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    {t("onboarding.docLink")}
-                  </a>
-                </div>
-                <CollapsibleContent>
-                  <div className="mt-3 bg-white border border-[rgba(10,10,10,0.08)] rounded-[10px] px-4 pb-4 pt-3">
-                    <p className="font-['Inter',sans-serif] font-normal text-[12px] text-[#7c7c7c] mb-3">
-                      {t("onboarding.limits.desc")}
-                    </p>
-
-                    {/* Per-Transaction Limit */}
-                    <div className="mb-3">
-                      <div className="font-['Inter',sans-serif] font-medium text-[13px] text-[#4f4f4f] mb-2">
-                        {t("onboarding.limits.perTx")}
-                      </div>
-                      <div className="flex items-center gap-2.5 flex-wrap">
-                        {["2", "5", "10"].map((val) => (
-                          <label key={val} className="flex items-center cursor-pointer">
-                            <input
-                              type="radio"
-                              name="perTxLimit"
-                              value={val}
-                              checked={perTxLimit === val}
-                              onChange={() => handleLimitChange("perTx", val)}
-                              className="w-4 h-4 text-[#4f5eff] border-[#EDEEF3] focus:ring-0 focus:ring-offset-0"
-                            />
-                            <span className="ml-1.5 font-['Inter',sans-serif] font-normal text-[13px] text-[#0a0a0a]">
-                              ${val}
-                            </span>
-                          </label>
-                        ))}
-                        <label className="flex items-center cursor-pointer">
-                          <input
-                            type="radio"
-                            name="perTxLimit"
-                            value="custom"
-                            checked={perTxLimit === "custom"}
-                            onChange={() => handleLimitChange("perTx", "custom")}
-                            className="w-4 h-4 text-[#4f5eff] border-[#EDEEF3] focus:ring-0 focus:ring-offset-0"
-                          />
-                          <span className="ml-1.5 font-['Inter',sans-serif] font-normal text-[13px] text-[#0a0a0a]">
-                            {t("onboarding.limits.others")}:
-                          </span>
-                        </label>
-                        <div className="flex items-center">
-                          <span className="font-['Inter',sans-serif] font-normal text-[13px] text-[#7c7c7c] mr-1">
-                            $
-                          </span>
-                          <input
-                            type="number"
-                            value={customPerTx}
-                            onChange={(e) => handleCustomChange("perTx", e.target.value)}
-                            onFocus={() => { setPerTxLimit("custom"); }}
-                            placeholder="0"
-                            className="w-16 bg-white border border-[#EDEEF3] rounded-[6px] px-2 py-1 font-['Inter',sans-serif] font-normal text-[13px] text-[#0a0a0a] focus:outline-none focus:border-[#4f5eff] focus:ring-1 focus:ring-[#4f5eff]"
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Daily Spending Limit */}
-                    <div className="mb-3">
-                      <div className="font-['Inter',sans-serif] font-medium text-[13px] text-[#4f4f4f] mb-2">
-                        {t("onboarding.limits.daily")}
-                      </div>
-                      <div className="flex items-center gap-2.5 flex-wrap">
-                        {["20", "50", "100"].map((val) => (
-                          <label key={val} className="flex items-center cursor-pointer">
-                            <input
-                              type="radio"
-                              name="dailyLimit"
-                              value={val}
-                              checked={dailyLimit === val}
-                              onChange={() => handleLimitChange("daily", val)}
-                              className="w-4 h-4 text-[#4f5eff] border-[#EDEEF3] focus:ring-0 focus:ring-offset-0"
-                            />
-                            <span className="ml-1.5 font-['Inter',sans-serif] font-normal text-[13px] text-[#0a0a0a]">
-                              ${val}
-                            </span>
-                          </label>
-                        ))}
-                        <label className="flex items-center cursor-pointer">
-                          <input
-                            type="radio"
-                            name="dailyLimit"
-                            value="custom"
-                            checked={dailyLimit === "custom"}
-                            onChange={() => handleLimitChange("daily", "custom")}
-                            className="w-4 h-4 text-[#4f5eff] border-[#EDEEF3] focus:ring-0 focus:ring-offset-0"
-                          />
-                          <span className="ml-1.5 font-['Inter',sans-serif] font-normal text-[13px] text-[#0a0a0a]">
-                            {t("onboarding.limits.others")}:
-                          </span>
-                        </label>
-                        <div className="flex items-center">
-                          <span className="font-['Inter',sans-serif] font-normal text-[13px] text-[#7c7c7c] mr-1">
-                            $
-                          </span>
-                          <input
-                            type="number"
-                            value={customDaily}
-                            onChange={(e) => handleCustomChange("daily", e.target.value)}
-                            onFocus={() => { setDailyLimit("custom"); }}
-                            placeholder="0"
-                            className="w-16 bg-white border border-[#EDEEF3] rounded-[6px] px-2 py-1 font-['Inter',sans-serif] font-normal text-[13px] text-[#0a0a0a] focus:outline-none focus:border-[#4f5eff] focus:ring-1 focus:ring-[#4f5eff]"
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Confirm */}
-                    <div className="mt-2">
-                      <button
-                        onClick={handleConfirmLimits}
-                        disabled={regenerating || !hasActualChange}
-                        className="w-full bg-[#4f5eff] hover:bg-[#3d4dd9] h-[36px] rounded-[8px] transition-colors font-['Inter',sans-serif] font-medium text-[13px] text-white flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        {regenerating ? (
-                          <>
-                            <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                            {t("onboarding.limits.regenerating")}
-                          </>
-                        ) : (
-                          t("onboarding.limits.confirm")
-                        )}
-                      </button>
-                    </div>
-                  </div>
-                </CollapsibleContent>
-              </Collapsible>
-            </div>
+            </Collapsible>
 
             {/* ─── Pairing overlay toast ─── */}
             {showPairingToast && (

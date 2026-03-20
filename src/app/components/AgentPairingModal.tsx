@@ -192,7 +192,7 @@ ${buildCommand()}`;
             /* Waiting State */
             <div className="text-center py-8">
               <Loader2 className="w-8 h-8 text-[#4f5eff] animate-spin mx-auto mb-3" />
-              <p className="font-['Inter',sans-serif] font-medium text-[14px] text-[#4f4f4f]">
+              <p className="font-['Inter',sans-serif] font-medium text-[14px] text-[#4F4F4F]">
                 {t("agentPairing.waiting")}
               </p>
             </div>
