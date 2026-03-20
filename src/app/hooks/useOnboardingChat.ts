@@ -311,20 +311,15 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${token}`;
 
   // ─── Handle Command Copy ───
   const handleCommandCopy = useCallback(() => {
-    // User message
-    addUserMessage(
-      language === 'zh' ? '已复制指令' : 'Instructions copied'
-    );
-
     // Mark as copied
     setMessages(prev => prev.map(msg => {
       if (msg.onboardingData?.step === 'setup-command') {
-        return { ...msg, onboardingData: { ...msg.onboardingData, payload: { ...msg.onboardingData.payload, copied: true } } };
+        return { ...msg, onboardingData: { ...msg.onboardingData, status: 'completed' as const, payload: { ...msg.onboardingData.payload, copied: true } } };
       }
       return msg;
     }));
 
-    // After 2s, AI starts pairing
+    // Directly start pairing
     const tid = setTimeout(() => {
       const pairingMsg: OnboardingMessage = {
         id: addId(),
