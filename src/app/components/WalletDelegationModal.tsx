@@ -146,7 +146,7 @@ export default function WalletDelegationModal({
             ) : step === "delegating" ? (
               <div className="text-center py-8">
                 <Loader2 className="w-8 h-8 text-[#4f5eff] animate-spin mx-auto mb-3" />
-                <p className="font-['Inter',sans-serif] font-medium text-[14px] text-[#4f4f4f]">
+                <p className="font-['Inter',sans-serif] font-medium text-[14px] text-[#4F4F4F]">
                   {t("walletDelegation.delegating")}
                 </p>
               </div>
@@ -167,7 +167,7 @@ export default function WalletDelegationModal({
 
                 {/* Permissions */}
                 <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[10px] p-4">
-                  <h4 className="font-['Inter',sans-serif] font-medium text-[13px] text-[#4f4f4f] mb-3">
+                  <h4 className="font-['Inter',sans-serif] font-medium text-[13px] text-[#4F4F4F] mb-3">
                     {t("walletDelegation.configurePermissions")}
                   </h4>
                   <div className="space-y-2">
@@ -194,7 +194,7 @@ export default function WalletDelegationModal({
 
                 {/* Policy */}
                 <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[10px] p-4">
-                  <h4 className="font-['Inter',sans-serif] font-medium text-[13px] text-[#4f4f4f] mb-3">
+                  <h4 className="font-['Inter',sans-serif] font-medium text-[13px] text-[#4F4F4F] mb-3">
                     {t("walletDelegation.configurePolicy")}
                   </h4>
                   <div className="space-y-3">
@@ -233,7 +233,7 @@ export default function WalletDelegationModal({
                         onChange={(e) => setPolicy({ ...policy, approvalRequired: e.target.checked })}
                         className="w-4 h-4 text-[#4f5eff] rounded focus:ring-0"
                       />
-                      <span className="font-['Inter',sans-serif] font-normal text-[12px] text-[#4f4f4f]">
+                      <span className="font-['Inter',sans-serif] font-normal text-[12px] text-[#4F4F4F]">
                         {t("policy.approvalRequired")}
                       </span>
                     </label>
@@ -253,7 +253,7 @@ export default function WalletDelegationModal({
               <div className="space-y-3">
                 {availableAgents.length > 0 ? (
                   <>
-                    <h4 className="font-['Inter',sans-serif] font-medium text-[13px] text-[#4f4f4f]">
+                    <h4 className="font-['Inter',sans-serif] font-medium text-[13px] text-[#4F4F4F]">
                       {t("walletDelegation.selectAgent")}
                     </h4>
                     <div className="space-y-2">

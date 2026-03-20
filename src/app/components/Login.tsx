@@ -113,7 +113,7 @@ export default function Login() {
               <h2 className="font-['Inter',sans-serif] font-semibold leading-[1.2] text-[24px] text-[#0a0a0a] mb-2">
                 {t('auth.login')}
               </h2>
-              <p className="font-['Inter',sans-serif] font-normal text-[14px] text-[#4f4f4f]">
+              <p className="font-['Inter',sans-serif] font-normal text-[14px] text-[#4F4F4F]">
                 {t('auth.selectProvider')}
               </p>
             </div>
@@ -214,7 +214,7 @@ export default function Login() {
           </div>
         </div>
 
-        <p className="font-['Inter',sans-serif] font-normal text-[14px] text-[#4f4f4f] text-center w-full">
+        <p className="font-['Inter',sans-serif] font-normal text-[14px] text-[#4F4F4F] text-center w-full">
           {t('common.copyright')}
         </p>
       </div>

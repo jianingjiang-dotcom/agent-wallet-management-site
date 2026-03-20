@@ -166,7 +166,7 @@ export default function DelegationCard({
           <div className="flex items-center gap-4">
             <div>
               <span className="font-['Inter',sans-serif] font-normal text-[10px] text-[#b0b0b0] block">{t("delegationCard.delegatedAt")}</span>
-              <span className="font-['Inter',sans-serif] font-normal text-[12px] text-[#4f4f4f]">{formatDate(delegation.delegatedAt)}</span>
+              <span className="font-['Inter',sans-serif] font-normal text-[12px] text-[#4F4F4F]">{formatDate(delegation.delegatedAt)}</span>
             </div>
           </div>
 
@@ -219,13 +219,13 @@ export default function DelegationCard({
             <p className="font-['Inter',sans-serif] font-normal text-[13px] text-[#7c7c7c] mb-1">
               {t("delegation.revokeConfirmDesc")}
             </p>
-            <p className="font-['JetBrains_Mono',monospace] text-[11px] text-[#4f4f4f] mb-4">
+            <p className="font-['JetBrains_Mono',monospace] text-[11px] text-[#4F4F4F] mb-4">
               Agent: {agent?.name || delegation.agentId}
             </p>
             <div className="flex gap-2">
               <button
                 onClick={() => setShowRevokeConfirm(false)}
-                className="flex-1 bg-[#f5f5f5] hover:bg-[#eee] h-[36px] rounded-[8px] font-['Inter',sans-serif] font-medium text-[13px] text-[#4f4f4f] transition-colors"
+                className="flex-1 bg-[#f5f5f5] hover:bg-[#eee] h-[36px] rounded-[8px] font-['Inter',sans-serif] font-medium text-[13px] text-[#4F4F4F] transition-colors"
               >
                 {t("common.cancel")}
               </button>

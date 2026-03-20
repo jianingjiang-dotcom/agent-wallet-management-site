@@ -6,7 +6,6 @@ import {
   Download,
   Bot,
   Wallet,
-  User,
 } from "lucide-react";
 import { useLanguage } from "../contexts/LanguageContext";
 import {
@@ -42,8 +41,6 @@ export default function ClaimWalletModal({
   const [phase, setPhase] = useState<Phase>("idle");
   const [walletId, setWalletId] = useState("");
   const [agentId, setAgentId] = useState("");
-  const [walletName, setWalletName] = useState("");
-  const [agentName, setAgentName] = useState("");
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   // Reset state every time the modal opens
@@ -53,8 +50,6 @@ export default function ClaimWalletModal({
       setPhase("idle");
       setWalletId("");
       setAgentId("");
-      setWalletName("");
-      setAgentName("");
     }
   }, [open]);
 
@@ -93,12 +88,8 @@ caw claim`;
 
   // Simulate: go directly to confirming with generated data (no loading)
   const simulateClaim = () => {
-    const wId = generateId();
-    const aId = generateId();
-    setWalletId(wId);
-    setAgentId(aId);
-    setWalletName(`Wallet #${wId.slice(-3)}`);
-    setAgentName(`Agent #${aId.slice(-3)}`);
+    setWalletId(generateId());
+    setAgentId(generateId());
     setPhase("confirming");
   };
 
@@ -119,8 +110,6 @@ caw claim`;
     setPhase("idle");
     setWalletId("");
     setAgentId("");
-    setWalletName("");
-    setAgentName("");
   };
 
   const handleDone = () => {
@@ -128,7 +117,7 @@ caw claim`;
       onWalletClaimed({
         walletId,
         agentId,
-        agentName,
+        agentName: `Agent #${agentId.slice(-3)}`,
       });
     }
     onClose();
@@ -176,67 +165,25 @@ caw claim`;
                 {t("claimWallet.confirmDesc")}
               </p>
 
-              <div className="space-y-3">
-                {/* Agent Info */}
-                <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[10px] px-4 py-3">
-                  <div className="flex items-center gap-2 mb-2.5">
-                    <Bot className="w-4 h-4 text-[#4f5eff]" />
-                    <span className="font-['Inter',sans-serif] font-medium text-[13px] text-[#0a0a0a]">
-                      {t("claimWallet.agentInfo")}
-                    </span>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="font-['Inter',sans-serif] font-normal text-[11px] text-[#7c7c7c]">{t("claimWallet.agentName")}</span>
-                      <span className="font-['Inter',sans-serif] font-medium text-[12px] text-[#0a0a0a]">{agentName}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="font-['Inter',sans-serif] font-normal text-[11px] text-[#7c7c7c]">{t("claimWallet.agentId")}</span>
-                      <span className="font-['JetBrains_Mono',monospace] text-[11px] text-[#4f4f4f]">{agentId}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Wallet Info */}
-                <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[10px] px-4 py-3">
-                  <div className="flex items-center gap-2 mb-2.5">
+              <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[10px] px-4 py-3 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
                     <Wallet className="w-4 h-4 text-[#4f5eff]" />
                     <span className="font-['Inter',sans-serif] font-medium text-[13px] text-[#0a0a0a]">
-                      {t("claimWallet.walletInfo")}
+                      {t("claimWallet.walletId")}
                     </span>
                   </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="font-['Inter',sans-serif] font-normal text-[11px] text-[#7c7c7c]">{t("claimWallet.walletName")}</span>
-                      <span className="font-['Inter',sans-serif] font-medium text-[12px] text-[#0a0a0a]">{walletName}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="font-['Inter',sans-serif] font-normal text-[11px] text-[#7c7c7c]">{t("claimWallet.walletId")}</span>
-                      <span className="font-['JetBrains_Mono',monospace] text-[11px] text-[#4f4f4f]">{walletId}</span>
-                    </div>
-                  </div>
+                  <span className="font-['JetBrains_Mono',monospace] text-[12px] text-[#4F4F4F]">{walletId}</span>
                 </div>
-
-                {/* User Identity */}
-                <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[10px] px-4 py-3">
-                  <div className="flex items-center gap-2 mb-2.5">
-                    <User className="w-4 h-4 text-[#4f5eff]" />
+                <div className="border-t border-[rgba(10,10,10,0.06)]" />
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Bot className="w-4 h-4 text-[#4f5eff]" />
                     <span className="font-['Inter',sans-serif] font-medium text-[13px] text-[#0a0a0a]">
-                      {t("claimWallet.userInfo")}
+                      {t("claimWallet.agentId")}
                     </span>
                   </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="font-['Inter',sans-serif] font-normal text-[11px] text-[#7c7c7c]">{t("claimWallet.claimedBy")}</span>
-                      <span className="font-['Inter',sans-serif] font-medium text-[12px] text-[#0a0a0a]">Current User</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="font-['Inter',sans-serif] font-normal text-[11px] text-[#7c7c7c]">{t("claimWallet.claimedAt")}</span>
-                      <span className="font-['Inter',sans-serif] font-normal text-[12px] text-[#4f4f4f]">
-                        {new Date().toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}
-                      </span>
-                    </div>
-                  </div>
+                  <span className="font-['JetBrains_Mono',monospace] text-[12px] text-[#4F4F4F]">{agentId}</span>
                 </div>
               </div>
 
@@ -244,7 +191,7 @@ caw claim`;
               <div className="flex gap-2 mt-4">
                 <button
                   onClick={handleCancelClaim}
-                  className="flex-1 bg-[#f5f5f5] hover:bg-[#eee] h-[40px] rounded-[8px] font-['Inter',sans-serif] font-medium text-[13px] text-[#4f4f4f] transition-colors"
+                  className="flex-1 bg-[#f5f5f5] hover:bg-[#eee] h-[40px] rounded-[8px] font-['Inter',sans-serif] font-medium text-[13px] text-[#4F4F4F] transition-colors"
                 >
                   {t("common.cancel")}
                 </button>
@@ -287,7 +234,7 @@ caw claim`;
           ) : phase === "waiting" || phase === "transferring" ? (
             <div className="text-center py-8">
               <Loader2 className="w-8 h-8 text-[#4f5eff] animate-spin mx-auto mb-3" />
-              <p className="font-['Inter',sans-serif] font-medium text-[14px] text-[#4f4f4f]">
+              <p className="font-['Inter',sans-serif] font-medium text-[14px] text-[#4F4F4F]">
                 {phase === "waiting" ? t("claimWallet.verifying") : t("claimWallet.transferring")}
               </p>
             </div>

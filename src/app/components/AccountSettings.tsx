@@ -29,14 +29,14 @@ export default function AccountSettings() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-3xl font-semibold text-slate-900 mb-2">{t('account.title')}</h1>
-        <p className="text-slate-600">{t('account.subtitle')}</p>
+    <div>
+      <div className="mb-6">
+        <h1 className="font-['Inter',sans-serif] font-semibold text-[28px] text-[#0a0a0a] mb-1">{t('account.title')}</h1>
+        <p className="font-['Inter',sans-serif] font-normal text-[15px] text-[#7c7c7c]">{t('account.subtitle')}</p>
       </div>
 
       {/* Profile Card */}
-      <div className="bg-white border border-[#EDEEF3] rounded-2xl p-6 shadow-sm mb-6">
+      <div className="bg-white border border-[#EBEBEB] rounded-2xl p-6 shadow-sm mb-6">
         <h2 className="text-xl font-semibold text-slate-900 mb-6">{t('account.basicInfo')}</h2>
 
         <div className="flex items-start space-x-6">
@@ -80,7 +80,7 @@ export default function AccountSettings() {
       </div>
 
       {/* Logout */}
-      <div className="bg-white border border-[#EDEEF3] rounded-2xl p-6 shadow-sm">
+      <div className="bg-white border border-[#EBEBEB] rounded-2xl p-6 shadow-sm">
         <div className="flex items-center justify-between">
           <div>
             <h3 className="font-semibold text-slate-900 mb-1">{t('account.logout')}</h3>
