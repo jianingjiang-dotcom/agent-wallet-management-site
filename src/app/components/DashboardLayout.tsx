@@ -145,7 +145,7 @@ export default function DashboardLayout() {
       {/* Sidebar */}
       <aside
         className={`
-          fixed lg:sticky top-0 left-0 h-screen w-[280px] sm:w-[260px] lg:w-[260px] bg-[#FAFAFA] flex flex-col z-40 border-r border-[#EBEBEB]
+          fixed lg:sticky top-0 left-0 h-screen w-[260px] bg-[#F8F9FC] flex flex-col z-40 border-r border-[#EDEEF3]
           transition-transform duration-300 ease-in-out
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
           shadow-xl lg:shadow-none
