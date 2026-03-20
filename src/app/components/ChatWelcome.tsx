@@ -12,7 +12,7 @@ export default function ChatWelcome({ variant }: ChatWelcomeProps) {
   return (
     <div className="flex flex-col items-center text-center mb-8" style={{ paddingTop: '8px' }}>
       {/* Avatar */}
-      <div className="mb-6">
+      <div className="mb-4">
         <AvatarCharacter variant={isFirst ? 'celebrate' : 'wave'} size={64} />
       </div>
 
@@ -21,7 +21,7 @@ export default function ChatWelcome({ variant }: ChatWelcomeProps) {
         className={`font-semibold text-[#0A0A0A] ${isFirst ? 'animate-reveal-up' : ''}`}
         style={{
           fontSize: '28px',
-          lineHeight: '36px',
+          lineHeight: '42px',
           marginBottom: '8px',
           ...(isFirst && { animationDelay: '800ms', animationDuration: '500ms' }),
         }}
@@ -31,11 +31,11 @@ export default function ChatWelcome({ variant }: ChatWelcomeProps) {
 
       {/* Subtitle */}
       <p
-        className={`text-[#4F4F4F] ${isFirst ? 'animate-reveal-up' : ''}`}
+        className={`text-[#73798B] ${isFirst ? 'animate-reveal-up' : ''}`}
         style={{
-          fontSize: '15px',
-          lineHeight: '22px',
-          maxWidth: '420px',
+          fontSize: '16px',
+          lineHeight: '24px',
+          maxWidth: '600px',
           ...(isFirst && { animationDelay: '1100ms', animationDuration: '500ms' }),
         }}
       >
