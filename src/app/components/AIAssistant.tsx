@@ -1,11 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useSearchParams, useOutletContext } from 'react-router';
-import { Send, Plus, AlertTriangle, CheckCircle, XCircle, Search, MoreHorizontal, Bot, Trash2, Sparkles, ArrowRight, Shield, Zap } from 'lucide-react';
+import { ArrowUp, Plus, AtSign, AlertTriangle, CheckCircle, XCircle, Search, MoreHorizontal, Bot, Trash2, Sparkles, ArrowRight, Shield, Zap, Wallet, ChevronRight, SquarePen, PanelLeftClose, X, MessageCircle, ClipboardCheck, CircleDollarSign, ShieldCheck, Send, Fuel, Users, Link, FileText, Settings, Clock } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useWalletStore } from '../hooks/useWalletStore';
 import { useOnboardingChat } from '../hooks/useOnboardingChat';
 import ChatWelcome from './ChatWelcome';
+import ApprovalPage from './ApprovalPage';
+import WalletAgentPage from './WalletAgentPage';
+import WalletCard from './WalletCard';
 import OnboardingMessageRenderer from './onboarding-cards/OnboardingMessageRenderer';
 import type { OnboardingData, OnboardingCallbacks } from './onboarding-cards/OnboardingMessageRenderer';
 
@@ -22,6 +25,7 @@ interface Message {
     status?: 'pending' | 'approved' | 'rejected';
   };
   onboardingData?: OnboardingData;
+  walletListData?: boolean;
 }
 
 interface ChatSession {
@@ -33,8 +37,19 @@ interface ChatSession {
 
 export default function AIAssistant() {
   const { t, language } = useLanguage();
-  const { hasWallets, addWalletWithAgent } = useWalletStore();
-  const { onClaimWallet } = useOutletContext<{ onSetupWallet: () => void; onClaimWallet: () => void }>();
+  const { wallets, hasWallets, addWalletWithAgent, delegations, selectWallet } = useWalletStore();
+  const { onClaimWallet, onOpenWalletModal, onShowWalletPage, onHideWalletPage, showWalletPage, onDelegateWallet, onShowApprovalPage, onHideApprovalPage, showApprovalPage } = useOutletContext<{
+    onSetupWallet: () => void;
+    onClaimWallet: () => void;
+    onOpenWalletModal: () => void;
+    onShowWalletPage: () => void;
+    onHideWalletPage: () => void;
+    showWalletPage: boolean;
+    onDelegateWallet: (walletId: string) => void;
+    onShowApprovalPage: () => void;
+    onHideApprovalPage: () => void;
+    showApprovalPage: boolean;
+  }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
@@ -42,13 +57,20 @@ export default function AIAssistant() {
   const [activeChatId, setActiveChatId] = useState<string>('current');
   const [chatTitle, setChatTitle] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [showSearch, setShowSearch] = useState(false);
+  const [showSearchModal, setShowSearchModal] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const searchModalInputRef = useRef<HTMLInputElement>(null);
   const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [welcomeType, setWelcomeType] = useState<'first-wallet' | null>(null);
+  const [approvalInitialTab, setApprovalInitialTab] = useState<'all' | 'pending'>('all');
   const [sidebarPortal, setSidebarPortal] = useState<HTMLElement | null>(null);
+  const [showWalletPicker, setShowWalletPicker] = useState<'empty' | 'chat' | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const walletPickerRef = useRef<HTMLDivElement>(null);
 
   // Onboarding chat hook
   const onboarding = useOnboardingChat(!hasWallets);
@@ -183,9 +205,40 @@ export default function AIAssistant() {
     s.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // Group sessions by date for search modal
+  const groupSessionsByDate = (sessions: ChatSession[]) => {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const yesterday = new Date(today.getTime() - 86400000);
+    const last7Days = new Date(today.getTime() - 7 * 86400000);
+
+    const groups: { label: string; sessions: ChatSession[] }[] = [
+      { label: language === 'zh' ? '今天' : 'Today', sessions: [] },
+      { label: language === 'zh' ? '昨天' : 'Yesterday', sessions: [] },
+      { label: language === 'zh' ? '前 7 天' : 'Previous 7 Days', sessions: [] },
+      { label: language === 'zh' ? '更早' : 'Older', sessions: [] },
+    ];
+
+    sessions.forEach(session => {
+      const sessionDate = new Date(session.timestamp);
+      if (sessionDate >= today) {
+        groups[0].sessions.push(session);
+      } else if (sessionDate >= yesterday) {
+        groups[1].sessions.push(session);
+      } else if (sessionDate >= last7Days) {
+        groups[2].sessions.push(session);
+      } else {
+        groups[3].sessions.push(session);
+      }
+    });
+
+    return groups.filter(g => g.sessions.length > 0);
+  };
+
   const handleSwitchSession = (session: ChatSession) => {
     setActiveChatId(session.id);
     setMessages(session.messages);
+    if (showWalletPage) onHideWalletPage();
   };
 
   const handleDeleteSession = (sessionId: string) => {
@@ -210,6 +263,24 @@ export default function AIAssistant() {
       return () => document.removeEventListener('mousedown', handleClickOutside);
     }
   }, [menuOpenId]);
+
+  // Close wallet picker on click outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (walletPickerRef.current && !walletPickerRef.current.contains(e.target as Node)) {
+        setShowWalletPicker(null);
+      }
+    };
+    if (showWalletPicker) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [showWalletPicker]);
+
+  const handleSelectWallet = (walletName: string) => {
+    setInputValue(prev => prev + `@${walletName} `);
+    setShowWalletPicker(null);
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -344,11 +415,21 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
     setIsTyping(true);
 
     setTimeout(() => {
+      const lowerInput = inputValue.toLowerCase();
+      const isWalletListQuery = hasWallets && (
+        lowerInput.includes('我的钱包') || lowerInput.includes('钱包列表') || lowerInput.includes('查看钱包') || lowerInput.includes('展示钱包') || lowerInput.includes('显示钱包') || lowerInput.includes('所有钱包') ||
+        lowerInput.includes('my wallet') || lowerInput.includes('wallet list') || lowerInput.includes('show wallet') || lowerInput.includes('list wallet') || lowerInput.includes('all wallet')
+      );
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: simulateAIResponse(inputValue),
+        content: isWalletListQuery
+          ? (language === 'zh'
+            ? `您当前共有 ${wallets.length} 个钱包，以下是钱包列表：`
+            : `You currently have ${wallets.length} wallet${wallets.length > 1 ? 's' : ''}. Here's your wallet list:`)
+          : simulateAIResponse(inputValue),
         timestamp: new Date(),
+        ...(isWalletListQuery ? { walletListData: true } : {}),
       };
       setMessages((prev) => [...prev, aiResponse]);
       setChatSessions((prev) =>
@@ -366,6 +447,8 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
     setMessages([]);
     setActiveChatId('current');
     setWelcomeType(null);
+    if (showWalletPage) onHideWalletPage();
+    if (showApprovalPage) onHideApprovalPage();
   };
 
   // Start the onboarding flow
@@ -376,31 +459,58 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
   // Chat sessions sidebar content (portaled into DashboardLayout sidebar)
   const chatSessionsSidebar = (
     <>
-      {/* New chat + search */}
-      <div className="px-3 pt-2 pb-2 flex flex-col gap-2">
+      {/* Collapse sidebar button */}
+      <div className="px-3 h-[64px] flex items-center justify-between">
+        <button
+          onClick={() => {
+            const sidebar = document.querySelector('aside');
+            if (sidebar) sidebar.classList.toggle('-translate-x-full');
+          }}
+          className="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] hover:bg-[#EBEBEB] transition-colors text-[#73798B]"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 5h18"/><path d="M3 12h18"/><path d="M3 19h18"/></svg>
+        </button>
+        <button
+          onClick={() => { setShowSearchModal(true); setSearchQuery(''); }}
+          className="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] hover:bg-[#EBEBEB] transition-colors text-[#73798B]"
+        >
+          <Search className="w-[20px] h-[20px]" strokeWidth={1.5} />
+        </button>
+      </div>
+
+      {/* Action items */}
+      <div className="px-2 pt-0 pb-[24px] flex flex-col">
         <button
           onClick={handleNewChat}
-          className="w-full h-[36px] flex items-center justify-center gap-2 px-4 text-[13px] font-medium text-[#4f5eff] border border-[#4f5eff] rounded-[8px] hover:bg-[#f0f0ff] transition-colors"
+          className="w-full h-[44px] flex items-center gap-[8px] px-[12px] rounded-[8px] hover:bg-[#EBEBEB] transition-colors text-[#0A0A0A]"
         >
-          <Plus className="w-4 h-4" />
-          {t('ai.newChat')}
+          <SquarePen className="w-[20px] h-[20px]" strokeWidth={1.5} />
+          <span className="font-['Inter',sans-serif] text-[14px] leading-[20px] font-normal">{t('ai.newChat')}</span>
         </button>
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={language === 'zh' ? '搜索对话...' : 'Search chats...'}
-            className="w-full h-[32px] pl-8 pr-3 text-[12px] bg-white border border-[#EBEBEB] rounded-[8px] text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-[#4f5eff] focus:border-[#4f5eff] transition-colors"
-          />
-        </div>
+        {hasWallets && (
+          <>
+            <button
+              onClick={() => showWalletPage ? onHideWalletPage() : onShowWalletPage()}
+              className={`w-full h-[44px] flex items-center gap-[8px] px-[12px] rounded-[8px] hover:bg-[#EBEBEB] transition-colors ${showWalletPage ? 'bg-[#EBEBEB] text-[#4f5eff]' : 'text-[#0A0A0A]'}`}
+            >
+              <Wallet className="w-[20px] h-[20px]" strokeWidth={1.5} />
+              <span className="font-['Inter',sans-serif] text-[14px] leading-[20px] font-normal">{language === 'zh' ? '我的钱包' : 'My Wallets'}</span>
+            </button>
+            <button
+              onClick={() => { if (showApprovalPage) { onHideApprovalPage(); } else { setApprovalInitialTab('all'); onShowApprovalPage(); } }}
+              className={`w-full h-[44px] flex items-center gap-[8px] px-[12px] rounded-[8px] hover:bg-[#EBEBEB] transition-colors ${showApprovalPage ? 'bg-[#EBEBEB] text-[#4f5eff]' : 'text-[#0A0A0A]'}`}
+            >
+              <ClipboardCheck className="w-[20px] h-[20px]" strokeWidth={1.5} />
+              <span className="font-['Inter',sans-serif] text-[14px] leading-[20px] font-normal">{language === 'zh' ? '操作审批' : 'Approvals'}</span>
+            </button>
+          </>
+        )}
       </div>
 
       {/* Session list */}
       <div className="flex-1 overflow-y-auto px-2">
-        <div className="px-2 py-1.5">
-          <span className="text-[11px] font-medium text-[#4F4F4F] uppercase tracking-wider">
+        <div className="px-[12px] py-1.5">
+          <span className="text-[14px] leading-[20px] font-normal text-[#B9BCC5]">
             {language === 'zh' ? '对话历史' : 'History'}
           </span>
         </div>
@@ -408,10 +518,10 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
           <div key={session.id} className="relative group">
             <button
               onClick={() => handleSwitchSession(session)}
-              className={`w-full text-left px-3 py-2 pr-8 rounded-[8px] text-[13px] transition-colors truncate ${
+              className={`w-full text-left px-[12px] py-2 pr-8 rounded-[8px] text-[14px] leading-[20px] font-normal transition-colors truncate ${
                 activeChatId === session.id
-                  ? 'bg-[#EBEBEB] text-[#4f5eff] font-medium'
-                  : 'text-slate-700 hover:bg-[#EBEBEB] font-normal'
+                  ? 'bg-[#EBEBEB] text-[#4f5eff]'
+                  : 'text-slate-700 hover:bg-[#EBEBEB]'
               }`}
             >
               {session.title}
@@ -439,9 +549,91 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
         ))}
       </div>
 
-      {/* Delete confirmation dialog */}
+    </>
+  );
+
+  // Search modal - rendered at top level, not inside sidebar portal
+  const searchModal = showSearchModal ? (
+    <div className="fixed inset-0 bg-black/30 flex items-start justify-center pt-[120px] z-[60]" onClick={() => setShowSearchModal(false)}>
+      <div
+        className="bg-white rounded-[16px] shadow-2xl w-[680px] max-h-[520px] flex flex-col overflow-hidden"
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Search input */}
+        <div className="flex items-center gap-3 px-5 py-4 border-b border-[#EBEBEB]">
+          <Search className="w-[20px] h-[20px] text-[#999] shrink-0" strokeWidth={1.5} />
+          <input
+            ref={searchModalInputRef}
+            autoFocus
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder={language === 'zh' ? '搜索聊天...' : 'Search chats...'}
+            className="flex-1 text-[16px] bg-transparent text-[#0A0A0A] placeholder-[#999] focus:outline-none"
+          />
+          <button
+            onClick={() => setShowSearchModal(false)}
+            className="w-[28px] h-[28px] flex items-center justify-center rounded-[6px] hover:bg-[#F5F5F5] transition-colors text-[#999]"
+          >
+            <X className="w-[18px] h-[18px]" strokeWidth={1.5} />
+          </button>
+        </div>
+
+        {/* Results */}
+        <div className="flex-1 overflow-y-auto py-2">
+          {/* New chat option */}
+          <button
+            onClick={() => { handleNewChat(); setShowSearchModal(false); }}
+            className="w-full flex items-center gap-3 px-5 py-3 hover:bg-[#F5F5F5] transition-colors"
+          >
+            <SquarePen className="w-[20px] h-[20px] text-[#0A0A0A]" strokeWidth={1.5} />
+            <span className="text-[15px] font-medium text-[#0A0A0A]">{language === 'zh' ? '新聊天' : 'New Chat'}</span>
+          </button>
+
+          {/* Grouped sessions */}
+          {groupSessionsByDate(filteredSessions).map((group) => (
+            <div key={group.label}>
+              <div className="px-5 pt-4 pb-1.5">
+                <span className="text-[12px] font-medium text-[#999]">{group.label}</span>
+              </div>
+              {group.sessions.map((session) => (
+                <button
+                  key={session.id}
+                  onClick={() => { handleSwitchSession(session); setShowSearchModal(false); }}
+                  className="w-full flex items-center gap-3 px-5 py-3 hover:bg-[#F5F5F5] transition-colors"
+                >
+                  <MessageCircle className="w-[20px] h-[20px] text-[#999] shrink-0" strokeWidth={1.5} />
+                  <span className="text-[15px] text-[#0A0A0A] truncate">{session.title}</span>
+                </button>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  ) : null;
+
+  // Render a single message (shared between regular and onboarding messages)
+  const renderAssistantHeader = () => (
+    <div style={{ fontSize: '16px', lineHeight: '24px', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+      <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: '#4f5eff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+        <Bot style={{ width: '12px', height: '12px', color: 'white' }} />
+      </div>
+      <span style={{ fontWeight: 600 }}>Cobo<span style={{ color: '#4f5eff' }}>Agentic</span>Wallet</span>
+    </div>
+  );
+
+  return (
+    <>
+      {/* Portal chat sessions into the layout sidebar */}
+      {sidebarPortal && createPortal(chatSessionsSidebar, sidebarPortal)}
+
+      {/* Search modal - rendered at top level via portal to body */}
+      {showSearchModal && createPortal(searchModal, document.body)}
+
+      {/* Delete confirmation dialog - rendered at top level */}
       {deleteConfirmId && (
-        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50" onClick={() => setDeleteConfirmId(null)}>
+        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-[60]" onClick={() => setDeleteConfirmId(null)}>
           <div className="bg-white rounded-xl p-6 shadow-xl" style={{ maxWidth: '360px', width: '90%' }} onClick={e => e.stopPropagation()}>
             <p className="text-base font-medium text-slate-900 mb-2">
               {language === 'zh' ? '确认删除' : 'Confirm Delete'}
@@ -466,23 +658,6 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
           </div>
         </div>
       )}
-    </>
-  );
-
-  // Render a single message (shared between regular and onboarding messages)
-  const renderAssistantHeader = () => (
-    <div style={{ fontSize: '14px', lineHeight: '20px', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-      <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: '#4f5eff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-        <Bot style={{ width: '12px', height: '12px', color: 'white' }} />
-      </div>
-      <span style={{ fontWeight: 600 }}>Cobo<span style={{ color: '#4f5eff' }}>Agentic</span>Wallet</span>
-    </div>
-  );
-
-  return (
-    <>
-      {/* Portal chat sessions into the layout sidebar */}
-      {sidebarPortal && createPortal(chatSessionsSidebar, sidebarPortal)}
 
       <input
         ref={fileInputRef}
@@ -498,12 +673,56 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
         }}
       />
 
+      {/* Wallet page - shown when wallet sidebar item is active */}
+      {showWalletPage && (
+        <div className="flex-1 flex flex-col bg-white overflow-y-auto min-h-0">
+          <div className="w-full max-w-[860px] mx-auto p-6 sm:p-10">
+            <WalletAgentPage
+              onSetupWallet={() => { onHideWalletPage(); }}
+              onClaimWallet={onClaimWallet}
+              onDelegateWallet={onDelegateWallet}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Approval page - shown when approval sidebar item is active */}
+      {showApprovalPage && (
+        <div className="flex-1 flex flex-col bg-white overflow-y-auto min-h-0">
+          <div className="w-full max-w-[860px] mx-auto p-6 sm:p-10">
+            <ApprovalPage key={approvalInitialTab} initialTab={approvalInitialTab} />
+          </div>
+        </div>
+      )}
+
       {/* Chat area - full height */}
-      <div className="flex-1 flex flex-col bg-white overflow-hidden relative" style={{ height: 'calc(100vh - 0px)' }}>
+      {!showWalletPage && !showApprovalPage && (
+      <div className="flex-1 flex flex-col bg-white overflow-hidden relative min-h-0">
+        {/* Pending approval notification banner */}
+        {hasWallets && (
+          <div className="w-full flex justify-center px-6 pt-4">
+          <button
+            onClick={() => { setApprovalInitialTab('pending'); onShowApprovalPage(); }}
+            className="w-full max-w-[768px] flex items-center justify-between px-4 py-3 rounded-xl bg-[#FFF8ED] border border-[#FFE4B5] hover:bg-[#FFF0D6] transition-colors group"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-[#FF9500]/10 flex items-center justify-center">
+                <Clock className="w-4 h-4 text-[#FF9500]" strokeWidth={2} />
+              </div>
+              <span className="text-[14px] text-[#0A0A0A]">
+                {language === 'zh'
+                  ? <>你有 <span className="font-semibold text-[#FF9500]">2</span> 条审批待处理</>
+                  : <>You have <span className="font-semibold text-[#FF9500]">2</span> pending approvals</>}
+              </span>
+            </div>
+            <ChevronRight className="w-4 h-4 text-[#999] group-hover:text-[#FF9500] transition-colors" strokeWidth={1.5} />
+          </button>
+          </div>
+        )}
         {/* Messages area */}
         {(displayMessages.length > 0 || combinedTyping) && (
         <div className="flex-1 overflow-y-auto px-6 pb-6 flex flex-col items-center" style={{ gap: '24px', paddingTop: '32px' }}>
-          <div className="w-full max-w-[768px] flex-1" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <div className="w-full max-w-[744px] flex-1" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
 
           {displayMessages.map((message) => (
             <div key={message.id} className="animate-reveal-up" style={{ animationDuration: '400ms' }}>
@@ -512,7 +731,7 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
                 <div className="flex items-start justify-start">
                   <div className="bg-transparent text-slate-900 w-full">
                     {renderAssistantHeader()}
-                    <div className="whitespace-pre-wrap" style={{ fontSize: '14px', lineHeight: '20px' }}>
+                    <div className="whitespace-pre-wrap" style={{ fontSize: '16px', lineHeight: '24px' }}>
                       {message.content}
                     </div>
                     <OnboardingMessageRenderer
@@ -584,11 +803,29 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
                   {message.role === 'assistant' ? (
                     <div className="bg-transparent text-slate-900 w-full">
                       {renderAssistantHeader()}
-                      <div className="whitespace-pre-wrap" style={{ fontSize: '14px', lineHeight: '20px' }}>{message.content}</div>
+                      <div className="whitespace-pre-wrap" style={{ fontSize: '16px', lineHeight: '24px' }}>{message.content}</div>
+                      {message.walletListData && wallets.length > 0 && (
+                        <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          {wallets.map((w) => {
+                            const count = delegations.filter(d => d.walletId === w.id).length;
+                            return (
+                              <WalletCard
+                                key={w.id}
+                                wallet={w}
+                                delegationCount={count}
+                                onSelect={(walletId) => {
+                                  selectWallet(walletId);
+                                  onShowWalletPage();
+                                }}
+                              />
+                            );
+                          })}
+                        </div>
+                      )}
                     </div>
                   ) : (
                     <div className="bg-[#EBEBEB] text-slate-900 max-w-[80%] rounded-[10px] px-4 py-3">
-                      <div className="whitespace-pre-wrap" style={{ fontSize: '14px', lineHeight: '20px' }}>{message.content}</div>
+                      <div className="whitespace-pre-wrap" style={{ fontSize: '16px', lineHeight: '24px' }}>{message.content}</div>
                     </div>
                   )}
                 </div>
@@ -614,7 +851,7 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
 
         {/* Empty state — only when no messages AND onboarding not active */}
         {displayMessages.length === 0 && !combinedTyping && !onboarding.isOnboardingActive && (
-          <div className="flex-1 flex items-center justify-center px-6">
+          <div className="flex-1 flex items-center justify-center px-6" style={{ marginTop: '-160px' }}>
             <div className="w-full max-w-[768px]">
 
               {/* Scenario C: No wallet, no welcome — start onboarding in chat */}
@@ -706,21 +943,73 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
                       onChange={(e) => setInputValue(e.target.value)}
                       onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
                       placeholder={t('ai.inputPlaceholder')}
-                      className="w-full h-[80px] bg-transparent px-4 pt-3 pb-1 text-sm text-slate-900 placeholder-slate-400 focus:outline-none resize-none"
+                      className="w-full bg-transparent p-3 text-[16px] leading-[24px] text-slate-900 focus:outline-none resize-none chat-input-placeholder overflow-y-auto"
+                      style={{ minHeight: '72px', maxHeight: '144px', height: '72px' }}
+                      onInput={(e) => { const el = e.currentTarget; el.style.height = '72px'; el.style.height = Math.min(el.scrollHeight, 144) + 'px'; }}
                     />
                     <div className="flex items-center justify-between px-3 pb-3">
-                      <button onClick={() => fileInputRef.current?.click()} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] text-slate-500 hover:bg-[#FAFAFA] transition-colors">
-                        <Plus className="w-5 h-5" strokeWidth={1.5} />
-                      </button>
+                      <div className="flex items-center gap-1 relative">
+                        <button onClick={() => fileInputRef.current?.click()} className="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] text-slate-500 hover:bg-[#FAFAFA] transition-colors">
+                          <Plus className="w-5 h-5" strokeWidth={1.5} />
+                        </button>
+                        {hasWallets && (
+                          <button onClick={() => setShowWalletPicker(showWalletPicker === 'empty' ? null : 'empty')} className="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] text-slate-500 hover:bg-[#FAFAFA] transition-colors">
+                            <AtSign className="w-5 h-5" strokeWidth={1.5} />
+                          </button>
+                        )}
+                        {showWalletPicker === 'empty' && (
+                          <div ref={walletPickerRef} className="absolute bottom-full left-0 mb-2 bg-white rounded-xl border border-[#EBEBEB] shadow-lg py-1 z-50" style={{ minWidth: '200px' }}>
+                            <div className="px-3 py-2 text-[12px] font-medium text-[#999]">{language === 'zh' ? '选择钱包' : 'Select Wallet'}</div>
+                            {wallets.map(w => (
+                              <button
+                                key={w.id}
+                                onClick={() => handleSelectWallet(w.name)}
+                                className="w-full text-left px-3 py-2 text-[14px] text-[#0A0A0A] hover:bg-[#F5F5F5] transition-colors flex items-center gap-2"
+                              >
+                                <Wallet className="w-4 h-4 text-[#4f5eff]" strokeWidth={1.5} />
+                                {w.name}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                       <button
                         onClick={handleSendMessage}
                         disabled={!inputValue.trim() || isTyping}
-                        className="w-[32px] h-[32px] flex items-center justify-center rounded-[10px] bg-[#4f5eff] hover:bg-[#3d4dd9] disabled:bg-slate-200 disabled:cursor-not-allowed text-white transition-all"
+                        className="w-[36px] h-[36px] flex items-center justify-center rounded-[10px] bg-[#4f5eff] hover:bg-[#3d4dd9] disabled:bg-slate-200 disabled:cursor-not-allowed text-white transition-all"
                       >
-                        <Send className="w-4 h-4" />
+                        <ArrowUp className="w-5 h-5" />
                       </button>
                     </div>
                   </div>
+
+                {/* Quick actions - only for returning users with wallets */}
+                {hasWallets && !welcomeType && (
+                  <div className="flex flex-wrap gap-[10px] mt-[32px] justify-center">
+                    {(language === 'zh' ? [
+                      { icon: CircleDollarSign, label: '查询钱包余额' },
+                      { icon: ShieldCheck, label: '设置风控策略' },
+                      { icon: Send, label: '发起一笔转账' },
+                      { icon: Fuel, label: '查询 Gas 费用' },
+                      { icon: Users, label: '配置 Agent 权限' },
+                    ] : [
+                      { icon: CircleDollarSign, label: 'Check Balance' },
+                      { icon: ShieldCheck, label: 'Set Risk Policy' },
+                      { icon: Send, label: 'Send Transfer' },
+                      { icon: Fuel, label: 'Check Gas Fees' },
+                      { icon: Users, label: 'Configure Agent' },
+                    ]).map(({ icon: Icon, label }) => (
+                      <button
+                        key={label}
+                        onClick={() => { setInputValue(label); }}
+                        className="inline-flex items-center gap-[6px] px-[14px] py-[8px] rounded-full border border-[#E5E5E5] bg-white hover:bg-[#F5F5F5] hover:border-[#D0D0D0] transition-all text-[13px] text-[#4F4F4F] hover:text-[#0A0A0A]"
+                      >
+                        <Icon className="w-[14px] h-[14px] text-[#999]" strokeWidth={1.5} />
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                )}
                 </div>
             </div>
           </div>
@@ -728,33 +1017,61 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
 
         {/* Input area - shown when messages exist */}
         {(displayMessages.length > 0 || combinedTyping) && (
-        <div className="bg-white px-6 pb-[24px] flex justify-center">
-          <div className="w-full max-w-[768px]">
+        <div className="bg-white px-6 pb-[8px] flex justify-center shrink-0 sticky bottom-0 z-10">
+          <div className="w-full max-w-[744px]">
           <div className="bg-white border border-[#EBEBEB] rounded-xl shadow-[0px_4px_16px_0px_rgba(0,0,0,0.08)] flex flex-col">
             <textarea
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
               placeholder={t('ai.inputPlaceholder')}
-              className="w-full h-[80px] bg-transparent px-4 pt-3 pb-1 text-sm text-slate-900 placeholder-slate-400 focus:outline-none resize-none"
+              className="w-full bg-transparent p-3 text-[16px] leading-[24px] text-slate-900 focus:outline-none resize-none chat-input-placeholder overflow-y-auto"
+                      style={{ minHeight: '72px', maxHeight: '144px', height: '72px' }}
+                      onInput={(e) => { const el = e.currentTarget; el.style.height = '72px'; el.style.height = Math.min(el.scrollHeight, 144) + 'px'; }}
             />
             <div className="flex items-center justify-between px-3 pb-3">
-              <button onClick={() => fileInputRef.current?.click()} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] text-slate-500 hover:bg-[#FAFAFA] transition-colors">
-                <Plus className="w-5 h-5" strokeWidth={1.5} />
-              </button>
+              <div className="flex items-center gap-1 relative">
+                <button onClick={() => fileInputRef.current?.click()} className="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] text-slate-500 hover:bg-[#FAFAFA] transition-colors">
+                  <Plus className="w-5 h-5" strokeWidth={1.5} />
+                </button>
+                {hasWallets && (
+                  <button onClick={() => setShowWalletPicker(showWalletPicker === 'chat' ? null : 'chat')} className="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] text-slate-500 hover:bg-[#FAFAFA] transition-colors">
+                    <AtSign className="w-5 h-5" strokeWidth={1.5} />
+                  </button>
+                )}
+                {showWalletPicker === 'chat' && (
+                  <div ref={walletPickerRef} className="absolute bottom-full left-0 mb-2 bg-white rounded-xl border border-[#EBEBEB] shadow-lg py-1 z-50" style={{ minWidth: '200px' }}>
+                    <div className="px-3 py-2 text-[12px] font-medium text-[#999]">{language === 'zh' ? '选择钱包' : 'Select Wallet'}</div>
+                    {wallets.map(w => (
+                      <button
+                        key={w.id}
+                        onClick={() => handleSelectWallet(w.name)}
+                        className="w-full text-left px-3 py-2 text-[14px] text-[#0A0A0A] hover:bg-[#F5F5F5] transition-colors flex items-center gap-2"
+                      >
+                        <Wallet className="w-4 h-4 text-[#4f5eff]" strokeWidth={1.5} />
+                        {w.name}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
               <button
                 onClick={handleSendMessage}
                 disabled={!inputValue.trim() || isTyping}
-                className="w-[32px] h-[32px] flex items-center justify-center rounded-[10px] bg-[#4f5eff] hover:bg-[#3d4dd9] disabled:bg-slate-200 disabled:cursor-not-allowed text-white transition-all"
+                className="w-[36px] h-[36px] flex items-center justify-center rounded-[10px] bg-[#4f5eff] hover:bg-[#3d4dd9] disabled:bg-slate-200 disabled:cursor-not-allowed text-white transition-all"
               >
-                <Send className="w-4 h-4" />
+                <ArrowUp className="w-5 h-5" />
               </button>
             </div>
           </div>
+          <p className="text-center mt-2" style={{ fontSize: '12px', lineHeight: '16px', color: '#73798B' }}>
+            {language === 'zh' ? 'AI 钱包助手也可能会犯错，请仔细核对回答的内容。' : 'AI Wallet Assistant may make mistakes. Please verify the responses carefully.'}
+          </p>
           </div>
         </div>
         )}
       </div>
+      )}
     </>
   );
 }

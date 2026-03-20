@@ -141,7 +141,7 @@ export default function DashboardLayout() {
   );
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA] flex">
+    <div className="h-screen bg-[#FAFAFA] flex overflow-hidden">
       {/* Sidebar */}
       <aside
         className={`
@@ -151,27 +151,23 @@ export default function DashboardLayout() {
           shadow-xl lg:shadow-none
         `}
       >
-        {/* Logo */}
-        <div className="pt-[24px] pb-[16px] flex items-center justify-between px-[20px]">
-          <div className="h-[18px] relative w-[172px]">
-            <LogoSvg />
-          </div>
+        {/* Mobile close button */}
+        <div className="pt-[24px] pb-[16px] flex items-center justify-end px-[8px] lg:hidden">
           <button
             onClick={() => setSidebarOpen(false)}
-            className="lg:hidden p-2 -mr-2 rounded-lg hover:bg-slate-100 transition-colors"
+            className="p-2 -mr-2 rounded-lg hover:bg-slate-100 transition-colors"
           >
             <X className="w-5 h-5 text-slate-600" />
           </button>
         </div>
-
         {/* Chat sessions portal area - AIAssistant will render here */}
-        <div id="sidebar-chat-area" className="flex-1 overflow-hidden flex flex-col min-h-0" />
+        <div id="sidebar-chat-area" className="overflow-hidden flex flex-col min-h-0 [&:not(:empty)]:flex-1" />
 
         {/* User Profile */}
         <div className="border-t border-[rgba(10,10,10,0.08)] relative" ref={accountMenuRef}>
           <button
             onClick={() => setAccountMenuOpen(!accountMenuOpen)}
-            className="w-full p-[16px] flex items-center gap-[8px] hover:bg-[#EBEBEB] transition-colors rounded-none"
+            className="w-full py-[16px] px-[8px] flex items-center gap-[8px] hover:bg-[#EBEBEB] transition-colors rounded-none"
           >
             <div className="w-[36px] h-[36px] bg-[rgba(79,94,255,0.1)] border-[1.25px] border-[rgba(79,94,255,0.2)] rounded-full flex items-center justify-center shrink-0">
               <User className="w-4 h-4 text-[#4f5eff]" />
@@ -252,7 +248,16 @@ export default function DashboardLayout() {
       )}
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 min-h-0 bg-white">
+        {/* Logo - desktop */}
+        <div className="hidden lg:flex items-center h-[64px] pl-[24px]">
+          <div className="h-[28px] flex items-center">
+            <div className="h-[18px] relative w-[172px]">
+              <LogoSvg />
+            </div>
+          </div>
+        </div>
+
         {/* Mobile Header */}
         <div className="lg:hidden bg-white border-b border-[rgba(10,10,10,0.08)] px-4 py-3 flex items-center justify-between sticky top-0 z-20 shadow-sm">
           <button
@@ -282,6 +287,13 @@ export default function DashboardLayout() {
             onPairAgent: () => setShowAgentPairing(true),
             onClaimWallet: () => setShowClaimWallet(true),
             onDelegateWallet: (walletId: string) => setDelegationTarget({ open: true, walletId }),
+            onOpenWalletModal: () => setActiveModal('wallet'),
+            onShowWalletPage: () => setActiveModal('wallet-page'),
+            onHideWalletPage: () => setActiveModal(null),
+            showWalletPage: activeModal === 'wallet-page',
+            onShowApprovalPage: () => setActiveModal('approval-page'),
+            onHideApprovalPage: () => setActiveModal(null),
+            showApprovalPage: activeModal === 'approval-page',
           }} />
         </main>
       </div>
