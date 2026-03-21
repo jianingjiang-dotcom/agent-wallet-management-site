@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { CheckCircle, XCircle, Clock, Wallet, Bot } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -75,10 +75,16 @@ const mockRecords: ApprovalRecord[] = [
   },
 ];
 
-export default function ApprovalPage({ initialTab = 'all' }: { initialTab?: TabFilter }) {
+export default function ApprovalPage({ initialTab = 'all', onPendingCountChange }: { initialTab?: TabFilter; onPendingCountChange?: (count: number) => void }) {
   const { language } = useLanguage();
   const [activeTab, setActiveTab] = useState<TabFilter>(initialTab);
   const [records, setRecords] = useState<ApprovalRecord[]>(mockRecords);
+
+  const pendingCount = records.filter(r => r.status === 'pending').length;
+
+  useEffect(() => {
+    onPendingCountChange?.(pendingCount);
+  }, [pendingCount, onPendingCountChange]);
 
   const tabs: { key: TabFilter; label: string }[] = [
     { key: 'all', label: language === 'zh' ? '全部' : 'All' },
@@ -90,8 +96,6 @@ export default function ApprovalPage({ initialTab = 'all' }: { initialTab?: TabF
   const filteredRecords = activeTab === 'all'
     ? records
     : records.filter(r => r.status === activeTab);
-
-  const pendingCount = records.filter(r => r.status === 'pending').length;
 
   const handleApprove = (id: string) => {
     setRecords(prev => prev.map(r => r.id === id ? { ...r, status: 'approved' as ApprovalStatus } : r));

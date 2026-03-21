@@ -52,7 +52,7 @@ export default function AIAssistant() {
     sidebarCollapsed: boolean;
   }>();
   const [searchParams, setSearchParams] = useSearchParams();
-  const pendingApprovalCount = hasWallets ? 2 : 0; // Mock pending approval count
+  const [pendingApprovalCount, setPendingApprovalCount] = useState(hasWallets ? 2 : 0);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -68,7 +68,6 @@ export default function AIAssistant() {
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [welcomeType, setWelcomeType] = useState<'first-wallet' | null>(null);
   const [approvalInitialTab, setApprovalInitialTab] = useState<'all' | 'pending'>('all');
-  const pendingApprovalCount = 2; // TODO: derive from shared approval state
   const [sidebarPortal, setSidebarPortal] = useState<HTMLElement | null>(null);
   const [showWalletPicker, setShowWalletPicker] = useState<'empty' | 'chat' | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -731,7 +730,7 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
       {showApprovalPage && (
         <div className="flex-1 flex flex-col bg-white overflow-y-auto min-h-0">
           <div className="w-full max-w-[860px] mx-auto p-6 sm:p-10">
-            <ApprovalPage key={approvalInitialTab} initialTab={approvalInitialTab} />
+            <ApprovalPage key={approvalInitialTab} initialTab={approvalInitialTab} onPendingCountChange={setPendingApprovalCount} />
           </div>
         </div>
       )}
