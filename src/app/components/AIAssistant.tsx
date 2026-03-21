@@ -52,7 +52,8 @@ export default function AIAssistant() {
     sidebarCollapsed: boolean;
   }>();
   const [searchParams, setSearchParams] = useSearchParams();
-  const pendingApprovalCount = hasWallets ? 2 : 0; // Mock pending approval count
+  const [pendingApprovalCount, setPendingApprovalCount] = useState(hasWallets ? 2 : 0);
+  const [approvalBannerDismissed, setApprovalBannerDismissed] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -68,7 +69,6 @@ export default function AIAssistant() {
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [welcomeType, setWelcomeType] = useState<'first-wallet' | null>(null);
   const [approvalInitialTab, setApprovalInitialTab] = useState<'all' | 'pending'>('all');
-  const pendingApprovalCount = 2; // TODO: derive from shared approval state
   const [sidebarPortal, setSidebarPortal] = useState<HTMLElement | null>(null);
   const [showWalletPicker, setShowWalletPicker] = useState<'empty' | 'chat' | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -692,31 +692,32 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
         }}
       />
 
-      {/* Pending approval notification banner — visible on all pages */}
-      {hasWallets && pendingApprovalCount > 0 && !showApprovalPage && (
-        <div className="w-full flex justify-center px-6 pt-4 bg-white">
-          <button
-            onClick={() => { setApprovalInitialTab('pending'); onShowApprovalPage(); }}
-            className="w-full max-w-[768px] flex items-center justify-between px-4 py-3 rounded-xl bg-[#FFF8ED] border border-[#FFE4B5] hover:bg-[#FFF0D6] transition-colors group"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-[#FF9500]/10 flex items-center justify-center">
-                <Clock className="w-4 h-4 text-[#FF9500]" strokeWidth={2} />
-              </div>
-              <span className="text-[14px] text-[#0A0A0A]">
-                {language === 'zh'
-                  ? <>你有 <span className="font-semibold text-[#FF9500]">{pendingApprovalCount}</span> 条审批待处理</>
-                  : <>You have <span className="font-semibold text-[#FF9500]">{pendingApprovalCount}</span> pending approval{pendingApprovalCount > 1 ? 's' : ''}</>}
-              </span>
-            </div>
-            <ChevronRight className="w-4 h-4 text-[#999] group-hover:text-[#FF9500] transition-colors" strokeWidth={1.5} />
-          </button>
-        </div>
-      )}
-
       {/* Wallet page - shown when wallet sidebar item is active */}
       {showWalletPage && (
-        <div className="flex-1 flex flex-col bg-white overflow-y-auto min-h-0">
+        <div className="flex-1 flex flex-col bg-white overflow-y-auto min-h-0 relative">
+          {/* Floating approval notification banner */}
+          {hasWallets && pendingApprovalCount > 0 && !approvalBannerDismissed && (
+            <div className="absolute top-0 left-0 right-0 z-10 flex justify-center px-6 pt-[24px] pointer-events-none">
+              <div className="w-full max-w-[768px] flex items-center justify-between px-4 py-3 rounded-xl bg-[#FEF1E8] pointer-events-auto">
+                <div className="flex items-center gap-2">
+                  <div className="w-5 h-5 flex items-center justify-center">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.6667 10.8333C16.6667 15 13.75 17.0833 10.2833 18.2916C10.1018 18.3532 9.90461 18.3502 9.72499 18.2833C6.24999 17.0833 3.33333 15 3.33333 10.8333V4.99997C3.33333 4.77895 3.42113 4.56699 3.57741 4.41071C3.73369 4.25443 3.94565 4.16663 4.16666 4.16663C5.83333 4.16663 7.91666 3.16663 9.36666 1.89997C9.54321 1.74913 9.76779 1.66626 9.99999 1.66626C10.2322 1.66626 10.4568 1.74913 10.6333 1.89997C12.0917 3.17497 14.1667 4.16663 15.8333 4.16663C16.0543 4.16663 16.2663 4.25443 16.4226 4.41071C16.5789 4.56699 16.6667 4.77895 16.6667 4.99997V10.8333Z" stroke="#F97316" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M7.5 9.99992L9.16667 11.6666L12.5 8.33325" stroke="#F97316" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  </div>
+                  <span className="text-[14px] leading-[20px] text-[#1C1C1C] font-normal">
+                    {language === 'zh'
+                      ? <>{pendingApprovalCount} 条审批待处理</>
+                      : <>{pendingApprovalCount} pending approval{pendingApprovalCount > 1 ? 's' : ''}</>}
+                  </span><button onClick={() => { setApprovalInitialTab('pending'); onShowApprovalPage(); }} className="text-[14px] leading-[20px] text-[#F97316] hover:text-[#FF9500] transition-colors font-normal cursor-pointer">
+                    {language === 'zh' ? '立即查看' : 'View now'}
+                  </button>
+                </div>
+                <button onClick={(e) => { e.stopPropagation(); setApprovalBannerDismissed(true); }} className="cursor-pointer relative group p-[2px] -m-[2px]" title={language === 'zh' ? '关闭提示' : 'Close tip'}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F97316" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover:stroke-[#FF9500] transition-colors"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                  <span className="absolute top-[calc(100%-2px+16px)] left-1/2 -translate-x-1/2 px-[6px] py-[4px] text-[12px] leading-[16px] font-normal text-white bg-[#1C1C1C] rounded-[6px] whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">{language === 'zh' ? '关闭提示' : 'Close tip'}</span>
+                </button>
+              </div>
+            </div>
+          )}
           <div className="w-full max-w-[860px] mx-auto p-6 sm:p-10">
             <WalletAgentPage
               onSetupWallet={() => { onHideWalletPage(); }}
@@ -731,7 +732,7 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
       {showApprovalPage && (
         <div className="flex-1 flex flex-col bg-white overflow-y-auto min-h-0">
           <div className="w-full max-w-[860px] mx-auto p-6 sm:p-10">
-            <ApprovalPage key={approvalInitialTab} initialTab={approvalInitialTab} />
+            <ApprovalPage key={approvalInitialTab} initialTab={approvalInitialTab} onPendingCountChange={setPendingApprovalCount} />
           </div>
         </div>
       )}
@@ -739,25 +740,27 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
       {/* Chat area - full height */}
       {!showWalletPage && !showApprovalPage && (
       <div className="flex-1 flex flex-col bg-white overflow-hidden relative min-h-0">
-        {/* Pending approval notification banner */}
-        {hasWallets && (
-          <div className="w-full flex justify-center px-6 pt-[24px]">
-          <button
-            onClick={() => { setApprovalInitialTab('pending'); onShowApprovalPage(); }}
-            className="w-full max-w-[768px] flex items-center justify-between px-4 py-3 rounded-xl bg-[#FFF8ED] border border-[#FFE4B5] hover:bg-[#FFF0D6] transition-colors group"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-[#FF9500]/10 flex items-center justify-center">
-                <Clock className="w-4 h-4 text-[#FF9500]" strokeWidth={2} />
+        {/* Floating approval notification banner */}
+        {hasWallets && pendingApprovalCount > 0 && !approvalBannerDismissed && (
+          <div className="absolute top-0 left-0 right-0 z-10 flex justify-center px-6 pt-[24px] pointer-events-none">
+            <div className="w-full max-w-[768px] flex items-center justify-between px-4 py-3 rounded-xl bg-[#FEF1E8] pointer-events-auto">
+              <div className="flex items-center gap-2">
+                <div className="w-5 h-5 flex items-center justify-center">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.6667 10.8333C16.6667 15 13.75 17.0833 10.2833 18.2916C10.1018 18.3532 9.90461 18.3502 9.72499 18.2833C6.24999 17.0833 3.33333 15 3.33333 10.8333V4.99997C3.33333 4.77895 3.42113 4.56699 3.57741 4.41071C3.73369 4.25443 3.94565 4.16663 4.16666 4.16663C5.83333 4.16663 7.91666 3.16663 9.36666 1.89997C9.54321 1.74913 9.76779 1.66626 9.99999 1.66626C10.2322 1.66626 10.4568 1.74913 10.6333 1.89997C12.0917 3.17497 14.1667 4.16663 15.8333 4.16663C16.0543 4.16663 16.2663 4.25443 16.4226 4.41071C16.5789 4.56699 16.6667 4.77895 16.6667 4.99997V10.8333Z" stroke="#F97316" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M7.5 9.99992L9.16667 11.6666L12.5 8.33325" stroke="#F97316" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                </div>
+                <span className="text-[14px] leading-[20px] text-[#1C1C1C] font-normal">
+                  {language === 'zh'
+                    ? <>{pendingApprovalCount} 条审批待处理</>
+                    : <>{pendingApprovalCount} pending approval{pendingApprovalCount > 1 ? 's' : ''}</>}
+                </span><button onClick={() => { setApprovalInitialTab('pending'); onShowApprovalPage(); }} className="text-[14px] leading-[20px] text-[#F97316] hover:text-[#FF9500] transition-colors font-normal cursor-pointer">
+                  {language === 'zh' ? '立即查看' : 'View now'}
+                </button>
               </div>
-              <span className="text-[14px] text-[#0A0A0A]">
-                {language === 'zh'
-                  ? <>你有 <span className="font-semibold text-[#FF9500]">2</span> 条审批待处理</>
-                  : <>You have <span className="font-semibold text-[#FF9500]">2</span> pending approvals</>}
-              </span>
+              <button onClick={(e) => { e.stopPropagation(); setApprovalBannerDismissed(true); }} className="cursor-pointer relative group p-[2px] -m-[2px]">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F97316" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover:stroke-[#FF9500] transition-colors"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                <span className="absolute top-[calc(100%-2px+16px)] left-1/2 -translate-x-1/2 px-[6px] py-[4px] text-[12px] leading-[16px] font-normal text-white bg-[#1C1C1C] rounded-[6px] whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">{language === 'zh' ? '关闭提示' : 'Close tip'}</span>
+              </button>
             </div>
-            <ChevronRight className="w-4 h-4 text-[#999] group-hover:text-[#FF9500] transition-colors" strokeWidth={1.5} />
-          </button>
           </div>
         )}
         {/* Messages area */}
