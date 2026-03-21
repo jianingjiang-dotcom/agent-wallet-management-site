@@ -65,6 +65,7 @@ export default function AIAssistant() {
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [welcomeType, setWelcomeType] = useState<'first-wallet' | null>(null);
   const [approvalInitialTab, setApprovalInitialTab] = useState<'all' | 'pending'>('all');
+  const pendingApprovalCount = 2; // TODO: derive from shared approval state
   const [sidebarPortal, setSidebarPortal] = useState<HTMLElement | null>(null);
   const [showWalletPicker, setShowWalletPicker] = useState<'empty' | 'chat' | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -502,6 +503,11 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
             >
               <ClipboardCheck className="w-[20px] h-[20px]" strokeWidth={1.5} />
               <span className="font-['Inter',sans-serif] text-[14px] leading-[20px] font-normal">{language === 'zh' ? '操作审批' : 'Approvals'}</span>
+              {pendingApprovalCount > 0 && (
+                <span className="ml-auto px-[6px] py-[1px] text-[11px] font-semibold text-white bg-[#FF9500] rounded-full min-w-[18px] text-center leading-[16px]">
+                  {pendingApprovalCount}
+                </span>
+              )}
             </button>
           </>
         )}
@@ -673,6 +679,28 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
         }}
       />
 
+      {/* Pending approval notification banner — visible on all pages */}
+      {hasWallets && pendingApprovalCount > 0 && !showApprovalPage && (
+        <div className="w-full flex justify-center px-6 pt-4 bg-white">
+          <button
+            onClick={() => { setApprovalInitialTab('pending'); onShowApprovalPage(); }}
+            className="w-full max-w-[768px] flex items-center justify-between px-4 py-3 rounded-xl bg-[#FFF8ED] border border-[#FFE4B5] hover:bg-[#FFF0D6] transition-colors group"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-[#FF9500]/10 flex items-center justify-center">
+                <Clock className="w-4 h-4 text-[#FF9500]" strokeWidth={2} />
+              </div>
+              <span className="text-[14px] text-[#0A0A0A]">
+                {language === 'zh'
+                  ? <>你有 <span className="font-semibold text-[#FF9500]">{pendingApprovalCount}</span> 条审批待处理</>
+                  : <>You have <span className="font-semibold text-[#FF9500]">{pendingApprovalCount}</span> pending approval{pendingApprovalCount > 1 ? 's' : ''}</>}
+              </span>
+            </div>
+            <ChevronRight className="w-4 h-4 text-[#999] group-hover:text-[#FF9500] transition-colors" strokeWidth={1.5} />
+          </button>
+        </div>
+      )}
+
       {/* Wallet page - shown when wallet sidebar item is active */}
       {showWalletPage && (
         <div className="flex-1 flex flex-col bg-white overflow-y-auto min-h-0">
@@ -698,27 +726,6 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
       {/* Chat area - full height */}
       {!showWalletPage && !showApprovalPage && (
       <div className="flex-1 flex flex-col bg-white overflow-hidden relative min-h-0">
-        {/* Pending approval notification banner */}
-        {hasWallets && (
-          <div className="w-full flex justify-center px-6 pt-4">
-          <button
-            onClick={() => { setApprovalInitialTab('pending'); onShowApprovalPage(); }}
-            className="w-full max-w-[768px] flex items-center justify-between px-4 py-3 rounded-xl bg-[#FFF8ED] border border-[#FFE4B5] hover:bg-[#FFF0D6] transition-colors group"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-[#FF9500]/10 flex items-center justify-center">
-                <Clock className="w-4 h-4 text-[#FF9500]" strokeWidth={2} />
-              </div>
-              <span className="text-[14px] text-[#0A0A0A]">
-                {language === 'zh'
-                  ? <>你有 <span className="font-semibold text-[#FF9500]">2</span> 条审批待处理</>
-                  : <>You have <span className="font-semibold text-[#FF9500]">2</span> pending approvals</>}
-              </span>
-            </div>
-            <ChevronRight className="w-4 h-4 text-[#999] group-hover:text-[#FF9500] transition-colors" strokeWidth={1.5} />
-          </button>
-          </div>
-        )}
         {/* Messages area */}
         {(displayMessages.length > 0 || combinedTyping) && (
         <div className="flex-1 overflow-y-auto px-6 pb-6 flex flex-col items-center" style={{ gap: '24px', paddingTop: '32px' }}>
