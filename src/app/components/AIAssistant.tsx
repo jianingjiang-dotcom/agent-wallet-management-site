@@ -38,7 +38,7 @@ interface ChatSession {
 export default function AIAssistant() {
   const { t, language } = useLanguage();
   const { wallets, hasWallets, addWalletWithAgent, delegations, selectWallet } = useWalletStore();
-  const { onClaimWallet, onOpenWalletModal, onShowWalletPage, onHideWalletPage, showWalletPage, onDelegateWallet, onShowApprovalPage, onHideApprovalPage, showApprovalPage } = useOutletContext<{
+  const { onClaimWallet, onOpenWalletModal, onShowWalletPage, onHideWalletPage, showWalletPage, onDelegateWallet, onShowApprovalPage, onHideApprovalPage, showApprovalPage, sidebarCollapsed } = useOutletContext<{
     onSetupWallet: () => void;
     onClaimWallet: () => void;
     onOpenWalletModal: () => void;
@@ -49,8 +49,10 @@ export default function AIAssistant() {
     onShowApprovalPage: () => void;
     onHideApprovalPage: () => void;
     showApprovalPage: boolean;
+    sidebarCollapsed: boolean;
   }>();
   const [searchParams, setSearchParams] = useSearchParams();
+  const pendingApprovalCount = hasWallets ? 2 : 0; // Mock pending approval count
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -62,6 +64,7 @@ export default function AIAssistant() {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchModalInputRef = useRef<HTMLInputElement>(null);
   const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
+  const [navTooltip, setNavTooltip] = useState<{ label: string; top: number } | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [welcomeType, setWelcomeType] = useState<'first-wallet' | null>(null);
   const [approvalInitialTab, setApprovalInitialTab] = useState<'all' | 'pending'>('all');
@@ -238,7 +241,7 @@ export default function AIAssistant() {
   const handleSwitchSession = (session: ChatSession) => {
     setActiveChatId(session.id);
     setMessages(session.messages);
-    if (showWalletPage) onHideWalletPage();
+    if (showWalletPage || showApprovalPage) onHideWalletPage();
   };
 
   const handleDeleteSession = (sessionId: string) => {
@@ -447,8 +450,7 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
     setMessages([]);
     setActiveChatId('current');
     setWelcomeType(null);
-    if (showWalletPage) onHideWalletPage();
-    if (showApprovalPage) onHideApprovalPage();
+    if (showWalletPage || showApprovalPage) onHideWalletPage();
   };
 
   // Start the onboarding flow
@@ -459,80 +461,94 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
   // Chat sessions sidebar content (portaled into DashboardLayout sidebar)
   const chatSessionsSidebar = (
     <>
-      {/* Collapse sidebar button */}
-      <div className="px-3 h-[64px] flex items-center justify-between">
+      {/* Action items */}
+      <div className="px-2 pt-0 pb-[8px] flex flex-col gap-[2px]">
         <button
-          onClick={() => {
-            const sidebar = document.querySelector('aside');
-            if (sidebar) sidebar.classList.toggle('-translate-x-full');
-          }}
-          className="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] hover:bg-[#EBEBEB] transition-colors text-[#73798B]"
+          onClick={handleNewChat}
+          className={`h-[36px] flex items-center gap-[8px] px-[8px] rounded-[8px] transition-colors text-[#0A0A0A] overflow-hidden w-full ${sidebarCollapsed ? '' : 'hover:bg-[#EDEEF3]'}`}
+          onMouseEnter={(e) => { if (sidebarCollapsed) { const rect = e.currentTarget.getBoundingClientRect(); setNavTooltip({ label: language === 'zh' ? '新对话' : 'New Chat', top: rect.top + rect.height / 2 }); } }}
+          onMouseLeave={() => setNavTooltip(null)}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 5h18"/><path d="M3 12h18"/><path d="M3 19h18"/></svg>
+          <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'w-[36px] h-[36px] -m-[8px] rounded-[8px] hover:bg-[#EDEEF3] transition-colors' : ''}`}>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0"><path d="M9.99999 18.3333C14.6024 18.3333 18.3333 14.6023 18.3333 9.99996C18.3333 5.39759 14.6024 1.66663 9.99999 1.66663C5.39762 1.66663 1.66666 5.39759 1.66666 9.99996C1.66666 14.6023 5.39762 18.3333 9.99999 18.3333Z" fill="#1C1C1C" stroke="#1C1C1C" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M6.66666 10H13.3333" stroke="white" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M10 6.66663V13.3333" stroke="white" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          </div>
+          <span className={`font-['Inter',sans-serif] text-[14px] leading-[20px] font-normal whitespace-nowrap transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}>{t('ai.newChat')}</span>
         </button>
         <button
           onClick={() => { setShowSearchModal(true); setSearchQuery(''); }}
-          className="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] hover:bg-[#EBEBEB] transition-colors text-[#73798B]"
+          className={`h-[36px] flex items-center gap-[8px] px-[8px] rounded-[8px] transition-colors text-[#0A0A0A] overflow-hidden w-full ${sidebarCollapsed ? '' : 'hover:bg-[#EDEEF3]'}`}
+          onMouseEnter={(e) => { if (sidebarCollapsed) { const rect = e.currentTarget.getBoundingClientRect(); setNavTooltip({ label: language === 'zh' ? '搜索对话' : 'Search Chats', top: rect.top + rect.height / 2 }); } }}
+          onMouseLeave={() => setNavTooltip(null)}
         >
-          <Search className="w-[20px] h-[20px]" strokeWidth={1.5} />
-        </button>
-      </div>
-
-      {/* Action items */}
-      <div className="px-2 pt-0 pb-[24px] flex flex-col">
-        <button
-          onClick={handleNewChat}
-          className="w-full h-[44px] flex items-center gap-[8px] px-[12px] rounded-[8px] hover:bg-[#EBEBEB] transition-colors text-[#0A0A0A]"
-        >
-          <SquarePen className="w-[20px] h-[20px]" strokeWidth={1.5} />
-          <span className="font-['Inter',sans-serif] text-[14px] leading-[20px] font-normal">{t('ai.newChat')}</span>
+          <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'w-[36px] h-[36px] -m-[8px] rounded-[8px] hover:bg-[#EDEEF3] transition-colors' : ''}`}>
+            <Search className="w-[20px] h-[20px] shrink-0" strokeWidth={1.5} />
+          </div>
+          <span className={`font-['Inter',sans-serif] text-[14px] leading-[20px] font-normal whitespace-nowrap transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}>{language === 'zh' ? '搜索对话' : 'Search Chats'}</span>
         </button>
         {hasWallets && (
           <>
             <button
-              onClick={() => showWalletPage ? onHideWalletPage() : onShowWalletPage()}
-              className={`w-full h-[44px] flex items-center gap-[8px] px-[12px] rounded-[8px] hover:bg-[#EBEBEB] transition-colors ${showWalletPage ? 'bg-[#EBEBEB] text-[#4f5eff]' : 'text-[#0A0A0A]'}`}
+              onClick={() => { if (!showWalletPage) { onShowWalletPage(); setActiveChatId('current'); } }}
+              className={`h-[36px] flex items-center gap-[8px] px-[8px] rounded-[8px] transition-colors overflow-hidden w-full ${sidebarCollapsed ? '' : 'hover:bg-[#EDEEF3]'} ${showWalletPage && !sidebarCollapsed ? 'bg-[#EDEEF3] text-[#1c1c1c]' : 'text-[#0A0A0A]'}`}
+              onMouseEnter={(e) => { if (sidebarCollapsed) { const rect = e.currentTarget.getBoundingClientRect(); setNavTooltip({ label: language === 'zh' ? '我的钱包' : 'My Wallets', top: rect.top + rect.height / 2 }); } }}
+              onMouseLeave={() => setNavTooltip(null)}
             >
-              <Wallet className="w-[20px] h-[20px]" strokeWidth={1.5} />
-              <span className="font-['Inter',sans-serif] text-[14px] leading-[20px] font-normal">{language === 'zh' ? '我的钱包' : 'My Wallets'}</span>
+              <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'w-[36px] h-[36px] -m-[8px] rounded-[8px] hover:bg-[#EDEEF3] transition-colors' : ''} ${showWalletPage && sidebarCollapsed ? 'bg-[#EDEEF3]' : ''}`}>
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0"><path d="M14.1667 11.6666H14.175" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M5.83333 5.83333H15.8333C16.2754 5.83333 16.6993 6.00893 17.0118 6.32149C17.3244 6.63405 17.5 7.05797 17.5 7.5V15.8333C17.5 16.2754 17.3244 16.6993 17.0118 17.0118C16.6993 17.3244 16.2754 17.5 15.8333 17.5H4.16667C3.72464 17.5 3.30072 17.3244 2.98816 17.0118C2.67559 16.6993 2.5 16.2754 2.5 15.8333V4.16667C2.5 3.72464 2.67559 3.30072 2.98816 2.98816C3.30072 2.67559 3.72464 2.5 4.16667 2.5H15.8333" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              </div>
+              <span className={`font-['Inter',sans-serif] text-[14px] leading-[20px] font-normal whitespace-nowrap transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}>{language === 'zh' ? '我的钱包' : 'My Wallets'}</span>
             </button>
             <button
-              onClick={() => { if (showApprovalPage) { onHideApprovalPage(); } else { setApprovalInitialTab('all'); onShowApprovalPage(); } }}
-              className={`w-full h-[44px] flex items-center gap-[8px] px-[12px] rounded-[8px] hover:bg-[#EBEBEB] transition-colors ${showApprovalPage ? 'bg-[#EBEBEB] text-[#4f5eff]' : 'text-[#0A0A0A]'}`}
+              onClick={() => { if (!showApprovalPage) { setApprovalInitialTab('all'); onShowApprovalPage(); setActiveChatId('current'); } }}
+              className={`h-[36px] flex items-center gap-[8px] px-[8px] rounded-[8px] transition-colors overflow-hidden w-full ${sidebarCollapsed ? '' : 'hover:bg-[#EDEEF3]'} ${showApprovalPage && !sidebarCollapsed ? 'bg-[#EDEEF3] text-[#1c1c1c]' : 'text-[#0A0A0A]'}`}
+              onMouseEnter={(e) => { if (sidebarCollapsed) { const rect = e.currentTarget.getBoundingClientRect(); setNavTooltip({ label: language === 'zh' ? '交易审批' : 'Approvals', top: rect.top + rect.height / 2 }); } }}
+              onMouseLeave={() => setNavTooltip(null)}
             >
-              <ClipboardCheck className="w-[20px] h-[20px]" strokeWidth={1.5} />
-              <span className="font-['Inter',sans-serif] text-[14px] leading-[20px] font-normal">{language === 'zh' ? '操作审批' : 'Approvals'}</span>
+              <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'w-[36px] h-[36px] -m-[8px] rounded-[8px] hover:bg-[#EDEEF3] transition-colors' : ''} ${showApprovalPage && sidebarCollapsed ? 'bg-[#EDEEF3]' : ''}`}>
+                <div className="relative shrink-0">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0"><path d="M16.6667 10.8333C16.6667 15 13.75 17.0833 10.2833 18.2916C10.1018 18.3532 9.90462 18.3502 9.72501 18.2833C6.25001 17.0833 3.33334 15 3.33334 10.8333V4.99997C3.33334 4.77895 3.42114 4.56699 3.57742 4.41071C3.7337 4.25443 3.94566 4.16663 4.16668 4.16663C5.83334 4.16663 7.91668 3.16663 9.36668 1.89997C9.54322 1.74913 9.7678 1.66626 10 1.66626C10.2322 1.66626 10.4568 1.74913 10.6333 1.89997C12.0917 3.17497 14.1667 4.16663 15.8333 4.16663C16.0544 4.16663 16.2663 4.25443 16.4226 4.41071C16.5789 4.56699 16.6667 4.77895 16.6667 4.99997V10.8333Z" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M7.5 10L9.16667 11.6667L12.5 8.33337" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  {pendingApprovalCount > 0 && (
+                    <div className={`absolute -top-[2px] -right-[2px] w-[8px] h-[8px] bg-[#FF3B30] rounded-full transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-100' : 'opacity-0'}`} />
+                  )}
+                </div>
+              </div>
+              <span className={`font-['Inter',sans-serif] text-[14px] leading-[20px] font-normal whitespace-nowrap transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}>{language === 'zh' ? '交易审批' : 'Approvals'}</span>
+              {pendingApprovalCount > 0 && (
+                <span className={`shrink-0 min-w-[16px] h-[16px] flex items-center justify-center rounded-full bg-[#FF3B30] text-white text-[11px] leading-[1] font-medium px-[4px] transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}>
+                  {pendingApprovalCount}
+                </span>
+              )}
             </button>
           </>
         )}
       </div>
 
       {/* Session list */}
-      <div className="flex-1 overflow-y-auto px-2">
-        <div className="px-[12px] py-1.5">
-          <span className="text-[14px] leading-[20px] font-normal text-[#B9BCC5]">
+      <div className={`flex-1 overflow-y-auto overflow-x-hidden px-2 flex flex-col gap-[2px] transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+        <div className="p-[8px]">
+          <span className="text-[14px] leading-[20px] font-normal text-[#73798B] opacity-50">
             {language === 'zh' ? '对话历史' : 'History'}
           </span>
         </div>
-        {filteredSessions.map((session) => (
-          <div key={session.id} className="relative group">
+        {chatSessions.map((session) => (
+          <div key={session.id} className={`relative group rounded-[8px] transition-colors ${activeChatId === session.id ? 'bg-[#EDEEF3]' : 'hover:bg-[#EDEEF3]'}`}>
             <button
               onClick={() => handleSwitchSession(session)}
-              className={`w-full text-left px-[12px] py-2 pr-8 rounded-[8px] text-[14px] leading-[20px] font-normal transition-colors truncate ${
+              className={`w-full text-left px-[8px] py-[8px] pr-8 rounded-[8px] text-[14px] leading-[20px] font-normal truncate ${
                 activeChatId === session.id
-                  ? 'bg-[#EBEBEB] text-[#4f5eff]'
-                  : 'text-slate-700 hover:bg-[#EBEBEB]'
+                  ? 'text-[#1c1c1c]'
+                  : 'text-[#1c1c1c]'
               }`}
             >
               {session.title}
             </button>
             <button
               onClick={(e) => { e.stopPropagation(); setMenuOpenId(menuOpenId === session.id ? null : session.id); }}
-              className={`absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-white/60 transition-opacity ${
+              className={`absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded transition-opacity text-[#73798B] hover:text-[#1c1c1c] ${
                 activeChatId === session.id || menuOpenId === session.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
               }`}
             >
-              <MoreHorizontal style={{ width: '14px', height: '14px', color: '#4F4F4F' }} />
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 10.8333C10.4602 10.8333 10.8333 10.4602 10.8333 9.99996C10.8333 9.53972 10.4602 9.16663 10 9.16663C9.53977 9.16663 9.16667 9.53972 9.16667 9.99996C9.16667 10.4602 9.53977 10.8333 10 10.8333Z" fill="currentColor" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M15.8333 10.8333C16.2936 10.8333 16.6667 10.4602 16.6667 9.99996C16.6667 9.53972 16.2936 9.16663 15.8333 9.16663C15.3731 9.16663 15 9.53972 15 9.99996C15 10.4602 15.3731 10.8333 15.8333 10.8333Z" fill="currentColor" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M4.16666 10.8333C4.6269 10.8333 4.99999 10.4602 4.99999 9.99996C4.99999 9.53972 4.6269 9.16663 4.16666 9.16663C3.70642 9.16663 3.33333 9.53972 3.33333 9.99996C3.33333 10.4602 3.70642 10.8333 4.16666 10.8333Z" fill="currentColor" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </button>
             {menuOpenId === session.id && (
               <div ref={menuRef} className="absolute right-0 top-full mt-1 bg-white rounded-lg shadow-lg border border-[#EBEBEB] py-1 z-50" style={{ minWidth: '120px' }}>
@@ -554,13 +570,13 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
 
   // Search modal - rendered at top level, not inside sidebar portal
   const searchModal = showSearchModal ? (
-    <div className="fixed inset-0 bg-black/30 flex items-start justify-center pt-[120px] z-[60]" onClick={() => setShowSearchModal(false)}>
+    <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-[60]" onClick={() => setShowSearchModal(false)}>
       <div
-        className="bg-white rounded-[16px] shadow-2xl w-[680px] max-h-[520px] flex flex-col overflow-hidden"
+        className="bg-white rounded-[16px] shadow-2xl w-[680px] h-[440px] flex flex-col overflow-hidden"
         onClick={e => e.stopPropagation()}
       >
         {/* Search input */}
-        <div className="flex items-center gap-3 px-5 py-4 border-b border-[#EBEBEB]">
+        <div className="flex items-center gap-3 px-[24px] py-[16px] border-b border-[#EBEBEB]">
           <Search className="w-[20px] h-[20px] text-[#999] shrink-0" strokeWidth={1.5} />
           <input
             ref={searchModalInputRef}
@@ -581,32 +597,19 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
 
         {/* Results */}
         <div className="flex-1 overflow-y-auto py-2">
-          {/* New chat option */}
-          <button
-            onClick={() => { handleNewChat(); setShowSearchModal(false); }}
-            className="w-full flex items-center gap-3 px-5 py-3 hover:bg-[#F5F5F5] transition-colors"
-          >
-            <SquarePen className="w-[20px] h-[20px] text-[#0A0A0A]" strokeWidth={1.5} />
-            <span className="text-[15px] font-medium text-[#0A0A0A]">{language === 'zh' ? '新聊天' : 'New Chat'}</span>
-          </button>
-
-          {/* Grouped sessions */}
-          {groupSessionsByDate(filteredSessions).map((group) => (
-            <div key={group.label}>
-              <div className="px-5 pt-4 pb-1.5">
-                <span className="text-[12px] font-medium text-[#999]">{group.label}</span>
-              </div>
-              {group.sessions.map((session) => (
-                <button
-                  key={session.id}
-                  onClick={() => { handleSwitchSession(session); setShowSearchModal(false); }}
-                  className="w-full flex items-center gap-3 px-5 py-3 hover:bg-[#F5F5F5] transition-colors"
-                >
-                  <MessageCircle className="w-[20px] h-[20px] text-[#999] shrink-0" strokeWidth={1.5} />
-                  <span className="text-[15px] text-[#0A0A0A] truncate">{session.title}</span>
-                </button>
-              ))}
-            </div>
+          <div className="px-5 pt-2 pb-1">
+            <span className="text-[12px] font-medium text-[#999]">{language === 'zh' ? '近期对话' : 'Recent Chats'}</span>
+          </div>
+          {/* All sessions flat list */}
+          {filteredSessions.map((session) => (
+            <button
+              key={session.id}
+              onClick={() => { handleSwitchSession(session); setShowSearchModal(false); }}
+              className="w-full flex items-center gap-3 px-5 py-3 hover:bg-[#F5F5F5] transition-colors"
+            >
+              <MessageCircle className="w-[20px] h-[20px] text-[#999] shrink-0" strokeWidth={1.5} />
+              <span className="text-[15px] text-[#0A0A0A] truncate">{session.title}</span>
+            </button>
           ))}
         </div>
       </div>
@@ -628,6 +631,21 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
       {/* Portal chat sessions into the layout sidebar */}
       {sidebarPortal && createPortal(chatSessionsSidebar, sidebarPortal)}
 
+      {/* Nav tooltip - rendered via portal to avoid sidebar clipping */}
+      {navTooltip && createPortal(
+        <div
+          className="fixed z-[200] px-[6px] py-[4px] bg-[#1C1C1C] text-white text-[12px] leading-[16px] rounded-[6px] whitespace-nowrap pointer-events-none"
+          style={{
+            top: `${navTooltip.top}px`,
+            left: `${52 + 8}px`,
+            transform: 'translateY(-50%)',
+          }}
+        >
+          {navTooltip.label}
+        </div>,
+        document.body
+      )}
+
       {/* Search modal - rendered at top level via portal to body */}
       {showSearchModal && createPortal(searchModal, document.body)}
 
@@ -636,7 +654,7 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-[60]" onClick={() => setDeleteConfirmId(null)}>
           <div className="bg-white rounded-xl p-6 shadow-xl" style={{ maxWidth: '360px', width: '90%' }} onClick={e => e.stopPropagation()}>
             <p className="text-base font-medium text-slate-900 mb-2">
-              {language === 'zh' ? '确认删除' : 'Confirm Delete'}
+              {language === 'zh' ? '删除对话历史？' : 'Delete conversation history?'}
             </p>
             <p className="text-sm text-slate-500 mb-6">
               {language === 'zh' ? '确定要删除这条对话历史吗？此操作不可撤销。' : 'Are you sure you want to delete this conversation? This action cannot be undone.'}
@@ -644,7 +662,7 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
             <div className="flex gap-3 justify-end">
               <button
                 onClick={() => setDeleteConfirmId(null)}
-                className="px-4 py-2 text-sm text-slate-700 bg-[#FAFAFA] rounded-lg hover:bg-[#EBEBEB] transition-colors"
+                className="px-4 py-2 text-sm text-slate-700 bg-[#FAFAFA] rounded-lg hover:bg-[#EDEEF3] transition-colors"
               >
                 {language === 'zh' ? '取消' : 'Cancel'}
               </button>
@@ -700,7 +718,7 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
       <div className="flex-1 flex flex-col bg-white overflow-hidden relative min-h-0">
         {/* Pending approval notification banner */}
         {hasWallets && (
-          <div className="w-full flex justify-center px-6 pt-4">
+          <div className="w-full flex justify-center px-6 pt-[24px]">
           <button
             onClick={() => { setApprovalInitialTab('pending'); onShowApprovalPage(); }}
             className="w-full max-w-[768px] flex items-center justify-between px-4 py-3 rounded-xl bg-[#FFF8ED] border border-[#FFE4B5] hover:bg-[#FFF0D6] transition-colors group"

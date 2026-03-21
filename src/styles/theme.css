@@ -175,6 +175,14 @@
     line-height: 1.5;
   }
 
+  button, a, [role="button"], summary {
+    cursor: pointer;
+  }
+
+  button *, a * {
+    cursor: inherit;
+  }
+
   button {
     font-size: var(--text-base);
     font-weight: var(--font-weight-medium);
