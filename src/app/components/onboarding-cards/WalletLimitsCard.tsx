@@ -10,7 +10,7 @@ interface WalletLimitsCardProps {
 }
 
 export default function WalletLimitsCard({ status, onConfirm, confirmedPerTx, confirmedDaily }: WalletLimitsCardProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [perTxLimit, setPerTxLimit] = useState('10');
   const [dailyLimit, setDailyLimit] = useState('50');
   const [customPerTx, setCustomPerTx] = useState('');
@@ -32,14 +32,36 @@ export default function WalletLimitsCard({ status, onConfirm, confirmedPerTx, co
   if (status === 'completed') {
     return (
       <div className="bg-white border border-[rgba(34,197,94,0.3)] rounded-[12px] p-4 transition-all duration-300">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 mb-3">
           <div className="w-8 h-8 rounded-full bg-[rgba(34,197,94,0.1)] flex items-center justify-center">
             <CheckCircle className="w-4 h-4 text-[#22c55e]" />
           </div>
-          <div className="flex items-center gap-2 flex-1">
-            <Shield className="w-3.5 h-3.5 text-[#7c7c7c]" />
-            <span className="font-['Inter',sans-serif] font-medium text-[13px] text-[#4F4F4F]">
-              ${confirmedPerTx}/tx · ${confirmedDaily}/day
+          <span className="font-['Inter',sans-serif] font-medium text-[13px] text-[#22c55e]">
+            {language === 'zh' ? '风控策略已配置' : 'Risk policies configured'}
+          </span>
+        </div>
+        <div className="rounded-[8px] bg-[#FAFAFA] border border-[rgba(10,10,10,0.06)] px-3.5 py-2.5 space-y-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Shield className="w-3.5 h-3.5 text-[#4f5eff]" />
+              <span className="text-[12px] text-[#73798B]">
+                {language === 'zh' ? '单笔交易限额' : 'Per-Transaction Limit'}
+              </span>
+            </div>
+            <span className="font-['JetBrains_Mono',monospace] text-[13px] font-medium text-[#0a0a0a]">
+              ${confirmedPerTx}
+            </span>
+          </div>
+          <div className="h-px bg-[rgba(10,10,10,0.06)]" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Shield className="w-3.5 h-3.5 text-[#4f5eff]" />
+              <span className="text-[12px] text-[#73798B]">
+                {language === 'zh' ? '每日支出限额' : 'Daily Spending Limit'}
+              </span>
+            </div>
+            <span className="font-['JetBrains_Mono',monospace] text-[13px] font-medium text-[#0a0a0a]">
+              ${confirmedDaily}
             </span>
           </div>
         </div>

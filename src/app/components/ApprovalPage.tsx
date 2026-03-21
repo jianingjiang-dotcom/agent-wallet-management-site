@@ -14,7 +14,7 @@ interface ApprovalRecord {
   target: string;
   status: ApprovalStatus;
   timestamp: Date;
-  reason?: string;
+  reason: string;
 }
 
 const mockRecords: ApprovalRecord[] = [
@@ -49,6 +49,7 @@ const mockRecords: ApprovalRecord[] = [
     target: '0x1f9a...c3e7',
     status: 'approved',
     timestamp: new Date(Date.now() - 86400000),
+    reason: '未授权合约地址',
   },
   {
     id: '4',
@@ -59,6 +60,7 @@ const mockRecords: ApprovalRecord[] = [
     target: '0x9d8e...b4f2',
     status: 'approved',
     timestamp: new Date(Date.now() - 172800000),
+    reason: '超出单笔限额',
   },
   {
     id: '5',
@@ -175,7 +177,7 @@ export default function ApprovalPage({ initialTab = 'all' }: { initialTab?: TabF
       <div className="space-y-3">
         {filteredRecords.length === 0 ? (
           <div className="text-center py-16 text-[#73798B] text-[14px]">
-            {language === 'zh' ? '暂无审批记录' : 'No approval records'}
+            {language === 'zh' ? '暂无待审批请求' : 'No pending approval requests'}
           </div>
         ) : (
           filteredRecords.map(record => (
@@ -215,11 +217,13 @@ export default function ApprovalPage({ initialTab = 'all' }: { initialTab?: TabF
                 </div>
               </div>
 
-              {record.reason && (
-                <div className="text-[12px] text-amber-600 bg-amber-50 px-3 py-1.5 rounded-lg mb-3">
-                  {language === 'zh' ? '原因' : 'Reason'}: {record.reason}
-                </div>
-              )}
+              <div className={`text-[12px] px-3 py-1.5 rounded-lg mb-3 ${
+                record.status === 'approved' ? 'text-green-600 bg-green-50'
+                : record.status === 'rejected' ? 'text-red-600 bg-red-50'
+                : 'text-amber-600 bg-amber-50'
+              }`}>
+                {language === 'zh' ? '触发原因' : 'Trigger'}: {record.reason}
+              </div>
 
               {record.status === 'pending' && (
                 <div className="flex gap-2 pt-1">
