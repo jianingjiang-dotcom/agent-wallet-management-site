@@ -188,8 +188,8 @@ const translations = {
     "ai.send": "Send",
     "chat.welcome.firstWallet.title": "Your wallet is ready",
     "chat.welcome.firstWallet.subtitle": "I'm your AI assistant, authorized to act on your behalf.",
-    "chat.welcome.returning.title": "Your AI Wallet Assistant",
-    "chat.welcome.returning.subtitle": "Manage wallets, check balances, configure agents, or adjust risk policies — just ask.",
+    "chat.welcome.returning.title": "Hi buddy, welcome to Cobo Pact",
+    "chat.welcome.returning.subtitle": "I can help you manage wallets and configure risk controls — just let me know!",
     "ai.quickQuestions": "Quick Questions:",
     "ai.placeholder": "Type your question...",
     "ai.greeting":
@@ -465,12 +465,12 @@ const translations = {
     "invitePage.codeSuccess": "Verification successful",
 
     // Agent Setup Page
-    "setupPage.title": "Add Cobo Pact to Your Agent",
-    "setupPage.tellAgent": "Tell your Agent:",
-    "setupPage.instructionText": "Install the Cobo Pact Skill. Skip if already installed.\nhttps://github.com/cobosteven/cobo-agent-wallet-manual/tree/master/skills/cobo-pact\n\nUse the following token to link the agent to my account and create a new wallet: iOGmzE17\n\nPoll the wallet creation progress and return the result when complete.",
-    "setupPage.copyButton": "Copy Text",
+    "setupPage.title": "Create Cobo Pact Wallet",
+    "setupPage.tellAgent": "Copy the instructions to your Agent to complete wallet creation",
+    "setupPage.instructionText": "Install Cobo Pact Skill and create a wallet with the Token.\nSkill: https://github.com/cobosteven/cobo-agent-wallet-manual/tree/master/skills/cobo-pact\nToken: iOGmzE17",
+    "setupPage.copyButton": "Copy Instructions",
     "setupPage.copied": "Copied successfully",
-    "setupPage.helpPrefix": "Agent will complete setup automatically. For more, see",
+    "setupPage.helpPrefix": "",
     "setupPage.helpLink": "Help Docs",
     "setupPage.connectingAgent": "Connecting Agent...",
     "setupPage.agentConnected": "Agent connected",
@@ -646,6 +646,24 @@ const translations = {
     // Onboarding claim entry
     "onboarding.claimEntry": "Already have a wallet? Claim it",
 
+    // Onboarding Page (standalone)
+    "onboarding.page.skip": "Skip",
+    "onboarding.page.inviteTitle": "Enter Invitation Code",
+    "onboarding.page.inviteSubtitle": "Please enter your invitation code to get started",
+    "onboarding.page.invitePlaceholder": "COBO-XXXX-XXXX",
+    "onboarding.page.continue": "Continue",
+    "onboarding.page.noCode": "Don't have an invitation code?",
+    "onboarding.page.applyCode": "Get one here",
+    "onboarding.page.createTitle": "Create Cobo Pact Wallet",
+    "onboarding.page.createSubtitle": "Copy the instructions to your Agent to complete wallet creation",
+    "onboarding.page.helpDoc": "Help Docs",
+    "onboarding.page.agentConnected": "Agent connected",
+    "onboarding.page.creatingWallet": "Creating wallet...",
+    "onboarding.page.walletCreated": "Wallet created",
+    "onboarding.page.successTitle": "Wallet Created Successfully!",
+    "onboarding.page.successSubtitle": "Your Cobo Pact wallet is ready to use",
+    "onboarding.page.tryCta": "Enter Dashboard",
+
     // Common
     "common.copyright":
       "© 2026 Cobo Pact. All rights reserved.",
@@ -814,8 +832,8 @@ const translations = {
     "ai.send": "发送",
     "chat.welcome.firstWallet.title": "钱包已准备就绪",
     "chat.welcome.firstWallet.subtitle": "我是你的 AI 助手，已获授权为你执行操作。",
-    "chat.welcome.returning.title": "你的 AI 钱包助手",
-    "chat.welcome.returning.subtitle": "帮你管理钱包、查询余额、配置 Agent 和风控策略，有需要随时告诉我。",
+    "chat.welcome.returning.title": "Hi buddy，欢迎使用 Cobo Pact",
+    "chat.welcome.returning.subtitle": "我能帮你管理钱包，配置风控，有需要请随时告诉我！",
 
     // Onboarding
     "onboarding.title": "创建 Cobo Pact 钱包",
@@ -1074,12 +1092,12 @@ const translations = {
     "invitePage.codeSuccess": "验证成功",
 
     // Agent Setup Page
-    "setupPage.title": "创建你的 Cobo Pact 钱包",
-    "setupPage.tellAgent": "请将以下指令发送给你的 Agent，以创建钱包并完成绑定：",
-    "setupPage.instructionText": "安装 Cobo Pact Skill，已安装请忽略。\nhttps://github.com/cobosteven/cobo-agent-wallet-manual/tree/master/skills/cobo-pact\n\n使用以下的 token 完成 agent 和我的账户关联，并且执行创建新钱包的操作：iOGmzE17\n\n轮询创建钱包的进度，完成后把结果返回给我。",
+    "setupPage.title": "创建 Cobo Pact 钱包",
+    "setupPage.tellAgent": "复制指令给 Agent，即可完成创建",
+    "setupPage.instructionText": "安装 Cobo Pact Skill，并用 Token 创建钱包。\nSkill：https://github.com/cobosteven/cobo-agent-wallet-manual/tree/master/skills/cobo-pact\nToken：iOGmzE17",
     "setupPage.copyButton": "复制指令",
     "setupPage.copied": "复制成功",
-    "setupPage.helpPrefix": "发送后，Agent 将自动完成钱包创建并返回结果。",
+    "setupPage.helpPrefix": "",
     "setupPage.helpLink": "帮助文档",
     "setupPage.connectingAgent": "正在连接 Agent...",
     "setupPage.agentConnected": "Agent 连接成功",
@@ -1253,6 +1271,24 @@ const translations = {
 
     // Onboarding claim entry
     "onboarding.claimEntry": "已有钱包？去认领",
+
+    // Onboarding Page (standalone)
+    "onboarding.page.skip": "跳过",
+    "onboarding.page.inviteTitle": "输入邀请码",
+    "onboarding.page.inviteSubtitle": "请输入邀请码以开始使用",
+    "onboarding.page.invitePlaceholder": "COBO-XXXX-XXXX",
+    "onboarding.page.continue": "继续",
+    "onboarding.page.noCode": "还没有邀请码？",
+    "onboarding.page.applyCode": "点击获取",
+    "onboarding.page.createTitle": "创建 Cobo Pact 钱包",
+    "onboarding.page.createSubtitle": "复制指令给 Agent，即可完成创建",
+    "onboarding.page.helpDoc": "帮助文档",
+    "onboarding.page.agentConnected": "Agent 已连接",
+    "onboarding.page.creatingWallet": "正在创建钱包...",
+    "onboarding.page.walletCreated": "钱包创建完成",
+    "onboarding.page.successTitle": "钱包创建成功！",
+    "onboarding.page.successSubtitle": "你的 Cobo Pact 钱包已就绪",
+    "onboarding.page.tryCta": "进入 Dashboard",
 
     // Common
     "common.copyright": "© 2026 Cobo Pact. 保留所有权利。",
