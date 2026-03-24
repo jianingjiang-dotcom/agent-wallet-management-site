@@ -26,27 +26,15 @@ export const router = createBrowserRouter([
   },
   {
     path: "/invite",
-    element: (
-      <LanguageProvider>
-        <InviteCodePage />
-      </LanguageProvider>
-    ),
+    element: <Navigate to="/dashboard/chat" replace />,
   },
   {
     path: "/setup",
-    element: (
-      <LanguageProvider>
-        <AgentSetupPage />
-      </LanguageProvider>
-    ),
+    element: <Navigate to="/dashboard/chat" replace />,
   },
   {
     path: "/setup-success",
-    element: (
-      <LanguageProvider>
-        <SetupSuccessPage />
-      </LanguageProvider>
-    ),
+    element: <Navigate to="/dashboard/chat" replace />,
   },
   {
     path: "/dashboard",

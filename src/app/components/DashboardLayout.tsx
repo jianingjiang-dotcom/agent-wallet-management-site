@@ -45,12 +45,6 @@ export default function DashboardLayout() {
     if (!currentUser) {
       navigate('/login');
     } else {
-      // Check invite code verification
-      const inviteVerified = localStorage.getItem('agent_wallet_invite_verified');
-      if (!inviteVerified) {
-        navigate('/invite');
-        return;
-      }
       const parsed = JSON.parse(currentUser);
       setUser(parsed);
     }
