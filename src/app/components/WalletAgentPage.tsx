@@ -2,7 +2,6 @@ import { Shield, Plus, ArrowRight, Download } from 'lucide-react';
 import { useState, useEffect, useCallback } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useWalletStore } from '../hooks/useWalletStore';
-import WalletCard from './WalletCard';
 import WalletDetail from './WalletDetail';
 
 interface WalletAgentPageProps {
@@ -37,14 +36,18 @@ export default function WalletAgentPage({ onSetupWallet, onClaimWallet, onDelega
     return () => window.removeEventListener('wallet-store-updated', handler);
   }, []);
 
+  // Auto-select first wallet when wallets exist but none selected
+  useEffect(() => {
+    if (hasWallets && (!selectedWalletId || !wallets.find(w => w.id === selectedWalletId))) {
+      const firstId = wallets[0].id;
+      setSelectedWalletId(firstId);
+      selectWallet(firstId);
+    }
+  }, [hasWallets, wallets, selectedWalletId, selectWallet]);
+
   const handleSelectWallet = useCallback((walletId: string) => {
     setSelectedWalletId(walletId);
     selectWallet(walletId);
-  }, [selectWallet]);
-
-  const handleBack = useCallback(() => {
-    setSelectedWalletId(null);
-    selectWallet(null);
   }, [selectWallet]);
 
   const detailWallet = selectedWalletId
@@ -54,11 +57,12 @@ export default function WalletAgentPage({ onSetupWallet, onClaimWallet, onDelega
   const noop = () => {};
 
   return (
-    <div className="max-w-5xl mx-auto">
+    <div className="max-w-[768px] mx-auto">
       {detailWallet ? (
         <WalletDetail
           wallet={detailWallet}
-          onBack={handleBack}
+          wallets={wallets}
+          onSwitchWallet={handleSelectWallet}
           onFreeze={freezeDelegation}
           onUnfreeze={unfreezeDelegation}
           onRevoke={removeDelegation}
@@ -69,9 +73,11 @@ export default function WalletAgentPage({ onSetupWallet, onClaimWallet, onDelega
           onUpdateAgentName={(agentId, name) => updateAgent(agentId, { name })}
           getDelegationsForWallet={getDelegationsForWallet}
           getAgentById={getAgentById}
+          onSetupWallet={onSetupWallet}
+          onClaimWallet={onClaimWallet}
         />
       ) : !hasWallets ? (
-        /* ─── State A: Welcome — no wallets ─── */
+        /* ─── Welcome — no wallets ─── */
         <div className="flex flex-col items-center justify-center py-12">
           <div className="w-full max-w-lg bg-white border border-[rgba(10,10,10,0.08)] rounded-[16px] p-8 md:p-12 text-center">
             <div className="inline-flex items-center justify-center w-[72px] h-[72px] bg-gradient-to-br from-[rgba(79,94,255,0.12)] to-[rgba(79,94,255,0.04)] border-2 border-[rgba(79,94,255,0.15)] rounded-[20px] mb-6">
@@ -101,48 +107,7 @@ export default function WalletAgentPage({ onSetupWallet, onClaimWallet, onDelega
             </div>
           </div>
         </div>
-      ) : (
-        /* ─── State B: Wallet grid ─── */
-        <>
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h1 className="font-['Inter',sans-serif] font-semibold text-[28px] text-[#0a0a0a] mb-1">
-                {t('walletPage.title')}
-              </h1>
-              <p className="font-['Inter',sans-serif] font-normal text-[15px] text-[#7c7c7c]">
-                {t('walletPage.subtitle')}
-              </p>
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={onClaimWallet || noop}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-[8px] font-['Inter',sans-serif] font-medium text-[12px] text-[#7c7c7c] border border-[rgba(10,10,10,0.1)] hover:bg-[#f5f5f5] transition-colors"
-              >
-                <Download className="w-3.5 h-3.5" />
-                {t('walletPage.claimWallet')}
-              </button>
-              <button
-                onClick={onSetupWallet || noop}
-                className="flex items-center gap-2 px-4 py-2 rounded-[8px] font-['Inter',sans-serif] font-medium text-[13px] text-white bg-[#4f5eff] hover:bg-[#3d4dd9] transition-colors"
-              >
-                <Plus className="w-4 h-4" />
-                {t('walletPage.createNew')}
-              </button>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {wallets.map((wallet) => (
-              <WalletCard
-                key={wallet.id}
-                wallet={wallet}
-                delegationCount={getDelegationsForWallet(wallet.id).length}
-                onSelect={handleSelectWallet}
-              />
-            ))}
-          </div>
-        </>
-      )}
+      ) : null}
     </div>
   );
 }

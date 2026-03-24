@@ -38,7 +38,7 @@ interface ChatSession {
 export default function AIAssistant() {
   const { t, language } = useLanguage();
   const { wallets, hasWallets, addWalletWithAgent, delegations, selectWallet } = useWalletStore();
-  const { onClaimWallet, onOpenWalletModal, onShowWalletPage, onHideWalletPage, showWalletPage, onDelegateWallet, onShowApprovalPage, onHideApprovalPage, showApprovalPage, sidebarCollapsed } = useOutletContext<{
+  const { onClaimWallet, onOpenWalletModal, onShowWalletPage, onHideWalletPage, showWalletPage, onDelegateWallet, onShowApprovalPage, onHideApprovalPage, showApprovalPage, sidebarCollapsed, demoApproval } = useOutletContext<{
     onSetupWallet: () => void;
     onClaimWallet: () => void;
     onOpenWalletModal: () => void;
@@ -50,6 +50,7 @@ export default function AIAssistant() {
     onHideApprovalPage: () => void;
     showApprovalPage: boolean;
     sidebarCollapsed: boolean;
+    demoApproval: boolean;
   }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const [pendingApprovalCount, setPendingApprovalCount] = useState(hasWallets ? 2 : 0);
@@ -118,8 +119,8 @@ export default function AIAssistant() {
           id: 'welcome-' + Date.now(),
           role: 'assistant',
           content: language === 'zh'
-            ? '恭喜！你的 Agent Wallet 已经准备就绪 🎉\n\n现在你可以随时向我提问，例如：\n• 查看钱包状态和余额\n• 调整风控策略\n• 了解支持的功能\n\n有什么我可以帮你的吗？'
-            : 'Congratulations! Your Agent Wallet is ready 🎉\n\nYou can now ask me anything, for example:\n• Check wallet status and balance\n• Adjust risk control policies\n• Learn about supported features\n\nHow can I help you?',
+            ? '恭喜！你的 Agentic 钱包已经创建完成 🎉\n\n有什么我可以帮你的吗？'
+            : 'Congratulations! Your Agent Wallet is ready 🎉\n\nHow can I help you?',
           timestamp: new Date(),
         };
 
@@ -300,6 +301,26 @@ export default function AIAssistant() {
     const welcome = searchParams.get('welcome');
     if (prefill) setInputValue(prefill);
     if (welcome === 'first-wallet') setWelcomeType('first-wallet');
+    if (welcome === 'wallet-ready') {
+      const welcomeMsg: Message = {
+        id: 'welcome-ready-' + Date.now(),
+        role: 'assistant',
+        content: language === 'zh'
+          ? '恭喜！你的 Agentic 钱包已经创建完成 🎉\n\n有什么我可以帮你的吗？'
+          : 'Congratulations! Your Agent Wallet is ready 🎉\n\nHow can I help you?',
+        timestamp: new Date(),
+        walletListData: true,
+      };
+      const sessionTitle = language === 'zh' ? '开始使用 Agentic 钱包' : 'Getting Started with Agentic Wallet';
+      const newSessionId = 'wallet-ready-' + Date.now();
+      setMessages([welcomeMsg]);
+      setActiveChatId(newSessionId);
+      setChatTitle(sessionTitle);
+      setChatSessions(prev => [
+        { id: newSessionId, title: sessionTitle, timestamp: new Date(), messages: [welcomeMsg] },
+        ...prev,
+      ]);
+    }
     if (prefill || welcome) setSearchParams({}, { replace: true });
   }, [searchParams, setSearchParams]);
 
@@ -447,6 +468,59 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
     }, 1000 + Math.random() * 500);
   };
 
+  const handleSendDirect = (text: string) => {
+    if (isTyping || onboarding.isOnboardingActive) return;
+
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: text,
+      timestamp: new Date(),
+    };
+
+    const currentSessionId = activeChatId;
+
+    setChatSessions((prev) =>
+      prev.map((s) =>
+        s.id === currentSessionId
+          ? { ...s, messages: [...s.messages, userMessage] }
+          : s
+      )
+    );
+
+    setMessages((prev) => [...prev, userMessage]);
+    setInputValue('');
+    setIsTyping(true);
+
+    setTimeout(() => {
+      const lowerInput = text.toLowerCase();
+      const isWalletListQuery = hasWallets && (
+        lowerInput.includes('我的钱包') || lowerInput.includes('钱包列表') || lowerInput.includes('查看钱包') || lowerInput.includes('展示钱包') || lowerInput.includes('显示钱包') || lowerInput.includes('所有钱包') ||
+        lowerInput.includes('my wallet') || lowerInput.includes('wallet list') || lowerInput.includes('show wallet') || lowerInput.includes('list wallet') || lowerInput.includes('all wallet')
+      );
+      const aiResponse: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: isWalletListQuery
+          ? (language === 'zh'
+            ? `您当前共有 ${wallets.length} 个钱包，以下是钱包列表：`
+            : `You currently have ${wallets.length} wallet${wallets.length > 1 ? 's' : ''}. Here's your wallet list:`)
+          : simulateAIResponse(text),
+        timestamp: new Date(),
+        ...(isWalletListQuery ? { walletListData: true } : {}),
+      };
+      setMessages((prev) => [...prev, aiResponse]);
+      setChatSessions((prev) =>
+        prev.map((s) =>
+          s.id === currentSessionId
+            ? { ...s, messages: [...s.messages, aiResponse] }
+            : s
+        )
+      );
+      setIsTyping(false);
+    }, 1000 + Math.random() * 500);
+  };
+
   const handleNewChat = () => {
     setMessages([]);
     setActiveChatId('current');
@@ -508,13 +582,13 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
               <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'w-[36px] h-[36px] -m-[8px] rounded-[8px] hover:bg-[#EDEEF3] transition-colors' : ''} ${showApprovalPage && sidebarCollapsed ? 'bg-[#EDEEF3]' : ''}`}>
                 <div className="relative shrink-0">
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0"><path d="M16.6667 10.8333C16.6667 15 13.75 17.0833 10.2833 18.2916C10.1018 18.3532 9.90462 18.3502 9.72501 18.2833C6.25001 17.0833 3.33334 15 3.33334 10.8333V4.99997C3.33334 4.77895 3.42114 4.56699 3.57742 4.41071C3.7337 4.25443 3.94566 4.16663 4.16668 4.16663C5.83334 4.16663 7.91668 3.16663 9.36668 1.89997C9.54322 1.74913 9.7678 1.66626 10 1.66626C10.2322 1.66626 10.4568 1.74913 10.6333 1.89997C12.0917 3.17497 14.1667 4.16663 15.8333 4.16663C16.0544 4.16663 16.2663 4.25443 16.4226 4.41071C16.5789 4.56699 16.6667 4.77895 16.6667 4.99997V10.8333Z" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M7.5 10L9.16667 11.6667L12.5 8.33337" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                  {pendingApprovalCount > 0 && (
+                  {demoApproval && pendingApprovalCount > 0 && (
                     <div className={`absolute -top-[2px] -right-[2px] w-[8px] h-[8px] bg-[#FF3B30] rounded-full transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-100' : 'opacity-0'}`} />
                   )}
                 </div>
               </div>
               <span className={`font-['Inter',sans-serif] text-[14px] leading-[20px] font-normal whitespace-nowrap transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}>{language === 'zh' ? '交易审批' : 'Approvals'}</span>
-              {pendingApprovalCount > 0 && (
+              {demoApproval && pendingApprovalCount > 0 && (
                 <span className={`shrink-0 min-w-[16px] h-[16px] flex items-center justify-center rounded-full bg-[#FF3B30] text-white text-[11px] leading-[1] font-medium px-[4px] transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}>
                   {pendingApprovalCount}
                 </span>
@@ -696,7 +770,7 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
       {showWalletPage && (
         <div className="flex-1 flex flex-col bg-white overflow-y-auto min-h-0 relative">
           {/* Floating approval notification banner */}
-          {hasWallets && pendingApprovalCount > 0 && !approvalBannerDismissed && (
+          {demoApproval && hasWallets && pendingApprovalCount > 0 && !approvalBannerDismissed && (
             <div className="absolute top-0 left-0 right-0 z-10 flex justify-center px-6 pt-[24px] pointer-events-none">
               <div className="w-full max-w-[768px] flex items-center justify-between px-4 py-3 rounded-xl bg-[#FEF1E8] pointer-events-auto">
                 <div className="flex items-center gap-2">
@@ -718,7 +792,7 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
               </div>
             </div>
           )}
-          <div className="w-full max-w-[860px] mx-auto p-6 sm:p-10">
+          <div className="w-full max-w-[864px] mx-auto px-[24px] py-[92px]">
             <WalletAgentPage
               onSetupWallet={() => { onHideWalletPage(); }}
               onClaimWallet={onClaimWallet}
@@ -731,7 +805,7 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
       {/* Approval page - shown when approval sidebar item is active */}
       {showApprovalPage && (
         <div className="flex-1 flex flex-col bg-white overflow-y-auto min-h-0">
-          <div className="w-full max-w-[860px] mx-auto p-6 sm:p-10">
+          <div className="w-full max-w-[864px] mx-auto px-[24px] py-[92px]">
             <ApprovalPage key={approvalInitialTab} initialTab={approvalInitialTab} onPendingCountChange={setPendingApprovalCount} />
           </div>
         </div>
@@ -741,7 +815,7 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
       {!showWalletPage && !showApprovalPage && (
       <div className="flex-1 flex flex-col bg-white overflow-hidden relative min-h-0">
         {/* Floating approval notification banner */}
-        {hasWallets && pendingApprovalCount > 0 && !approvalBannerDismissed && (
+        {demoApproval && hasWallets && pendingApprovalCount > 0 && !approvalBannerDismissed && (
           <div className="absolute top-0 left-0 right-0 z-10 flex justify-center px-6 pt-[24px] pointer-events-none">
             <div className="w-full max-w-[768px] flex items-center justify-between px-4 py-3 rounded-xl bg-[#FEF1E8] pointer-events-auto">
               <div className="flex items-center gap-2">
@@ -765,7 +839,7 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
         )}
         {/* Messages area */}
         {(displayMessages.length > 0 || combinedTyping) && (
-        <div className="flex-1 overflow-y-auto px-6 pb-6 flex flex-col items-center" style={{ gap: '24px', paddingTop: '32px' }}>
+        <div className="flex-1 overflow-y-auto px-6 pb-6 flex flex-col items-center" style={{ gap: '24px', paddingTop: demoApproval && hasWallets && pendingApprovalCount > 0 && !approvalBannerDismissed ? '92px' : '32px' }}>
           <div className="w-full max-w-[744px] flex-1" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
 
           {displayMessages.map((message) => (
@@ -847,8 +921,58 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
                   {message.role === 'assistant' ? (
                     <div className="bg-transparent text-slate-900 w-full">
                       {renderAssistantHeader()}
-                      <div className="whitespace-pre-wrap" style={{ fontSize: '16px', lineHeight: '24px' }}>{message.content}</div>
-                      {message.walletListData && wallets.length > 0 && (
+                      {message.id.startsWith('welcome-ready-') ? (
+                        <>
+                          <div className="whitespace-pre-wrap" style={{ fontSize: '16px', lineHeight: '24px' }}>{message.content.split('\n\n')[0]}</div>
+                          {message.walletListData && wallets.length > 0 && (
+                            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                              {wallets.map((w) => {
+                                const count = delegations.filter(d => d.walletId === w.id).length;
+                                return (
+                                  <WalletCard
+                                    key={w.id}
+                                    wallet={w}
+                                    delegationCount={count}
+                                    onSelect={(walletId) => {
+                                      selectWallet(walletId);
+                                      onShowWalletPage();
+                                    }}
+                                  />
+                                );
+                              })}
+                            </div>
+                          )}
+                          {message.content.split('\n\n').length > 1 && (
+                            <div className="whitespace-pre-wrap mt-4" style={{ fontSize: '16px', lineHeight: '24px' }}>{message.content.split('\n\n').slice(1).join('\n\n')}</div>
+                          )}
+                          {!isTyping && displayMessages.length === 1 && (
+                            <div className="flex flex-col gap-[10px] mt-[20px]">
+                              {(language === 'zh' ? [
+                                '我这个钱包现在准备好了吗？',
+                                '帮我设置一个安全的使用限制',
+                                '下一步我该怎么开始用？',
+                              ] : [
+                                'Is my wallet ready to use?',
+                                'Help me set up safe usage limits',
+                                'What should I do next to get started?',
+                              ]).map((suggestion) => (
+                                <button
+                                  key={suggestion}
+                                  onClick={() => handleSendDirect(suggestion)}
+                                  className="w-fit px-[16px] py-[10px] rounded-[12px] border border-[#EDEEF3] bg-white hover:bg-[#F8F9FC] transition-all text-[14px] leading-[20px] font-normal text-[#1C1C1C] text-left"
+                                >
+                                  {suggestion}
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <>
+                          <div className="whitespace-pre-wrap" style={{ fontSize: '16px', lineHeight: '24px' }}>{message.content}</div>
+                        </>
+                      )}
+                      {!message.id.startsWith('welcome-ready-') && message.walletListData && wallets.length > 0 && (
                         <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
                           {wallets.map((w) => {
                             const count = delegations.filter(d => d.walletId === w.id).length;

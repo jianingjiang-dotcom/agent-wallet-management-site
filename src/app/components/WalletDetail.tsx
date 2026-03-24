@@ -1,5 +1,4 @@
 import {
-  ArrowLeft,
   Wallet,
   Shield,
   Clock,
@@ -21,6 +20,8 @@ import {
   Ban,
   Play,
   Pause,
+  ChevronDown,
+  Download,
   type LucideIcon,
 } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
@@ -30,7 +31,8 @@ import DelegationCard from './DelegationCard';
 
 interface WalletDetailProps {
   wallet: WalletType;
-  onBack: () => void;
+  wallets: WalletType[];
+  onSwitchWallet: (walletId: string) => void;
   onFreeze: (delegationId: string) => void;
   onUnfreeze: (delegationId: string) => void;
   onRevoke: (delegationId: string) => void;
@@ -41,11 +43,14 @@ interface WalletDetailProps {
   onUpdateAgentName?: (agentId: string, name: string) => void;
   getDelegationsForWallet: (walletId: string) => Delegation[];
   getAgentById: (agentId: string) => Agent | null;
+  onSetupWallet?: () => void;
+  onClaimWallet?: () => void;
 }
 
 export default function WalletDetail({
   wallet,
-  onBack,
+  wallets,
+  onSwitchWallet,
   onFreeze,
   onUnfreeze,
   onRevoke,
@@ -56,6 +61,8 @@ export default function WalletDetail({
   onUpdateAgentName,
   getDelegationsForWallet,
   getAgentById,
+  onSetupWallet,
+  onClaimWallet,
 }: WalletDetailProps) {
   const { t } = useLanguage();
   const [isEditingName, setIsEditingName] = useState(false);
@@ -97,20 +104,27 @@ export default function WalletDetail({
     }
   };
 
+  const [switcherOpen, setSwitcherOpen] = useState(false);
+  const switcherRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (switcherRef.current && !switcherRef.current.contains(e.target as Node)) {
+        setSwitcherOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const noop = () => {};
+
   return (
     <div className="max-w-5xl mx-auto">
-      {/* Back Button */}
-      <button
-        onClick={onBack}
-        className="flex items-center gap-2 font-['Inter',sans-serif] font-medium text-[14px] text-[#4f5eff] hover:text-[#2837d0] transition-colors mb-6"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        {t('walletDetail.back')}
-      </button>
-
-      {/* Wallet Name Header */}
-      <div className="flex items-center gap-3 mb-6">
-        <div className="flex items-center gap-3 flex-1 min-w-0">
+      {/* Header: wallet switcher + action buttons */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3 min-w-0">
+          {/* Wallet name / switcher */}
           {isEditingName ? (
             <div className="flex items-center gap-2">
               <input
@@ -122,7 +136,7 @@ export default function WalletDetail({
                   if (e.key === 'Enter') handleSaveName();
                   if (e.key === 'Escape') { setEditName(wallet.name); setIsEditingName(false); }
                 }}
-                className="font-['Inter',sans-serif] font-semibold text-[28px] text-[#0a0a0a] bg-transparent border-b-2 border-[#4f5eff] outline-none py-0 px-0 w-[240px]"
+                className="font-['Inter',sans-serif] font-normal text-[24px] leading-[32px] text-[#0a0a0a] bg-transparent border-b-2 border-[#4f5eff] outline-none py-0 px-0 w-[240px]"
               />
               <button onClick={handleSaveName} className="text-[#4f5eff] hover:text-[#2837d0] transition-colors p-1">
                 <Check className="w-5 h-5" />
@@ -130,12 +144,12 @@ export default function WalletDetail({
             </div>
           ) : (
             <div className="flex items-center gap-2 group/name">
-              <h1 className="font-['Inter',sans-serif] font-semibold text-[28px] text-[#0a0a0a]">
+              <h1 className="font-['Inter',sans-serif] font-normal text-[24px] leading-[32px] text-[#0a0a0a]">
                 {wallet.name}
               </h1>
               <button
                 onClick={() => { setEditName(wallet.name); setIsEditingName(true); }}
-                className="text-[#b0b0b0] hover:text-[#4f5eff] transition-colors p-1 opacity-0 group-hover/name:opacity-100"
+                className="text-[#b0b0b0] hover:text-[#4f5eff] transition-colors p-1"
               >
                 <Pencil className="w-4 h-4" />
               </button>
@@ -152,6 +166,52 @@ export default function WalletDetail({
               {t('delegation.noAgent')}
             </span>
           )}
+          {/* Wallet switcher button */}
+          {wallets.length > 1 && (
+            <div className="relative" ref={switcherRef}>
+              <button
+                onClick={() => setSwitcherOpen(!switcherOpen)}
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-[8px] font-['Inter',sans-serif] font-medium text-[12px] text-[#7c7c7c] border border-[rgba(10,10,10,0.1)] hover:bg-[#f5f5f5] hover:border-[rgba(10,10,10,0.15)] transition-colors"
+              >
+                <Wallet className="w-3.5 h-3.5" />
+                {t('walletDetail.switchWallet')}
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform ${switcherOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {switcherOpen && (
+                <div className="absolute top-full left-0 mt-1 w-[220px] bg-white border border-[rgba(10,10,10,0.1)] rounded-[10px] shadow-[0px_4px_16px_rgba(0,0,0,0.08)] z-20 py-1">
+                  {wallets.map(w => (
+                    <button
+                      key={w.id}
+                      onClick={() => { onSwitchWallet(w.id); setSwitcherOpen(false); }}
+                      className={`w-full text-left px-3 py-2 text-[13px] font-['Inter',sans-serif] transition-colors ${
+                        w.id === wallet.id
+                          ? 'text-[#4f5eff] bg-[rgba(79,94,255,0.04)] font-medium'
+                          : 'text-[#0a0a0a] hover:bg-[#f5f5f5] font-normal'
+                      }`}
+                    >
+                      {w.name}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={onClaimWallet || noop}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-[8px] font-['Inter',sans-serif] font-medium text-[12px] text-[#7c7c7c] border border-[rgba(10,10,10,0.1)] hover:bg-[#f5f5f5] transition-colors"
+          >
+            <Download className="w-3.5 h-3.5" />
+            {t('walletPage.claimWallet')}
+          </button>
+          <button
+            onClick={onSetupWallet || noop}
+            className="flex items-center gap-2 px-4 py-2 rounded-[8px] font-['Inter',sans-serif] font-medium text-[13px] text-white bg-[#4f5eff] hover:bg-[#3d4dd9] transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            {t('walletPage.createNew')}
+          </button>
         </div>
       </div>
 

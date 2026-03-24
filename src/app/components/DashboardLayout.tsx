@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { Outlet, useNavigate, Link, useLocation } from 'react-router';
-import { Wallet, LogOut, Menu, X, User, Fuel, ReceiptJapaneseYen, Settings, Globe, ChevronRight } from 'lucide-react';
+import { Wallet, LogOut, Menu, X, User, Fuel, ReceiptJapaneseYen, Settings, Globe, ChevronRight, Play } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useWalletStore } from '../hooks/useWalletStore';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -14,7 +14,6 @@ import {
   DialogContent,
   DialogTitle,
 } from "./ui/dialog";
-import WalletAgentPage from './WalletAgentPage';
 import Gasless from './Gasless';
 import Billing from './Billing';
 import AccountSettings from './AccountSettings';
@@ -29,11 +28,12 @@ export default function DashboardLayout() {
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [demoApproval, setDemoApproval] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showAgentPairing, setShowAgentPairing] = useState(false);
   const [showClaimWallet, setShowClaimWallet] = useState(false);
   const [delegationTarget, setDelegationTarget] = useState<{ open: boolean; walletId: string }>({ open: false, walletId: "" });
-  const [activeModal, setActiveModal] = useState<'wallet' | 'gas' | 'billing' | 'settings' | null>(null);
+  const [activeModal, setActiveModal] = useState<'gas' | 'billing' | 'settings' | null>(null);
   const [toggleTooltip, setToggleTooltip] = useState(false);
   const [avatarTooltip, setAvatarTooltip] = useState(false);
   const avatarBtnRef = useRef<HTMLButtonElement>(null);
@@ -45,6 +45,12 @@ export default function DashboardLayout() {
     if (!currentUser) {
       navigate('/login');
     } else {
+      // Check invite code verification
+      const inviteVerified = localStorage.getItem('agent_wallet_invite_verified');
+      if (!inviteVerified) {
+        navigate('/invite');
+        return;
+      }
       const parsed = JSON.parse(currentUser);
       setUser(parsed);
     }
@@ -113,8 +119,7 @@ export default function DashboardLayout() {
   };
 
   // Nav items for user menu — open modals instead of navigating
-  const navItems: { key: 'wallet' | 'gas' | 'billing' | 'settings'; label: string; icon: typeof Wallet }[] = [
-    { key: 'wallet', label: t('nav.walletAgent'), icon: Wallet },
+  const navItems: { key: 'gas' | 'billing' | 'settings'; label: string; icon: typeof Wallet }[] = [
     { key: 'gas', label: t('nav.gasAccount'), icon: Fuel },
     { key: 'billing', label: t('nav.billing'), icon: ReceiptJapaneseYen },
     { key: 'settings', label: t('nav.settings'), icon: Settings },
@@ -231,6 +236,22 @@ export default function DashboardLayout() {
 
                 <div className="border-t border-[rgba(10,10,10,0.06)] my-[2px]" />
 
+                {/* Demo Approval Toggle */}
+                <button
+                  onClick={() => setDemoApproval(!demoApproval)}
+                  className="flex items-center gap-[8px] px-[12px] py-[8px] rounded-[8px] hover:bg-[#FAFAFA] transition-colors w-full"
+                >
+                  <Play className="w-4 h-4 text-[#4F4F4F]" />
+                  <span className="font-['Inter',sans-serif] font-medium text-[13px] text-[#0A0A0A]">
+                    {language === 'zh' ? '审批提示演示' : 'Approval Demo'}
+                  </span>
+                  <div className="ml-auto">
+                    <div className={`relative w-[36px] h-[20px] rounded-full transition-colors cursor-pointer ${demoApproval ? 'bg-[#4F5EFF]' : 'bg-[#D9D9D9]'}`}>
+                      <div className={`absolute top-[2px] w-[16px] h-[16px] rounded-full bg-white shadow-sm transition-transform ${demoApproval ? 'translate-x-[18px]' : 'translate-x-[2px]'}`} />
+                    </div>
+                  </div>
+                </button>
+
                 {/* Language */}
                 <button
                   onClick={() => setLanguage(language === 'zh' ? 'en' : 'zh')}
@@ -346,7 +367,7 @@ export default function DashboardLayout() {
             onPairAgent: () => setShowAgentPairing(true),
             onClaimWallet: () => setShowClaimWallet(true),
             onDelegateWallet: (walletId: string) => setDelegationTarget({ open: true, walletId }),
-            onOpenWalletModal: () => setActiveModal('wallet'),
+            onOpenWalletModal: () => {},
             onShowWalletPage: () => setActiveModal('wallet-page'),
             onHideWalletPage: () => setActiveModal(null),
             showWalletPage: activeModal === 'wallet-page',
@@ -354,6 +375,7 @@ export default function DashboardLayout() {
             onHideApprovalPage: () => setActiveModal(null),
             showApprovalPage: activeModal === 'approval-page',
             sidebarCollapsed,
+            demoApproval,
           }} />
         </main>
       </div>
@@ -393,19 +415,12 @@ export default function DashboardLayout() {
       />
 
       {/* Feature Page Modals — unified sizing */}
-      {(['wallet', 'gas', 'billing', 'settings'] as const).map((key) => (
+      {(['gas', 'billing', 'settings'] as const).map((key) => (
         <Dialog key={key} open={activeModal === key} onOpenChange={(val) => { if (!val) setActiveModal(null); }}>
           <DialogContent className="max-w-[calc(100vw-3rem)] sm:max-w-[860px] max-h-[90vh] overflow-y-auto p-6 sm:p-10 rounded-2xl">
             <DialogTitle className="sr-only">
-              {key === 'wallet' ? t('nav.walletAgent') : key === 'gas' ? t('nav.gasAccount') : key === 'billing' ? t('nav.billing') : t('nav.settings')}
+              {key === 'gas' ? t('nav.gasAccount') : key === 'billing' ? t('nav.billing') : t('nav.settings')}
             </DialogTitle>
-            {key === 'wallet' && (
-              <WalletAgentPage
-                onSetupWallet={() => { setActiveModal(null); setShowOnboarding(true); }}
-                onClaimWallet={() => { setActiveModal(null); setShowClaimWallet(true); }}
-                onDelegateWallet={(walletId) => { setActiveModal(null); setDelegationTarget({ open: true, walletId }); }}
-              />
-            )}
             {key === 'gas' && <Gasless />}
             {key === 'billing' && <Billing />}
             {key === 'settings' && <AccountSettings />}
