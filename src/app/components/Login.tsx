@@ -24,6 +24,8 @@ export default function Login() {
     };
     // Clear previous wallet data for a fresh start
     localStorage.removeItem('agent_wallet_wallets');
+    localStorage.removeItem('agent_wallet_invite_verified');
+    localStorage.removeItem('agent_wallet_invite_code');
     localStorage.setItem('agent_wallet_current_user', JSON.stringify(socialUser));
 
     // Always navigate to dashboard; onboarding modal auto-opens if walletPaired is false
@@ -44,6 +46,8 @@ export default function Login() {
       createdAt: new Date().toISOString(),
       walletPaired: false, // New user needs onboarding
     };
+    localStorage.removeItem('agent_wallet_invite_verified');
+    localStorage.removeItem('agent_wallet_invite_code');
     localStorage.setItem('agent_wallet_current_user', JSON.stringify(magicLinkUser));
     navigate('/dashboard');
   };
@@ -75,31 +79,14 @@ export default function Login() {
       <div className="w-full max-w-[446px] flex flex-col gap-[40px] items-center">
         {/* Logo and Header */}
         <div className="content-stretch flex flex-col gap-[8px] items-center w-full">
-          <div 
-            className="h-[32px] relative w-[301.665px] cursor-pointer"
+          <div
+            className="cursor-pointer"
             onClick={handleLogoClick}
           >
-            <svg className="absolute block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 301.665 32">
-              <g>
-                <path d={svgPaths.pc0264f0} fill="#0A0A0A" />
-                <path d={svgPaths.p3047e200} fill="#0A0A0A" />
-                <path d={svgPaths.p2ae8cf80} fill="#0A0A0A" />
-                <path d={svgPaths.p2f540240} fill="#0A0A0A" />
-                <path d={svgPaths.p34feb700} fill="#0A0A0A" />
-                <path d={svgPaths.p19bb4d00} fill="#0A0A0A" />
-                <path d={svgPaths.p1d862d80} fill="#4F5EFF" />
-                <path d={svgPaths.pc8a4d00} fill="#4F5EFF" />
-                <path d={svgPaths.p3dee7e70} fill="#4F5EFF" />
-                <path d={svgPaths.p4c54400} fill="#4F5EFF" />
-                <path d={svgPaths.pea8ab00} fill="#4F5EFF" />
-                <path d={svgPaths.p1af1ca00} fill="#4F5EFF" />
-                <path d={svgPaths.p273dfb80} fill="#4F5EFF" />
-                <path d={svgPaths.p3f114880} fill="#0A0A0A" />
-                <path d={svgPaths.p32df7100} fill="#0A0A0A" />
-                <path d={svgPaths.p3b768700} fill="#0A0A0A" />
-                <path d={svgPaths.p908dd80} fill="#0A0A0A" />
-              </g>
-            </svg>
+            <span className="text-[28px] font-semibold leading-none" style={{ fontFamily: "'Inter', sans-serif" }}>
+              <span className="text-[#0A0A0A]">Cobo </span>
+              <span className="text-[#4F5EFF]">Pact</span>
+            </span>
           </div>
           <p className="font-['Inter',sans-serif] font-normal leading-[1.5] text-[16px] text-black text-center w-full">
             {t('auth.subtitle')}

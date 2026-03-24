@@ -1,7 +1,6 @@
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useLanguage } from '../contexts/LanguageContext';
-import svgPaths from '../../imports/svg-zu39gs7vho';
 
 export default function InviteCodePage() {
   const { t } = useLanguage();
@@ -13,6 +12,7 @@ export default function InviteCodePage() {
   const [toast, setToast] = useState('');
   const [toastVisible, setToastVisible] = useState(false);
   const [toastType, setToastType] = useState<'error' | 'success'>('error');
+  const [exiting, setExiting] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Auto-format: strip non-alphanumeric, insert dash after 4 chars, max 9 chars (XXXX-XXXX)
@@ -34,7 +34,7 @@ export default function InviteCodePage() {
     // Mock validation
     await new Promise(r => setTimeout(r, 800));
 
-    if (code !== '3333-3333') {
+    if (code === '1111-1111') {
       setError(t('invitePage.codeInvalid'));
       inputRef.current?.focus();
       setToastType('error');
@@ -45,15 +45,26 @@ export default function InviteCodePage() {
       return;
     }
 
+    if (code === '2222-2222') {
+      setError(t('invitePage.codeUsed'));
+      inputRef.current?.focus();
+      setToastType('error');
+      setToast(t('invitePage.codeUsed'));
+      setToastVisible(true);
+      setTimeout(() => setToastVisible(false), 3000);
+      setLoading(false);
+      return;
+    }
+
     // Store invite code and mark as verified
     localStorage.setItem('agent_wallet_invite_verified', 'true');
     localStorage.setItem('agent_wallet_invite_code', code);
-    setLoading(false);
+    // Keep loading=true so the button doesn't flash back to idle before navigating
     setToastType('success');
     setToast(t('invitePage.codeSuccess'));
     setToastVisible(true);
     setTimeout(() => {
-      navigate('/setup');
+      setExiting(true);
     }, 1500);
   };
 
@@ -62,11 +73,18 @@ export default function InviteCodePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F9FC] relative">
+    <div
+      className={`min-h-screen bg-[#F8F9FC] relative ${exiting ? 'animate-page-exit' : 'animate-page-enter'}`}
+      onAnimationEnd={() => { if (exiting) navigate('/setup'); }}
+    >
       {/* Toast */}
       {toast && (
-        <div className={`fixed top-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-5 py-3 rounded-[12px] shadow-[0px_4px_12px_rgba(0,0,0,0.08)] transition-all duration-300 ${toastType === 'success' ? 'bg-[#F0FDF4] border border-[#BBF7D0]' : 'bg-[#FEF2F2] border border-[#FECACA]'} ${toastVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}`}
-          onTransitionEnd={() => { if (!toastVisible) setToast(''); }}
+        <div
+          className={`fixed left-1/2 z-50 flex items-center gap-2 px-5 py-3 rounded-[12px] shadow-[0px_4px_12px_rgba(0,0,0,0.08)] ${toastType === 'success' ? 'bg-[#F0FDF4] border border-[#BBF7D0]' : 'bg-[#FEF2F2] border border-[#FECACA]'} ${toastVisible ? '' : 'opacity-0 pointer-events-none'}`}
+          style={{
+            animation: toastVisible ? 'toast-drop-in 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards' : 'toast-drop-out 0.3s ease-in forwards',
+          }}
+          onAnimationEnd={() => { if (!toastVisible) setToast(''); }}
         >
           {toastType === 'success' ? (
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="8" fill="#22C55E"/><path d="M5 8L7 10L11 6" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
@@ -76,31 +94,23 @@ export default function InviteCodePage() {
           <span className={`text-[14px] leading-[20px] font-medium ${toastType === 'success' ? 'text-[#166534]' : 'text-[#991B1B]'}`}>{toast}</span>
         </div>
       )}
+
+      <style>{`
+        @keyframes toast-drop-in {
+          0% { transform: translateX(-50%) translateY(-80px); opacity: 0; }
+          100% { transform: translateX(-50%) translateY(0); opacity: 1; top: 24px; }
+        }
+        @keyframes toast-drop-out {
+          0% { transform: translateX(-50%) translateY(0); opacity: 1; top: 24px; }
+          100% { transform: translateX(-50%) translateY(-80px); opacity: 0; top: 24px; }
+        }
+      `}</style>
       {/* Logo */}
       <div className="absolute top-0 left-0 px-6 py-[23px]">
-        <div className="h-[18px] w-[172px] relative shrink-0">
-          <svg className="absolute block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 188.538 19.9998">
-            <g>
-              <path d={svgPaths.p12420d80} fill="#1C1C1C" />
-              <path d={svgPaths.p19bafe80} fill="#1C1C1C" />
-              <path d={svgPaths.p161a0400} fill="#1C1C1C" />
-              <path d={svgPaths.p3456db00} fill="#1C1C1C" />
-              <path d={svgPaths.p5983200} fill="#1C1C1C" />
-              <path d={svgPaths.p35ddbb80} fill="#1C1C1C" />
-              <path d={svgPaths.p192f4b80} fill="#4F5EFF" />
-              <path d={svgPaths.p2c193100} fill="#4F5EFF" />
-              <path d={svgPaths.p357a0d00} fill="#4F5EFF" />
-              <path d={svgPaths.p26dee800} fill="#4F5EFF" />
-              <path d={svgPaths.pf8ab380} fill="#4F5EFF" />
-              <path d={svgPaths.p25b8a100} fill="#4F5EFF" />
-              <path d={svgPaths.p1a427e00} fill="#4F5EFF" />
-              <path d={svgPaths.p37c6db00} fill="#1C1C1C" />
-              <path d={svgPaths.p16c2cc00} fill="#1C1C1C" />
-              <path d={svgPaths.p2ed1f700} fill="#1C1C1C" />
-              <path d={svgPaths.p123d8680} fill="#1C1C1C" />
-            </g>
-          </svg>
-        </div>
+        <span className="text-[18px] font-semibold leading-none whitespace-nowrap" style={{ fontFamily: "'Inter', sans-serif" }}>
+          <span className="text-[#1C1C1C]">Cobo </span>
+          <span className="text-[#4F5EFF]">Pact</span>
+        </span>
       </div>
 
       {/* Centered content */}
@@ -136,9 +146,17 @@ export default function InviteCodePage() {
             <button
               onClick={handleSubmit}
               disabled={!code.trim() || loading}
-              className="w-full h-[54px] px-6 py-4 bg-[#4F5EFF] hover:bg-[#3d4dd9] disabled:opacity-50 disabled:cursor-not-allowed rounded-[14px] text-[16px] leading-[22px] font-medium text-white text-center transition-colors"
+              className="w-full h-[54px] px-6 py-4 bg-[#4F5EFF] hover:bg-[#3d4dd9] disabled:opacity-50 disabled:cursor-not-allowed rounded-[14px] text-[16px] leading-[22px] font-medium text-white text-center transition-all duration-150 active:scale-[0.98]"
             >
-              {loading ? t('invitePage.verifying') : t('invitePage.submit')}
+              {loading ? (
+                <span className="inline-flex items-center gap-2">
+                  <svg className="animate-spin" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <circle cx="8" cy="8" r="6.5" stroke="white" strokeOpacity="0.3" strokeWidth="2" />
+                    <path d="M14.5 8A6.5 6.5 0 0 0 8 1.5" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                  </svg>
+                  {t('invitePage.verifying')}
+                </span>
+              ) : t('invitePage.submit')}
             </button>
           </div>
 

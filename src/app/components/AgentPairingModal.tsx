@@ -79,14 +79,14 @@ export default function AgentPairingModal({
   const buildPrompt = () => {
     if (language === "zh") {
       return walletId
-        ? `请帮我配对一个 Cobo Agentic Wallet Agent 并绑定到指定钱包，按以下步骤执行：
+        ? `请帮我配对一个 Cobo Pact Agent 并绑定到指定钱包，按以下步骤执行：
 
 1. 安装 CLI 工具（如果没安装）：
 pip install /path/to/cobo-agent-wallet/sdk
 
 2. 运行配对命令：
 ${buildCommand()}`
-        : `请帮我配对一个 Cobo Agentic Wallet Agent，按以下步骤执行：
+        : `请帮我配对一个 Cobo Pact Agent，按以下步骤执行：
 
 1. 安装 CLI 工具（如果没安装）：
 pip install /path/to/cobo-agent-wallet/sdk
@@ -95,14 +95,14 @@ pip install /path/to/cobo-agent-wallet/sdk
 ${buildCommand()}`;
     }
     return walletId
-      ? `Please help me pair a Cobo Agentic Wallet Agent and bind it to a specific wallet by following these steps:
+      ? `Please help me pair a Cobo Pact Agent and bind it to a specific wallet by following these steps:
 
 1. Install the CLI tool (if not installed):
 pip install /path/to/cobo-agent-wallet/sdk
 
 2. Run the pairing command:
 ${buildCommand()}`
-      : `Please help me pair a Cobo Agentic Wallet Agent by following these steps:
+      : `Please help me pair a Cobo Pact Agent by following these steps:
 
 1. Install the CLI tool (if not installed):
 pip install /path/to/cobo-agent-wallet/sdk

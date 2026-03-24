@@ -17,7 +17,7 @@ import {
 import Gasless from './Gasless';
 import Billing from './Billing';
 import AccountSettings from './AccountSettings';
-import svgPaths from "../../imports/svg-zu39gs7vho";
+
 
 export default function DashboardLayout() {
   const navigate = useNavigate();
@@ -127,28 +127,11 @@ export default function DashboardLayout() {
 
   if (!user) return null;
 
-  const LogoSvg = () => (
-    <svg className="absolute block size-full" fill="none" preserveAspectRatio="xMidYMid meet" viewBox="0 0 188.538 19.9998">
-      <g>
-        <path d={svgPaths.p12420d80} fill="#1C1C1C" />
-        <path d={svgPaths.p19bafe80} fill="#1C1C1C" />
-        <path d={svgPaths.p161a0400} fill="#1C1C1C" />
-        <path d={svgPaths.p3456db00} fill="#1C1C1C" />
-        <path d={svgPaths.p5983200} fill="#1C1C1C" />
-        <path d={svgPaths.p35ddbb80} fill="#1C1C1C" />
-        <path d={svgPaths.p192f4b80} fill="#4F5EFF" />
-        <path d={svgPaths.p2c193100} fill="#4F5EFF" />
-        <path d={svgPaths.p357a0d00} fill="#4F5EFF" />
-        <path d={svgPaths.p26dee800} fill="#4F5EFF" />
-        <path d={svgPaths.pf8ab380} fill="#4F5EFF" />
-        <path d={svgPaths.p25b8a100} fill="#4F5EFF" />
-        <path d={svgPaths.p1a427e00} fill="#4F5EFF" />
-        <path d={svgPaths.p37c6db00} fill="#1C1C1C" />
-        <path d={svgPaths.p16c2cc00} fill="#1C1C1C" />
-        <path d={svgPaths.p2ed1f700} fill="#1C1C1C" />
-        <path d={svgPaths.p123d8680} fill="#1C1C1C" />
-      </g>
-    </svg>
+  const LogoText = () => (
+    <span className="text-[18px] font-semibold leading-none whitespace-nowrap" style={{ fontFamily: "'Inter', sans-serif" }}>
+      <span className="text-[#1C1C1C]">Cobo </span>
+      <span className="text-[#4F5EFF]">Pact</span>
+    </span>
   );
 
   return (
@@ -166,8 +149,8 @@ export default function DashboardLayout() {
         <div className="w-[260px] shrink-0 flex flex-col h-full relative z-[1]">
         {/* Logo - desktop */}
         <div className="hidden lg:flex items-center h-[64px] pl-4 pr-3 pointer-events-none">
-          <div className={`h-[18px] w-[172px] relative shrink-0 transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
-            <LogoSvg />
+          <div className={`shrink-0 transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+            <LogoText />
           </div>
         </div>
         {/* Mobile close button */}
@@ -347,8 +330,8 @@ export default function DashboardLayout() {
           >
             <Menu className="w-6 h-6" />
           </button>
-          <div className="h-[16px] relative w-[152px]">
-            <LogoSvg />
+          <div className="flex items-center">
+            <LogoText />
           </div>
           <button
             onClick={() => setAccountMenuOpen(!accountMenuOpen)}

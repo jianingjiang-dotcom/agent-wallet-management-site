@@ -106,7 +106,7 @@ export function useOnboardingChat(isFirstWallet: boolean) {
     const tok = token || setupToken;
     const cmdSuffix = isFirstWallet && inviteCode ? ` --COBO-${inviteCode}` : '';
     if (language === 'zh') {
-      return `请帮我配置 Cobo Agentic Wallet，按以下步骤执行：
+      return `请帮我配置 Cobo Pact，按以下步骤执行：
 
 1. 安装 CLI 工具（如果没安装）：
 pip install /path/to/cobo-agent-wallet/sdk
@@ -114,7 +114,7 @@ pip install /path/to/cobo-agent-wallet/sdk
 2. 运行配对命令：
 caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${tok}`;
     }
-    return `Please help me set up Cobo Agentic Wallet by following these steps:
+    return `Please help me set up Cobo Pact by following these steps:
 
 1. Install the CLI tool (if not installed):
 pip install /path/to/cobo-agent-wallet/sdk
@@ -159,7 +159,7 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${tok}`;
     const userMsg: OnboardingMessage = {
       id: addId(),
       role: 'user',
-      content: language === 'zh' ? '我想创建一个 Agent Wallet' : 'I want to create an Agent Wallet',
+      content: language === 'zh' ? '我想创建一个 Cobo Pact 钱包' : 'I want to create a Cobo Pact wallet',
       timestamp: new Date(),
     };
     addMessage(userMsg);
@@ -284,7 +284,7 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${tok}`;
           command: (() => {
             const cmdSuffix = isFirstWallet && inviteCode ? ` --COBO-${inviteCode}` : '';
             if (language === 'zh') {
-              return `请帮我配置 Cobo Agentic Wallet，按以下步骤执行：
+              return `请帮我配置 Cobo Pact，按以下步骤执行：
 
 1. 安装 CLI 工具（如果没安装）：
 pip install /path/to/cobo-agent-wallet/sdk
@@ -292,7 +292,7 @@ pip install /path/to/cobo-agent-wallet/sdk
 2. 运行配对命令：
 caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${token}`;
             }
-            return `Please help me set up Cobo Agentic Wallet by following these steps:
+            return `Please help me set up Cobo Pact by following these steps:
 
 1. Install the CLI tool (if not installed):
 pip install /path/to/cobo-agent-wallet/sdk
