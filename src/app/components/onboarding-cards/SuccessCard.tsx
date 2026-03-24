@@ -82,18 +82,7 @@ export default function SuccessCard({ walletId, agentId, onComplete, completed }
         </div>
       </div>
 
-      {/* CTA — hidden after completion */}
-      {!completed && (
-        <button
-          onClick={onComplete}
-          className="w-full bg-[#4f5eff] hover:bg-[#3d4dd9] h-[40px] rounded-[8px] transition-colors shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)] relative overflow-hidden group"
-        >
-          <span className="font-['Inter',sans-serif] font-medium text-[13px] text-white relative z-10">
-            {t('onboarding.chat.startChatting')}
-          </span>
-          <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-        </button>
-      )}
+      {/* CTA button removed — suggestions are shown below the card instead */}
     </div>
   );
 }

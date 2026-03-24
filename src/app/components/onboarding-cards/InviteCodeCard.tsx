@@ -3,7 +3,7 @@ import { CheckCircle, AlertCircle, Loader2, ExternalLink } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 
 interface InviteCodeCardProps {
-  status: 'active' | 'completed' | 'error';
+  status: 'active' | 'completed' | 'disabled';
   onVerify: (code: string) => Promise<void>;
   error?: string;
   verifiedCode?: string;
@@ -62,6 +62,31 @@ export default function InviteCodeCard({ status, onVerify, error, verifiedCode }
               {language === 'zh' ? '已验证' : 'Verified'}
             </span>
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (status === 'disabled') {
+    return (
+      <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[12px] p-4 transition-all duration-300 opacity-50">
+        <div className="mb-3">
+          <div className="flex items-center w-full h-[48px] bg-[#FAFAFA] border border-[rgba(10,10,10,0.06)] rounded-[10px] overflow-hidden">
+            <span className="font-['JetBrains_Mono',monospace] font-medium text-[15px] text-[#999] pl-3.5 pr-0.5 flex-shrink-0 select-none">
+              COBO-
+            </span>
+            <input
+              type="text"
+              disabled
+              placeholder="0000-0000"
+              className="flex-1 h-full bg-transparent font-['JetBrains_Mono',monospace] font-normal text-[15px] text-[#999] placeholder:text-[#c0c0c0] focus:outline-none pr-3 cursor-not-allowed"
+            />
+          </div>
+        </div>
+        <div className="flex items-center justify-center gap-1.5">
+          <span className="text-[12px] text-[#999] font-medium">
+            {language === 'zh' ? '已在对话中输入' : 'Code entered in chat'}
+          </span>
         </div>
       </div>
     );

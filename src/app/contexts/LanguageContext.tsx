@@ -614,6 +614,11 @@ const translations = {
     "onboarding.chat.pairingSuccess": "Connected successfully!",
     "onboarding.chat.successMessage": "Your Cobo Pact wallet is ready! Here's a summary of what was created.",
     "onboarding.chat.startChatting": "Start Chatting",
+    "onboarding.chat.invitePromptNew": "Great! First, I'll need to verify your invitation code. Please enter it below:",
+    "onboarding.chat.inviteVerifiedNew": "Invitation code verified! Now copy the instructions below and send them to your Agent:",
+    "onboarding.chat.walletDone": "Your Cobo Pact wallet has been created successfully! You're all set to start using it.",
+    "onboarding.suggestion.createWallet": "Help me create a Cobo Agentic Wallet",
+    "onboarding.card.disabled": "Code entered in chat",
 
     // Invitation Code
     "onboarding.inviteTitle": "Enter Invitation Code",
@@ -1240,6 +1245,11 @@ const translations = {
     "onboarding.chat.pairingSuccess": "连接成功！",
     "onboarding.chat.successMessage": "你的 Cobo Pact 钱包已就绪！以下是创建摘要。",
     "onboarding.chat.startChatting": "开始对话",
+    "onboarding.chat.invitePromptNew": "好的！首先需要验证你的邀请码，请在下方输入：",
+    "onboarding.chat.inviteVerifiedNew": "邀请码验证通过！复制以下指令发送给你的 Agent：",
+    "onboarding.chat.walletDone": "🎉 钱包创建成功！你现在可以开始使用了。",
+    "onboarding.suggestion.createWallet": "帮我创建一个 Cobo Agentic Wallet",
+    "onboarding.card.disabled": "已在对话中输入",
 
     // Invitation Code
     "onboarding.inviteTitle": "输入邀请码",

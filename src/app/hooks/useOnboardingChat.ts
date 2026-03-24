@@ -2,8 +2,6 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import type { OnboardingData, OnboardingStep } from '../components/onboarding-cards/OnboardingMessageRenderer';
 
-const API_URL = 'https://api-agent-wallet-core.sandbox.cobo.com';
-
 export interface OnboardingMessage {
   id: string;
   role: 'user' | 'assistant' | 'onboarding';
@@ -19,109 +17,34 @@ const generateSetupToken = () =>
 const generateShortId = () =>
   Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 
-export function useOnboardingChat(isFirstWallet: boolean) {
+export function useOnboardingChat(_isFirstWallet?: boolean) {
   const { t, language } = useLanguage();
   const [messages, setMessages] = useState<OnboardingMessage[]>([]);
   const [isActive, setIsActive] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
 
   // Internal state
-  const [inviteCode, setInviteCode] = useState('');
-  const [perTxLimit, setPerTxLimit] = useState('10');
-  const [dailyLimit, setDailyLimit] = useState('50');
-  const [setupToken, setSetupToken] = useState('');
-  const [timeRemaining, setTimeRemaining] = useState(15 * 60);
+  const [, setInviteCode] = useState('');
   const [walletId, setWalletId] = useState('');
   const [agentId, setAgentId] = useState('');
   const [currentStep, setCurrentStep] = useState<OnboardingStep | null>(null);
-  const [waitingPhase, setWaitingPhase] = useState<WaitingPhase>('waiting');
+  const [, setWaitingPhase] = useState<WaitingPhase>('waiting');
 
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
-  const timerIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     return () => {
       timersRef.current.forEach(clearTimeout);
-      if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
     };
   }, []);
 
-  // Countdown timer for setup command
-  useEffect(() => {
-    if (currentStep !== 'setup-command' || timeRemaining <= 0) return;
-    timerIntervalRef.current = setInterval(() => {
-      setTimeRemaining((prev) => {
-        if (prev <= 1) {
-          const newToken = generateSetupToken();
-          setSetupToken(newToken);
-          updateCommandMessage(newToken, 15 * 60);
-          return 15 * 60;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-    return () => {
-      if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentStep]);
-
-  // Sync timeRemaining into setup-command message payload
-  useEffect(() => {
-    if (currentStep !== 'setup-command') return;
-    setMessages(prev => prev.map(msg => {
-      if (msg.onboardingData?.step === 'setup-command' && msg.onboardingData.status === 'active') {
-        return {
-          ...msg,
-          onboardingData: {
-            ...msg.onboardingData,
-            payload: { ...msg.onboardingData.payload, timeRemaining },
-          },
-        };
-      }
-      return msg;
-    }));
-  }, [timeRemaining, currentStep]);
-
-  const updateCommandMessage = (token: string, time: number) => {
-    setMessages(prev => prev.map(msg => {
-      if (msg.onboardingData?.step === 'setup-command') {
-        return {
-          ...msg,
-          onboardingData: {
-            ...msg.onboardingData,
-            payload: {
-              ...msg.onboardingData.payload,
-              command: buildPromptText(token),
-              timeRemaining: time,
-            },
-          },
-        };
-      }
-      return msg;
-    }));
-  };
-
-  const buildPromptText = useCallback((token?: string) => {
-    const tok = token || setupToken;
-    const cmdSuffix = isFirstWallet && inviteCode ? ` --COBO-${inviteCode}` : '';
+  const buildPromptText = useCallback(() => {
+    const token = generateSetupToken();
     if (language === 'zh') {
-      return `请帮我配置 Cobo Pact，按以下步骤执行：
-
-1. 安装 CLI 工具（如果没安装）：
-pip install /path/to/cobo-agent-wallet/sdk
-
-2. 运行配对命令：
-caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${tok}`;
+      return `安装 Cobo Pact Skill，并用 Token 创建钱包。\nSkill：https://github.com/cobosteven/cobo-agent-wallet-manual/tree/master/skills/cobo-pact\nToken：${token}`;
     }
-    return `Please help me set up Cobo Pact by following these steps:
-
-1. Install the CLI tool (if not installed):
-pip install /path/to/cobo-agent-wallet/sdk
-
-2. Run the pairing command:
-caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${tok}`;
-  }, [language, setupToken, isFirstWallet, inviteCode]);
+    return `Install Cobo Pact Skill and create a wallet with the Token.\nSkill: https://github.com/cobosteven/cobo-agent-wallet-manual/tree/master/skills/cobo-pact\nToken: ${token}`;
+  }, [language]);
 
   const addId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 
@@ -148,6 +71,25 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${tok}`;
     timersRef.current.push(tid);
   }, [addMessage]);
 
+  // Helper: proceed to setup-command step after invite verification or directly
+  const proceedToSetupCommand = useCallback(() => {
+    const cmdMsg: OnboardingMessage = {
+      id: addId(),
+      role: 'onboarding',
+      content: t('onboarding.chat.inviteVerifiedNew'),
+      timestamp: new Date(),
+      onboardingData: {
+        step: 'setup-command',
+        status: 'active',
+        payload: {
+          command: buildPromptText(),
+        },
+      },
+    };
+    showTypingThenMessage(cmdMsg, 600);
+    setCurrentStep('setup-command');
+  }, [t, buildPromptText, showTypingThenMessage]);
+
   // ─── Start Onboarding ───
   const startOnboarding = useCallback(() => {
     setIsActive(true);
@@ -159,49 +101,30 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${tok}`;
     const userMsg: OnboardingMessage = {
       id: addId(),
       role: 'user',
-      content: language === 'zh' ? '我想创建一个 Cobo Pact 钱包' : 'I want to create a Cobo Pact wallet',
+      content: t('onboarding.suggestion.createWallet'),
       timestamp: new Date(),
     };
     addMessage(userMsg);
 
-    // AI welcomes
-    const welcomeMsg: OnboardingMessage = {
-      id: addId(),
-      role: 'assistant',
-      content: t('onboarding.chat.welcome'),
-      timestamp: new Date(),
-    };
+    // AI welcomes + asks for invite code
     setIsTyping(true);
     const t1 = setTimeout(() => {
       setIsTyping(false);
-      addMessage(welcomeMsg);
 
-      if (isFirstWallet) {
-        const inviteMsg: OnboardingMessage = {
-          id: addId(),
-          role: 'onboarding',
-          content: t('onboarding.chat.invitePrompt'),
-          timestamp: new Date(),
-          onboardingData: { step: 'invite-code', status: 'active' },
-        };
-        showTypingThenMessage(inviteMsg, 600);
-        setCurrentStep('invite-code');
-      } else {
-        const limitsMsg: OnboardingMessage = {
-          id: addId(),
-          role: 'onboarding',
-          content: t('onboarding.chat.limitsPrompt'),
-          timestamp: new Date(),
-          onboardingData: { step: 'wallet-limits', status: 'active' },
-        };
-        showTypingThenMessage(limitsMsg, 600);
-        setCurrentStep('wallet-limits');
-      }
+      const inviteMsg: OnboardingMessage = {
+        id: addId(),
+        role: 'onboarding',
+        content: t('onboarding.chat.invitePromptNew'),
+        timestamp: new Date(),
+        onboardingData: { step: 'invite-code', status: 'active' },
+      };
+      showTypingThenMessage(inviteMsg, 600);
+      setCurrentStep('invite-code');
     }, 600 + Math.random() * 400);
     timersRef.current.push(t1);
-  }, [isFirstWallet, t, language, addMessage, showTypingThenMessage]);
+  }, [t, addMessage, showTypingThenMessage]);
 
-  // ─── Handle Invite Code Verify ───
+  // ─── Handle Invite Code Verify (from card) ───
   const handleInviteVerify = useCallback(async (code: string) => {
     // Mock validation
     await new Promise(r => setTimeout(r, 600));
@@ -224,9 +147,8 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${tok}`;
       return;
     }
 
-    // Success — add user message, then mark card completed, then AI responds
+    // Success — mark card completed, proceed to setup-command (no user message for card interaction)
     setInviteCode(code);
-    addUserMessage(`COBO-${code}`);
 
     setMessages(prev => prev.map(msg => {
       if (msg.onboardingData?.step === 'invite-code') {
@@ -235,79 +157,108 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${tok}`;
       return msg;
     }));
 
-    // AI responds with limits step
-    const limitsMsg: OnboardingMessage = {
-      id: addId(),
-      role: 'onboarding',
-      content: t('onboarding.chat.limitsPrompt'),
-      timestamp: new Date(),
-      onboardingData: { step: 'wallet-limits', status: 'active' },
-    };
-    showTypingThenMessage(limitsMsg, 600);
-    setCurrentStep('wallet-limits');
-  }, [t, addUserMessage, showTypingThenMessage]);
+    // Directly proceed to setup command (verified text merged into command prompt)
+    const t1 = setTimeout(() => {
+      proceedToSetupCommand();
+    }, 600);
+    timersRef.current.push(t1);
+  }, [proceedToSetupCommand]);
 
-  // ─── Handle Limits Confirm ───
-  const handleLimitsConfirm = useCallback((perTx: string, daily: string) => {
-    setPerTxLimit(perTx);
-    setDailyLimit(daily);
+  // ─── Handle Invite Code from Chat Input ───
+  const handleInviteFromChat = useCallback(async (rawInput: string) => {
+    // Try to extract 8-character alphanumeric code from input
+    const stripped = rawInput.replace(/^COBO-?/i, '');
+    const clean = stripped.replace(/[^a-zA-Z0-9]/g, '');
 
-    // User message
-    addUserMessage(
-      language === 'zh'
-        ? `单笔限额 $${perTx}，每日限额 $${daily}`
-        : `Per-tx limit $${perTx}, daily limit $${daily}`
-    );
+    // Add user message
+    addUserMessage(rawInput);
 
-    // Mark card completed
+    // Immediately disable the invite-code card
     setMessages(prev => prev.map(msg => {
-      if (msg.onboardingData?.step === 'wallet-limits') {
-        return { ...msg, onboardingData: { ...msg.onboardingData, status: 'completed' as const, payload: { perTx, daily } } };
+      if (msg.onboardingData?.step === 'invite-code' && msg.onboardingData.status !== 'completed') {
+        return { ...msg, onboardingData: { ...msg.onboardingData, status: 'disabled' as const } };
       }
       return msg;
     }));
 
-    // Generate token and AI responds with setup command
-    const token = generateSetupToken();
-    setSetupToken(token);
-    setTimeRemaining(15 * 60);
+    // Check format: must be exactly 8 alphanumeric characters
+    if (clean.length !== 8) {
+      const errorMsg: OnboardingMessage = {
+        id: addId(),
+        role: 'assistant',
+        content: language === 'zh'
+          ? '请输入正确的 8 位邀请码（格式：XXXX-XXXX）'
+          : 'Please enter a valid 8-character invite code (format: XXXX-XXXX)',
+        timestamp: new Date(),
+      };
+      showTypingThenMessage(errorMsg, 400);
+      // Re-enable the card
+      setMessages(prev => prev.map(msg => {
+        if (msg.onboardingData?.step === 'invite-code' && msg.onboardingData.status === 'disabled') {
+          return { ...msg, onboardingData: { ...msg.onboardingData, status: 'active' as const } };
+        }
+        return msg;
+      }));
+      return;
+    }
 
-    const cmdMsg: OnboardingMessage = {
-      id: addId(),
-      role: 'onboarding',
-      content: t('onboarding.chat.commandPrompt'),
-      timestamp: new Date(),
-      onboardingData: {
-        step: 'setup-command',
-        status: 'active',
-        payload: {
-          command: (() => {
-            const cmdSuffix = isFirstWallet && inviteCode ? ` --COBO-${inviteCode}` : '';
-            if (language === 'zh') {
-              return `请帮我配置 Cobo Pact，按以下步骤执行：
+    const formatted = clean.slice(0, 4) + '-' + clean.slice(4);
 
-1. 安装 CLI 工具（如果没安装）：
-pip install /path/to/cobo-agent-wallet/sdk
+    // Mock validation
+    await new Promise(r => setTimeout(r, 600));
 
-2. 运行配对命令：
-caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${token}`;
-            }
-            return `Please help me set up Cobo Pact by following these steps:
+    if (formatted === '1111-1111') {
+      const errorMsg: OnboardingMessage = {
+        id: addId(),
+        role: 'assistant',
+        content: t('onboarding.inviteCodeInvalid'),
+        timestamp: new Date(),
+      };
+      showTypingThenMessage(errorMsg, 400);
+      // Re-enable the card
+      setMessages(prev => prev.map(msg => {
+        if (msg.onboardingData?.step === 'invite-code' && msg.onboardingData.status === 'disabled') {
+          return { ...msg, onboardingData: { ...msg.onboardingData, status: 'active' as const } };
+        }
+        return msg;
+      }));
+      return;
+    }
+    if (formatted === '2222-2222') {
+      const errorMsg: OnboardingMessage = {
+        id: addId(),
+        role: 'assistant',
+        content: t('onboarding.inviteCodeUsed'),
+        timestamp: new Date(),
+      };
+      showTypingThenMessage(errorMsg, 400);
+      // Re-enable the card
+      setMessages(prev => prev.map(msg => {
+        if (msg.onboardingData?.step === 'invite-code' && msg.onboardingData.status === 'disabled') {
+          return { ...msg, onboardingData: { ...msg.onboardingData, status: 'active' as const } };
+        }
+        return msg;
+      }));
+      return;
+    }
 
-1. Install the CLI tool (if not installed):
-pip install /path/to/cobo-agent-wallet/sdk
+    // Success
+    setInviteCode(formatted);
 
-2. Run the pairing command:
-caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${token}`;
-          })(),
-          inviteCode: isFirstWallet ? inviteCode : undefined,
-          timeRemaining: 15 * 60,
-        },
-      },
-    };
-    showTypingThenMessage(cmdMsg, 600);
-    setCurrentStep('setup-command');
-  }, [t, language, isFirstWallet, inviteCode, addUserMessage, showTypingThenMessage]);
+    // Mark card as completed (from disabled)
+    setMessages(prev => prev.map(msg => {
+      if (msg.onboardingData?.step === 'invite-code') {
+        return { ...msg, onboardingData: { ...msg.onboardingData, status: 'completed' as const, payload: { verifiedCode: formatted } } };
+      }
+      return msg;
+    }));
+
+    // Directly proceed to setup command (verified text is in the command prompt)
+    const t1 = setTimeout(() => {
+      proceedToSetupCommand();
+    }, 600);
+    timersRef.current.push(t1);
+  }, [t, language, addUserMessage, showTypingThenMessage, proceedToSetupCommand]);
 
   // ─── Handle Command Copy ───
   const handleCommandCopy = useCallback(() => {
@@ -324,7 +275,7 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${token}`;
       const pairingMsg: OnboardingMessage = {
         id: addId(),
         role: 'onboarding',
-        content: t('onboarding.chat.pairingWaiting'),
+        content: '',
         timestamp: new Date(),
         onboardingData: {
           step: 'pairing-status',
@@ -375,7 +326,7 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${token}`;
         const successMsg: OnboardingMessage = {
           id: addId(),
           role: 'onboarding',
-          content: t('onboarding.chat.successMessage'),
+          content: t('onboarding.chat.walletDone'),
           timestamp: new Date(),
           onboardingData: {
             step: 'success',
@@ -396,16 +347,7 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${token}`;
       timersRef.current.push(t1, t2, t3);
     }, 2000);
     timersRef.current.push(tid);
-  }, [t, language, addMessage, addUserMessage]);
-
-  // ─── Handle Token Refresh ───
-  const handleCommandRefresh = useCallback(() => {
-    const newToken = generateSetupToken();
-    setSetupToken(newToken);
-    setTimeRemaining(15 * 60);
-    updateCommandMessage(newToken, 15 * 60);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [t, addMessage]);
 
   // ─── Handle Onboarding Complete ───
   const handleComplete = useCallback(() => {
@@ -414,21 +356,21 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${token}`;
       walletId,
       agentId,
       policy: {
-        singleTxLimit: Number(perTxLimit),
-        dailyLimit: Number(dailyLimit),
+        singleTxLimit: 10,
+        dailyLimit: 50,
       },
     };
-  }, [walletId, agentId, perTxLimit, dailyLimit]);
+  }, [walletId, agentId]);
 
   return {
     isOnboardingActive: isActive,
     onboardingMessages: messages,
     isOnboardingTyping: isTyping,
+    currentStep,
     startOnboarding,
     handleInviteVerify,
-    handleLimitsConfirm,
+    handleInviteFromChat,
     handleCommandCopy,
-    handleCommandRefresh,
     handleComplete,
   };
 }

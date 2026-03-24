@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useSearchParams, useOutletContext } from 'react-router';
-import { ArrowUp, Plus, AtSign, AlertTriangle, CheckCircle, XCircle, Search, MoreHorizontal, Bot, Trash2, Sparkles, ArrowRight, Shield, Zap, Wallet, ChevronRight, SquarePen, PanelLeftClose, X, MessageCircle, ClipboardCheck, Send, Users, Link, FileText, Settings, Clock } from 'lucide-react';
+import { ArrowUp, Plus, AtSign, AlertTriangle, CheckCircle, XCircle, Search, MoreHorizontal, Bot, Trash2, Sparkles, Wallet, ChevronRight, SquarePen, PanelLeftClose, X, MessageCircle, ClipboardCheck, Send, Users, Link, FileText, Settings, Clock } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useWalletStore } from '../hooks/useWalletStore';
 import { useOnboardingChat } from '../hooks/useOnboardingChat';
@@ -93,9 +93,7 @@ export default function AIAssistant() {
   // Onboarding callbacks
   const onboardingCallbacks: OnboardingCallbacks = {
     onInviteVerify: onboarding.handleInviteVerify,
-    onLimitsConfirm: onboarding.handleLimitsConfirm,
     onCommandCopy: onboarding.handleCommandCopy,
-    onCommandRefresh: onboarding.handleCommandRefresh,
     onComplete: () => {
       const result = onboarding.handleComplete();
       if (result) {
@@ -105,7 +103,7 @@ export default function AIAssistant() {
           policy: result.policy,
         });
 
-        // Convert onboarding messages — mark success card as completed so button hides
+        // Convert onboarding messages — mark success card as completed
         const onboardingMsgs: Message[] = onboarding.onboardingMessages.map(msg => ({
           ...msg,
           role: msg.onboardingData ? 'onboarding' as const : msg.role as Message['role'],
@@ -114,17 +112,7 @@ export default function AIAssistant() {
             : msg.onboardingData,
         }));
 
-        // Add a welcome message after onboarding
-        const welcomeMsg: Message = {
-          id: 'welcome-' + Date.now(),
-          role: 'assistant',
-          content: language === 'zh'
-            ? '恭喜！你的 Cobo Pact 钱包已经创建完成 🎉\n\n有什么我可以帮你的吗？'
-            : 'Congratulations! Your Cobo Pact wallet is ready 🎉\n\nHow can I help you?',
-          timestamp: new Date(),
-        };
-
-        const allMsgs = [...onboardingMsgs, welcomeMsg];
+        const allMsgs = onboardingMsgs;
         setMessages(allMsgs);
 
         // Create session entry in sidebar
@@ -488,7 +476,15 @@ Would you like me to help adjust your current Agent's limit settings?`;
   };
 
   const handleSendMessage = async () => {
-    if (!inputValue.trim() || onboarding.isOnboardingActive) return;
+    if (!inputValue.trim()) return;
+
+    // During onboarding invite-code step, intercept input as invite code attempt
+    if (onboarding.isOnboardingActive && onboarding.currentStep === 'invite-code') {
+      const raw = inputValue.trim();
+      setInputValue('');
+      await onboarding.handleInviteFromChat(raw);
+      return;
+    }
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -553,7 +549,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
   };
 
   const handleSendDirect = (text: string) => {
-    if (isTyping || onboarding.isOnboardingActive) return;
+    if (isTyping) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -926,20 +922,52 @@ Would you like me to help adjust your current Agent's limit settings?`;
         <div className="flex-1 overflow-y-auto px-6 pb-6 flex flex-col items-center" style={{ gap: '24px', paddingTop: demoApproval && hasWallets && pendingApprovalCount > 0 && !approvalBannerDismissed ? '92px' : '32px' }}>
           <div className="w-full max-w-[744px] flex-1" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
 
-          {displayMessages.map((message) => (
-            <div key={message.id} className="animate-reveal-up" style={{ animationDuration: '400ms' }}>
+          {displayMessages.map((message, msgIndex) => {
+            // Check if this non-user message should be grouped with the previous one (skip header)
+            const prevMsg = msgIndex > 0 ? displayMessages[msgIndex - 1] : null;
+            const isGroupedWithPrev = message.role !== 'user' && prevMsg !== null && prevMsg.role !== 'user';
+
+            return (
+            <div key={message.id} className="animate-reveal-up" style={{ animationDuration: '400ms', ...(isGroupedWithPrev ? { marginTop: '-8px' } : {}) }}>
               {/* Onboarding messages */}
               {message.role === 'onboarding' && message.onboardingData ? (
                 <div className="flex items-start justify-start">
                   <div className="bg-transparent text-slate-900 w-full">
-                    {renderAssistantHeader()}
-                    <div className="whitespace-pre-wrap" style={{ fontSize: '16px', lineHeight: '24px' }}>
-                      {message.content}
-                    </div>
+                    {!isGroupedWithPrev && renderAssistantHeader()}
+                    {message.content && (
+                      <div className="whitespace-pre-wrap" style={{ fontSize: '16px', lineHeight: '24px' }}>
+                        {message.content}
+                      </div>
+                    )}
                     <OnboardingMessageRenderer
                       data={message.onboardingData}
                       callbacks={onboardingCallbacks}
                     />
+                    {/* Post-success suggestions */}
+                    {message.onboardingData.step === 'success' && (
+                      <div className="flex flex-wrap gap-[10px] mt-4 justify-center">
+                        {(language === 'zh' ? [
+                          '介绍 Cobo Pact 的产品能力',
+                          '如何完成首次钱包充值',
+                          '如何限制 Agent 每日花费',
+                        ] : [
+                          'Introduce Cobo Pact capabilities',
+                          'How to make the first deposit',
+                          'How to limit Agent daily spending',
+                        ]).map((label) => (
+                          <button
+                            key={label}
+                            onClick={() => {
+                              onboardingCallbacks.onComplete();
+                              setTimeout(() => handleSendDirect(label), 100);
+                            }}
+                            className="w-fit px-[16px] py-[10px] rounded-[12px] border border-[#EDEEF3] bg-white hover:bg-[#F8F9FC] transition-all text-[14px] leading-[20px] font-normal text-[#1C1C1C]"
+                          >
+                            {label}
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               ) : message.role === 'approval' && message.approvalData ? (
@@ -1004,7 +1032,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                 <div className={`flex items-start ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                   {message.role === 'assistant' ? (
                     <div className="bg-transparent text-slate-900 w-full">
-                      {renderAssistantHeader()}
+                      {!isGroupedWithPrev && renderAssistantHeader()}
                       <div className="whitespace-pre-wrap" style={{ fontSize: '16px', lineHeight: '24px' }}>{message.content}</div>
                       {message.walletListData && wallets.length > 0 && (
                         <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -1033,7 +1061,8 @@ Would you like me to help adjust your current Agent's limit settings?`;
                 </div>
               )}
             </div>
-          ))}
+          );
+          })}
 
           {combinedTyping && (
             <div className="flex items-start">
@@ -1056,69 +1085,9 @@ Would you like me to help adjust your current Agent's limit settings?`;
           <div className="flex-1 flex items-center justify-center px-6" style={{ marginTop: '-160px' }}>
             <div className="w-full max-w-[768px]">
 
-              {/* Scenario C: No wallet, no welcome — start onboarding in chat */}
+              {/* Scenario C: No wallet, no welcome — CTA suggestion + other suggestions */}
               {!hasWallets && !welcomeType && (
-                <>
-                  <p style={{ fontSize: '36px', lineHeight: '46px', color: '#0A0A0A', marginBottom: '32px', textAlign: 'center' }}>
-                    {language === 'zh' ? (
-                      <>欢迎使用 Cobo <span style={{ color: '#4F5EFF' }}>Pact</span></>
-                    ) : (
-                      <>Welcome to Cobo <span style={{ color: '#4F5EFF' }}>Pact</span></>
-                    )}
-                  </p>
-
-                  <div className="mb-6 relative overflow-hidden rounded-2xl border border-[rgba(79,94,255,0.15)] bg-gradient-to-r from-[#f8f8ff] via-[#f0f1ff] to-[#eef0ff] hover:from-[#f0f1ff] hover:via-[#e8eaff] hover:to-[#e4e7ff] transition-all duration-300 hover:shadow-[0px_8px_32px_0px_rgba(79,94,255,0.15)] hover:border-[rgba(79,94,255,0.25)] group">
-                    <div className="absolute -right-8 -top-8 w-32 h-32 rounded-full bg-[rgba(79,94,255,0.06)] group-hover:bg-[rgba(79,94,255,0.1)] transition-colors duration-300" />
-                    <div className="absolute -right-2 -bottom-6 w-20 h-20 rounded-full bg-[rgba(79,94,255,0.04)] group-hover:bg-[rgba(79,94,255,0.08)] transition-colors duration-300" />
-
-                    <button onClick={handleStartOnboarding} className="w-full text-left">
-                      <div className="relative flex items-center gap-4 p-5">
-                        <div className="shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-[#4f5eff] to-[#6c7aff] flex items-center justify-center shadow-[0px_4px_12px_0px_rgba(79,94,255,0.3)]">
-                          <Sparkles className="w-6 h-6 text-white" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="font-semibold text-[15px] text-[#0A0A0A] mb-1">
-                            {language === 'zh' ? '创建你的第一个 Cobo Pact 钱包' : 'Create Your First Cobo Pact Wallet'}
-                          </div>
-                          <div className="text-[13px] text-[#4F4F4F] leading-[18px]">
-                            {language === 'zh'
-                              ? '让 AI Agent 安全地管理链上资产，支持智能风控与多链操作'
-                              : 'Let AI Agents securely manage on-chain assets with smart risk controls'}
-                          </div>
-                        </div>
-                        <div className="shrink-0 w-8 h-8 rounded-full bg-white border border-[rgba(79,94,255,0.12)] flex items-center justify-center group-hover:bg-[#4f5eff] group-hover:border-[#4f5eff] transition-all duration-300">
-                          <ArrowRight className="w-4 h-4 text-[#4f5eff] group-hover:text-white transition-colors duration-300" />
-                        </div>
-                      </div>
-                      <div className="relative flex items-center gap-2 px-5 pb-3 -mt-1">
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/80 border border-[rgba(79,94,255,0.08)] text-[11px] font-medium text-[#4f5eff]">
-                          <Shield className="w-3 h-3" />
-                          {language === 'zh' ? '安全风控' : 'Risk Control'}
-                        </span>
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/80 border border-[rgba(79,94,255,0.08)] text-[11px] font-medium text-[#4f5eff]">
-                          <Zap className="w-3 h-3" />
-                          {language === 'zh' ? '多链支持' : 'Multi-Chain'}
-                        </span>
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/80 border border-[rgba(79,94,255,0.08)] text-[11px] font-medium text-[#4f5eff]">
-                          <Bot className="w-3 h-3" />
-                          {language === 'zh' ? 'Agent 委托' : 'Agent Delegation'}
-                        </span>
-                      </div>
-                    </button>
-
-                    <div className="relative border-t border-[rgba(79,94,255,0.1)] px-5 py-3 flex items-center justify-center">
-                      <span className="text-[13px] text-[#4F4F4F]">
-                        {language === 'zh' ? '已有钱包？' : 'Already have a wallet? '}
-                      </span>
-                      <button
-                        onClick={onClaimWallet}
-                        className="text-[13px] font-medium text-[#4f5eff] hover:text-[#3d4dd9] underline underline-offset-2 ml-1 transition-colors"
-                      >
-                        {language === 'zh' ? '认领钱包' : 'Claim Wallet'}
-                      </button>
-                    </div>
-                  </div>
-                </>
+                <ChatWelcome variant="returning" />
               )}
 
               {/* Scenario A: First wallet just created */}
@@ -1185,9 +1154,19 @@ Would you like me to help adjust your current Agent's limit settings?`;
                     </div>
                   </div>
 
-                {/* Quick actions - only for returning users with wallets */}
-                {hasWallets && !welcomeType && (
+                {/* Suggestions */}
+                {!welcomeType && (
                   <div className="flex flex-wrap gap-[10px] mt-[32px] justify-center">
+                    {/* CTA suggestion for no-wallet users */}
+                    {!hasWallets && (
+                      <button
+                        onClick={handleStartOnboarding}
+                        className="w-fit px-[16px] py-[10px] rounded-[12px] bg-gradient-to-r from-[#4F5EFF] to-[#6C7AFF] hover:from-[#3d4dd9] hover:to-[#5b6aef] text-white text-[14px] leading-[20px] font-medium transition-all shadow-[0px_2px_8px_rgba(79,94,255,0.3)] hover:shadow-[0px_4px_16px_rgba(79,94,255,0.4)] flex items-center gap-1.5"
+                      >
+                        <Sparkles className="w-4 h-4" />
+                        {t('onboarding.suggestion.createWallet')}
+                      </button>
+                    )}
                     {(language === 'zh' ? [
                       '介绍 Cobo Pact 的产品能力',
                       '如何完成首次钱包充值',
