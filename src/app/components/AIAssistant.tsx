@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useSearchParams, useOutletContext } from 'react-router';
-import { ArrowUp, Plus, AtSign, AlertTriangle, CheckCircle, XCircle, Search, MoreHorizontal, Bot, Trash2, Sparkles, ArrowRight, Shield, Zap, Wallet, ChevronRight, SquarePen, PanelLeftClose, X, MessageCircle, ClipboardCheck, CircleDollarSign, ShieldCheck, Send, Fuel, Users, Link, FileText, Settings, Clock } from 'lucide-react';
+import { ArrowUp, Plus, AtSign, AlertTriangle, CheckCircle, XCircle, Search, MoreHorizontal, Bot, Trash2, Sparkles, ArrowRight, Shield, Zap, Wallet, ChevronRight, SquarePen, PanelLeftClose, X, MessageCircle, ClipboardCheck, Send, Users, Link, FileText, Settings, Clock } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useWalletStore } from '../hooks/useWalletStore';
 import { useOnboardingChat } from '../hooks/useOnboardingChat';
@@ -302,27 +302,10 @@ export default function AIAssistant() {
     if (prefill) setInputValue(prefill);
     if (welcome === 'first-wallet') setWelcomeType('first-wallet');
     if (welcome === 'wallet-ready') {
-      const latestWallet = wallets[wallets.length - 1];
-      const latestAgentId = latestWallet ? delegations.find(d => d.walletId === latestWallet.id)?.agentId || '-' : '-';
-      const wId = latestWallet?.id || '-';
-      const aId = latestAgentId;
-      const welcomeMsg: Message = {
-        id: 'welcome-ready-' + Date.now(),
-        role: 'assistant',
-        content: language === 'zh'
-          ? `🎉 恭喜，你的 Cobo Pact 钱包已创建成功！\n\n📋 钱包信息\n• Wallet ID: ${wId}\n• Agent ID: ${aId}\n\nCobo Pact 是一个为 AI Agent 设计的智能钱包管理平台，核心能力包括：\n\n🔐 安全风控 — 灵活配置单笔/每日交易限额，超限自动触发人工审批\n💸 代币管理 — 支持主流代币的充值、转账和余额查询\n🤖 Agent 委托 — 将钱包操作权限安全地委托给 AI Agent\n📊 交易监控 — 实时追踪所有链上交易和审批状态\n\n你可以点击下方的快捷问题快速开始探索 👇`
-          : `🎉 Congratulations! Your Cobo Pact wallet has been created successfully!\n\n📋 Wallet Info\n• Wallet ID: ${wId}\n• Agent ID: ${aId}\n\nCobo Pact is a smart wallet management platform designed for AI Agents. Key capabilities include:\n\n🔐 Risk Controls — Set per-transaction and daily spending limits with auto-approval triggers\n💸 Token Management — Deposit, transfer, and check balances for major tokens\n🤖 Agent Delegation — Securely delegate wallet operations to AI Agents\n📊 Transaction Monitoring — Track all on-chain transactions and approval status in real-time\n\nClick a suggestion below to start exploring 👇`,
-        timestamp: new Date(),
-      };
-      const sessionTitle = language === 'zh' ? '开始使用 Cobo Pact' : 'Getting Started with Cobo Pact';
-      const newSessionId = 'wallet-ready-' + Date.now();
-      setMessages([welcomeMsg]);
-      setActiveChatId(newSessionId);
-      setChatTitle(sessionTitle);
-      setChatSessions(prev => [
-        { id: newSessionId, title: sessionTitle, timestamp: new Date(), messages: [welcomeMsg] },
-        ...prev,
-      ]);
+      // Go straight to the empty home state — no default message
+      setMessages([]);
+      setActiveChatId('');
+      setChatTitle('');
     }
     if (prefill || welcome) setSearchParams({}, { replace: true });
   }, [searchParams, setSearchParams]);
@@ -1022,37 +1005,8 @@ Would you like me to help adjust your current Agent's limit settings?`;
                   {message.role === 'assistant' ? (
                     <div className="bg-transparent text-slate-900 w-full">
                       {renderAssistantHeader()}
-                      {message.id.startsWith('welcome-ready-') ? (
-                        <>
-                          <div className="whitespace-pre-wrap" style={{ fontSize: '16px', lineHeight: '24px' }}>{message.content}</div>
-                          {!isTyping && displayMessages.length === 1 && (
-                            <div className="flex flex-col gap-[10px] mt-[20px]">
-                              {(language === 'zh' ? [
-                                '请介绍一下 Cobo Pact 的基础能力',
-                                '如何完成第一次充值并管理钱包内的资产',
-                                '如何设置 Agent 每天可以花费的金额上限',
-                              ] : [
-                                'Introduce the basic capabilities of Cobo Pact',
-                                'How to make the first deposit and manage wallet assets',
-                                'How to set a daily spending limit for the Agent',
-                              ]).map((suggestion) => (
-                                <button
-                                  key={suggestion}
-                                  onClick={() => handleSendDirect(suggestion)}
-                                  className="w-fit px-[16px] py-[10px] rounded-[12px] border border-[#EDEEF3] bg-white hover:bg-[#F8F9FC] transition-all text-[14px] leading-[20px] font-normal text-[#1C1C1C] text-left"
-                                >
-                                  {suggestion}
-                                </button>
-                              ))}
-                            </div>
-                          )}
-                        </>
-                      ) : (
-                        <>
-                          <div className="whitespace-pre-wrap" style={{ fontSize: '16px', lineHeight: '24px' }}>{message.content}</div>
-                        </>
-                      )}
-                      {!message.id.startsWith('welcome-ready-') && message.walletListData && wallets.length > 0 && (
+                      <div className="whitespace-pre-wrap" style={{ fontSize: '16px', lineHeight: '24px' }}>{message.content}</div>
+                      {message.walletListData && wallets.length > 0 && (
                         <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
                           {wallets.map((w) => {
                             const count = delegations.filter(d => d.walletId === w.id).length;
@@ -1235,24 +1189,19 @@ Would you like me to help adjust your current Agent's limit settings?`;
                 {hasWallets && !welcomeType && (
                   <div className="flex flex-wrap gap-[10px] mt-[32px] justify-center">
                     {(language === 'zh' ? [
-                      { icon: CircleDollarSign, label: '查询钱包余额' },
-                      { icon: ShieldCheck, label: '设置风控策略' },
-                      { icon: Send, label: '发起一笔转账' },
-                      { icon: Fuel, label: '查询 Gas 费用' },
-                      { icon: Users, label: '配置 Agent 权限' },
+                      '介绍 Cobo Pact 的产品能力',
+                      '如何完成首次钱包充值',
+                      '如何限制 Agent 每日花费',
                     ] : [
-                      { icon: CircleDollarSign, label: 'Check Balance' },
-                      { icon: ShieldCheck, label: 'Set Risk Policy' },
-                      { icon: Send, label: 'Send Transfer' },
-                      { icon: Fuel, label: 'Check Gas Fees' },
-                      { icon: Users, label: 'Configure Agent' },
-                    ]).map(({ icon: Icon, label }) => (
+                      'Introduce Cobo Pact capabilities',
+                      'How to make the first deposit',
+                      'How to limit Agent daily spending',
+                    ]).map((label) => (
                       <button
                         key={label}
-                        onClick={() => { setInputValue(label); }}
-                        className="inline-flex items-center gap-[6px] px-[14px] py-[8px] rounded-full border border-[#E5E5E5] bg-white hover:bg-[#F5F5F5] hover:border-[#D0D0D0] transition-all text-[13px] text-[#4F4F4F] hover:text-[#0A0A0A]"
+                        onClick={() => handleSendDirect(label)}
+                        className="w-fit px-[16px] py-[10px] rounded-[12px] border border-[#EDEEF3] bg-white hover:bg-[#F8F9FC] transition-all text-[14px] leading-[20px] font-normal text-[#1C1C1C] text-left"
                       >
-                        <Icon className="w-[14px] h-[14px] text-[#999]" strokeWidth={1.5} />
                         {label}
                       </button>
                     ))}

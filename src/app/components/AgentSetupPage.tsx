@@ -1,37 +1,48 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useLanguage } from '../contexts/LanguageContext';
+import { launchConfetti } from '../utils/confetti';
+import { useWalletStore } from '../hooks/useWalletStore';
 
 type SetupPhase = 'idle' | 'connecting' | 'connected' | 'creating' | 'done';
 
 export default function AgentSetupPage() {
   const { t } = useLanguage();
   const navigate = useNavigate();
+  const { addWalletWithAgent, hasWallets } = useWalletStore();
   const [toast, setToast] = useState('');
   const [toastVisible, setToastVisible] = useState(false);
   const [phase, setPhase] = useState<SetupPhase>('idle');
   const [copied, setCopied] = useState(false);
   const [exiting, setExiting] = useState(false);
   const startedRef = useRef(false);
-
-  useEffect(() => {
-    if (phase === 'done') {
-      setExiting(true);
-    }
-  }, [phase]);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const confettiFiredRef = useRef(false);
 
   const instructionText = t('setupPage.instructionText');
+
+  // Fire confetti & create wallet when done
+  useEffect(() => {
+    if (phase === 'done' && !confettiFiredRef.current) {
+      confettiFiredRef.current = true;
+      if (!hasWallets) {
+        addWalletWithAgent({
+          walletName: 'My Cobo Pact Wallet',
+          agentName: 'Agent #1',
+        });
+      }
+      setTimeout(() => {
+        if (containerRef.current) launchConfetti(containerRef.current);
+      }, 300);
+    }
+  }, [phase, hasWallets, addWalletWithAgent]);
 
   const startSetupSequence = () => {
     if (startedRef.current) return;
     startedRef.current = true;
-    // 3s after copy → show "connecting agent"
     setTimeout(() => setPhase('connecting'), 3000);
-    // 3s + 5s = 8s → agent connected
     setTimeout(() => setPhase('connected'), 8000);
-    // 8s + brief pause → show "creating wallet"
     setTimeout(() => setPhase('creating'), 8500);
-    // 8.5s + 5s = 13.5s → wallet created
     setTimeout(() => setPhase('done'), 13500);
   };
 
@@ -54,15 +65,20 @@ export default function AgentSetupPage() {
     startSetupSequence();
   };
 
-  const showStatus = phase !== 'idle';
+  const handleGetStarted = () => {
+    setExiting(true);
+  };
+
+  const showOverlay = phase !== 'idle';
   const agentDone = phase === 'connected' || phase === 'creating' || phase === 'done';
   const walletLoading = phase === 'creating';
   const walletDone = phase === 'done';
 
   return (
     <div
+      ref={containerRef}
       className={`min-h-screen bg-[#F8F9FC] relative ${exiting ? 'animate-page-exit' : 'animate-page-enter'}`}
-      onAnimationEnd={() => { if (exiting) navigate('/setup-success'); }}
+      onAnimationEnd={() => { if (exiting) navigate('/dashboard/chat?welcome=wallet-ready'); }}
     >
       {/* Success toast */}
       {toast && (
@@ -87,7 +103,19 @@ export default function AgentSetupPage() {
           0% { transform: translateX(-50%) translateY(0); opacity: 1; top: 24px; }
           100% { transform: translateX(-50%) translateY(-80px); opacity: 0; top: 24px; }
         }
+        @keyframes scaleIn {
+          from { transform: scale(0); opacity: 0; }
+          to { transform: scale(1); opacity: 1; }
+        }
+        @keyframes drawCheck {
+          to { stroke-dashoffset: 0; }
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
       `}</style>
+
       {/* Logo */}
       <div className="absolute top-0 left-0 px-6 py-[23px]">
         <span className="text-[18px] font-semibold leading-none whitespace-nowrap" style={{ fontFamily: "'Inter', sans-serif" }}>
@@ -97,102 +125,144 @@ export default function AgentSetupPage() {
       </div>
 
       {/* Centered content */}
-      <div className="flex justify-center">
-        <div className="flex flex-col items-start w-[480px] gap-8 mt-[152px]">
-          {/* Title */}
-          <h1 className="w-full font-medium text-[28px] leading-[42px] text-left text-[#1C1C1C]">
-            {t('setupPage.title')}
-          </h1>
-
-          {/* Instruction section */}
-          <div className="flex flex-col items-start gap-3 w-full">
-            {/* "Tell your Agent:" label */}
-            <p className="text-[16px] leading-[26px] text-[#1C1C1C]">
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="flex flex-col items-center w-[480px] gap-8 -mt-[120px]">
+          {/* Title + subtitle — always visible, never changes */}
+          <div className="flex flex-col items-center gap-3 w-full">
+            <h1 className="font-medium text-[28px] leading-[42px] text-center text-[#1C1C1C]">
+              {t('setupPage.title')}
+            </h1>
+            <p className="text-[16px] leading-[26px] text-center text-[#73798B]">
               {t('setupPage.tellAgent')}
             </p>
+          </div>
 
-            {/* Code block + copy button */}
-            <div className="flex flex-col items-start gap-6 w-full">
-              {/* Dashed code block */}
+          {/* Instruction section */}
+          <div className="flex flex-col items-start gap-6 w-full">
+            {/* Dashed code block with overlay */}
+            <div className="relative w-full">
+              {/* Always-visible instruction text */}
               <div className="w-full p-4 bg-white border border-dashed border-[#B9BCC5] rounded-[14px]">
                 <p className="text-[14px] leading-[20px] text-[#73798B] whitespace-pre-line">
                   {instructionText}
                 </p>
               </div>
 
-              {/* Copy button */}
-              <button
-                onClick={handleCopy}
-                className={`w-full h-[54px] px-6 py-4 rounded-[14px] text-[16px] leading-[22px] font-medium text-white text-center uppercase transition-all duration-150 active:scale-[0.98] ${copied ? 'bg-[#22C55E]' : 'bg-[#4F5EFF] hover:bg-[#3d4dd9]'}`}
-              >
-                {copied ? '✓ ' + t('setupPage.copied') : t('setupPage.copyButton')}
-              </button>
-            </div>
-          </div>
-
-          {/* Help link */}
-          <div className="flex items-center gap-1">
-            <span className="text-[16px] leading-[26px] text-[#1C1C1C]">
-              {t('setupPage.helpPrefix')}
-            </span>
-            <a
-              href="https://www.cobo.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1 text-[16px] leading-[26px] font-medium text-[#4F5EFF] underline hover:text-[#3d4dd9] transition-colors"
-            >
-              {t('setupPage.helpLink')}
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M12.5 2.5H17.5V7.5" stroke="#4F5EFF" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M8.333 11.667L17.5 2.5" stroke="#4F5EFF" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M15 10.833V15.833C15 16.275 14.824 16.699 14.512 17.012C14.199 17.324 13.775 17.5 13.333 17.5H4.167C3.725 17.5 3.301 17.324 2.988 17.012C2.676 16.699 2.5 16.275 2.5 15.833V6.667C2.5 6.225 2.676 5.801 2.988 5.488C3.301 5.176 3.725 5 4.167 5H9.167" stroke="#4F5EFF" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </a>
-          </div>
-
-          {/* Divider + Status section — only shown after copy */}
-          {showStatus && (
-            <div className="flex flex-col items-start gap-4 w-full">
-              <div className="w-full h-px bg-[#EDEEF3]" />
-              <div className="flex flex-col items-start gap-4 w-full">
-                {/* Step 1: Agent connection */}
-                <div className="flex items-center gap-2">
-                  {agentDone ? (
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                      <circle cx="12" cy="12" r="9" fill="#26C165" stroke="#26C165" strokeWidth="1.25" />
-                      <path d="M9 12L11 14L15 10" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
+              {/* Status overlay — covers the instruction text */}
+              {showOverlay && (
+                <div
+                  className="absolute inset-0 rounded-[14px] flex flex-col items-center justify-center gap-3 z-10"
+                  style={{
+                    background: walletDone
+                      ? 'rgba(255,255,255,0.95)'
+                      : 'rgba(255,255,255,0.88)',
+                    backdropFilter: 'blur(2px)',
+                    animation: 'fadeIn 0.3s ease-out forwards',
+                  }}
+                >
+                  {walletDone ? (
+                    /* Success state */
+                    <>
+                      <div
+                        className="w-[64px] h-[64px] rounded-full bg-[#F0FDF4] flex items-center justify-center"
+                        style={{ animation: 'scaleIn 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards' }}
+                      >
+                        <svg width="32" height="32" viewBox="0 0 60 60" fill="none">
+                          <circle cx="30" cy="30" r="28" fill="#26C165" />
+                          <path
+                            d="M18 30L26 38L42 22"
+                            stroke="white"
+                            strokeWidth="4"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            style={{ strokeDasharray: 40, strokeDashoffset: 40, animation: 'drawCheck 0.4s 0.3s ease-out forwards' }}
+                          />
+                        </svg>
+                      </div>
+                      <span className="text-[16px] leading-[24px] font-medium text-[#1C1C1C]">
+                        {t('setupSuccess.title')}
+                      </span>
+                    </>
                   ) : (
-                    <svg className="animate-spin" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                      <circle cx="12" cy="12" r="9" stroke="#73798B" strokeWidth="1.25" strokeDasharray="14 42" strokeLinecap="round" />
-                    </svg>
-                  )}
-                  <span className={`text-[16px] leading-[24px] ${agentDone ? 'text-[#2C2F33]' : 'text-[#73798B]'}`}>
-                    {agentDone ? t('setupPage.agentConnected') : t('setupPage.connectingAgent')}
-                  </span>
-                </div>
+                    /* Progress states */
+                    <>
+                      {/* Step 1: Agent connection */}
+                      <div className="flex items-center gap-2">
+                        {agentDone ? (
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="flex-shrink-0">
+                            <circle cx="12" cy="12" r="9" fill="#26C165" stroke="#26C165" strokeWidth="1.25" />
+                            <path d="M9 12L11 14L15 10" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        ) : (
+                          <svg className="animate-spin flex-shrink-0" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="12" r="9" stroke="#4F5EFF" strokeWidth="1.25" strokeDasharray="14 42" strokeLinecap="round" />
+                          </svg>
+                        )}
+                        <span className={`text-[14px] leading-[20px] ${agentDone ? 'text-[#26C165] font-medium' : 'text-[#73798B]'}`}>
+                          {agentDone ? t('setupPage.agentConnected') : t('setupPage.connectingAgent')}
+                        </span>
+                      </div>
 
-                {/* Step 2: Wallet creation — only shown after agent is connected */}
-                {(walletLoading || walletDone) && (
-                  <div className="flex items-center gap-2">
-                    {walletDone ? (
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                        <circle cx="12" cy="12" r="9" fill="#26C165" stroke="#26C165" strokeWidth="1.25" />
-                        <path d="M9 12L11 14L15 10" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    ) : (
-                      <svg className="animate-spin" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                        <circle cx="12" cy="12" r="9" stroke="#73798B" strokeWidth="1.25" strokeDasharray="14 42" strokeLinecap="round" />
-                      </svg>
-                    )}
-                    <span className={`text-[16px] leading-[24px] ${walletDone ? 'text-[#2C2F33]' : 'text-[#73798B]'}`}>
-                      {walletDone ? t('setupPage.walletCreated') : t('setupPage.creatingWallet')}
-                    </span>
-                  </div>
-                )}
-              </div>
+                      {/* Step 2: Wallet creation */}
+                      {(walletLoading || walletDone) && (
+                        <div className="flex items-center gap-2" style={{ animation: 'fadeIn 0.3s ease-out forwards' }}>
+                          <svg className="animate-spin flex-shrink-0" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="12" r="9" stroke="#4F5EFF" strokeWidth="1.25" strokeDasharray="14 42" strokeLinecap="round" />
+                          </svg>
+                          <span className="text-[14px] leading-[20px] text-[#73798B]">
+                            {t('setupPage.creatingWallet')}
+                          </span>
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
+              )}
             </div>
-          )}
+
+            {/* Bottom area: button + help link, with mask when status is active but not done */}
+            <div className="relative w-full flex flex-col items-center gap-6">
+              {/* Grey mask over button area during progress (not when done) */}
+              {showOverlay && !walletDone && (
+                <div className="absolute inset-0 z-10 rounded-[14px]" style={{ background: 'rgba(248,249,252,0.6)' }} />
+              )}
+
+              {/* Button */}
+              <button
+                onClick={walletDone ? handleGetStarted : handleCopy}
+                disabled={showOverlay && !walletDone}
+                className={`w-full h-[54px] px-6 py-4 rounded-[14px] text-[16px] leading-[22px] font-medium text-white text-center transition-all duration-300 active:scale-[0.98] ${
+                  walletDone
+                    ? 'bg-[#4F5EFF] hover:bg-[#3d4dd9]'
+                    : copied
+                      ? 'bg-[#22C55E]'
+                      : 'bg-[#4F5EFF] hover:bg-[#3d4dd9] disabled:hover:bg-[#4F5EFF]'
+                }`}
+              >
+                {walletDone
+                  ? t('setupSuccess.button')
+                  : copied
+                    ? '✓ ' + t('setupPage.copied')
+                    : t('setupPage.copyButton')
+                }
+              </button>
+
+              {/* Help link */}
+              <a
+                href="https://www.cobo.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 text-[14px] leading-[20px] font-medium text-[#4F5EFF] underline hover:text-[#3d4dd9] transition-colors"
+              >
+                {t('setupPage.helpLink')}
+                <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                  <path d="M12.5 2.5H17.5V7.5" stroke="#4F5EFF" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M8.333 11.667L17.5 2.5" stroke="#4F5EFF" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M15 10.833V15.833C15 16.275 14.824 16.699 14.512 17.012C14.199 17.324 13.775 17.5 13.333 17.5H4.167C3.725 17.5 3.301 17.324 2.988 17.012C2.676 16.699 2.5 16.275 2.5 15.833V6.667C2.5 6.225 2.676 5.801 2.988 5.488C3.301 5.176 3.725 5 4.167 5H9.167" stroke="#4F5EFF" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
