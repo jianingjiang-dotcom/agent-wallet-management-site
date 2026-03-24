@@ -1,24 +1,33 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useLanguage } from '../contexts/LanguageContext';
 import { launchConfetti } from '../utils/confetti';
 import { useWalletStore } from '../hooks/useWalletStore';
-import svgPaths from '../../imports/svg-zu39gs7vho';
 
 export default function SetupSuccessPage() {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement>(null);
   const { addWalletWithAgent, hasWallets } = useWalletStore();
+  const [exiting, setExiting] = useState(false);
 
-  const handleGetStarted = () => {
+  const resultRef = useRef<{ walletId: string; agentId: string } | null>(null);
+
+  // Create wallet on mount so we can display the IDs
+  if (!resultRef.current) {
     if (!hasWallets) {
-      addWalletWithAgent({
-        walletName: 'My Agentic Wallet',
+      const result = addWalletWithAgent({
+        walletName: 'My Cobo Pact Wallet',
         agentName: 'Agent #1',
       });
+      resultRef.current = { walletId: result.wallet.id, agentId: result.agent.id };
+    } else {
+      resultRef.current = { walletId: '-', agentId: '-' };
     }
-    navigate('/dashboard/chat?welcome=wallet-ready');
+  }
+
+  const handleGetStarted = () => {
+    setExiting(true);
   };
 
   useEffect(() => {
@@ -29,32 +38,17 @@ export default function SetupSuccessPage() {
   }, []);
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-[#F8F9FC] relative">
+    <div
+      ref={containerRef}
+      className={`min-h-screen bg-[#F8F9FC] relative ${exiting ? 'animate-page-exit' : 'animate-page-enter'}`}
+      onAnimationEnd={() => { if (exiting) navigate('/dashboard/chat?welcome=wallet-ready'); }}
+    >
       {/* Logo */}
       <div className="absolute top-0 left-0 px-6 py-[23px]">
-        <div className="h-[18px] w-[172px] relative shrink-0">
-          <svg className="absolute block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 188.538 19.9998">
-            <g>
-              <path d={svgPaths.p12420d80} fill="#1C1C1C" />
-              <path d={svgPaths.p19bafe80} fill="#1C1C1C" />
-              <path d={svgPaths.p161a0400} fill="#1C1C1C" />
-              <path d={svgPaths.p3456db00} fill="#1C1C1C" />
-              <path d={svgPaths.p5983200} fill="#1C1C1C" />
-              <path d={svgPaths.p35ddbb80} fill="#1C1C1C" />
-              <path d={svgPaths.p192f4b80} fill="#4F5EFF" />
-              <path d={svgPaths.p2c193100} fill="#4F5EFF" />
-              <path d={svgPaths.p357a0d00} fill="#4F5EFF" />
-              <path d={svgPaths.p26dee800} fill="#4F5EFF" />
-              <path d={svgPaths.pf8ab380} fill="#4F5EFF" />
-              <path d={svgPaths.p25b8a100} fill="#4F5EFF" />
-              <path d={svgPaths.p1a427e00} fill="#4F5EFF" />
-              <path d={svgPaths.p37c6db00} fill="#1C1C1C" />
-              <path d={svgPaths.p16c2cc00} fill="#1C1C1C" />
-              <path d={svgPaths.p2ed1f700} fill="#1C1C1C" />
-              <path d={svgPaths.p123d8680} fill="#1C1C1C" />
-            </g>
-          </svg>
-        </div>
+        <span className="text-[18px] font-semibold leading-none whitespace-nowrap" style={{ fontFamily: "'Inter', sans-serif" }}>
+          <span className="text-[#1C1C1C]">Cobo </span>
+          <span className="text-[#4F5EFF]">Pact</span>
+        </span>
       </div>
 
       {/* Centered content */}
@@ -78,14 +72,31 @@ export default function SetupSuccessPage() {
         </div>
 
         {/* Title */}
-        <h1 className="font-medium text-[28px] leading-[42px] text-[#1C1C1C] text-center mb-10">
+        <h1 className="font-medium text-[28px] leading-[42px] text-[#1C1C1C] text-center mb-6">
           {t('setupSuccess.title')}
         </h1>
+
+        {/* Wallet & Agent ID card */}
+        {resultRef.current && (
+          <div className="w-[480px] max-w-full mb-10 p-5 bg-white rounded-[14px] border border-[#EDEEF3] shadow-[0px_2px_8px_rgba(0,0,0,0.04)]">
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center justify-between">
+                <span className="text-[14px] leading-[20px] text-[#73798B]">Wallet ID</span>
+                <span className="text-[14px] leading-[20px] text-[#1C1C1C] font-mono font-medium">{resultRef.current.walletId}</span>
+              </div>
+              <div className="w-full h-px bg-[#EDEEF3]" />
+              <div className="flex items-center justify-between">
+                <span className="text-[14px] leading-[20px] text-[#73798B]">Agent ID</span>
+                <span className="text-[14px] leading-[20px] text-[#1C1C1C] font-mono font-medium">{resultRef.current.agentId}</span>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* CTA Button */}
         <button
           onClick={handleGetStarted}
-          className="w-[480px] max-w-full h-[54px] px-6 py-4 bg-[#4F5EFF] hover:bg-[#3d4dd9] rounded-[14px] text-[16px] leading-[22px] font-medium text-white text-center transition-colors"
+          className="w-[480px] max-w-full h-[54px] px-6 py-4 bg-[#4F5EFF] hover:bg-[#3d4dd9] rounded-[14px] text-[16px] leading-[22px] font-medium text-white text-center transition-all duration-150 active:scale-[0.98]"
         >
           {t('setupSuccess.button')}
         </button>

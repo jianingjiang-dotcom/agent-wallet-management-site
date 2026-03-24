@@ -63,7 +63,7 @@ export default function ClaimWalletModal({
 
   const buildPrompt = () => {
     if (language === "zh") {
-      return `请帮我认领一个 Cobo Agentic Wallet，将钱包所有权转移给我，按以下步骤执行：
+      return `请帮我认领一个 Cobo Pact，将钱包所有权转移给我，按以下步骤执行：
 
 1. 安装 CLI 工具（如果没安装）：
 pip install cobo-agent-wallet
@@ -71,7 +71,7 @@ pip install cobo-agent-wallet
 2. 运行认领命令：
 caw claim`;
     }
-    return `Please help me claim a Cobo Agentic Wallet and transfer ownership to me by following these steps:
+    return `Please help me claim a Cobo Pact and transfer ownership to me by following these steps:
 
 1. Install the CLI tool (if not installed):
 pip install cobo-agent-wallet

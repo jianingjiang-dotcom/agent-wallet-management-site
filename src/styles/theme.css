@@ -317,6 +317,19 @@
     animation: phase-fade 0.3s ease-out both;
   }
 
+  /* ═══════ Page Transition Animations ═══════ */
+
+  @keyframes page-fade-in {
+    0%   { opacity: 0; transform: translateY(24px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes page-fade-out {
+    0%   { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-12px); }
+  }
+  .animate-page-enter { animation: page-fade-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .animate-page-exit  { animation: page-fade-out 0.25s ease-in both; }
+
   .scrollbar-hidden {
     scrollbar-width: none;
     -ms-overflow-style: none;

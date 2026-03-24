@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useLanguage } from '../contexts/LanguageContext';
-import svgPaths from '../../imports/svg-zu39gs7vho';
 
 type SetupPhase = 'idle' | 'connecting' | 'connected' | 'creating' | 'done';
 
@@ -11,13 +10,15 @@ export default function AgentSetupPage() {
   const [toast, setToast] = useState('');
   const [toastVisible, setToastVisible] = useState(false);
   const [phase, setPhase] = useState<SetupPhase>('idle');
+  const [copied, setCopied] = useState(false);
+  const [exiting, setExiting] = useState(false);
   const startedRef = useRef(false);
 
   useEffect(() => {
     if (phase === 'done') {
-      navigate('/setup-success');
+      setExiting(true);
     }
-  }, [phase, navigate]);
+  }, [phase]);
 
   const instructionText = t('setupPage.instructionText');
 
@@ -45,6 +46,8 @@ export default function AgentSetupPage() {
       document.execCommand('copy');
       document.body.removeChild(textarea);
     }
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
     setToast(t('setupPage.copied'));
     setToastVisible(true);
     setTimeout(() => setToastVisible(false), 3000);
@@ -57,41 +60,40 @@ export default function AgentSetupPage() {
   const walletDone = phase === 'done';
 
   return (
-    <div className="min-h-screen bg-[#F8F9FC] relative">
+    <div
+      className={`min-h-screen bg-[#F8F9FC] relative ${exiting ? 'animate-page-exit' : 'animate-page-enter'}`}
+      onAnimationEnd={() => { if (exiting) navigate('/setup-success'); }}
+    >
       {/* Success toast */}
       {toast && (
-        <div className={`fixed top-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-5 py-3 rounded-[12px] bg-[#F0FDF4] border border-[#BBF7D0] shadow-[0px_4px_12px_rgba(0,0,0,0.08)] transition-all duration-300 ${toastVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}`}
-          onTransitionEnd={() => { if (!toastVisible) setToast(''); }}
+        <div
+          className={`fixed left-1/2 z-50 flex items-center gap-2 px-5 py-3 rounded-[12px] bg-[#F0FDF4] border border-[#BBF7D0] shadow-[0px_4px_12px_rgba(0,0,0,0.08)] ${toastVisible ? '' : 'opacity-0 pointer-events-none'}`}
+          style={{
+            animation: toastVisible ? 'toast-drop-in 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards' : 'toast-drop-out 0.3s ease-in forwards',
+          }}
+          onAnimationEnd={() => { if (!toastVisible) setToast(''); }}
         >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="8" fill="#22C55E"/><path d="M5.5 8L7 9.5L10.5 6" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
           <span className="text-[14px] leading-[20px] text-[#166534] font-medium">{toast}</span>
         </div>
       )}
+
+      <style>{`
+        @keyframes toast-drop-in {
+          0% { transform: translateX(-50%) translateY(-80px); opacity: 0; }
+          100% { transform: translateX(-50%) translateY(0); opacity: 1; top: 24px; }
+        }
+        @keyframes toast-drop-out {
+          0% { transform: translateX(-50%) translateY(0); opacity: 1; top: 24px; }
+          100% { transform: translateX(-50%) translateY(-80px); opacity: 0; top: 24px; }
+        }
+      `}</style>
       {/* Logo */}
       <div className="absolute top-0 left-0 px-6 py-[23px]">
-        <div className="h-[18px] w-[172px] relative shrink-0">
-          <svg className="absolute block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 188.538 19.9998">
-            <g>
-              <path d={svgPaths.p12420d80} fill="#1C1C1C" />
-              <path d={svgPaths.p19bafe80} fill="#1C1C1C" />
-              <path d={svgPaths.p161a0400} fill="#1C1C1C" />
-              <path d={svgPaths.p3456db00} fill="#1C1C1C" />
-              <path d={svgPaths.p5983200} fill="#1C1C1C" />
-              <path d={svgPaths.p35ddbb80} fill="#1C1C1C" />
-              <path d={svgPaths.p192f4b80} fill="#4F5EFF" />
-              <path d={svgPaths.p2c193100} fill="#4F5EFF" />
-              <path d={svgPaths.p357a0d00} fill="#4F5EFF" />
-              <path d={svgPaths.p26dee800} fill="#4F5EFF" />
-              <path d={svgPaths.pf8ab380} fill="#4F5EFF" />
-              <path d={svgPaths.p25b8a100} fill="#4F5EFF" />
-              <path d={svgPaths.p1a427e00} fill="#4F5EFF" />
-              <path d={svgPaths.p37c6db00} fill="#1C1C1C" />
-              <path d={svgPaths.p16c2cc00} fill="#1C1C1C" />
-              <path d={svgPaths.p2ed1f700} fill="#1C1C1C" />
-              <path d={svgPaths.p123d8680} fill="#1C1C1C" />
-            </g>
-          </svg>
-        </div>
+        <span className="text-[18px] font-semibold leading-none whitespace-nowrap" style={{ fontFamily: "'Inter', sans-serif" }}>
+          <span className="text-[#1C1C1C]">Cobo </span>
+          <span className="text-[#4F5EFF]">Pact</span>
+        </span>
       </div>
 
       {/* Centered content */}
@@ -121,9 +123,9 @@ export default function AgentSetupPage() {
               {/* Copy button */}
               <button
                 onClick={handleCopy}
-                className="w-full h-[54px] px-6 py-4 bg-[#4F5EFF] hover:bg-[#3d4dd9] rounded-[14px] text-[16px] leading-[22px] font-medium text-white text-center uppercase transition-colors"
+                className={`w-full h-[54px] px-6 py-4 rounded-[14px] text-[16px] leading-[22px] font-medium text-white text-center uppercase transition-all duration-150 active:scale-[0.98] ${copied ? 'bg-[#22C55E]' : 'bg-[#4F5EFF] hover:bg-[#3d4dd9]'}`}
               >
-                {t('setupPage.copyButton')}
+                {copied ? '✓ ' + t('setupPage.copied') : t('setupPage.copyButton')}
               </button>
             </div>
           </div>

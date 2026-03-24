@@ -119,8 +119,8 @@ export default function AIAssistant() {
           id: 'welcome-' + Date.now(),
           role: 'assistant',
           content: language === 'zh'
-            ? '恭喜！你的 Agentic 钱包已经创建完成 🎉\n\n有什么我可以帮你的吗？'
-            : 'Congratulations! Your Agent Wallet is ready 🎉\n\nHow can I help you?',
+            ? '恭喜！你的 Cobo Pact 钱包已经创建完成 🎉\n\n有什么我可以帮你的吗？'
+            : 'Congratulations! Your Cobo Pact wallet is ready 🎉\n\nHow can I help you?',
           timestamp: new Date(),
         };
 
@@ -182,8 +182,8 @@ export default function AIAssistant() {
       title: language === 'zh' ? '转账权限咨询' : 'Transfer Permission',
       timestamp: new Date(Date.now() - 172800000),
       messages: [
-        { id: '3-1', role: 'user', content: language === 'zh' ? 'Agent Wallet 的转账权限怎么配置？' : 'How to configure transfer permissions?', timestamp: new Date(Date.now() - 172800000) },
-        { id: '3-2', role: 'assistant', content: language === 'zh' ? 'Agent Wallet 提供了完善的权限管理系统，您可以按链、按代币设置转账限额。' : 'Agent Wallet provides a comprehensive permission system. You can set transfer limits by chain and token.', timestamp: new Date(Date.now() - 172790000) },
+        { id: '3-1', role: 'user', content: language === 'zh' ? 'Cobo Pact 的转账权限怎么配置？' : 'How to configure transfer permissions?', timestamp: new Date(Date.now() - 172800000) },
+        { id: '3-2', role: 'assistant', content: language === 'zh' ? 'Cobo Pact 提供了完善的权限管理系统，您可以按链、按代币设置转账限额。' : 'Cobo Pact provides a comprehensive permission system. You can set transfer limits by chain and token.', timestamp: new Date(Date.now() - 172790000) },
       ],
     },
     {
@@ -302,16 +302,19 @@ export default function AIAssistant() {
     if (prefill) setInputValue(prefill);
     if (welcome === 'first-wallet') setWelcomeType('first-wallet');
     if (welcome === 'wallet-ready') {
+      const latestWallet = wallets[wallets.length - 1];
+      const latestAgentId = latestWallet ? delegations.find(d => d.walletId === latestWallet.id)?.agentId || '-' : '-';
+      const wId = latestWallet?.id || '-';
+      const aId = latestAgentId;
       const welcomeMsg: Message = {
         id: 'welcome-ready-' + Date.now(),
         role: 'assistant',
         content: language === 'zh'
-          ? '恭喜！你的 Agentic 钱包已经创建完成 🎉\n\n有什么我可以帮你的吗？'
-          : 'Congratulations! Your Agent Wallet is ready 🎉\n\nHow can I help you?',
+          ? `🎉 恭喜，你的 Cobo Pact 钱包已创建成功！\n\n📋 钱包信息\n• Wallet ID: ${wId}\n• Agent ID: ${aId}\n\nCobo Pact 是一个为 AI Agent 设计的智能钱包管理平台，核心能力包括：\n\n🔐 安全风控 — 灵活配置单笔/每日交易限额，超限自动触发人工审批\n💸 代币管理 — 支持主流代币的充值、转账和余额查询\n🤖 Agent 委托 — 将钱包操作权限安全地委托给 AI Agent\n📊 交易监控 — 实时追踪所有链上交易和审批状态\n\n你可以点击下方的快捷问题快速开始探索 👇`
+          : `🎉 Congratulations! Your Cobo Pact wallet has been created successfully!\n\n📋 Wallet Info\n• Wallet ID: ${wId}\n• Agent ID: ${aId}\n\nCobo Pact is a smart wallet management platform designed for AI Agents. Key capabilities include:\n\n🔐 Risk Controls — Set per-transaction and daily spending limits with auto-approval triggers\n💸 Token Management — Deposit, transfer, and check balances for major tokens\n🤖 Agent Delegation — Securely delegate wallet operations to AI Agents\n📊 Transaction Monitoring — Track all on-chain transactions and approval status in real-time\n\nClick a suggestion below to start exploring 👇`,
         timestamp: new Date(),
-        walletListData: true,
       };
-      const sessionTitle = language === 'zh' ? '开始使用 Agentic 钱包' : 'Getting Started with Agentic Wallet';
+      const sessionTitle = language === 'zh' ? '开始使用 Cobo Pact' : 'Getting Started with Cobo Pact';
       const newSessionId = 'wallet-ready-' + Date.now();
       setMessages([welcomeMsg]);
       setActiveChatId(newSessionId);
@@ -337,66 +340,164 @@ export default function AIAssistant() {
   const simulateAIResponse = (userMessage: string): string => {
     const lowerMessage = userMessage.toLowerCase();
     if (language === 'zh') {
-      if (lowerMessage.includes('钱包状态') || lowerMessage.includes('支持的能力') || lowerMessage.includes('介绍一下我的钱包')) {
-        return `您的 Agent Wallet 已成功创建并处于活跃状态，以下是当前钱包概览：
+      if (lowerMessage.includes('钱包状态') || lowerMessage.includes('支持的能力') || lowerMessage.includes('介绍一下我的钱包') || lowerMessage.includes('基础能力') || lowerMessage.includes('cobo pact')) {
+        return `Cobo Pact 是面向 AI Agent 的链上钱包管理平台，让你可以安全地将链上操作委托给 Agent，同时保持完整的控制权。以下是核心能力介绍：
 
-📊 钱包状态
-• 状态：已激活 ✅
-• 网络：Ethereum Sepolia (Testnet)
-• 余额：0.00 USDC
-• 钱包地址：0x7a3d...f82e
+🤖 Agent 委托管理
+• 支持将钱包操作权限委托给一个或多个 AI Agent
+• 每个 Agent 可独立配置操作范围和权限边界
+• 随时可撤销或调整 Agent 的委托权限
 
-🔒 风控配置
-• 单笔交易限额：$10
-• 每日支出限额：$50
+💳 钱包与资产管理
+• 支持创建和管理多个链上钱包
+• 支持 ETH、USDC 等主流代币的发送、接收和余额查询
+• 支持通过 Agent 发起智能合约交互（需授权）
 
-⚡ 支持的能力
-1. 代币转账 — 支持 ETH、USDC 等主流代币的发送和接收
-2. 智能合约调用 — 可通过 Agent 发起合约交互（需授权）
-3. 余额查询 — 实时查看各代币余额和交易记录
-4. 风控策略管理 — 灵活配置单笔/每日限额、白名单地址等
-5. 多 Agent 委托 — 可将钱包权限委托给多个 AI Agent，分别设定操作范围
-6. 交易审批 — 超出限额的交易会触发人工审批流程
+🔒 风控与安全策略
+• 可配置单笔交易限额和每日支出上限
+• 超出限额的交易自动进入人工审批队列
+• 支持白名单地址管理，限制转账目标范围
 
-如需充值测试代币或调整风控策略，随时告诉我！`;
+📋 交易审批
+• 所有超限交易实时推送，等待你确认后才会执行
+• 完整的交易历史记录，便于审计和追溯
+
+你可以通过下方的快捷问题继续了解具体的操作方式！`;
       } else if (lowerMessage.includes('安装') || lowerMessage.includes('配置')) {
         return '关于 Agent 的安装和配置，您可以在"Agent 安装指南"页面找到详细的步骤说明。主要包括：1) 安装 SDK，2) 初始化配置，3) 设置 API 密钥。如果您在某个步骤遇到问题，请告诉我具体是哪一步。';
+      } else if (lowerMessage.includes('充值') || lowerMessage.includes('管理') && lowerMessage.includes('资产')) {
+        return `充值是开始使用 Cobo Pact 的第一步，完成后即可通过 Agent 进行链上操作。
+
+💰 如何充值
+1. 进入左侧「我的钱包」，选择目标钱包
+2. 点击钱包地址旁的复制按钮获取收款地址
+3. 从外部钱包或测试网水龙头向该地址转入代币
+4. 到账后余额会自动刷新显示
+
+💡 小贴士
+• 当前钱包运行在 Ethereum Sepolia 测试网，可以免费获取测试代币
+• 首次建议先充入少量代币熟悉流程
+
+📊 资产管理
+• 钱包详情页实时展示各代币余额和完整交易记录
+• 你可以直接在对话中发起操作，例如："帮我转 0.1 ETH 到 0x..."
+• Agent 发起的转账同样受风控策略约束，超限交易会自动进入审批
+
+🔗 Sepolia 测试代币获取
+• ETH: 可通过 Google Cloud Faucet 或 Alchemy Faucet 领取
+• USDC: 可在 Sepolia USDC Faucet 领取测试 USDC
+
+如需帮助获取测试代币，随时告诉我！`;
+      } else if (lowerMessage.includes('金额上限') || lowerMessage.includes('限额') || lowerMessage.includes('花费')) {
+        return `通过风控策略，你可以精确控制每个 Agent 的链上花费范围，确保资金安全。
+
+⚙️ 设置步骤
+1. 进入左侧「我的钱包」，选择目标钱包
+2. 在「委托与策略」区域找到对应的 Agent
+3. 点击编辑策略，即可配置限额规则
+
+📋 可配置的限额类型
+• 单笔交易限额 — 单次操作的最大金额（默认 $10）
+• 每日支出上限 — Agent 一天内可花费的总额（默认 $50）
+• 审批触发阈值 — 超过此金额的交易自动进入审批队列
+
+🛡️ 风控机制说明
+• 超出限额的交易不会被拒绝，而是暂停执行并等待你确认
+• 每个 Agent 的限额独立计算，互不影响
+• 每日额度在 UTC 0:00 自动重置
+• 你可以在「交易审批」页面随时处理待审批的交易
+
+💡 最佳实践
+• 新 Agent 建议从较低限额开始，运行稳定后再逐步放宽
+• 对于高频低额场景（如 Gas 费支付），可适当提高单笔限额
+• 对于大额操作场景，建议设置较低的审批阈值以加强管控
+
+需要我帮你调整当前 Agent 的限额设置吗？`;
       } else if (lowerMessage.includes('安全') || lowerMessage.includes('风险') || lowerMessage.includes('风控')) {
         return '安全是我们最重视的部分。建议您启用以下安全功能：1) 双因素认证，2) 自动拦截可疑活动，3) 交易限额控制。您可以在"委托与策略"页面进行详细设置。需要我帮您详细解释某个功能吗？';
       } else if (lowerMessage.includes('余额') || lowerMessage.includes('转账')) {
-        return '关于交易和转账，Agent Wallet 提供了完善的交易管理功能。所有交易都会经过多重验证和风控检查。如需查看交易历史或调整交易权限，我可以帮您导航到相应的页面。';
+        return '关于交易和转账，Cobo Pact 提供了完善的交易管理功能。所有交易都会经过多重验证和风控检查。如需查看交易历史或调整交易权限，我可以帮您导航到相应的页面。';
       } else {
         return '感谢您的提问。我会尽力帮助您。如果您需要更详细的技术支持，建议您查看我们的完整文档或联系技术支持团队。还有其他问题吗？';
       }
     } else {
-      if (lowerMessage.includes('wallet status') || lowerMessage.includes('capabilities') || lowerMessage.includes('describe my wallet')) {
-        return `Your Agent Wallet has been successfully created and is active. Here's an overview:
+      if (lowerMessage.includes('wallet status') || lowerMessage.includes('capabilities') || lowerMessage.includes('describe my wallet') || lowerMessage.includes('cobo pact')) {
+        return `Cobo Pact is an on-chain wallet management platform for AI Agents, allowing you to safely delegate on-chain operations to Agents while maintaining full control. Here are the core capabilities:
 
-📊 Wallet Status
-• Status: Active ✅
-• Network: Ethereum Sepolia (Testnet)
-• Balance: 0.00 USDC
-• Address: 0x7a3d...f82e
+🤖 Agent Delegation
+• Delegate wallet operation permissions to one or more AI Agents
+• Configure independent operation scope and permission boundaries per Agent
+• Revoke or adjust Agent delegation at any time
 
-🔒 Risk Controls
-• Per-transaction limit: $10
-• Daily spending limit: $50
+💳 Wallet & Asset Management
+• Create and manage multiple on-chain wallets
+• Send, receive, and query balances for ETH, USDC, and other major tokens
+• Initiate smart contract interactions via Agent (requires authorization)
 
-⚡ Supported Capabilities
-1. Token Transfers — Send and receive ETH, USDC, and other major tokens
-2. Smart Contract Calls — Initiate contract interactions via Agent (requires authorization)
-3. Balance Queries — Real-time token balances and transaction history
-4. Risk Policy Management — Configure per-tx/daily limits, address whitelists, etc.
-5. Multi-Agent Delegation — Delegate wallet permissions to multiple AI Agents with scoped access
-6. Transaction Approval — Transactions exceeding limits trigger manual approval
+🔒 Risk Control & Security
+• Configure per-transaction limits and daily spending caps
+• Over-limit transactions automatically enter a manual approval queue
+• Whitelist management to restrict transfer destinations
 
-Let me know if you'd like to fund test tokens or adjust risk policies!`;
+📋 Transaction Approval
+• All over-limit transactions are pushed in real-time, pending your confirmation
+• Complete transaction history for audit and traceability
+
+Feel free to explore the quick questions below to learn more about specific operations!`;
       } else if (lowerMessage.includes('install') || lowerMessage.includes('setup')) {
         return 'For Agent installation and configuration, please visit the "Agent Installation" page for step-by-step instructions. The process includes: 1) Installing the SDK, 2) Initializing the configuration, 3) Setting up your API key.';
+      } else if (lowerMessage.includes('deposit') || lowerMessage.includes('manage') && lowerMessage.includes('asset')) {
+        return `Depositing funds is the first step to start using Cobo Pact. Once funded, your Agent can perform on-chain operations.
+
+💰 How to Deposit
+1. Go to "My Wallets" in the left sidebar and select your wallet
+2. Click the copy button next to the wallet address
+3. Send tokens from an external wallet or testnet faucet
+4. Your balance will refresh automatically once the deposit arrives
+
+💡 Tips
+• Your wallet is on Ethereum Sepolia testnet — test tokens are free to obtain
+• Start with a small amount to familiarize yourself with the process
+
+📊 Asset Management
+• View real-time balances and full transaction history in the wallet detail page
+• Initiate operations directly in chat, e.g., "Transfer 0.1 ETH to 0x..."
+• Agent-initiated transfers follow the same risk policies — over-limit transactions require approval
+
+🔗 Sepolia Test Token Faucets
+• ETH: Available via Google Cloud Faucet or Alchemy Faucet
+• USDC: Available via Sepolia USDC Faucet
+
+Let me know if you need help obtaining test tokens!`;
+      } else if (lowerMessage.includes('spending limit') || lowerMessage.includes('daily limit') || lowerMessage.includes('spending')) {
+        return `Risk policies let you precisely control each Agent's on-chain spending to keep your funds safe.
+
+⚙️ Setup Steps
+1. Go to "My Wallets" in the left sidebar and select the target wallet
+2. Find the Agent under "Delegation & Policy"
+3. Click edit policy to configure limit rules
+
+📋 Configurable Limit Types
+• Per-transaction limit — Max amount per operation (default: $10)
+• Daily spending cap — Total amount an Agent can spend per day (default: $50)
+• Approval threshold — Transactions above this amount auto-enter the approval queue
+
+🛡️ How Risk Controls Work
+• Over-limit transactions are paused (not rejected) and await your confirmation
+• Each Agent's limits are calculated independently
+• Daily quotas reset automatically at UTC 0:00
+• Manage pending approvals anytime from the "Approvals" page
+
+💡 Best Practices
+• Start new Agents with lower limits and increase gradually once stable
+• For high-frequency, low-value scenarios (e.g., gas payments), consider higher per-tx limits
+• For large-value operations, set a lower approval threshold for tighter control
+
+Would you like me to help adjust your current Agent's limit settings?`;
       } else if (lowerMessage.includes('security') || lowerMessage.includes('risk')) {
         return 'Security is our top priority. I recommend enabling: 1) Two-factor authentication, 2) Auto-block suspicious activities, 3) Transaction limits. You can configure these in "Delegation & Policy" page.';
       } else if (lowerMessage.includes('balance') || lowerMessage.includes('transfer')) {
-        return 'Agent Wallet provides comprehensive transaction management. All transactions go through multiple verification and risk control checks. I can guide you to the relevant page if needed.';
+        return 'Cobo Pact provides comprehensive transaction management. All transactions go through multiple verification and risk control checks. I can guide you to the relevant page if needed.';
       } else {
         return "Thank you for your question. I'll do my best to assist you. For more detailed technical support, please refer to our complete documentation. Is there anything else I can help with?";
       }
@@ -697,7 +798,7 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
       <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: '#4f5eff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
         <Bot style={{ width: '12px', height: '12px', color: 'white' }} />
       </div>
-      <span style={{ fontWeight: 600 }}>Cobo<span style={{ color: '#4f5eff' }}>Agentic</span>Wallet</span>
+      <span style={{ fontWeight: 600 }}>Cobo <span style={{ color: '#4f5eff' }}>Pact</span></span>
     </div>
   );
 
@@ -923,38 +1024,17 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
                       {renderAssistantHeader()}
                       {message.id.startsWith('welcome-ready-') ? (
                         <>
-                          <div className="whitespace-pre-wrap" style={{ fontSize: '16px', lineHeight: '24px' }}>{message.content.split('\n\n')[0]}</div>
-                          {message.walletListData && wallets.length > 0 && (
-                            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                              {wallets.map((w) => {
-                                const count = delegations.filter(d => d.walletId === w.id).length;
-                                return (
-                                  <WalletCard
-                                    key={w.id}
-                                    wallet={w}
-                                    delegationCount={count}
-                                    onSelect={(walletId) => {
-                                      selectWallet(walletId);
-                                      onShowWalletPage();
-                                    }}
-                                  />
-                                );
-                              })}
-                            </div>
-                          )}
-                          {message.content.split('\n\n').length > 1 && (
-                            <div className="whitespace-pre-wrap mt-4" style={{ fontSize: '16px', lineHeight: '24px' }}>{message.content.split('\n\n').slice(1).join('\n\n')}</div>
-                          )}
+                          <div className="whitespace-pre-wrap" style={{ fontSize: '16px', lineHeight: '24px' }}>{message.content}</div>
                           {!isTyping && displayMessages.length === 1 && (
                             <div className="flex flex-col gap-[10px] mt-[20px]">
                               {(language === 'zh' ? [
-                                '我这个钱包现在准备好了吗？',
-                                '帮我设置一个安全的使用限制',
-                                '下一步我该怎么开始用？',
+                                '请介绍一下 Cobo Pact 的基础能力',
+                                '如何完成第一次充值并管理钱包内的资产',
+                                '如何设置 Agent 每天可以花费的金额上限',
                               ] : [
-                                'Is my wallet ready to use?',
-                                'Help me set up safe usage limits',
-                                'What should I do next to get started?',
+                                'Introduce the basic capabilities of Cobo Pact',
+                                'How to make the first deposit and manage wallet assets',
+                                'How to set a daily spending limit for the Agent',
                               ]).map((suggestion) => (
                                 <button
                                   key={suggestion}
@@ -1027,9 +1107,9 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
                 <>
                   <p style={{ fontSize: '36px', lineHeight: '46px', color: '#0A0A0A', marginBottom: '32px', textAlign: 'center' }}>
                     {language === 'zh' ? (
-                      <>欢迎使用 Cobo<span style={{ color: '#4F5EFF' }}>Agentic</span>Wallet</>
+                      <>欢迎使用 Cobo <span style={{ color: '#4F5EFF' }}>Pact</span></>
                     ) : (
-                      <>Welcome to Cobo<span style={{ color: '#4F5EFF' }}>Agentic</span>Wallet</>
+                      <>Welcome to Cobo <span style={{ color: '#4F5EFF' }}>Pact</span></>
                     )}
                   </p>
 
@@ -1044,7 +1124,7 @@ Let me know if you'd like to fund test tokens or adjust risk policies!`;
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="font-semibold text-[15px] text-[#0A0A0A] mb-1">
-                            {language === 'zh' ? '创建你的第一个 Agent Wallet' : 'Create Your First Agent Wallet'}
+                            {language === 'zh' ? '创建你的第一个 Cobo Pact 钱包' : 'Create Your First Cobo Pact Wallet'}
                           </div>
                           <div className="text-[13px] text-[#4F4F4F] leading-[18px]">
                             {language === 'zh'
