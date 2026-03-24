@@ -3,6 +3,9 @@ import { LanguageProvider } from "./contexts/LanguageContext";
 import DashboardLayout from "./components/DashboardLayout";
 import Login from "./components/Login";
 import AIAssistant from "./components/AIAssistant";
+import InviteCodePage from "./components/InviteCodePage";
+import AgentSetupPage from "./components/AgentSetupPage";
+import SetupSuccessPage from "./components/SetupSuccessPage";
 
 export const router = createBrowserRouter([
   {
@@ -18,6 +21,30 @@ export const router = createBrowserRouter([
     element: (
       <LanguageProvider>
         <Login />
+      </LanguageProvider>
+    ),
+  },
+  {
+    path: "/invite",
+    element: (
+      <LanguageProvider>
+        <InviteCodePage />
+      </LanguageProvider>
+    ),
+  },
+  {
+    path: "/setup",
+    element: (
+      <LanguageProvider>
+        <AgentSetupPage />
+      </LanguageProvider>
+    ),
+  },
+  {
+    path: "/setup-success",
+    element: (
+      <LanguageProvider>
+        <SetupSuccessPage />
       </LanguageProvider>
     ),
   },

@@ -452,8 +452,38 @@ const translations = {
     "policyPanel.title": "Risk Control Rules",
     "policyPanel.desc": "Set spending limits and approval thresholds",
 
+    // Invite Code Page
+    "invitePage.title": "Enter Invitation Code",
+    "invitePage.subtitle": "Currently open to invited users only. Please enter your invitation code to continue.",
+    "invitePage.placeholder": "Enter code",
+    "invitePage.submit": "Verify & Continue",
+    "invitePage.verifying": "Verifying...",
+    "invitePage.noCode": "Don't have a code?",
+    "invitePage.getCode": "Get one now",
+    "invitePage.codeInvalid": "Invalid invitation code. Please check and try again.",
+    "invitePage.codeUsed": "This invitation code has already been used.",
+    "invitePage.codeSuccess": "Verification successful",
+
+    // Agent Setup Page
+    "setupPage.title": "Add Agentic Wallet to Your Agent",
+    "setupPage.tellAgent": "Tell your Agent:",
+    "setupPage.instructionText": "Install the Cobo Agentic Wallet Skill. Skip if already installed.\nhttps://github.com/cobosteven/cobo-agent-wallet-manual/tree/master/skills/cobo-agentic-wallet\n\nUse the following token to link the agent to my account and create a new wallet: iOGmzE17\n\nPoll the wallet creation progress and return the result when complete.",
+    "setupPage.copyButton": "Copy Text",
+    "setupPage.copied": "Copied successfully",
+    "setupPage.helpPrefix": "Agent will complete setup automatically. For more, see",
+    "setupPage.helpLink": "Help Docs",
+    "setupPage.connectingAgent": "Connecting Agent...",
+    "setupPage.agentConnected": "Agent connected",
+    "setupPage.creatingWallet": "Creating wallet...",
+    "setupPage.walletCreated": "Wallet created",
+
+    // Setup Success Page
+    "setupSuccess.title": "Wallet Created Successfully",
+    "setupSuccess.button": "Get Started",
+
     // Wallet Detail
     "walletDetail.back": "Back to wallets",
+    "walletDetail.switchWallet": "Switch Wallet",
     "walletDetail.delegateAgent": "Delegate Agent",
     "walletDetail.addresses": "Addresses",
     "walletDetail.noAddresses": "No addresses yet",
@@ -1031,14 +1061,44 @@ const translations = {
     "policyPanel.desc": "设定消费限额和审批门槛",
 
     // Wallet Detail
+    // 邀请码页面
+    "invitePage.title": "输入邀请码",
+    "invitePage.subtitle": "当前仅对受邀用户开放，请输入邀请码以继续",
+    "invitePage.placeholder": "输入邀请码",
+    "invitePage.submit": "继续",
+    "invitePage.verifying": "验证中...",
+    "invitePage.noCode": "没有邀请码?",
+    "invitePage.getCode": "申请获取",
+    "invitePage.codeInvalid": "邀请码无效，请检查后重试。",
+    "invitePage.codeUsed": "该邀请码已被使用。",
+    "invitePage.codeSuccess": "验证成功",
+
+    // Agent Setup Page
+    "setupPage.title": "创建你的 Agentic 钱包",
+    "setupPage.tellAgent": "请将以下指令发送给你的 Agent，以创建钱包并完成绑定：",
+    "setupPage.instructionText": "安装 Cobo Agentic Wallet Skill，已安装请忽略。\nhttps://github.com/cobosteven/cobo-agent-wallet-manual/tree/master/skills/cobo-agentic-wallet\n\n使用以下的 token 完成 agent 和我的账户关联，并且执行创建新钱包的操作：iOGmzE17\n\n轮询创建钱包的进度，完成后把结果返回给我。",
+    "setupPage.copyButton": "复制指令",
+    "setupPage.copied": "复制成功",
+    "setupPage.helpPrefix": "发送后，Agent 将自动完成钱包创建并返回结果。",
+    "setupPage.helpLink": "帮助文档",
+    "setupPage.connectingAgent": "正在连接 Agent...",
+    "setupPage.agentConnected": "Agent 连接成功",
+    "setupPage.creatingWallet": "正在创建钱包...",
+    "setupPage.walletCreated": "钱包创建成功",
+
+    // Setup Success Page
+    "setupSuccess.title": "钱包创建成功",
+    "setupSuccess.button": "开始体验",
+
     "walletDetail.back": "返回钱包列表",
+    "walletDetail.switchWallet": "切换钱包",
     "walletDetail.delegateAgent": "委托 Agent",
     "walletDetail.addresses": "地址",
     "walletDetail.noAddresses": "暂无地址",
     "walletDetail.copyAddress": "复制地址",
 
     // Wallet Agent Page
-    "walletPage.title": "钱包",
+    "walletPage.title": "我的钱包",
     "walletPage.subtitle": "管理你的钱包和已连接的 Agent",
     "walletPage.createWallet": "创建钱包",
     "walletPage.createNew": "创建新钱包",

@@ -142,10 +142,10 @@ export default function ApprovalPage({ initialTab = 'all', onPendingCountChange 
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full max-w-[768px] mx-auto">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-[22px] font-semibold text-[#0A0A0A] mb-1">
+        <h1 className="text-[24px] leading-[32px] font-normal text-[#0A0A0A] mb-1">
           {language === 'zh' ? '操作审批' : 'Operation Approvals'}
         </h1>
         <p className="text-[14px] text-[#73798B]">
