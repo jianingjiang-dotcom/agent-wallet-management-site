@@ -80,7 +80,7 @@ export default function WalletAgentPage({ onSetupWallet, onClaimWallet, onDelega
         /* ─── Welcome — no wallets ─── */
         <div className="flex flex-col items-center justify-center py-12">
           <div className="w-full max-w-lg bg-white border border-[rgba(10,10,10,0.08)] rounded-[16px] p-8 md:p-12 text-center">
-            <div className="inline-flex items-center justify-center w-[72px] h-[72px] bg-gradient-to-br from-[rgba(79,94,255,0.12)] to-[rgba(79,94,255,0.04)] border-2 border-[rgba(79,94,255,0.15)] rounded-[20px] mb-6">
+            <div className="inline-flex items-center justify-center w-[72px] h-[72px] bg-gradient-to-br from-[rgba(79,94,255,0.12)] to-[rgba(79,94,255,0.04)] border-2 border-[rgba(79,94,255,0.15)] rounded-[16px] mb-6">
               <Shield className="w-9 h-9 text-[#4f5eff]" />
             </div>
             <h1 className="font-['Inter',sans-serif] font-bold text-[28px] md:text-[32px] text-[#0a0a0a] mb-3 leading-tight">
