@@ -488,6 +488,16 @@ const translations = {
     "walletDetail.addresses": "Addresses",
     "walletDetail.noAddresses": "No addresses yet",
     "walletDetail.copyAddress": "Copy address",
+    "walletDetail.totalBalance": "Total Balance",
+    "walletDetail.assets": "Assets",
+    "walletDetail.transactions": "Transaction History",
+    "walletDetail.allChains": "All Chains",
+    "walletDetail.viewOnExplorer": "View on Explorer",
+    "walletDetail.allAddresses": "All Addresses",
+    "tx.send": "Send",
+    "tx.receive": "Receive",
+    "tx.swap": "Swap",
+    "tx.approve": "Approve",
 
     // Wallet Agent Page
     "walletPage.title": "Wallets",
@@ -1119,6 +1129,16 @@ const translations = {
     "walletDetail.addresses": "地址",
     "walletDetail.noAddresses": "暂无地址",
     "walletDetail.copyAddress": "复制地址",
+    "walletDetail.totalBalance": "总余额",
+    "walletDetail.assets": "资产",
+    "walletDetail.transactions": "交易历史",
+    "walletDetail.allChains": "全部链",
+    "walletDetail.viewOnExplorer": "在浏览器中查看",
+    "walletDetail.allAddresses": "全部地址",
+    "tx.send": "发送",
+    "tx.receive": "接收",
+    "tx.swap": "兑换",
+    "tx.approve": "授权",
 
     // Wallet Agent Page
     "walletPage.title": "我的钱包",
