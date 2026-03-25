@@ -75,16 +75,19 @@ export default function ChatWelcome({ variant }: ChatWelcomeProps) {
         )}
       </h2>
 
-      {/* Subtitle */}
-      <p
-        className={`text-[#73798B] text-[14px] leading-[21px] md:text-[16px] md:leading-[24px] ${isFirst ? 'animate-reveal-up' : ''}`}
-        style={{
-          maxWidth: '600px',
-          ...(isFirst && { animationDelay: '1100ms', animationDuration: '500ms' }),
-        }}
-      >
-        {t(isFirst ? 'chat.welcome.firstWallet.subtitle' : 'chat.welcome.returning.subtitle')}
-      </p>
+      {/* Subtitle - only show for first wallet */}
+      {isFirst && (
+        <p
+          className="text-[#73798B] text-[14px] leading-[21px] md:text-[16px] md:leading-[24px] animate-reveal-up"
+          style={{
+            maxWidth: '600px',
+            animationDelay: '1100ms',
+            animationDuration: '500ms',
+          }}
+        >
+          {t('chat.welcome.firstWallet.subtitle')}
+        </p>
+      )}
     </div>
   );
 }
