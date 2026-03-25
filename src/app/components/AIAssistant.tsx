@@ -1148,7 +1148,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                   : {}
                 }
               >
-                  <div className="bg-white border border-[#EBEBEB] rounded-xl shadow-[0px_4px_16px_0px_rgba(0,0,0,0.08)] flex flex-col">
+                  <div className="bg-white border border-[#EBEBEB] rounded-xl shadow-[0px_10px_20px_0px_rgba(0,0,0,0.04)] flex flex-col">
                     <textarea
                       value={inputValue}
                       onChange={(e) => setInputValue(e.target.value)}
@@ -1215,7 +1215,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
         {(displayMessages.length > 0 || combinedTyping) && (
         <div className="bg-white px-6 pb-[8px] flex justify-center shrink-0 sticky bottom-0 z-10">
           <div className="w-full max-w-[744px]">
-          <div className="bg-white border border-[#EBEBEB] rounded-xl shadow-[0px_4px_16px_0px_rgba(0,0,0,0.08)] flex flex-col">
+          <div className="bg-white border border-[#EBEBEB] rounded-xl shadow-[0px_10px_20px_0px_rgba(0,0,0,0.04)] flex flex-col">
             <textarea
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
