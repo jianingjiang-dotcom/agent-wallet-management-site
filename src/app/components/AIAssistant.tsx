@@ -999,8 +999,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                           <button
                             key={label}
                             onClick={() => {
-                              onboardingCallbacks.onComplete();
-                              setTimeout(() => handleSendDirect(label), 100);
+                              handleSendDirect(label);
                             }}
                             className="w-fit px-[16px] py-[10px] rounded-[12px] border border-[#EDEEF3] bg-white hover:bg-[#F8F9FC] transition-all text-[14px] leading-[20px] font-normal text-[#1C1C1C]"
                           >
