@@ -1163,26 +1163,6 @@ Would you like me to help adjust your current Agent's limit settings?`;
                         <button onClick={() => fileInputRef.current?.click()} className="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] text-slate-500 hover:bg-[#FAFAFA] transition-colors">
                           <Plus className="w-5 h-5" strokeWidth={1.5} />
                         </button>
-                        {hasWallets && (
-                          <button onClick={() => setShowWalletPicker(showWalletPicker === 'empty' ? null : 'empty')} className="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] text-slate-500 hover:bg-[#FAFAFA] transition-colors">
-                            <AtSign className="w-5 h-5" strokeWidth={1.5} />
-                          </button>
-                        )}
-                        {showWalletPicker === 'empty' && (
-                          <div ref={walletPickerRef} className="absolute bottom-full left-0 mb-2 bg-white rounded-xl border border-[#EBEBEB] shadow-lg py-1 z-50" style={{ minWidth: '200px' }}>
-                            <div className="px-3 py-2 text-[12px] font-medium text-[#999]">{language === 'zh' ? '选择钱包' : 'Select Wallet'}</div>
-                            {wallets.map(w => (
-                              <button
-                                key={w.id}
-                                onClick={() => handleSelectWallet(w.name)}
-                                className="w-full text-left px-3 py-2 text-[14px] text-[#0A0A0A] hover:bg-[#F5F5F5] transition-colors flex items-center gap-2"
-                              >
-                                <Wallet className="w-4 h-4 text-[#4f5eff]" strokeWidth={1.5} />
-                                {w.name}
-                              </button>
-                            ))}
-                          </div>
-                        )}
                       </div>
                       <button
                         onClick={handleSendMessage}
@@ -1250,26 +1230,6 @@ Would you like me to help adjust your current Agent's limit settings?`;
                 <button onClick={() => fileInputRef.current?.click()} className="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] text-slate-500 hover:bg-[#FAFAFA] transition-colors">
                   <Plus className="w-5 h-5" strokeWidth={1.5} />
                 </button>
-                {hasWallets && (
-                  <button onClick={() => setShowWalletPicker(showWalletPicker === 'chat' ? null : 'chat')} className="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] text-slate-500 hover:bg-[#FAFAFA] transition-colors">
-                    <AtSign className="w-5 h-5" strokeWidth={1.5} />
-                  </button>
-                )}
-                {showWalletPicker === 'chat' && (
-                  <div ref={walletPickerRef} className="absolute bottom-full left-0 mb-2 bg-white rounded-xl border border-[#EBEBEB] shadow-lg py-1 z-50" style={{ minWidth: '200px' }}>
-                    <div className="px-3 py-2 text-[12px] font-medium text-[#999]">{language === 'zh' ? '选择钱包' : 'Select Wallet'}</div>
-                    {wallets.map(w => (
-                      <button
-                        key={w.id}
-                        onClick={() => handleSelectWallet(w.name)}
-                        className="w-full text-left px-3 py-2 text-[14px] text-[#0A0A0A] hover:bg-[#F5F5F5] transition-colors flex items-center gap-2"
-                      >
-                        <Wallet className="w-4 h-4 text-[#4f5eff]" strokeWidth={1.5} />
-                        {w.name}
-                      </button>
-                    ))}
-                  </div>
-                )}
               </div>
               <button
                 onClick={handleSendMessage}
