@@ -560,7 +560,17 @@ Would you like me to help adjust your current Agent's limit settings?`;
 
     let currentSessionId = activeChatId;
 
-    if (messages.length === 0 && !chatSessions.some(s => s.id === activeChatId)) {
+    if (chatSessions.some(s => s.id === activeChatId)) {
+      // Already in an existing session — append message
+      setChatSessions((prev) =>
+        prev.map((s) =>
+          s.id === currentSessionId
+            ? { ...s, messages: [...s.messages, userMessage] }
+            : s
+        )
+      );
+    } else {
+      // New conversation — create session
       const title = text.length > 20 ? text.slice(0, 20) + '...' : text;
       const newSessionId = 'new-' + Date.now();
       currentSessionId = newSessionId;
@@ -569,14 +579,6 @@ Would you like me to help adjust your current Agent's limit settings?`;
         { id: newSessionId, title, timestamp: new Date(), messages: [userMessage] },
         ...prev,
       ]);
-    } else {
-      setChatSessions((prev) =>
-        prev.map((s) =>
-          s.id === currentSessionId
-            ? { ...s, messages: [...s.messages, userMessage] }
-            : s
-        )
-      );
     }
 
     setMessages((prev) => [...prev, userMessage]);
