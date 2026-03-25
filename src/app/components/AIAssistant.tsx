@@ -146,7 +146,7 @@ export default function AIAssistant() {
   }, []);
 
   // Mock chat history data
-  const [chatSessions, setChatSessions] = useState<ChatSession[]>([
+  const [chatSessions, setChatSessions] = useState<ChatSession[]>(hasWallets ? [
     {
       id: '1',
       title: language === 'zh' ? 'Agent 安装配置' : 'Agent Installation',
@@ -192,7 +192,7 @@ export default function AIAssistant() {
         { id: '5-2', role: 'assistant', content: language === 'zh' ? '点击"创建钱包"按钮，选择链类型，设置权限规则即可完成创建。' : 'Click "Create Wallet", select chain type, and set permission rules to complete creation.', timestamp: new Date(Date.now() - 1209590000) },
       ],
     },
-  ]);
+  ] : []);
 
   const filteredSessions = chatSessions.filter(s =>
     s.title.toLowerCase().includes(searchQuery.toLowerCase())
