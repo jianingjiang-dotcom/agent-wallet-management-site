@@ -558,15 +558,26 @@ Would you like me to help adjust your current Agent's limit settings?`;
       timestamp: new Date(),
     };
 
-    const currentSessionId = activeChatId;
+    let currentSessionId = activeChatId;
 
-    setChatSessions((prev) =>
-      prev.map((s) =>
-        s.id === currentSessionId
-          ? { ...s, messages: [...s.messages, userMessage] }
-          : s
-      )
-    );
+    if (messages.length === 0 && !chatSessions.some(s => s.id === activeChatId)) {
+      const title = text.length > 20 ? text.slice(0, 20) + '...' : text;
+      const newSessionId = 'new-' + Date.now();
+      currentSessionId = newSessionId;
+      setActiveChatId(newSessionId);
+      setChatSessions((prev) => [
+        { id: newSessionId, title, timestamp: new Date(), messages: [userMessage] },
+        ...prev,
+      ]);
+    } else {
+      setChatSessions((prev) =>
+        prev.map((s) =>
+          s.id === currentSessionId
+            ? { ...s, messages: [...s.messages, userMessage] }
+            : s
+        )
+      );
+    }
 
     setMessages((prev) => [...prev, userMessage]);
     setInputValue('');
