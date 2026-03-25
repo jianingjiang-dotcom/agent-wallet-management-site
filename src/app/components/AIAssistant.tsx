@@ -680,11 +680,13 @@ Would you like me to help adjust your current Agent's limit settings?`;
 
       {/* Session list */}
       <div className={`flex-1 overflow-y-auto overflow-x-hidden px-2 flex flex-col gap-[2px] transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
-        <div className="p-[8px]">
-          <span className="text-[14px] leading-[20px] font-normal text-[#73798B] opacity-50">
-            {language === 'zh' ? '对话历史' : 'History'}
-          </span>
-        </div>
+        {chatSessions.length > 0 && (
+          <div className="p-[8px]">
+            <span className="text-[14px] leading-[20px] font-normal text-[#73798B] opacity-50">
+              {language === 'zh' ? '对话历史' : 'History'}
+            </span>
+          </div>
+        )}
         {chatSessions.map((session) => (
           <div key={session.id} className={`relative group rounded-[8px] transition-colors ${activeChatId === session.id ? 'bg-[#EDEEF3]' : 'hover:bg-[#EDEEF3]'}`}>
             <button
