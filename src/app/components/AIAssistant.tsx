@@ -1082,7 +1082,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
 
         {/* Empty state — only when no messages AND onboarding not active */}
         {displayMessages.length === 0 && !combinedTyping && !onboarding.isOnboardingActive && (
-          <div className="flex-1 flex items-center justify-center px-6" style={{ marginTop: '-160px' }}>
+          <div className="flex-1 flex items-center justify-center px-6">
             <div className="w-full max-w-[768px]">
 
               {/* Scenario C: No wallet, no welcome — CTA suggestion + other suggestions */}
