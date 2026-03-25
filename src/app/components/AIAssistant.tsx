@@ -1114,7 +1114,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                       onChange={(e) => setInputValue(e.target.value)}
                       onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
                       placeholder={t('ai.inputPlaceholder')}
-                      className="w-full bg-transparent p-3 text-[16px] leading-[24px] text-slate-900 focus:outline-none resize-none chat-input-placeholder overflow-y-auto"
+                      className="w-full bg-transparent px-[16px] py-3 text-[16px] leading-[24px] text-slate-900 focus:outline-none resize-none chat-input-placeholder overflow-y-auto"
                       style={{ minHeight: '72px', maxHeight: '144px', height: '72px' }}
                       onInput={(e) => { const el = e.currentTarget; el.style.height = '72px'; el.style.height = Math.min(el.scrollHeight, 144) + 'px'; }}
                     />
