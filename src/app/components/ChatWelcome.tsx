@@ -71,7 +71,7 @@ export default function ChatWelcome({ variant }: ChatWelcomeProps) {
               {language === 'zh' ? 'Hi buddy，欢迎使用 ' : 'Hi buddy, welcome to '}
             </span>
             <span className="shimmer-wrap brand-gradient">
-              <span style={{ color: '#1c1c1c', WebkitTextFillColor: '#1c1c1c' }}>Cobo</span>Pact
+              <span className="brand-gradient" style={{ color: '#1c1c1c', WebkitTextFillColor: '#1c1c1c', background: 'none' }}>Cobo</span>Pact
             </span>
           </>
         )}
