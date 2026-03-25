@@ -57,6 +57,7 @@ export default function AIAssistant() {
   const [approvalBannerDismissed, setApprovalBannerDismissed] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
+  const [inputExpanded, setInputExpanded] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [activeChatId, setActiveChatId] = useState<string>('current');
   const [chatTitle, setChatTitle] = useState<string>('');
@@ -494,7 +495,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
     // During onboarding invite-code step, intercept input as invite code attempt
     if (onboarding.isOnboardingActive && onboarding.currentStep === 'invite-code') {
       const raw = inputValue.trim();
-      setInputValue('');
+      setInputValue(''); setInputExpanded(false);
       await onboarding.handleInviteFromChat(raw);
       return;
     }
@@ -531,7 +532,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
     }
 
     setMessages((prev) => [...prev, userMessage]);
-    setInputValue('');
+    setInputValue(''); setInputExpanded(false);
     setIsTyping(true);
 
     setTimeout(() => {
@@ -597,7 +598,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
     }
 
     setMessages((prev) => [...prev, userMessage]);
-    setInputValue('');
+    setInputValue(''); setInputExpanded(false);
     setIsTyping(true);
 
     setTimeout(() => {
@@ -1149,25 +1150,51 @@ Would you like me to help adjust your current Agent's limit settings?`;
                 }
               >
                   <div className="bg-white border border-[#EBEBEB] rounded-xl shadow-[0px_10px_20px_0px_rgba(0,0,0,0.04)] flex flex-col">
-                    <textarea
-                      value={inputValue}
-                      onChange={(e) => setInputValue(e.target.value)}
-                      onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
-                      placeholder={t('ai.inputPlaceholder')}
-                      className="w-full bg-transparent px-[16px] py-3 text-[15px] leading-[22px] text-slate-900 font-normal focus:outline-none resize-none chat-input-placeholder overflow-y-auto"
-                      style={{ minHeight: '72px', maxHeight: '144px', height: '72px' }}
-                      onInput={(e) => { const el = e.currentTarget; el.style.height = '72px'; el.style.height = Math.min(el.scrollHeight, 144) + 'px'; }}
-                    />
-                    <div className="flex items-center justify-between px-3 pb-3">
-                      <div className="flex items-center gap-1 relative">
-                        <button onClick={() => fileInputRef.current?.click()} className="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] text-slate-500 hover:bg-[#FAFAFA] transition-colors">
+                    {inputExpanded && (
+                      <textarea
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
+                        onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
+                        placeholder={t('ai.inputPlaceholder')}
+                        className="w-full bg-transparent px-[16px] py-3 text-[15px] leading-[22px] text-slate-900 font-normal focus:outline-none resize-none chat-input-placeholder overflow-y-auto"
+                        style={{ minHeight: '72px', maxHeight: '144px', height: '72px' }}
+                        onInput={(e) => {
+                          const el = e.currentTarget;
+                          el.style.height = '72px';
+                          el.style.height = Math.min(el.scrollHeight, 144) + 'px';
+                          if (el.scrollHeight <= 44) { setInputExpanded(false); }
+                        }}
+                      />
+                    )}
+                    <div className="flex items-center justify-between px-3 pb-3 pt-3">
+                      <div className="flex items-center gap-1 relative flex-1 min-w-0">
+                        <button onClick={() => fileInputRef.current?.click()} className="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] text-slate-500 hover:bg-[#FAFAFA] transition-colors shrink-0">
                           <Plus className="w-5 h-5" strokeWidth={1.5} />
                         </button>
+                        {!inputExpanded && (
+                          <input
+                            type="text"
+                            value={inputValue}
+                            onChange={(e) => setInputValue(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); }
+                            }}
+                            onInput={(e) => {
+                              const el = e.currentTarget;
+                              // Check if text would overflow by comparing scrollWidth
+                              if (el.scrollWidth > el.clientWidth) {
+                                setInputExpanded(true);
+                              }
+                            }}
+                            placeholder={t('ai.inputPlaceholder')}
+                            className="flex-1 min-w-0 bg-transparent text-[15px] leading-[22px] text-slate-900 font-normal focus:outline-none chat-input-placeholder"
+                          />
+                        )}
                       </div>
                       <button
                         onClick={handleSendMessage}
                         disabled={!inputValue.trim() || isTyping}
-                        className="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] bg-[#4f5eff] hover:bg-[#3d4dd9] disabled:bg-slate-200 disabled:cursor-not-allowed text-white transition-all"
+                        className="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] bg-[#4f5eff] hover:bg-[#3d4dd9] disabled:bg-slate-200 disabled:cursor-not-allowed text-white transition-all shrink-0"
                       >
                         <ArrowUp className="w-5 h-5" />
                       </button>
@@ -1216,25 +1243,50 @@ Would you like me to help adjust your current Agent's limit settings?`;
         <div className="bg-white px-6 pb-[8px] flex justify-center shrink-0 sticky bottom-0 z-10">
           <div className="w-full max-w-[744px]">
           <div className="bg-white border border-[#EBEBEB] rounded-xl shadow-[0px_10px_20px_0px_rgba(0,0,0,0.04)] flex flex-col">
-            <textarea
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
-              placeholder={t('ai.inputPlaceholder')}
-              className="w-full bg-transparent p-3 text-[15px] leading-[22px] text-slate-900 font-normal focus:outline-none resize-none chat-input-placeholder overflow-y-auto"
-                      style={{ minHeight: '72px', maxHeight: '144px', height: '72px' }}
-                      onInput={(e) => { const el = e.currentTarget; el.style.height = '72px'; el.style.height = Math.min(el.scrollHeight, 144) + 'px'; }}
-            />
-            <div className="flex items-center justify-between px-3 pb-3">
-              <div className="flex items-center gap-1 relative">
-                <button onClick={() => fileInputRef.current?.click()} className="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] text-slate-500 hover:bg-[#FAFAFA] transition-colors">
+            {inputExpanded && (
+              <textarea
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
+                placeholder={t('ai.inputPlaceholder')}
+                className="w-full bg-transparent px-[16px] py-3 text-[15px] leading-[22px] text-slate-900 font-normal focus:outline-none resize-none chat-input-placeholder overflow-y-auto"
+                style={{ minHeight: '72px', maxHeight: '144px', height: '72px' }}
+                onInput={(e) => {
+                  const el = e.currentTarget;
+                  el.style.height = '72px';
+                  el.style.height = Math.min(el.scrollHeight, 144) + 'px';
+                  if (el.scrollHeight <= 44) { setInputExpanded(false); }
+                }}
+              />
+            )}
+            <div className="flex items-center justify-between px-3 pb-3 pt-3">
+              <div className="flex items-center gap-1 relative flex-1 min-w-0">
+                <button onClick={() => fileInputRef.current?.click()} className="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] text-slate-500 hover:bg-[#FAFAFA] transition-colors shrink-0">
                   <Plus className="w-5 h-5" strokeWidth={1.5} />
                 </button>
+                {!inputExpanded && (
+                  <input
+                    type="text"
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); }
+                    }}
+                    onInput={(e) => {
+                      const el = e.currentTarget;
+                      if (el.scrollWidth > el.clientWidth) {
+                        setInputExpanded(true);
+                      }
+                    }}
+                    placeholder={t('ai.inputPlaceholder')}
+                    className="flex-1 min-w-0 bg-transparent text-[15px] leading-[22px] text-slate-900 font-normal focus:outline-none chat-input-placeholder"
+                  />
+                )}
               </div>
               <button
                 onClick={handleSendMessage}
                 disabled={!inputValue.trim() || isTyping}
-                className="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] bg-[#4f5eff] hover:bg-[#3d4dd9] disabled:bg-slate-200 disabled:cursor-not-allowed text-white transition-all"
+                className="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] bg-[#4f5eff] hover:bg-[#3d4dd9] disabled:bg-slate-200 disabled:cursor-not-allowed text-white transition-all shrink-0"
               >
                 <ArrowUp className="w-5 h-5" />
               </button>
