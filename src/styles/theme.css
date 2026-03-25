@@ -355,3 +355,9 @@
     background: rgba(255, 255, 255, 0.25);
   }
 }
+
+@layer base {
+  .brand-gradient {
+    font-family: 'Space Grotesk', sans-serif !important;
+  }
+}
