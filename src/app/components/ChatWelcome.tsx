@@ -53,10 +53,8 @@ export default function ChatWelcome({ variant }: ChatWelcomeProps) {
 
       {/* Title */}
       <h2
-        className={`font-semibold ${isFirst ? 'animate-reveal-up' : ''}`}
+        className={`font-semibold text-[20px] leading-[30px] md:text-[28px] md:leading-[42px] ${isFirst ? 'animate-reveal-up' : ''}`}
         style={{
-          fontSize: '28px',
-          lineHeight: '42px',
           marginBottom: '8px',
           ...(isFirst && { animationDelay: '800ms', animationDuration: '500ms' }),
         }}
@@ -79,10 +77,8 @@ export default function ChatWelcome({ variant }: ChatWelcomeProps) {
 
       {/* Subtitle */}
       <p
-        className={`text-[#73798B] ${isFirst ? 'animate-reveal-up' : ''}`}
+        className={`text-[#73798B] text-[14px] leading-[21px] md:text-[16px] md:leading-[24px] ${isFirst ? 'animate-reveal-up' : ''}`}
         style={{
-          fontSize: '16px',
-          lineHeight: '24px',
           maxWidth: '600px',
           ...(isFirst && { animationDelay: '1100ms', animationDuration: '500ms' }),
         }}

@@ -1082,7 +1082,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
 
         {/* Empty state — only when no messages AND onboarding not active */}
         {displayMessages.length === 0 && !combinedTyping && !onboarding.isOnboardingActive && (
-          <div className="flex-1 flex items-center justify-center px-6" style={{ marginTop: '-6vh' }}>
+          <div className="flex-1 flex items-center justify-center px-4 md:px-6" style={{ marginTop: '-6vh' }}>
             <div className="w-full max-w-[768px]">
 
               {/* Scenario C: No wallet, no welcome — CTA suggestion + other suggestions */}
@@ -1156,12 +1156,12 @@ Would you like me to help adjust your current Agent's limit settings?`;
 
                 {/* Suggestions */}
                 {!welcomeType && (
-                  <div className="flex flex-wrap gap-[10px] mt-[32px] justify-center">
+                  <div className="flex flex-wrap gap-[8px] md:gap-[10px] mt-[24px] md:mt-[32px] justify-center">
                     {/* CTA suggestion for no-wallet users */}
                     {!hasWallets && (
                       <button
                         onClick={handleStartOnboarding}
-                        className="w-fit px-[16px] py-[10px] rounded-[12px] bg-gradient-to-r from-[#4F5EFF] to-[#6C7AFF] hover:from-[#3d4dd9] hover:to-[#5b6aef] text-white text-[14px] leading-[20px] font-medium transition-all shadow-[0px_2px_8px_rgba(79,94,255,0.3)] hover:shadow-[0px_4px_16px_rgba(79,94,255,0.4)] flex items-center gap-1.5"
+                        className="w-fit px-[12px] py-[8px] md:px-[16px] md:py-[10px] rounded-[12px] bg-gradient-to-r from-[#4F5EFF] to-[#6C7AFF] hover:from-[#3d4dd9] hover:to-[#5b6aef] text-white text-[13px] md:text-[14px] leading-[20px] font-medium transition-all shadow-[0px_2px_8px_rgba(79,94,255,0.3)] hover:shadow-[0px_4px_16px_rgba(79,94,255,0.4)] flex items-center gap-1.5"
                       >
                         <Sparkles className="w-4 h-4" />
                         {t('onboarding.suggestion.createWallet')}
@@ -1179,7 +1179,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                       <button
                         key={label}
                         onClick={() => handleSendDirect(label)}
-                        className="w-fit px-[16px] py-[10px] rounded-[12px] border border-[#EDEEF3] bg-white hover:bg-[#F8F9FC] transition-all text-[14px] leading-[20px] font-normal text-[#1C1C1C] text-left"
+                        className="w-fit px-[12px] py-[8px] md:px-[16px] md:py-[10px] rounded-[12px] border border-[#EDEEF3] bg-white hover:bg-[#F8F9FC] transition-all text-[13px] md:text-[14px] leading-[20px] font-normal text-[#1C1C1C] text-left"
                       >
                         {label}
                       </button>
