@@ -952,7 +952,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                         {(language === 'zh' ? [
                           'Cobo Pact 能做什么？',
                           '如何给钱包充值？',
-                          '如何限制 Agent 每日花费',
+                          '如何设置 Agent 的每日花费上限？',
                         ] : [
                           'Introduce Cobo Pact capabilities',
                           'How to make the first deposit',
@@ -1173,7 +1173,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                     {(language === 'zh' ? [
                       'Cobo Pact 能做什么？',
                       '如何给钱包充值？',
-                      '如何限制 Agent 每日花费',
+                      '如何设置 Agent 的每日花费上限？',
                     ] : [
                       'Introduce Cobo Pact capabilities',
                       'How to make the first deposit',
