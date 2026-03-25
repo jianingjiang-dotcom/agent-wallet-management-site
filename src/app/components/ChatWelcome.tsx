@@ -10,7 +10,7 @@ export default function ChatWelcome({ variant }: ChatWelcomeProps) {
   const isFirst = variant === 'first-wallet';
 
   return (
-    <div className="flex flex-col items-center text-center mb-8" style={{ paddingTop: '8px' }}>
+    <div className="flex flex-col items-center text-center mb-8">
       <style>{`
         @keyframes gradient-shift {
           0%, 100% { background-position: 0% 50%; }
