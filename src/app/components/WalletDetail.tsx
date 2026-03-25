@@ -254,7 +254,7 @@ export default function WalletDetail({
                   key={idx}
                   className="flex items-center gap-3 px-3 py-2.5 rounded-[8px] bg-[#fafafa] border border-[rgba(10,10,10,0.06)] group/addr"
                 >
-                  <span className="font-['Inter',sans-serif] font-medium text-[11px] text-[#4f5eff] bg-[rgba(79,94,255,0.08)] px-2 py-0.5 rounded-[4px] uppercase tracking-wider shrink-0 min-w-[44px] text-center">
+                  <span className="font-['Inter',sans-serif] font-medium text-[11px] text-[#4f5eff] bg-[rgba(79,94,255,0.08)] px-2 py-0.5 rounded-[6px] uppercase tracking-wider shrink-0 min-w-[44px] text-center">
                     {addr.chain}
                   </span>
                   <code className="font-['JetBrains_Mono','SF_Mono','Consolas',monospace] text-[12px] text-[#0a0a0a] break-all flex-1">
@@ -262,7 +262,7 @@ export default function WalletDetail({
                   </code>
                   <button
                     onClick={() => handleCopyAddress(addr.address)}
-                    className={`shrink-0 p-1 rounded-[4px] transition-colors ${
+                    className={`shrink-0 p-1 rounded-[6px] transition-colors ${
                       copiedAddress === addr.address
                         ? 'text-[#22c55e]'
                         : 'text-[#b0b0b0] hover:text-[#4f5eff] opacity-0 group-hover/addr:opacity-100'
@@ -438,10 +438,10 @@ function ActivityLog({ t, walletCreatedAt }: { t: (key: string) => string; walle
                   <span className="font-['Inter',sans-serif] font-medium text-[13px] text-[#0a0a0a]">
                     {t(log.labelKey)}
                   </span>
-                  <span className={`inline-flex px-1.5 py-0.5 rounded-[4px] font-['Inter',sans-serif] font-medium text-[10px] ${actorStyle.bg} ${actorStyle.text}`}>
+                  <span className={`inline-flex px-1.5 py-0.5 rounded-[6px] font-['Inter',sans-serif] font-medium text-[10px] ${actorStyle.bg} ${actorStyle.text}`}>
                     {t(`log.actor.${log.actor}`)}
                   </span>
-                  <span className={`inline-flex px-1.5 py-0.5 rounded-[4px] font-['Inter',sans-serif] font-medium text-[10px] ${statusStyle.bg} ${statusStyle.text}`}>
+                  <span className={`inline-flex px-1.5 py-0.5 rounded-[6px] font-['Inter',sans-serif] font-medium text-[10px] ${statusStyle.bg} ${statusStyle.text}`}>
                     {t(`log.status.${log.status}`)}
                   </span>
                 </div>
