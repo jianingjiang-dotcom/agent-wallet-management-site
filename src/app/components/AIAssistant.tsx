@@ -115,15 +115,28 @@ export default function AIAssistant() {
         const allMsgs = onboardingMsgs;
         setMessages(allMsgs);
 
-        // Create session entry in sidebar
-        const sessionTitle = language === 'zh' ? '钱包创建' : 'Wallet Setup';
-        const newSessionId = 'onboarding-' + Date.now();
-        setActiveChatId(newSessionId);
-        setChatTitle(sessionTitle);
-        setChatSessions(prev => [
-          { id: newSessionId, title: sessionTitle, timestamp: new Date(), messages: allMsgs },
-          ...prev,
-        ]);
+        // Update existing session or create new one
+        const currentExists = chatSessions.some(s => s.id === activeChatId);
+        if (currentExists) {
+          // Already in a session — update its messages
+          setChatSessions(prev =>
+            prev.map(s =>
+              s.id === activeChatId
+                ? { ...s, messages: allMsgs }
+                : s
+            )
+          );
+        } else {
+          // Create session entry in sidebar
+          const sessionTitle = language === 'zh' ? '钱包创建' : 'Wallet Setup';
+          const newSessionId = 'onboarding-' + Date.now();
+          setActiveChatId(newSessionId);
+          setChatTitle(sessionTitle);
+          setChatSessions(prev => [
+            { id: newSessionId, title: sessionTitle, timestamp: new Date(), messages: allMsgs },
+            ...prev,
+          ]);
+        }
       }
     },
   };
