@@ -1169,7 +1169,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                     )}
                     <div className="flex items-center justify-between px-3 pb-3 pt-3">
                       <div className="flex items-center gap-1 relative flex-1 min-w-0">
-                        <button onClick={() => fileInputRef.current?.click()} className="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] text-slate-500 hover:bg-[#FAFAFA] transition-colors shrink-0">
+                        <button onClick={() => fileInputRef.current?.click()} className="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] text-slate-500 hover:bg-[#F8F9FC] transition-colors shrink-0">
                           <Plus className="w-5 h-5" strokeWidth={1.5} />
                         </button>
                         {!inputExpanded && (
@@ -1263,7 +1263,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
             )}
             <div className="flex items-center justify-between px-3 pb-3 pt-3">
               <div className="flex items-center gap-1 relative flex-1 min-w-0">
-                <button onClick={() => fileInputRef.current?.click()} className="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] text-slate-500 hover:bg-[#FAFAFA] transition-colors shrink-0">
+                <button onClick={() => fileInputRef.current?.click()} className="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] text-slate-500 hover:bg-[#F8F9FC] transition-colors shrink-0">
                   <Plus className="w-5 h-5" strokeWidth={1.5} />
                 </button>
                 {!inputExpanded && (
