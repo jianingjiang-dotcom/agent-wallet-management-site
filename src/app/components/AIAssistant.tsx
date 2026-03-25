@@ -1152,6 +1152,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                   <div className="bg-white border border-[#EBEBEB] rounded-xl shadow-[0px_10px_20px_0px_rgba(0,0,0,0.04)] flex flex-col">
                     {inputExpanded && (
                       <textarea
+                        autoFocus
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
                         onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
@@ -1245,6 +1246,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
           <div className="bg-white border border-[#EBEBEB] rounded-xl shadow-[0px_10px_20px_0px_rgba(0,0,0,0.04)] flex flex-col">
             {inputExpanded && (
               <textarea
+                autoFocus
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
