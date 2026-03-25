@@ -950,7 +950,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                     {message.onboardingData.step === 'success' && (
                       <div className="flex flex-wrap gap-[10px] mt-4 justify-center">
                         {(language === 'zh' ? [
-                          '介绍 Cobo Pact 的产品能力',
+                          'Cobo Pact 能做什么？',
                           '如何完成首次钱包充值',
                           '如何限制 Agent 每日花费',
                         ] : [
@@ -1171,7 +1171,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                       </button>
                     )}
                     {(language === 'zh' ? [
-                      '介绍 Cobo Pact 的产品能力',
+                      'Cobo Pact 能做什么？',
                       '如何完成首次钱包充值',
                       '如何限制 Agent 每日花费',
                     ] : [
