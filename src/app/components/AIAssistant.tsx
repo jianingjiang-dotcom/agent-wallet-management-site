@@ -939,7 +939,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                   <div className="bg-transparent text-slate-900 w-full">
                     {!isGroupedWithPrev && renderAssistantHeader()}
                     {message.content && (
-                      <div className="whitespace-pre-wrap" style={{ fontSize: '16px', lineHeight: '24px' }}>
+                      <div className="whitespace-pre-wrap" style={{ fontSize: '15px', lineHeight: '22px' }}>
                         {message.content}
                       </div>
                     )}
@@ -1037,7 +1037,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                   {message.role === 'assistant' ? (
                     <div className="bg-transparent text-slate-900 w-full">
                       {!isGroupedWithPrev && renderAssistantHeader()}
-                      <div className="whitespace-pre-wrap" style={{ fontSize: '16px', lineHeight: '24px' }}>{message.content}</div>
+                      <div className="whitespace-pre-wrap" style={{ fontSize: '15px', lineHeight: '22px' }}>{message.content}</div>
                       {message.walletListData && wallets.length > 0 && (
                         <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
                           {wallets.map((w) => {
@@ -1059,7 +1059,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                     </div>
                   ) : (
                     <div className="bg-[#F1F3FF] text-slate-900 max-w-[80%] rounded-[10px] px-4 py-3">
-                      <div className="whitespace-pre-wrap" style={{ fontSize: '16px', lineHeight: '24px' }}>{message.content}</div>
+                      <div className="whitespace-pre-wrap" style={{ fontSize: '15px', lineHeight: '22px' }}>{message.content}</div>
                     </div>
                   )}
                 </div>
