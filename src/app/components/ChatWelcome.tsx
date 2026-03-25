@@ -11,40 +11,6 @@ export default function ChatWelcome({ variant }: ChatWelcomeProps) {
 
   return (
     <div className="flex flex-col items-center text-center mb-8">
-      <style>{`
-        @keyframes gradient-shift {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-        @keyframes shimmer {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(100%); }
-        }
-        .brand-gradient {
-          background: linear-gradient(135deg, #4F5EFF 0%, #7B8AFF 40%, #4F5EFF 60%, #6C7AFF 100%);
-          background-size: 200% 200%;
-          animation: gradient-shift 4s ease-in-out infinite;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
-        .shimmer-wrap {
-          position: relative;
-          display: inline;
-          overflow: hidden;
-        }
-        .shimmer-wrap::after {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 50%;
-          height: 100%;
-          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-          animation: shimmer 3s ease-in-out infinite;
-          animation-delay: 1s;
-        }
-      `}</style>
 
       {/* Avatar */}
       <div className="mb-4">
@@ -67,7 +33,7 @@ export default function ChatWelcome({ variant }: ChatWelcomeProps) {
             <span className="text-[#0A0A0A]">
               {language === 'zh' ? 'Hi buddy，欢迎使用 ' : 'Hi buddy, welcome to '}
             </span>
-            <span style={{ color: '#1c1c1c' }}>Cobo</span><span className="brand-gradient">Pact</span>
+            <span style={{ color: '#1c1c1c' }}>Cobo</span><span style={{ color: '#4F5EFF' }}>Pact</span>
           </>
         )}
       </h2>
