@@ -956,10 +956,10 @@ Would you like me to help adjust your current Agent's limit settings?`;
               {/* Onboarding messages */}
               {message.role === 'onboarding' && message.onboardingData ? (
                 <div className="flex items-start justify-start">
-                  <div className="bg-transparent text-slate-900 w-full">
+                  <div className="bg-transparent text-slate-900 w-full min-w-0 overflow-hidden">
                     {!isGroupedWithPrev && renderAssistantHeader()}
                     {message.content && (
-                      <div className="whitespace-pre-wrap" style={{ fontSize: '15px', lineHeight: '22px' }}>
+                      <div className="whitespace-pre-wrap break-words" style={{ fontSize: '15px', lineHeight: '22px' }}>
                         {message.content}
                       </div>
                     )}
@@ -1055,9 +1055,9 @@ Would you like me to help adjust your current Agent's limit settings?`;
               ) : (
                 <div className={`flex items-start ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                   {message.role === 'assistant' ? (
-                    <div className="bg-transparent text-slate-900 w-full">
+                    <div className="bg-transparent text-slate-900 w-full min-w-0 overflow-hidden">
                       {!isGroupedWithPrev && renderAssistantHeader()}
-                      <div className="whitespace-pre-wrap" style={{ fontSize: '15px', lineHeight: '22px' }}>{message.content}</div>
+                      <div className="whitespace-pre-wrap break-words" style={{ fontSize: '15px', lineHeight: '22px' }}>{message.content}</div>
                       {message.walletListData && wallets.length > 0 && (
                         <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
                           {wallets.map((w) => {
@@ -1079,7 +1079,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                     </div>
                   ) : (
                     <div className="bg-[#F1F3FF] text-slate-900 max-w-[80%] rounded-[12px] px-4 py-3">
-                      <div className="whitespace-pre-wrap" style={{ fontSize: '15px', lineHeight: '22px' }}>{message.content}</div>
+                      <div className="whitespace-pre-wrap break-words" style={{ fontSize: '15px', lineHeight: '22px' }}>{message.content}</div>
                     </div>
                   )}
                 </div>
