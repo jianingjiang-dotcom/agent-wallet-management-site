@@ -103,13 +103,10 @@ export default function AIAssistant() {
           policy: result.policy,
         });
 
-        // Convert onboarding messages — mark success card as completed
+        // Convert onboarding messages
         const onboardingMsgs: Message[] = onboarding.onboardingMessages.map(msg => ({
           ...msg,
           role: msg.onboardingData ? 'onboarding' as const : msg.role as Message['role'],
-          onboardingData: msg.onboardingData?.step === 'success'
-            ? { ...msg.onboardingData, status: 'completed' as const }
-            : msg.onboardingData,
         }));
 
         const allMsgs = onboardingMsgs;
@@ -943,8 +940,8 @@ Would you like me to help adjust your current Agent's limit settings?`;
                       data={message.onboardingData}
                       callbacks={onboardingCallbacks}
                     />
-                    {/* Post-success suggestions */}
-                    {message.onboardingData.step === 'success' && (
+                    {/* Post-success suggestions — show after setup-command card when pairing is done */}
+                    {message.onboardingData.step === 'setup-command' && message.onboardingData.payload?.pairingPhase === 'done' && (
                       <div className="flex flex-wrap gap-[10px] mt-4 justify-center">
                         {(language === 'zh' ? [
                           '介绍 Cobo Pact 的产品能力',

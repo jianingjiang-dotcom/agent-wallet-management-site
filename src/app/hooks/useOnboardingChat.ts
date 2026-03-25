@@ -260,54 +260,39 @@ export function useOnboardingChat(_isFirstWallet?: boolean) {
     timersRef.current.push(t1);
   }, [t, language, addUserMessage, showTypingThenMessage, proceedToSetupCommand]);
 
-  // ─── Handle Command Copy ───
-  const handleCommandCopy = useCallback(() => {
-    // Mark as copied
+  // Helper to update setup-command message payload
+  const updateSetupPayload = useCallback((update: Record<string, any>) => {
     setMessages(prev => prev.map(msg => {
       if (msg.onboardingData?.step === 'setup-command') {
-        return { ...msg, onboardingData: { ...msg.onboardingData, status: 'completed' as const, payload: { ...msg.onboardingData.payload, copied: true } } };
+        return { ...msg, onboardingData: { ...msg.onboardingData, payload: { ...msg.onboardingData.payload, ...update } } };
       }
       return msg;
     }));
+  }, []);
 
-    // Directly start pairing
+  // ─── Handle Command Copy ───
+  const handleCommandCopy = useCallback(() => {
+    // Mark as copied
+    updateSetupPayload({ copied: true });
+
+    // Start pairing overlay on the setup-command card
     const tid = setTimeout(() => {
-      const pairingMsg: OnboardingMessage = {
-        id: addId(),
-        role: 'onboarding',
-        content: '',
-        timestamp: new Date(),
-        onboardingData: {
-          step: 'pairing-status',
-          status: 'active',
-          payload: { phase: 'waiting' },
-        },
-      };
-      addMessage(pairingMsg);
-      setCurrentStep('pairing-status');
+      updateSetupPayload({ pairingPhase: 'waiting' });
       setWaitingPhase('waiting');
 
-      // Simulate pairing phases
+      // Phase: connected (agent done)
       const t1 = setTimeout(() => {
         setWaitingPhase('connected');
-        setMessages(prev => prev.map(msg => {
-          if (msg.onboardingData?.step === 'pairing-status') {
-            return { ...msg, onboardingData: { ...msg.onboardingData, payload: { phase: 'connected' } } };
-          }
-          return msg;
-        }));
+        updateSetupPayload({ pairingPhase: 'connected' });
       }, 1200);
 
+      // Phase: configuring (creating wallet)
       const t2 = setTimeout(() => {
         setWaitingPhase('configuring');
-        setMessages(prev => prev.map(msg => {
-          if (msg.onboardingData?.step === 'pairing-status') {
-            return { ...msg, onboardingData: { ...msg.onboardingData, payload: { phase: 'configuring' } } };
-          }
-          return msg;
-        }));
+        updateSetupPayload({ pairingPhase: 'configuring' });
       }, 2200);
 
+      // Phase: done
       const t3 = setTimeout(() => {
         setWaitingPhase('success');
         const wId = generateShortId();
@@ -315,31 +300,20 @@ export function useOnboardingChat(_isFirstWallet?: boolean) {
         setWalletId(wId);
         setAgentId(aId);
 
-        setMessages(prev => prev.map(msg => {
-          if (msg.onboardingData?.step === 'pairing-status') {
-            return { ...msg, onboardingData: { ...msg.onboardingData, status: 'completed' as const, payload: { phase: 'success' } } };
-          }
-          return msg;
-        }));
+        updateSetupPayload({ pairingPhase: 'done' });
+        setCurrentStep('success');
 
-        // AI shows success card
+        // Add a text message for the success
         const successMsg: OnboardingMessage = {
           id: addId(),
-          role: 'onboarding',
+          role: 'assistant',
           content: t('onboarding.chat.walletDone'),
           timestamp: new Date(),
-          onboardingData: {
-            step: 'success',
-            status: 'active',
-            payload: { walletId: wId, agentId: aId },
-          },
         };
-
         setIsTyping(true);
         const t4 = setTimeout(() => {
           setIsTyping(false);
           addMessage(successMsg);
-          setCurrentStep('success');
         }, 500);
         timersRef.current.push(t4);
       }, 3200);
@@ -347,7 +321,7 @@ export function useOnboardingChat(_isFirstWallet?: boolean) {
       timersRef.current.push(t1, t2, t3);
     }, 2000);
     timersRef.current.push(tid);
-  }, [t, addMessage]);
+  }, [t, addMessage, updateSetupPayload]);
 
   // ─── Handle Onboarding Complete ───
   const handleComplete = useCallback(() => {
