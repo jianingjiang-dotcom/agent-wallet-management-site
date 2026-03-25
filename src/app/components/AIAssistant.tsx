@@ -773,7 +773,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
 
   // Render a single message (shared between regular and onboarding messages)
   const renderAssistantHeader = () => (
-    <div style={{ fontSize: '16px', lineHeight: '24px', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+    <div style={{ fontSize: '16px', lineHeight: '24px', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '10px' }}>
       <svg width="18" height="18" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
         <path d="M13.0909 5.81818L12.1818 3.81818L10.1818 2.90909L12.1818 2L13.0909 0L14 2L16 2.90909L14 3.81818L13.0909 5.81818ZM13.0909 16L12.1818 14L10.1818 13.0909L12.1818 12.1818L13.0909 10.1818L14 12.1818L16 13.0909L14 14L13.0909 16ZM5.81818 13.8182L4 9.81818L0 8L4 6.18182L5.81818 2.18182L7.63636 6.18182L11.6364 8L7.63636 9.81818L5.81818 13.8182Z" fill="#5564FF"/>
       </svg>
