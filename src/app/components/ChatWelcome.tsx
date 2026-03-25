@@ -55,7 +55,6 @@ export default function ChatWelcome({ variant }: ChatWelcomeProps) {
       <h2
         className={`font-semibold text-[20px] leading-[30px] md:text-[28px] md:leading-[42px] ${isFirst ? 'animate-reveal-up' : ''}`}
         style={{
-          marginBottom: '8px',
           ...(isFirst && { animationDelay: '800ms', animationDuration: '500ms' }),
         }}
       >
