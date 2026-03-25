@@ -315,10 +315,12 @@ export default function DashboardLayout() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0 min-h-0 bg-white relative">
 
-        {/* Logo when sidebar collapsed - desktop only */}
-        <div className={`hidden md:block absolute top-[23px] left-[24px] z-10 transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-          <LogoText />
-        </div>
+        {/* Logo bar when sidebar collapsed on screens < 1184px */}
+        {sidebarCollapsed && (
+          <div className="logo-bar-collapsed hidden md:flex items-center h-[64px] pl-[24px] bg-white border-b border-[#EDEEF3] shrink-0">
+            <LogoText />
+          </div>
+        )}
 
         {/* Mobile Header */}
         <div className="md:hidden bg-white border-b border-[rgba(10,10,10,0.08)] px-4 py-3 flex items-center justify-between sticky top-0 z-20 shadow-sm">

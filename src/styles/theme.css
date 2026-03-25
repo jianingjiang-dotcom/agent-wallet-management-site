@@ -361,3 +361,9 @@
     font-family: 'Space Grotesk', sans-serif !important;
   }
 }
+
+@media (min-width: 1184px) {
+  .logo-bar-collapsed {
+    display: none !important;
+  }
+}
