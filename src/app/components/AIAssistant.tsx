@@ -1159,7 +1159,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
 
                 {/* Suggestions */}
                 {!welcomeType && (
-                  <div className="flex flex-wrap gap-[8px] md:gap-[10px] mt-[24px] md:mt-[32px] justify-center">
+                  <div className="flex flex-wrap gap-[12px] mt-[24px] md:mt-[32px] justify-center">
                     {/* CTA suggestion for no-wallet users */}
                     {!hasWallets && (
                       <button
