@@ -367,3 +367,13 @@
     display: none !important;
   }
 }
+
+.logo-bar-wide {
+  display: none !important;
+}
+
+@media (min-width: 1184px) {
+  .logo-bar-wide {
+    display: block !important;
+  }
+}

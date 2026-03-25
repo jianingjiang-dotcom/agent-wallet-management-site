@@ -315,11 +315,16 @@ export default function DashboardLayout() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0 min-h-0 bg-white relative">
 
-        {/* Logo bar when sidebar collapsed on screens < 1184px */}
+        {/* Logo bar when sidebar collapsed: fixed 64px bar on < 1184px, absolute on >= 1184px */}
         {sidebarCollapsed && (
-          <div className="logo-bar-collapsed hidden md:flex items-center h-[64px] pl-[24px] bg-white border-b border-[#EDEEF3] shrink-0">
-            <LogoText />
-          </div>
+          <>
+            <div className="logo-bar-collapsed hidden md:flex items-center h-[64px] pl-[24px] bg-white border-b border-[#EDEEF3] shrink-0">
+              <LogoText />
+            </div>
+            <div className="logo-bar-wide hidden md:block absolute top-[23px] left-[24px] z-10">
+              <LogoText />
+            </div>
+          </>
         )}
 
         {/* Mobile Header */}
