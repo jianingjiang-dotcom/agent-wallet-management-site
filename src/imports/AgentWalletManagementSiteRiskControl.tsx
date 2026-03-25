@@ -752,7 +752,7 @@ function LanguageIconContainer() {
 function Button4() {
   return (
     <div className="absolute bg-white h-[40px] left-[983px] rounded-[6px] top-[30px] w-[97px]" data-name="Button">
-      <div className="content-stretch flex gap-[8px] items-center overflow-clip px-[16px] py-[8px] relative rounded-[inherit] size-full">
+      <div className="content-stretch flex gap-[8px] items-center overflow-clip px-[16px] py-[8px] relative rounded-[6px] size-full">
         <LanguageIconContainer />
         <p className="font-['Inter:Medium',sans-serif] font-medium leading-[1.5] not-italic relative shrink-0 text-[#1c1c1c] text-[14px] text-right whitespace-nowrap">English</p>
       </div>
