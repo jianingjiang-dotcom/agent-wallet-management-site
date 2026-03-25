@@ -1054,7 +1054,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                       )}
                     </div>
                   ) : (
-                    <div className="bg-[#EBEBEB] text-slate-900 max-w-[80%] rounded-[10px] px-4 py-3">
+                    <div className="bg-[#E5E7FF] text-slate-900 max-w-[80%] rounded-[10px] px-4 py-3">
                       <div className="whitespace-pre-wrap" style={{ fontSize: '16px', lineHeight: '24px' }}>{message.content}</div>
                     </div>
                   )}
