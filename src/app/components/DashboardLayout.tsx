@@ -133,22 +133,22 @@ export default function DashboardLayout() {
       {/* Sidebar */}
       <aside
         className={`
-          fixed lg:sticky top-0 left-0 h-screen bg-[#F8F9FC] flex flex-col z-40 border-r border-[#EDEEF3]
+          fixed md:sticky top-0 left-0 h-screen bg-[#F8F9FC] flex flex-col z-40 border-r border-[#EDEEF3]
           transition-all duration-300 ease-in-out overflow-hidden
           ${sidebarCollapsed ? 'w-[52px] bg-white' : 'w-[260px]'}
-          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-          shadow-xl lg:shadow-none
+          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+          shadow-xl md:shadow-none
         `}
       >
         <div className="w-[260px] shrink-0 flex flex-col h-full relative z-[1]">
         {/* Logo - desktop */}
-        <div className="hidden lg:flex items-center h-[64px] pl-4 pr-3 pointer-events-none">
+        <div className="hidden md:flex items-center h-[64px] pl-4 pr-3 pointer-events-none">
           <div className={`shrink-0 transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
             <LogoText />
           </div>
         </div>
         {/* Mobile close button */}
-        <div className="pt-[24px] pb-[16px] flex items-center justify-end px-[8px] lg:hidden">
+        <div className="pt-[24px] pb-[16px] flex items-center justify-end px-[8px] md:hidden">
           <button
             onClick={() => setSidebarOpen(false)}
             className="p-2 -mr-2 rounded-lg hover:bg-slate-100 transition-colors"
@@ -267,7 +267,7 @@ export default function DashboardLayout() {
           onClick={() => { setToggleTooltip(false); setSidebarCollapsed(!sidebarCollapsed); }}
           onMouseEnter={() => setToggleTooltip(true)}
           onMouseLeave={() => setToggleTooltip(false)}
-          className="hidden lg:flex w-[36px] h-[36px] items-center justify-center rounded-[8px] hover:bg-[#EDEEF3] transition-colors text-[#73798B] absolute top-[14px] z-10"
+          className="hidden md:flex w-[36px] h-[36px] items-center justify-center rounded-[8px] hover:bg-[#EDEEF3] transition-colors text-[#73798B] absolute top-[14px] z-10"
           style={{ left: sidebarCollapsed ? 'calc(50% - 18px)' : 'calc(100% - 48px)', transition: 'left 0.3s ease-in-out' }}
         >
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.8333 2.5H4.16667C3.24619 2.5 2.5 3.24619 2.5 4.16667V15.8333C2.5 16.7538 3.24619 17.5 4.16667 17.5H15.8333C16.7538 17.5 17.5 16.7538 17.5 15.8333V4.16667C17.5 3.24619 16.7538 2.5 15.8333 2.5Z" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M7.5 2.5V17.5" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
@@ -307,7 +307,7 @@ export default function DashboardLayout() {
       {/* Overlay for mobile sidebar */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/40 z-30 lg:hidden backdrop-blur-sm"
+          className="fixed inset-0 bg-black/40 z-30 md:hidden backdrop-blur-sm"
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -316,12 +316,12 @@ export default function DashboardLayout() {
       <div className="flex-1 flex flex-col min-w-0 min-h-0 bg-white relative">
 
         {/* Logo when sidebar collapsed - desktop only */}
-        <div className={`hidden lg:block absolute top-[23px] left-[24px] z-10 transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+        <div className={`hidden md:block absolute top-[23px] left-[24px] z-10 transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
           <LogoText />
         </div>
 
         {/* Mobile Header */}
-        <div className="lg:hidden bg-white border-b border-[rgba(10,10,10,0.08)] px-4 py-3 flex items-center justify-between sticky top-0 z-20 shadow-sm">
+        <div className="md:hidden bg-white border-b border-[rgba(10,10,10,0.08)] px-4 py-3 flex items-center justify-between sticky top-0 z-20 shadow-sm">
           <button
             onClick={() => setSidebarOpen(true)}
             className="text-[#0A0A0A] p-2 -ml-2 hover:bg-slate-100 rounded-lg transition-colors"
