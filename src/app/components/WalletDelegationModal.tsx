@@ -154,7 +154,7 @@ export default function WalletDelegationModal({
               /* Configure permissions & policy */
               <div className="space-y-4">
                 {selectedAgent && (
-                  <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[10px] px-4 py-3 flex items-center gap-3">
+                  <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[8px] px-4 py-3 flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-[rgba(79,94,255,0.1)] flex items-center justify-center">
                       <UserPlus className="w-4 h-4 text-[#4f5eff]" />
                     </div>
@@ -166,7 +166,7 @@ export default function WalletDelegationModal({
                 )}
 
                 {/* Permissions */}
-                <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[10px] p-4">
+                <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[8px] p-4">
                   <h4 className="font-['Inter',sans-serif] font-medium text-[13px] text-[#4F4F4F] mb-3">
                     {t("walletDelegation.configurePermissions")}
                   </h4>
@@ -193,7 +193,7 @@ export default function WalletDelegationModal({
                 </div>
 
                 {/* Policy */}
-                <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[10px] p-4">
+                <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[8px] p-4">
                   <h4 className="font-['Inter',sans-serif] font-medium text-[13px] text-[#4F4F4F] mb-3">
                     {t("walletDelegation.configurePolicy")}
                   </h4>
@@ -261,7 +261,7 @@ export default function WalletDelegationModal({
                         <button
                           key={agent.id}
                           onClick={() => handleSelectAgent(agent.id)}
-                          className="w-full bg-white border border-[rgba(10,10,10,0.08)] rounded-[10px] px-4 py-3 flex items-center gap-3 hover:border-[#4f5eff] hover:bg-[rgba(79,94,255,0.02)] transition-colors text-left"
+                          className="w-full bg-white border border-[rgba(10,10,10,0.08)] rounded-[8px] px-4 py-3 flex items-center gap-3 hover:border-[#4f5eff] hover:bg-[rgba(79,94,255,0.02)] transition-colors text-left"
                         >
                           <div className="w-8 h-8 rounded-full bg-[rgba(79,94,255,0.1)] flex items-center justify-center flex-shrink-0">
                             <UserPlus className="w-4 h-4 text-[#4f5eff]" />
@@ -276,7 +276,7 @@ export default function WalletDelegationModal({
                     </div>
                   </>
                 ) : (
-                  <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[10px] p-4 text-center">
+                  <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[8px] p-4 text-center">
                     <p className="font-['Inter',sans-serif] font-medium text-[13px] text-[#7c7c7c] mb-1">
                       {t("walletDelegation.noAgents")}
                     </p>
@@ -290,7 +290,7 @@ export default function WalletDelegationModal({
                 {agents.filter(a => existingAgentIds.includes(a.id)).map((agent) => (
                   <div
                     key={agent.id}
-                    className="w-full bg-[#f5f5f5] border border-[rgba(10,10,10,0.06)] rounded-[10px] px-4 py-3 flex items-center gap-3 opacity-60"
+                    className="w-full bg-[#f5f5f5] border border-[rgba(10,10,10,0.06)] rounded-[8px] px-4 py-3 flex items-center gap-3 opacity-60"
                   >
                     <div className="w-8 h-8 rounded-full bg-[rgba(10,10,10,0.05)] flex items-center justify-center flex-shrink-0">
                       <UserPlus className="w-4 h-4 text-[#b0b0b0]" />
@@ -309,7 +309,7 @@ export default function WalletDelegationModal({
                 <div className="border-t border-[rgba(10,10,10,0.08)] pt-3">
                   <button
                     onClick={() => setShowPairingModal(true)}
-                    className="w-full border border-dashed border-[rgba(79,94,255,0.3)] rounded-[10px] px-4 py-3 flex items-center gap-3 hover:bg-[rgba(79,94,255,0.02)] transition-colors text-left"
+                    className="w-full border border-dashed border-[rgba(79,94,255,0.3)] rounded-[8px] px-4 py-3 flex items-center gap-3 hover:bg-[rgba(79,94,255,0.02)] transition-colors text-left"
                   >
                     <div className="w-8 h-8 rounded-full bg-[rgba(79,94,255,0.08)] flex items-center justify-center flex-shrink-0">
                       <UserPlus className="w-4 h-4 text-[#4f5eff]" />

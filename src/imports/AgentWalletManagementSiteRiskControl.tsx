@@ -198,8 +198,8 @@ function User() {
 
 function Container() {
   return (
-    <div className="bg-[rgba(79,94,255,0.1)] content-stretch flex items-center justify-center p-[1.25px] relative rounded-[16777200px] shrink-0 size-[40px]" data-name="Container">
-      <div aria-hidden="true" className="absolute border-[1.25px] border-[rgba(79,94,255,0.2)] border-solid inset-0 pointer-events-none rounded-[16777200px]" />
+    <div className="bg-[rgba(79,94,255,0.1)] content-stretch flex items-center justify-center p-[1.25px] relative rounded-full shrink-0 size-[40px]" data-name="Container">
+      <div aria-hidden="true" className="absolute border-[1.25px] border-[rgba(79,94,255,0.2)] border-solid inset-0 pointer-events-none rounded-full" />
       <User />
     </div>
   );
@@ -429,7 +429,7 @@ function Container7() {
 
 function Switch1() {
   return (
-    <div className="bg-white relative rounded-[9999px] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)] shrink-0 size-[12px]" data-name="Switch">
+    <div className="bg-white relative rounded-full shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)] shrink-0 size-[12px]" data-name="Switch">
       <div className="size-full" />
     </div>
   );
@@ -437,7 +437,7 @@ function Switch1() {
 
 function SwitchOn() {
   return (
-    <div className="bg-[#4f5eff] col-1 content-stretch flex h-[16px] items-center justify-end ml-0 mt-0 px-[2px] relative rounded-[9999px] row-1 w-[28px]" data-name="Switch_On">
+    <div className="bg-[#4f5eff] col-1 content-stretch flex h-[16px] items-center justify-end ml-0 mt-0 px-[2px] relative rounded-full row-1 w-[28px]" data-name="Switch_On">
       <Switch1 />
     </div>
   );
@@ -549,7 +549,7 @@ function Container9() {
 
 function Switch3() {
   return (
-    <div className="bg-white relative rounded-[9999px] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)] shrink-0 size-[12px]" data-name="Switch">
+    <div className="bg-white relative rounded-full shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)] shrink-0 size-[12px]" data-name="Switch">
       <div className="size-full" />
     </div>
   );
@@ -557,7 +557,7 @@ function Switch3() {
 
 function SwitchOn1() {
   return (
-    <div className="bg-[#4f5eff] col-1 content-stretch flex h-[16px] items-center justify-end ml-0 mt-0 px-[2px] relative rounded-[9999px] row-1 w-[28px]" data-name="Switch_On">
+    <div className="bg-[#4f5eff] col-1 content-stretch flex h-[16px] items-center justify-end ml-0 mt-0 px-[2px] relative rounded-full row-1 w-[28px]" data-name="Switch_On">
       <Switch3 />
     </div>
   );
@@ -752,7 +752,7 @@ function LanguageIconContainer() {
 function Button4() {
   return (
     <div className="absolute bg-white h-[40px] left-[983px] rounded-[6px] top-[30px] w-[97px]" data-name="Button">
-      <div className="content-stretch flex gap-[8px] items-center overflow-clip px-[16px] py-[8px] relative rounded-[inherit] size-full">
+      <div className="content-stretch flex gap-[8px] items-center overflow-clip px-[16px] py-[8px] relative rounded-[6px] size-full">
         <LanguageIconContainer />
         <p className="font-['Inter:Medium',sans-serif] font-medium leading-[1.5] not-italic relative shrink-0 text-[#1c1c1c] text-[14px] text-right whitespace-nowrap">English</p>
       </div>

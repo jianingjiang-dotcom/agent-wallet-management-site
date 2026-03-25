@@ -16,7 +16,7 @@ export default function Gasless() {
       </div>
 
       <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[16px] flex flex-col items-center justify-center py-20 px-8">
-        <div className="w-[72px] h-[72px] rounded-[20px] bg-[rgba(79,94,255,0.08)] border-2 border-[rgba(79,94,255,0.12)] flex items-center justify-center mb-6">
+        <div className="w-[72px] h-[72px] rounded-[16px] bg-[rgba(79,94,255,0.08)] border-2 border-[rgba(79,94,255,0.12)] flex items-center justify-center mb-6">
           <Fuel className="w-9 h-9 text-[#4f5eff]" />
         </div>
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[rgba(79,94,255,0.08)] mb-4">
