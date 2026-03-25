@@ -137,7 +137,7 @@ export default function InviteCodePage() {
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
                 placeholder={t('invitePage.placeholder')}
-                className="w-full h-[54px] px-6 py-4 bg-white border border-[#EDEEF3] rounded-[14px] text-[16px] leading-[22px] text-center text-[#1C1C1C] placeholder:text-[#B9BCC5] placeholder:uppercase focus:placeholder:text-transparent outline-none transition-colors"
+                className="w-full h-[54px] px-6 py-4 bg-white border border-[#EDEEF3] rounded-[16px] text-[16px] leading-[22px] text-center text-[#1C1C1C] placeholder:text-[#B9BCC5] placeholder:uppercase focus:placeholder:text-transparent outline-none transition-colors"
                 maxLength={9}
               />
             </div>
@@ -146,7 +146,7 @@ export default function InviteCodePage() {
             <button
               onClick={handleSubmit}
               disabled={!code.trim() || loading}
-              className="w-full h-[54px] px-6 py-4 bg-[#4F5EFF] hover:bg-[#3d4dd9] disabled:opacity-50 disabled:cursor-not-allowed rounded-[14px] text-[16px] leading-[22px] font-medium text-white text-center transition-all duration-150 active:scale-[0.98]"
+              className="w-full h-[54px] px-6 py-4 bg-[#4F5EFF] hover:bg-[#3d4dd9] disabled:opacity-50 disabled:cursor-not-allowed rounded-[16px] text-[16px] leading-[22px] font-medium text-white text-center transition-all duration-150 active:scale-[0.98]"
             >
               {loading ? (
                 <span className="inline-flex items-center gap-2">
