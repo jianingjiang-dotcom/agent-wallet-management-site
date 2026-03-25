@@ -316,13 +316,15 @@ export default function DashboardLayout() {
       <div className="flex-1 flex flex-col min-w-0 min-h-0 bg-white relative">
 
         {/* Logo bar when sidebar collapsed: fixed 64px bar on < 1184px, absolute on >= 1184px */}
-        <div className={`logo-bar-collapsed hidden md:grid transition-[grid-template-rows,opacity,border-color] duration-300 ease-in-out border-b ${sidebarCollapsed ? 'grid-rows-[1fr] opacity-100 border-[#EDEEF3]' : 'grid-rows-[0fr] opacity-0 border-transparent'}`}>
+        <div className={`logo-bar-collapsed hidden md:grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${sidebarCollapsed ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
           <div className="overflow-hidden">
             <div className="flex items-center h-[64px] pl-[24px] bg-white">
               <LogoText />
             </div>
           </div>
         </div>
+        {/* Divider line - fixed position, fade only */}
+        <div className={`logo-bar-collapsed hidden md:block h-px bg-[#EDEEF3] transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-100' : 'opacity-0'}`} />
         <div className={`logo-bar-wide hidden md:block absolute top-[23px] left-[24px] z-10 transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
           <LogoText />
         </div>
