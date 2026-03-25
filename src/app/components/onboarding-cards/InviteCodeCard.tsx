@@ -45,7 +45,7 @@ export default function InviteCodeCard({ status, onVerify, error, verifiedCode }
             {t('onboarding.chat.inviteVerified')}
           </span>
         </div>
-        <div className="rounded-[8px] bg-[#FAFAFA] border border-[rgba(10,10,10,0.06)] px-3.5 py-2.5 flex items-center justify-between">
+        <div className="rounded-[12px] bg-[#FAFAFA] border border-[rgba(10,10,10,0.06)] px-3.5 py-2.5 flex items-center justify-between">
           <div>
             <div className="text-[11px] font-medium text-[#999] uppercase tracking-wider mb-0.5">
               {language === 'zh' ? '邀请码' : 'Invite Code'}

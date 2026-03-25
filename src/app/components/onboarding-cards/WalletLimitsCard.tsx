@@ -40,7 +40,7 @@ export default function WalletLimitsCard({ status, onConfirm, confirmedPerTx, co
             {language === 'zh' ? '风控策略已配置' : 'Risk policies configured'}
           </span>
         </div>
-        <div className="rounded-[8px] bg-[#FAFAFA] border border-[rgba(10,10,10,0.06)] px-3.5 py-2.5 space-y-2">
+        <div className="rounded-[12px] bg-[#FAFAFA] border border-[rgba(10,10,10,0.06)] px-3.5 py-2.5 space-y-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Shield className="w-3.5 h-3.5 text-[#4f5eff]" />
