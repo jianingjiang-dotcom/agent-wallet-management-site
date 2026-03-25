@@ -316,9 +316,9 @@ export default function DashboardLayout() {
       <div className="flex-1 flex flex-col min-w-0 min-h-0 bg-white relative">
 
         {/* Logo bar when sidebar collapsed: fixed 64px bar on < 1184px, absolute on >= 1184px */}
-        <div className={`logo-bar-collapsed hidden md:grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${sidebarCollapsed ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
+        <div className={`logo-bar-collapsed hidden md:grid transition-[grid-template-rows,opacity,border-color] duration-300 ease-in-out border-b ${sidebarCollapsed ? 'grid-rows-[1fr] opacity-100 border-[#EDEEF3]' : 'grid-rows-[0fr] opacity-0 border-transparent'}`}>
           <div className="overflow-hidden">
-            <div className="flex items-center h-[64px] pl-[24px] bg-white border-b border-[#EDEEF3]">
+            <div className="flex items-center h-[64px] pl-[24px] bg-white">
               <LogoText />
             </div>
           </div>
