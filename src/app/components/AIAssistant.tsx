@@ -1164,7 +1164,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                     {!hasWallets && (
                       <button
                         onClick={handleStartOnboarding}
-                        className="w-fit px-[12px] py-[8px] md:px-[16px] md:py-[10px] rounded-[12px] bg-gradient-to-r from-[#4F5EFF] to-[#6C7AFF] hover:from-[#3d4dd9] hover:to-[#5b6aef] text-white text-[13px] md:text-[14px] leading-[20px] font-medium transition-all shadow-none hover:shadow-none flex items-center gap-1.5"
+                        className="w-fit px-[12px] py-[8px] md:px-[16px] md:py-[10px] rounded-[12px] bg-gradient-to-r from-[#4F5EFF] to-[#6C7AFF] hover:from-[#3d4dd9] hover:to-[#5b6aef] text-white text-[13px] md:text-[14px] leading-[20px] font-normal transition-all shadow-none hover:shadow-none flex items-center gap-1.5"
                       >
                         <Sparkles className="w-4 h-4" />
                         {t('onboarding.suggestion.createWallet')}
