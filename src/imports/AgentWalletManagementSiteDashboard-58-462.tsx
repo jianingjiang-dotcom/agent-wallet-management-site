@@ -198,8 +198,8 @@ function User() {
 
 function Container() {
   return (
-    <div className="bg-[rgba(79,94,255,0.1)] content-stretch flex items-center justify-center p-[1.25px] relative rounded-[16777200px] shrink-0 size-[40px]" data-name="Container">
-      <div aria-hidden="true" className="absolute border-[1.25px] border-[rgba(79,94,255,0.2)] border-solid inset-0 pointer-events-none rounded-[16777200px]" />
+    <div className="bg-[rgba(79,94,255,0.1)] content-stretch flex items-center justify-center p-[1.25px] relative rounded-full shrink-0 size-[40px]" data-name="Container">
+      <div aria-hidden="true" className="absolute border-[1.25px] border-[rgba(79,94,255,0.2)] border-solid inset-0 pointer-events-none rounded-full" />
       <User />
     </div>
   );
@@ -864,7 +864,7 @@ function Frame3() {
 }
 
 function Container11() {
-  return <div className="bg-[#00c950] rounded-[16777200px] shrink-0 size-[8px]" data-name="Container" />;
+  return <div className="bg-[#00c950] rounded-full shrink-0 size-[8px]" data-name="Container" />;
 }
 
 function Container12() {
@@ -910,7 +910,7 @@ function Container9() {
 }
 
 function Container16() {
-  return <div className="bg-[#4f5eff] rounded-[16777200px] shrink-0 size-[8px]" data-name="Container" />;
+  return <div className="bg-[#4f5eff] rounded-full shrink-0 size-[8px]" data-name="Container" />;
 }
 
 function Container18() {
@@ -972,7 +972,7 @@ function Container14() {
 }
 
 function Container23() {
-  return <div className="bg-[#00c950] rounded-[16777200px] shrink-0 size-[8px]" data-name="Container" />;
+  return <div className="bg-[#00c950] rounded-full shrink-0 size-[8px]" data-name="Container" />;
 }
 
 function Container25() {
@@ -1034,7 +1034,7 @@ function Container21() {
 }
 
 function Container30() {
-  return <div className="bg-[#4f5eff] rounded-[16777200px] shrink-0 size-[8px]" data-name="Container" />;
+  return <div className="bg-[#4f5eff] rounded-full shrink-0 size-[8px]" data-name="Container" />;
 }
 
 function Container32() {
