@@ -30,7 +30,7 @@ export default function ChatWelcome({ variant }: ChatWelcomeProps) {
         }
         .shimmer-wrap {
           position: relative;
-          display: inline-block;
+          display: inline;
           overflow: hidden;
         }
         .shimmer-wrap::after {
