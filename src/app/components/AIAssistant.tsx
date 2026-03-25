@@ -1188,7 +1188,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                               }
                             }}
                             placeholder={t('ai.inputPlaceholder')}
-                            className="flex-1 min-w-0 bg-transparent pr-[12px] text-[15px] leading-[22px] text-slate-900 font-normal focus:outline-none chat-input-placeholder"
+                            className="flex-1 min-w-0 bg-transparent px-[8px] text-[15px] leading-[22px] text-slate-900 font-normal focus:outline-none chat-input-placeholder"
                           />
                         )}
                       </div>
@@ -1281,7 +1281,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                       }
                     }}
                     placeholder={t('ai.inputPlaceholder')}
-                    className="flex-1 min-w-0 bg-transparent pr-[12px] text-[15px] leading-[22px] text-slate-900 font-normal focus:outline-none chat-input-placeholder"
+                    className="flex-1 min-w-0 bg-transparent px-[8px] text-[15px] leading-[22px] text-slate-900 font-normal focus:outline-none chat-input-placeholder"
                   />
                 )}
               </div>
