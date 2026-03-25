@@ -605,6 +605,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
     setMessages([]);
     setActiveChatId('current');
     setWelcomeType(null);
+    onboarding.resetOnboarding();
     if (showWalletPage || showApprovalPage) onHideWalletPage();
   };
 

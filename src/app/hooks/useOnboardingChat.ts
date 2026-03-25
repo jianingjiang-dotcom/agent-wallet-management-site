@@ -362,6 +362,19 @@ export function useOnboardingChat(_isFirstWallet?: boolean) {
     };
   }, [walletId, agentId]);
 
+  const resetOnboarding = useCallback(() => {
+    timersRef.current.forEach(clearTimeout);
+    timersRef.current = [];
+    setIsActive(false);
+    setMessages([]);
+    setCurrentStep(null);
+    setIsTyping(false);
+    setInviteCode(null);
+    setWaitingPhase(null);
+    setWalletId(null);
+    setAgentId(null);
+  }, []);
+
   return {
     isOnboardingActive: isActive,
     onboardingMessages: messages,
@@ -372,5 +385,6 @@ export function useOnboardingChat(_isFirstWallet?: boolean) {
     handleInviteFromChat,
     handleCommandCopy,
     handleComplete,
+    resetOnboarding,
   };
 }
