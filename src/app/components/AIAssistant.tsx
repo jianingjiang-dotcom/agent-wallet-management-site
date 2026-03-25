@@ -1182,7 +1182,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                       <button
                         key={label}
                         onClick={() => handleSendDirect(label)}
-                        className="w-fit px-[12px] py-[8px] md:px-[16px] md:py-[10px] rounded-[12px] border border-[#EDEEF3] bg-white hover:bg-[#F8F9FC] transition-all text-[13px] md:text-[14px] leading-[20px] font-normal text-[#1C1C1C] text-left"
+                        className="w-fit px-[12px] py-[8px] md:px-[16px] md:py-[10px] rounded-[12px] border border-[#EDEEF3] bg-white hover:bg-[#F8F9FC] transition-all text-[13px] md:text-[14px] leading-[20px] font-normal text-[#73798B] text-left"
                       >
                         {label}
                       </button>
