@@ -1057,7 +1057,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                       )}
                     </div>
                   ) : (
-                    <div className="bg-[#F1F3FF] text-slate-900 max-w-[80%] rounded-[10px] px-4 py-3">
+                    <div className="bg-[#F1F3FF] text-slate-900 max-w-[80%] rounded-[8px] px-4 py-3">
                       <div className="whitespace-pre-wrap" style={{ fontSize: '15px', lineHeight: '22px' }}>{message.content}</div>
                     </div>
                   )}
@@ -1150,7 +1150,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                       <button
                         onClick={handleSendMessage}
                         disabled={!inputValue.trim() || isTyping}
-                        className="w-[36px] h-[36px] flex items-center justify-center rounded-[10px] bg-[#4f5eff] hover:bg-[#3d4dd9] disabled:bg-slate-200 disabled:cursor-not-allowed text-white transition-all"
+                        className="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] bg-[#4f5eff] hover:bg-[#3d4dd9] disabled:bg-slate-200 disabled:cursor-not-allowed text-white transition-all"
                       >
                         <ArrowUp className="w-5 h-5" />
                       </button>
@@ -1237,7 +1237,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
               <button
                 onClick={handleSendMessage}
                 disabled={!inputValue.trim() || isTyping}
-                className="w-[36px] h-[36px] flex items-center justify-center rounded-[10px] bg-[#4f5eff] hover:bg-[#3d4dd9] disabled:bg-slate-200 disabled:cursor-not-allowed text-white transition-all"
+                className="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] bg-[#4f5eff] hover:bg-[#3d4dd9] disabled:bg-slate-200 disabled:cursor-not-allowed text-white transition-all"
               >
                 <ArrowUp className="w-5 h-5" />
               </button>

@@ -73,7 +73,7 @@ export default function DelegationCard({
   };
 
   return (
-    <div className={`bg-white border rounded-[10px] transition-colors ${
+    <div className={`bg-white border rounded-[8px] transition-colors ${
       isFrozen ? "border-[#eab308] bg-[rgba(234,179,8,0.02)]" : "border-[rgba(10,10,10,0.08)]"
     }`}>
       {/* Header */}

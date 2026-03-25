@@ -182,7 +182,7 @@ export default function DashboardLayout() {
           {accountMenuOpen && createPortal(
             <div
               ref={accountMenuPortalRef}
-              className="fixed z-[100] bg-white rounded-[10px] border border-[rgba(10,10,10,0.08)] shadow-[0px_8px_24px_0px_rgba(0,0,0,0.12)] max-h-[70vh] overflow-y-auto"
+              className="fixed z-[100] bg-white rounded-[8px] border border-[rgba(10,10,10,0.08)] shadow-[0px_8px_24px_0px_rgba(0,0,0,0.12)] max-h-[70vh] overflow-y-auto"
               style={{
                 width: sidebarCollapsed ? '220px' : '244px',
                 left: sidebarCollapsed ? '4px' : '8px',

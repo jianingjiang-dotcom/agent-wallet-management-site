@@ -178,7 +178,7 @@ export default function WalletDetail({
                 <ChevronDown className={`w-3.5 h-3.5 transition-transform ${switcherOpen ? 'rotate-180' : ''}`} />
               </button>
               {switcherOpen && (
-                <div className="absolute top-full left-0 mt-1 w-[220px] bg-white border border-[rgba(10,10,10,0.1)] rounded-[10px] shadow-[0px_4px_16px_rgba(0,0,0,0.08)] z-20 py-1">
+                <div className="absolute top-full left-0 mt-1 w-[220px] bg-white border border-[rgba(10,10,10,0.1)] rounded-[8px] shadow-[0px_4px_16px_rgba(0,0,0,0.08)] z-20 py-1">
                   {wallets.map(w => (
                     <button
                       key={w.id}

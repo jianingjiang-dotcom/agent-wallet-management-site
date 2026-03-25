@@ -63,7 +63,7 @@ export default function PolicyPanel({ policy, disabled }: PolicyPanelProps) {
       {/* Area A: Read-only metrics */}
       <div className="grid grid-cols-3 gap-3 mb-6">
         {/* Per-tx limit */}
-        <div className="bg-[#fafafa] rounded-[10px] p-4 text-center">
+        <div className="bg-[#fafafa] rounded-[8px] p-4 text-center">
           <div className="font-['Inter',sans-serif] font-semibold text-[22px] text-[#0a0a0a] mb-1">
             ${policy.singleTxLimit}
           </div>
@@ -73,7 +73,7 @@ export default function PolicyPanel({ policy, disabled }: PolicyPanelProps) {
         </div>
 
         {/* Daily limit */}
-        <div className="bg-[#fafafa] rounded-[10px] p-4 text-center">
+        <div className="bg-[#fafafa] rounded-[8px] p-4 text-center">
           <div className="font-['Inter',sans-serif] font-semibold text-[22px] text-[#0a0a0a] mb-1">
             ${policy.dailyLimit}
           </div>
@@ -83,7 +83,7 @@ export default function PolicyPanel({ policy, disabled }: PolicyPanelProps) {
         </div>
 
         {/* Approval status */}
-        <div className="bg-[#fafafa] rounded-[10px] p-4 text-center">
+        <div className="bg-[#fafafa] rounded-[8px] p-4 text-center">
           <div className={`font-['Inter',sans-serif] font-semibold text-[16px] mb-1 ${
             policy.approvalRequired ? 'text-[#22c55e]' : 'text-[#b0b0b0]'
           }`}>
@@ -96,7 +96,7 @@ export default function PolicyPanel({ policy, disabled }: PolicyPanelProps) {
       </div>
 
       {/* Area B: Advanced config guide */}
-      <div className="rounded-[10px] bg-gradient-to-br from-[rgba(79,94,255,0.04)] to-[rgba(79,94,255,0.08)] border border-[rgba(79,94,255,0.1)] p-5">
+      <div className="rounded-[8px] bg-gradient-to-br from-[rgba(79,94,255,0.04)] to-[rgba(79,94,255,0.08)] border border-[rgba(79,94,255,0.1)] p-5">
         <h3 className="font-['Inter',sans-serif] font-semibold text-[14px] text-[#0a0a0a] mb-2">
           {t('policy.advancedTitle')}
         </h3>

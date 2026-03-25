@@ -41,7 +41,7 @@ export default function SuccessCard({ walletId, agentId, onComplete, completed }
       </div>
 
       {/* Wallet ↔ Agent */}
-      <div className="rounded-[10px] border border-[rgba(10,10,10,0.08)] bg-[#FAFAFA] overflow-hidden mb-4">
+      <div className="rounded-[8px] border border-[rgba(10,10,10,0.08)] bg-[#FAFAFA] overflow-hidden mb-4">
         <div className="flex items-center gap-3 px-3.5 py-3">
           <div className="w-8 h-8 rounded-[8px] bg-[rgba(79,94,255,0.08)] flex items-center justify-center flex-shrink-0">
             <Shield className="w-3.5 h-3.5 text-[#4f5eff]" />

@@ -71,7 +71,7 @@ export default function InviteCodeCard({ status, onVerify, error, verifiedCode }
     return (
       <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[12px] p-4 transition-all duration-300 opacity-50">
         <div className="mb-3">
-          <div className="flex items-center w-full h-[48px] bg-[#FAFAFA] border border-[rgba(10,10,10,0.06)] rounded-[10px] overflow-hidden">
+          <div className="flex items-center w-full h-[48px] bg-[#FAFAFA] border border-[rgba(10,10,10,0.06)] rounded-[8px] overflow-hidden">
             <span className="font-['JetBrains_Mono',monospace] font-medium text-[15px] text-[#999] pl-3.5 pr-0.5 flex-shrink-0 select-none">
               COBO-
             </span>
@@ -96,7 +96,7 @@ export default function InviteCodeCard({ status, onVerify, error, verifiedCode }
     <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[12px] p-4 transition-all duration-300">
       {/* Input */}
       <div className="mb-3">
-        <div className={`flex items-center w-full h-[48px] bg-white border rounded-[10px] overflow-hidden transition-colors ${
+        <div className={`flex items-center w-full h-[48px] bg-white border rounded-[8px] overflow-hidden transition-colors ${
           error
             ? 'border-[#ef4444] ring-2 ring-[rgba(239,68,68,0.15)]'
             : 'border-[rgba(79,94,255,0.3)] focus-within:ring-2 focus-within:ring-[rgba(79,94,255,0.2)] focus-within:border-[#4f5eff]'
