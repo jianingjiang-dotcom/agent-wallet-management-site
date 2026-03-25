@@ -972,7 +972,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                       <div className="flex flex-wrap gap-[10px] mt-4 justify-center">
                         {(language === 'zh' ? [
                           'Cobo Pact 能做什么？',
-                          '如何给钱包充值？',
+                          '第一次如何给钱包充值？',
                           '如何设置 Agent 的每日花费上限？',
                         ] : [
                           'Introduce Cobo Pact capabilities',
@@ -1193,7 +1193,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                     )}
                     {(language === 'zh' ? [
                       'Cobo Pact 能做什么？',
-                      '如何给钱包充值？',
+                      '第一次如何给钱包充值？',
                       '如何设置 Agent 的每日花费上限？',
                     ] : [
                       'Introduce Cobo Pact capabilities',
