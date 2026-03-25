@@ -38,7 +38,7 @@ interface ChatSession {
 export default function AIAssistant() {
   const { t, language } = useLanguage();
   const { wallets, hasWallets, addWalletWithAgent, delegations, selectWallet } = useWalletStore();
-  const { onClaimWallet, onOpenWalletModal, onShowWalletPage, onHideWalletPage, showWalletPage, onDelegateWallet, onShowApprovalPage, onHideApprovalPage, showApprovalPage, sidebarCollapsed, demoApproval } = useOutletContext<{
+  const { onClaimWallet, onOpenWalletModal, onShowWalletPage, onHideWalletPage, showWalletPage, onDelegateWallet, onShowApprovalPage, onHideApprovalPage, showApprovalPage, sidebarCollapsed, demoApproval, setHasActiveChat } = useOutletContext<{
     onSetupWallet: () => void;
     onClaimWallet: () => void;
     onOpenWalletModal: () => void;
@@ -51,6 +51,7 @@ export default function AIAssistant() {
     showApprovalPage: boolean;
     sidebarCollapsed: boolean;
     demoApproval: boolean;
+    setHasActiveChat: (v: boolean) => void;
   }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const [pendingApprovalCount, setPendingApprovalCount] = useState(hasWallets ? 2 : 0);
@@ -58,6 +59,7 @@ export default function AIAssistant() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [inputExpanded, setInputExpanded] = useState(false);
+  const shouldFocusInputRef = useRef(false);
   const [isTyping, setIsTyping] = useState(false);
   const [activeChatId, setActiveChatId] = useState<string>('current');
   const [chatTitle, setChatTitle] = useState<string>('');
@@ -80,6 +82,11 @@ export default function AIAssistant() {
 
   // Onboarding chat hook
   const onboarding = useOnboardingChat(!hasWallets);
+
+  // Notify layout whether we have an active chat (for divider visibility)
+  useEffect(() => {
+    setHasActiveChat(messages.length > 0);
+  }, [messages.length, setHasActiveChat]);
 
   // Check for startOnboarding URL param
   useEffect(() => {
@@ -636,6 +643,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
     setWelcomeType(null);
     onboarding.resetOnboarding();
     if (showWalletPage || showApprovalPage) onHideWalletPage();
+    shouldFocusInputRef.current = true;
   };
 
   // Start the onboarding flow
@@ -935,7 +943,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
 
       {/* Chat area - full height */}
       {!showWalletPage && !showApprovalPage && (
-      <div className="flex-1 flex flex-col bg-white overflow-hidden relative min-h-0">
+      <div className="flex-1 flex flex-col bg-white overflow-hidden min-h-0">
         {/* Floating approval notification banner */}
         {demoApproval && hasWallets && pendingApprovalCount > 0 && !approvalBannerDismissed && (
           <div className="absolute top-0 left-0 right-0 z-10 flex justify-center px-6 pt-[24px] pointer-events-none">
@@ -1123,7 +1131,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
 
         {/* Empty state — only when no messages AND onboarding not active */}
         {displayMessages.length === 0 && !combinedTyping && !onboarding.isOnboardingActive && (
-          <div className="flex-1 flex items-center justify-center px-4 md:px-6" style={{ marginTop: '-6vh' }}>
+          <div className="absolute inset-0 flex items-center justify-center px-4 md:px-6 z-0" style={{ marginTop: '-15vh' }}>
             <div className="w-full max-w-[768px]">
 
               {/* Scenario C: No wallet, no welcome — CTA suggestion + other suggestions */}
@@ -1149,12 +1157,15 @@ Would you like me to help adjust your current Agent's limit settings?`;
                   : {}
                 }
               >
-                  <div className="bg-white border border-[#EBEBEB] rounded-xl shadow-[0px_10px_20px_0px_rgba(0,0,0,0.04)] flex flex-col">
+                  <div className="bg-white border border-[#EBEBEB] rounded-xl shadow-[0px_10px_20px_0px_rgba(0,0,0,0.04)] focus-within:border-[#4F5EFF] focus-within:shadow-[0px_10px_20px_0px_rgba(79,94,255,0.12)] transition-all flex flex-col">
                     {inputExpanded && (
                       <textarea
                         ref={(el) => { if (el) { el.focus(); el.selectionStart = el.selectionEnd = el.value.length; } }}
                         value={inputValue}
-                        onChange={(e) => setInputValue(e.target.value)}
+                        onChange={(e) => {
+                          setInputValue(e.target.value);
+                          if (e.target.value === '') { shouldFocusInputRef.current = true; setInputExpanded(false); }
+                        }}
                         onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
                         placeholder={t('ai.inputPlaceholder')}
                         className="w-full bg-transparent px-[16px] py-3 text-[15px] leading-[22px] text-slate-900 font-normal focus:outline-none resize-none chat-input-placeholder overflow-y-auto"
@@ -1163,17 +1174,22 @@ Would you like me to help adjust your current Agent's limit settings?`;
                           const el = e.currentTarget;
                           el.style.height = '72px';
                           el.style.height = Math.min(el.scrollHeight, 144) + 'px';
-                          if (el.scrollHeight <= 44) { setInputExpanded(false); }
                         }}
                       />
                     )}
-                    <div className="flex items-center justify-between px-3 pb-3 pt-3">
-                      <div className="flex items-center gap-1 relative flex-1 min-w-0">
-                        <button onClick={() => fileInputRef.current?.click()} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] text-slate-500 hover:bg-[#F8F9FC] transition-colors shrink-0">
-                          <Plus className="w-[18px] h-[18px]" strokeWidth={1.5} />
-                        </button>
+                    <div className={`flex items-center justify-between px-3 pb-3 ${!inputExpanded ? 'pt-3' : ''}`}>
+                      <div className="flex items-center relative flex-1 min-w-0">
+                        <div className="relative group shrink-0">
+                          <button onClick={() => fileInputRef.current?.click()} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] text-[#1C1C1C] hover:bg-[#F8F9FC] transition-colors">
+                            <Plus className="w-[18px] h-[18px]" strokeWidth={2} />
+                          </button>
+                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-[8px] px-[6px] py-[4px] bg-[#1C1C1C] text-white text-[12px] leading-[16px] rounded-[6px] whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
+                            添加图片/附件
+                          </div>
+                        </div>
                         {!inputExpanded && (
                           <input
+                            ref={(el) => { if (el && shouldFocusInputRef.current) { el.focus(); shouldFocusInputRef.current = false; } }}
                             type="text"
                             value={inputValue}
                             onChange={(e) => setInputValue(e.target.value)}
@@ -1243,12 +1259,15 @@ Would you like me to help adjust your current Agent's limit settings?`;
         {(displayMessages.length > 0 || combinedTyping) && (
         <div className="bg-white px-6 pb-[8px] flex justify-center shrink-0 sticky bottom-0 z-10">
           <div className="w-full max-w-[744px]">
-          <div className="bg-white border border-[#EBEBEB] rounded-xl shadow-[0px_10px_20px_0px_rgba(0,0,0,0.04)] flex flex-col">
+          <div className="bg-white border border-[#EBEBEB] rounded-xl shadow-[0px_10px_20px_0px_rgba(0,0,0,0.04)] focus-within:border-[#4F5EFF] focus-within:shadow-[0px_10px_20px_0px_rgba(79,94,255,0.12)] transition-all flex flex-col">
             {inputExpanded && (
               <textarea
                 ref={(el) => { if (el) { el.focus(); el.selectionStart = el.selectionEnd = el.value.length; } }}
                 value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
+                onChange={(e) => {
+                  setInputValue(e.target.value);
+                  if (e.target.value === '') { shouldFocusInputRef.current = true; setInputExpanded(false); }
+                }}
                 onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
                 placeholder={t('ai.inputPlaceholder')}
                 className="w-full bg-transparent px-[16px] py-3 text-[15px] leading-[22px] text-slate-900 font-normal focus:outline-none resize-none chat-input-placeholder overflow-y-auto"
@@ -1257,17 +1276,22 @@ Would you like me to help adjust your current Agent's limit settings?`;
                   const el = e.currentTarget;
                   el.style.height = '72px';
                   el.style.height = Math.min(el.scrollHeight, 144) + 'px';
-                  if (el.scrollHeight <= 44) { setInputExpanded(false); }
                 }}
               />
             )}
-            <div className="flex items-center justify-between px-3 pb-3 pt-3">
-              <div className="flex items-center gap-1 relative flex-1 min-w-0">
-                <button onClick={() => fileInputRef.current?.click()} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] text-slate-500 hover:bg-[#F8F9FC] transition-colors shrink-0">
-                  <Plus className="w-[18px] h-[18px]" strokeWidth={1.5} />
-                </button>
+            <div className={`flex items-center justify-between px-3 pb-3 ${!inputExpanded ? 'pt-3' : ''}`}>
+              <div className="flex items-center relative flex-1 min-w-0">
+                <div className="relative group shrink-0">
+                  <button onClick={() => fileInputRef.current?.click()} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] text-[#1C1C1C] hover:bg-[#F8F9FC] transition-colors">
+                    <Plus className="w-[18px] h-[18px]" strokeWidth={2} />
+                  </button>
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-[8px] px-[6px] py-[4px] bg-[#1C1C1C] text-white text-[12px] leading-[16px] rounded-[6px] whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
+                    添加图片/附件
+                  </div>
+                </div>
                 {!inputExpanded && (
                   <input
+                    ref={(el) => { if (el && shouldFocusInputRef.current) { el.focus(); shouldFocusInputRef.current = false; } }}
                     type="text"
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}

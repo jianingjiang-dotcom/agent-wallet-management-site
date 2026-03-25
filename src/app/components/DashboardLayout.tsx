@@ -34,6 +34,7 @@ export default function DashboardLayout() {
   const [showClaimWallet, setShowClaimWallet] = useState(false);
   const [delegationTarget, setDelegationTarget] = useState<{ open: boolean; walletId: string }>({ open: false, walletId: "" });
   const [activeModal, setActiveModal] = useState<'gas' | 'billing' | 'settings' | null>(null);
+  const [hasActiveChat, setHasActiveChat] = useState(false);
   const [toggleTooltip, setToggleTooltip] = useState(false);
   const [avatarTooltip, setAvatarTooltip] = useState(false);
   const avatarBtnRef = useRef<HTMLButtonElement>(null);
@@ -322,7 +323,7 @@ export default function DashboardLayout() {
         <div className={`logo-bar-collapsed hidden md:flex items-center h-[64px] pl-[24px] bg-white absolute top-0 left-0 right-0 z-10 transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
           <LogoText />
         </div>
-        <div className={`logo-bar-collapsed hidden md:block absolute top-[64px] left-0 right-0 h-px bg-[#EDEEF3] z-10 transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-100' : 'opacity-0'}`} />
+        <div className={`logo-bar-collapsed hidden md:block absolute top-[64px] left-0 right-0 h-px bg-[#EDEEF3] z-10 transition-opacity duration-300 ease-in-out ${sidebarCollapsed && hasActiveChat ? 'opacity-100' : 'opacity-0'}`} />
         {/* Logo for wide screens (>= 1184px): absolute, no bar */}
         <div className={`logo-bar-wide hidden md:block absolute top-[23px] left-[24px] z-10 transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
           <LogoText />
@@ -366,6 +367,7 @@ export default function DashboardLayout() {
             showApprovalPage: activeModal === 'approval-page',
             sidebarCollapsed,
             demoApproval,
+            setHasActiveChat,
           }} />
         </main>
       </div>
