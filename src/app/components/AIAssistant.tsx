@@ -611,6 +611,13 @@ Would you like me to help adjust your current Agent's limit settings?`;
 
   // Start the onboarding flow
   const handleStartOnboarding = () => {
+    const title = language === 'zh' ? '创建 Cobo Agent Wallet' : 'Create Cobo Agent Wallet';
+    const newSessionId = 'onboarding-' + Date.now();
+    setActiveChatId(newSessionId);
+    setChatSessions((prev) => [
+      { id: newSessionId, title, timestamp: new Date(), messages: [] },
+      ...prev,
+    ]);
     onboarding.startOnboarding();
   };
 
