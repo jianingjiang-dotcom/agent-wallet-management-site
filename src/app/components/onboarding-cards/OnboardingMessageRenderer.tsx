@@ -1,7 +1,5 @@
 import InviteCodeCard from './InviteCodeCard';
 import SetupCommandCard from './SetupCommandCard';
-import PairingStatusCard from './PairingStatusCard';
-import SuccessCard from './SuccessCard';
 
 export type OnboardingStep =
   | 'welcome'
@@ -30,7 +28,7 @@ interface Props {
 export default function OnboardingMessageRenderer({ data, callbacks }: Props) {
   switch (data.step) {
     case 'welcome':
-      return null; // Pure text message, no card
+      return null;
 
     case 'invite-code':
       return (
@@ -51,25 +49,7 @@ export default function OnboardingMessageRenderer({ data, callbacks }: Props) {
             command={data.payload?.command || ''}
             onCopy={callbacks.onCommandCopy}
             status={data.payload?.copied ? 'copied' : 'active'}
-          />
-        </div>
-      );
-
-    case 'pairing-status':
-      return (
-        <div className="mt-3 animate-reveal-up">
-          <PairingStatusCard phase={data.payload?.phase || 'waiting'} />
-        </div>
-      );
-
-    case 'success':
-      return (
-        <div className="mt-3 animate-reveal-up">
-          <SuccessCard
-            walletId={data.payload?.walletId || ''}
-            agentId={data.payload?.agentId || ''}
-            onComplete={callbacks.onComplete}
-            completed={data.status === 'completed'}
+            pairingPhase={data.payload?.pairingPhase || null}
           />
         </div>
       );
