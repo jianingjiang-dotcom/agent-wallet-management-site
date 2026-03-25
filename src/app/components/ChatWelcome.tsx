@@ -33,7 +33,7 @@ export default function ChatWelcome({ variant }: ChatWelcomeProps) {
             <span className="text-[#0A0A0A]">
               {language === 'zh' ? 'Hi buddy，欢迎使用 ' : 'Hi buddy, welcome to '}
             </span>
-            <span style={{ color: '#1c1c1c', fontFamily: "'Space Grotesk', sans-serif" }}>Cobo</span><span style={{ color: '#4F5EFF', fontFamily: "'Space Grotesk', sans-serif" }}>Pact</span>
+            <span className="font-space-grotesk" style={{ color: '#1c1c1c' }}>Cobo</span><span className="font-space-grotesk" style={{ color: '#4F5EFF' }}>Pact</span>
           </>
         )}
       </h2>

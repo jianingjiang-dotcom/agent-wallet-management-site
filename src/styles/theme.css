@@ -360,6 +360,9 @@
   .brand-gradient {
     font-family: 'Space Grotesk', sans-serif !important;
   }
+  .font-space-grotesk {
+    font-family: 'Space Grotesk', sans-serif !important;
+  }
 }
 
 @media (min-width: 1184px) {
