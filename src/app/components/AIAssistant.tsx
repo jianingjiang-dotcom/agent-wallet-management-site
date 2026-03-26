@@ -1230,7 +1230,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                       </div>
                     </div>
                     {!welcomeType && (
-                      <div className="flex flex-wrap gap-2 mt-[28px] justify-center max-w-[600px] mx-auto">
+                      <div className="flex flex-wrap gap-2 mt-[28px] justify-center max-w-[600px] mx-auto overflow-hidden max-h-[84px]">
                         {!hasWallets && (
                           <button onClick={handleStartOnboarding} className="flex items-center gap-1.5 h-[36px] px-4 bg-[#EEF0FF] border border-transparent text-[#1F32D6] hover:bg-[#E2E5FF] text-sm font-medium rounded-full transition-colors">
                             <Sparkles className="w-3.5 h-3.5" strokeWidth={1.5} />
@@ -1238,15 +1238,15 @@ Would you like me to help adjust your current Agent's limit settings?`;
                           </button>
                         )}
                         {(language === 'zh' ? [
-                          { emoji: '\uD83D\uDCE6', label: '如何安装 Agent' },
-                          { emoji: '\uD83D\uDD12', label: '设置安全策略' },
-                          { emoji: '\uD83D\uDCB3', label: '查看转账权限' },
-                          { emoji: '\u26FD', label: 'Gas 费用优化' },
+                          { emoji: '\uD83D\uDCE6', label: '安装 Agent' },
+                          { emoji: '\uD83D\uDD12', label: '安全策略' },
+                          { emoji: '\uD83D\uDCB3', label: '转账权限' },
+                          { emoji: '\u26FD', label: 'Gas 优化' },
                         ] : [
-                          { emoji: '\uD83D\uDCE6', label: 'How to install Agent' },
-                          { emoji: '\uD83D\uDD12', label: 'Set up security policies' },
-                          { emoji: '\uD83D\uDCB3', label: 'Check transfer permissions' },
-                          { emoji: '\u26FD', label: 'Optimize gas fees' },
+                          { emoji: '\uD83D\uDCE6', label: 'Install Agent' },
+                          { emoji: '\uD83D\uDD12', label: 'Security' },
+                          { emoji: '\uD83D\uDCB3', label: 'Permissions' },
+                          { emoji: '\u26FD', label: 'Gas fees' },
                         ]).map((item) => (
                           <button key={item.label} onClick={() => handleSendDirect(item.label)} className="flex items-center gap-1.5 h-[36px] px-4 bg-transparent hover:bg-[#FAFAFA] text-sm font-normal text-[#7C7C7C] rounded-full transition-colors border border-[#EBEBEB]">
                             <span className="text-[14px]">{item.emoji}</span>
