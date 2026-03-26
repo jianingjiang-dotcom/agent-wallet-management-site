@@ -176,8 +176,8 @@ export default function DashboardLayout() {
             className={`w-full flex items-center gap-[12px] transition-all duration-300 ease-in-out rounded-none overflow-hidden py-[16px] ${sidebarCollapsed ? 'px-[8px]' : 'px-[16px] hover:bg-[#F0F2FF]'}`}
           >
             <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'rounded-none p-[8px] -m-[8px] hover:bg-[#F0F2FF] transition-colors' : ''}`}>
-              <div className="w-9 h-9 rounded-full bg-[#EEF0FF] flex items-center justify-center shrink-0">
-                <span className="text-[#1F32D6] text-[13px] font-semibold leading-none">{(user.name || 'A').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}</span>
+              <div className="w-9 h-9 rounded-full bg-[#1F32D6] flex items-center justify-center shrink-0">
+                <span className="text-white text-[13px] font-semibold leading-none">{(user.name || 'A').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}</span>
               </div>
             </div>
             <div className={`flex-1 min-w-0 text-left whitespace-nowrap transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}>
