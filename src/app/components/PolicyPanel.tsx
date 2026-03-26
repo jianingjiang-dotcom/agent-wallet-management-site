@@ -25,7 +25,7 @@ export default function PolicyPanel({ policy, disabled }: PolicyPanelProps) {
       <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[12px] p-6 mb-6">
         {/* Header */}
         <div className="flex items-center gap-2 mb-1">
-          <Shield className="w-4 h-4 text-[#b0b0b0]" />
+          <Shield className="w-4 h-4 text-[#7C7C7C]" />
           <h2 className="font-['Inter',sans-serif] font-semibold text-[16px] text-[#0a0a0a]">
             {t('policyPanel.title')}
           </h2>
@@ -34,12 +34,12 @@ export default function PolicyPanel({ policy, disabled }: PolicyPanelProps) {
         {/* Empty State */}
         <div className="flex flex-col items-center justify-center py-10">
           <div className="w-12 h-12 rounded-full bg-[#fafafa] flex items-center justify-center mb-4">
-            <Shield className="w-6 h-6 text-[#d4d4d4]" />
+            <Shield className="w-6 h-6 text-[#EBEBEB]" />
           </div>
           <span className="font-['Inter',sans-serif] font-medium text-[14px] text-[#7c7c7c] mb-1">
             {t('permissions.needAgent')}
           </span>
-          <span className="font-['Inter',sans-serif] font-normal text-[12px] text-[#b0b0b0]">
+          <span className="font-['Inter',sans-serif] font-normal text-[12px] text-[#7C7C7C]">
             {t('policy.emptyStateDesc')}
           </span>
         </div>
@@ -67,7 +67,7 @@ export default function PolicyPanel({ policy, disabled }: PolicyPanelProps) {
           <div className="font-['Inter',sans-serif] font-semibold text-[22px] text-[#0a0a0a] mb-1">
             ${policy.singleTxLimit}
           </div>
-          <div className="font-['Inter',sans-serif] font-normal text-[11px] text-[#b0b0b0] uppercase tracking-wider">
+          <div className="font-['Inter',sans-serif] font-normal text-[11px] text-[#7C7C7C] uppercase tracking-wider">
             {t('policy.perTxLimit')}
           </div>
         </div>
@@ -77,7 +77,7 @@ export default function PolicyPanel({ policy, disabled }: PolicyPanelProps) {
           <div className="font-['Inter',sans-serif] font-semibold text-[22px] text-[#0a0a0a] mb-1">
             ${policy.dailyLimit}
           </div>
-          <div className="font-['Inter',sans-serif] font-normal text-[11px] text-[#b0b0b0] uppercase tracking-wider">
+          <div className="font-['Inter',sans-serif] font-normal text-[11px] text-[#7C7C7C] uppercase tracking-wider">
             {t('policy.dailyLimitLabel')}
           </div>
         </div>
@@ -85,11 +85,11 @@ export default function PolicyPanel({ policy, disabled }: PolicyPanelProps) {
         {/* Approval status */}
         <div className="bg-[#fafafa] rounded-[8px] p-4 text-center">
           <div className={`font-['Inter',sans-serif] font-semibold text-[16px] mb-1 ${
-            policy.approvalRequired ? 'text-[#22c55e]' : 'text-[#b0b0b0]'
+            policy.approvalRequired ? 'text-[#22c55e]' : 'text-[#7C7C7C]'
           }`}>
             {policy.approvalRequired ? t('policy.approvalOn') : t('policy.approvalOff')}
           </div>
-          <div className="font-['Inter',sans-serif] font-normal text-[11px] text-[#b0b0b0] uppercase tracking-wider">
+          <div className="font-['Inter',sans-serif] font-normal text-[11px] text-[#7C7C7C] uppercase tracking-wider">
             {t('policy.approvalLabel')}
           </div>
         </div>

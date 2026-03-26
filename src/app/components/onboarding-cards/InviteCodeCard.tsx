@@ -79,7 +79,7 @@ export default function InviteCodeCard({ status, onVerify, error, verifiedCode }
               type="text"
               disabled
               placeholder="0000-0000"
-              className="flex-1 h-full bg-transparent font-['JetBrains_Mono',monospace] font-normal text-[15px] text-[#999] placeholder:text-[#c0c0c0] focus:outline-none pr-3 cursor-not-allowed"
+              className="flex-1 h-full bg-transparent font-['JetBrains_Mono',monospace] font-normal text-[15px] text-[#999] placeholder:text-[#7C7C7C] focus:outline-none pr-3 cursor-not-allowed"
             />
           </div>
         </div>
@@ -111,7 +111,7 @@ export default function InviteCodeCard({ status, onVerify, error, verifiedCode }
             onKeyDown={(e) => { if (e.key === 'Enter') handleVerify(); }}
             placeholder="0000-0000"
             maxLength={9}
-            className="flex-1 h-full bg-transparent font-['JetBrains_Mono',monospace] font-normal text-[15px] text-[#0a0a0a] placeholder:text-[#c0c0c0] focus:outline-none pr-3"
+            className="flex-1 h-full bg-transparent font-['JetBrains_Mono',monospace] font-normal text-[15px] text-[#0a0a0a] placeholder:text-[#7C7C7C] focus:outline-none pr-3"
           />
         </div>
         {error && (

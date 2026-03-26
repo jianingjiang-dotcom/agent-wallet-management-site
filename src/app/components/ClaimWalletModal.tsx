@@ -191,7 +191,7 @@ caw claim`;
               <div className="flex gap-2 mt-4">
                 <button
                   onClick={handleCancelClaim}
-                  className="flex-1 bg-[#f5f5f5] hover:bg-[#eee] h-[40px] rounded-[8px] font-['Inter',sans-serif] font-medium text-[13px] text-[#4F4F4F] transition-colors"
+                  className="flex-1 bg-[#FAFAFA] hover:bg-[#eee] h-[40px] rounded-[8px] font-['Inter',sans-serif] font-medium text-[13px] text-[#4F4F4F] transition-colors"
                 >
                   {t("common.cancel")}
                 </button>
@@ -243,9 +243,9 @@ caw claim`;
             <div>
               <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[8px] mb-4 overflow-hidden">
                 {/* Prompt text block */}
-                <div className="bg-[#f5f5f7] rounded-[8px]">
+                <div className="bg-[#FAFAFA] rounded-[8px]">
                   <div className="p-4">
-                    <pre className="font-['Inter',sans-serif] font-normal text-[14px] text-[#333333] leading-[20px] whitespace-pre-wrap break-words">
+                    <pre className="font-['Inter',sans-serif] font-normal text-[14px] text-[#0A0A0A] leading-[20px] whitespace-pre-wrap break-words">
                       {buildPrompt()}
                     </pre>
                   </div>
@@ -270,7 +270,7 @@ caw claim`;
               {/* Simulate button (dev) */}
               <button
                 onClick={simulateClaim}
-                className="w-full mt-2 h-[32px] rounded-[8px] border border-dashed border-[rgba(10,10,10,0.15)] font-['Inter',sans-serif] font-normal text-[11px] text-[#7c7c7c] hover:bg-[#f5f5f5] transition-colors"
+                className="w-full mt-2 h-[32px] rounded-[8px] border border-dashed border-[rgba(10,10,10,0.15)] font-['Inter',sans-serif] font-normal text-[11px] text-[#7c7c7c] hover:bg-[#FAFAFA] transition-colors"
               >
                 ⚡ Simulate Claim
               </button>

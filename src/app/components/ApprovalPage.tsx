@@ -148,7 +148,7 @@ export default function ApprovalPage({ initialTab = 'all', onPendingCountChange 
         <h1 className="text-[24px] leading-[32px] font-normal text-[#0A0A0A] mb-1">
           {language === 'zh' ? '操作审批' : 'Operation Approvals'}
         </h1>
-        <p className="text-[14px] text-[#73798B]">
+        <p className="text-[14px] text-[#4F4F4F]">
           {language === 'zh'
             ? '管理钱包和 Agent 的操作审批请求'
             : 'Manage approval requests from wallets and agents'}
@@ -164,7 +164,7 @@ export default function ApprovalPage({ initialTab = 'all', onPendingCountChange 
             className={`px-4 py-2.5 text-[14px] font-medium border-b-2 transition-colors ${
               activeTab === tab.key
                 ? 'border-[#1F32D6] text-[#1F32D6]'
-                : 'border-transparent text-[#73798B] hover:text-[#0A0A0A]'
+                : 'border-transparent text-[#4F4F4F] hover:text-[#0A0A0A]'
             }`}
           >
             {tab.label}
@@ -180,7 +180,7 @@ export default function ApprovalPage({ initialTab = 'all', onPendingCountChange 
       {/* Records */}
       <div className="space-y-3">
         {filteredRecords.length === 0 ? (
-          <div className="text-center py-16 text-[#73798B] text-[14px]">
+          <div className="text-center py-16 text-[#4F4F4F] text-[14px]">
             {language === 'zh' ? '暂无待审批请求' : 'No pending approval requests'}
           </div>
         ) : (
@@ -203,20 +203,20 @@ export default function ApprovalPage({ initialTab = 'all', onPendingCountChange 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4 mb-3">
                 <div className="flex items-center gap-2 text-[13px]">
                   <Wallet className="w-3.5 h-3.5 text-[#999]" strokeWidth={1.5} />
-                  <span className="text-[#73798B]">{language === 'zh' ? '钱包' : 'Wallet'}:</span>
+                  <span className="text-[#4F4F4F]">{language === 'zh' ? '钱包' : 'Wallet'}:</span>
                   <span className="text-[#0A0A0A]">{record.walletName}</span>
                 </div>
                 <div className="flex items-center gap-2 text-[13px]">
                   <Bot className="w-3.5 h-3.5 text-[#999]" strokeWidth={1.5} />
-                  <span className="text-[#73798B]">Agent:</span>
+                  <span className="text-[#4F4F4F]">Agent:</span>
                   <span className="text-[#0A0A0A]">{record.agentName}</span>
                 </div>
                 <div className="text-[13px]">
-                  <span className="text-[#73798B]">{language === 'zh' ? '操作' : 'Operation'}:</span>
+                  <span className="text-[#4F4F4F]">{language === 'zh' ? '操作' : 'Operation'}:</span>
                   <span className="text-[#0A0A0A] ml-1">{record.operation}</span>
                 </div>
                 <div className="text-[13px]">
-                  <span className="text-[#73798B]">{language === 'zh' ? '目标' : 'Target'}:</span>
+                  <span className="text-[#4F4F4F]">{language === 'zh' ? '目标' : 'Target'}:</span>
                   <span className="text-[#0A0A0A] ml-1 font-mono">{record.target}</span>
                 </div>
               </div>

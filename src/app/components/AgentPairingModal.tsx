@@ -238,9 +238,9 @@ ${buildCommand()}`;
                 <div className="border-t border-[rgba(10,10,10,0.08)]" />
 
                 {/* Prompt text block */}
-                <div className="bg-[#f5f5f7] rounded-b-[8px]">
+                <div className="bg-[#FAFAFA] rounded-b-[8px]">
                   <div className="p-4">
-                    <pre className="font-['Inter',sans-serif] font-normal text-[14px] text-[#333333] leading-[20px] whitespace-pre-wrap break-words">
+                    <pre className="font-['Inter',sans-serif] font-normal text-[14px] text-[#0A0A0A] leading-[20px] whitespace-pre-wrap break-words">
                       {buildPrompt()}
                     </pre>
                   </div>
@@ -265,7 +265,7 @@ ${buildCommand()}`;
               {/* Simulate button (dev) */}
               <button
                 onClick={simulatePairing}
-                className="w-full mt-2 h-[32px] rounded-[8px] border border-dashed border-[rgba(10,10,10,0.15)] font-['Inter',sans-serif] font-normal text-[11px] text-[#7c7c7c] hover:bg-[#f5f5f5] transition-colors"
+                className="w-full mt-2 h-[32px] rounded-[8px] border border-dashed border-[rgba(10,10,10,0.15)] font-['Inter',sans-serif] font-normal text-[11px] text-[#7c7c7c] hover:bg-[#FAFAFA] transition-colors"
               >
                 ⚡ Simulate Agent Connection
               </button>

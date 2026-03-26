@@ -56,7 +56,7 @@ function ConfirmModal({
         <div className="flex gap-3 pt-2">
           <button
             onClick={onCancel}
-            className="flex-1 h-[44px] rounded-xl border border-[#E0E0E0] text-[14px] font-medium text-[#0a0a0a] hover:bg-[#F5F5F5] transition-colors"
+            className="flex-1 h-[44px] rounded-xl border border-[#EBEBEB] text-[14px] font-medium text-[#0a0a0a] hover:bg-[#FAFAFA] transition-colors"
           >
             {/* Cancel */}
             {onCancel && 'Cancel'}
@@ -206,7 +206,7 @@ export default function AccountSettings() {
               </button>
               <button
                 onClick={() => setSecureBannerDismissed(true)}
-                className="text-[13px] text-[#BDBDBD] hover:text-[#7c7c7c]"
+                className="text-[13px] text-[#7C7C7C] hover:text-[#7c7c7c]"
               >
                 {t('account.secureDismiss')}
               </button>
@@ -236,7 +236,7 @@ export default function AccountSettings() {
                     setNameError('');
                   }}
                   className={`h-[36px] px-3 rounded-lg border text-[14px] flex-1 min-w-0 outline-none ${
-                    nameError ? 'border-red-400' : 'border-[#E0E0E0] focus:border-[#F5A623]'
+                    nameError ? 'border-red-400' : 'border-[#EBEBEB] focus:border-[#F5A623]'
                   }`}
                 />
                 <button
@@ -247,7 +247,7 @@ export default function AccountSettings() {
                 </button>
                 <button
                   onClick={handleCancelName}
-                  className="w-8 h-8 flex items-center justify-center rounded-lg border border-[#E0E0E0] text-[#7c7c7c] hover:bg-[#F5F5F5] transition-colors"
+                  className="w-8 h-8 flex items-center justify-center rounded-lg border border-[#EBEBEB] text-[#7c7c7c] hover:bg-[#FAFAFA] transition-colors"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -259,7 +259,7 @@ export default function AccountSettings() {
                 </span>
                 <button
                   onClick={() => setEditingName(true)}
-                  className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#F5F5F5] text-[#BDBDBD] hover:text-[#7c7c7c] transition-colors"
+                  className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#FAFAFA] text-[#7C7C7C] hover:text-[#7c7c7c] transition-colors"
                   title={t('account.editName')}
                 >
                   <Pencil className="w-3.5 h-3.5" />
@@ -274,7 +274,7 @@ export default function AccountSettings() {
         </div>
 
         {/* Member since */}
-        <div className="text-[13px] text-[#BDBDBD] pt-1">
+        <div className="text-[13px] text-[#7C7C7C] pt-1">
           {t('account.memberSince')} {formatDate(user.createdAt)}
         </div>
       </div>
@@ -295,9 +295,9 @@ export default function AccountSettings() {
         </div>
 
         {/* Login method (read-only) */}
-        <div className="flex items-center justify-between py-3 border-t border-[#F5F5F5]">
+        <div className="flex items-center justify-between py-3 border-t border-[#FAFAFA]">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-[#F5F5F5] flex items-center justify-center">
+            <div className="w-9 h-9 rounded-full bg-[#FAFAFA] flex items-center justify-center">
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path
                   d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
@@ -319,7 +319,7 @@ export default function AccountSettings() {
             </div>
             <div>
               <p className="text-[14px] font-medium text-[#0a0a0a]">{t('account.loginMethod')}</p>
-              <p className="text-[12px] text-[#BDBDBD]">{user.email}</p>
+              <p className="text-[12px] text-[#7C7C7C]">{user.email}</p>
             </div>
           </div>
           <span className="text-[12px] text-[#34A853] font-medium bg-[#E8F5E9] px-2 py-0.5 rounded-full">
@@ -328,7 +328,7 @@ export default function AccountSettings() {
         </div>
 
         {/* Telegram row */}
-        <div className="flex items-center justify-between py-3 border-t border-[#F5F5F5]">
+        <div className="flex items-center justify-between py-3 border-t border-[#FAFAFA]">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-full bg-[#E3F2FD] flex items-center justify-center">
               <TelegramIcon className="w-5 h-5 text-[#0088cc]" />
@@ -348,7 +348,7 @@ export default function AccountSettings() {
         </div>
 
         {/* Discord row */}
-        <div className="flex items-center justify-between py-3 border-t border-[#F5F5F5]">
+        <div className="flex items-center justify-between py-3 border-t border-[#FAFAFA]">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-full bg-[#EDE7F6] flex items-center justify-center">
               <DiscordIcon className="w-5 h-5 text-[#5865F2]" />

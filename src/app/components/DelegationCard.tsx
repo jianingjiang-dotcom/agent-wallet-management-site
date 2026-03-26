@@ -116,7 +116,7 @@ export default function DelegationCard({
                     setEditName(agent?.name || "");
                     setIsEditingName(true);
                   }}
-                  className="text-[#b0b0b0] hover:text-[#1F32D6] transition-colors p-0.5 opacity-0 group-hover/agentname:opacity-100"
+                  className="text-[#7C7C7C] hover:text-[#1F32D6] transition-colors p-0.5 opacity-0 group-hover/agentname:opacity-100"
                 >
                   <Pencil className="w-3 h-3" />
                 </button>
@@ -139,7 +139,7 @@ export default function DelegationCard({
           </div>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
-          <span className="font-['Inter',sans-serif] font-normal text-[10px] text-[#b0b0b0]">
+          <span className="font-['Inter',sans-serif] font-normal text-[10px] text-[#7C7C7C]">
             {delegation.permissions.length} {t("delegationCard.permissions")}
           </span>
           {expanded ? (
@@ -165,7 +165,7 @@ export default function DelegationCard({
           {/* Meta info */}
           <div className="flex items-center gap-4">
             <div>
-              <span className="font-['Inter',sans-serif] font-normal text-[10px] text-[#b0b0b0] block">{t("delegationCard.delegatedAt")}</span>
+              <span className="font-['Inter',sans-serif] font-normal text-[10px] text-[#7C7C7C] block">{t("delegationCard.delegatedAt")}</span>
               <span className="font-['Inter',sans-serif] font-normal text-[12px] text-[#4F4F4F]">{formatDate(delegation.delegatedAt)}</span>
             </div>
           </div>
@@ -225,7 +225,7 @@ export default function DelegationCard({
             <div className="flex gap-2">
               <button
                 onClick={() => setShowRevokeConfirm(false)}
-                className="flex-1 bg-[#f5f5f5] hover:bg-[#eee] h-[36px] rounded-[8px] font-['Inter',sans-serif] font-medium text-[13px] text-[#4F4F4F] transition-colors"
+                className="flex-1 bg-[#FAFAFA] hover:bg-[#eee] h-[36px] rounded-[8px] font-['Inter',sans-serif] font-medium text-[13px] text-[#4F4F4F] transition-colors"
               >
                 {t("common.cancel")}
               </button>

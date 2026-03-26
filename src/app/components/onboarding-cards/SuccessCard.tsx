@@ -47,7 +47,7 @@ export default function SuccessCard({ walletId, agentId, onComplete, completed }
             <Shield className="w-3.5 h-3.5 text-[#1F32D6]" />
           </div>
           <div className="min-w-0 flex-1">
-            <span className="font-['Inter',sans-serif] font-medium text-[10px] text-[#9a9a9a] uppercase tracking-wider block mb-0.5">
+            <span className="font-['Inter',sans-serif] font-medium text-[10px] text-[#7C7C7C] uppercase tracking-wider block mb-0.5">
               {t('onboarding.success.walletId')}
             </span>
             <code className="font-['JetBrains_Mono',monospace] text-[12px] text-[#0a0a0a] break-words leading-snug">
@@ -72,7 +72,7 @@ export default function SuccessCard({ walletId, agentId, onComplete, completed }
             <Zap className="w-3.5 h-3.5 text-[#f59e0b]" />
           </div>
           <div className="min-w-0 flex-1">
-            <span className="font-['Inter',sans-serif] font-medium text-[10px] text-[#9a9a9a] uppercase tracking-wider block mb-0.5">
+            <span className="font-['Inter',sans-serif] font-medium text-[10px] text-[#7C7C7C] uppercase tracking-wider block mb-0.5">
               {t('onboarding.success.agentId')}
             </span>
             <code className="font-['JetBrains_Mono',monospace] text-[12px] text-[#0a0a0a] break-words leading-snug">

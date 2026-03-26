@@ -149,7 +149,7 @@ export default function WalletDetail({
               </h1>
               <button
                 onClick={() => { setEditName(wallet.name); setIsEditingName(true); }}
-                className="text-[#b0b0b0] hover:text-[#1F32D6] transition-colors p-1"
+                className="text-[#7C7C7C] hover:text-[#1F32D6] transition-colors p-1"
               >
                 <Pencil className="w-4 h-4" />
               </button>
@@ -161,8 +161,8 @@ export default function WalletDetail({
               {walletDelegations.length} {t('walletPage.agents')}
             </span>
           ) : (
-            <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#d4d4d4]/20 text-[#b0b0b0] font-['Inter',sans-serif] font-medium text-[12px]">
-              <div className="w-1.5 h-1.5 rounded-full bg-[#d4d4d4]" />
+            <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#EBEBEB]/20 text-[#7C7C7C] font-['Inter',sans-serif] font-medium text-[12px]">
+              <div className="w-1.5 h-1.5 rounded-full bg-[#EBEBEB]" />
               {t('delegation.noAgent')}
             </span>
           )}
@@ -171,7 +171,7 @@ export default function WalletDetail({
             <div className="relative" ref={switcherRef}>
               <button
                 onClick={() => setSwitcherOpen(!switcherOpen)}
-                className="flex items-center gap-1.5 px-2.5 py-1 rounded-[8px] font-['Inter',sans-serif] font-medium text-[12px] text-[#7c7c7c] border border-[rgba(10,10,10,0.1)] hover:bg-[#f5f5f5] hover:border-[rgba(10,10,10,0.15)] transition-colors"
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-[8px] font-['Inter',sans-serif] font-medium text-[12px] text-[#7c7c7c] border border-[rgba(10,10,10,0.1)] hover:bg-[#FAFAFA] hover:border-[rgba(10,10,10,0.15)] transition-colors"
               >
                 <Wallet className="w-3.5 h-3.5" />
                 {t('walletDetail.switchWallet')}
@@ -186,7 +186,7 @@ export default function WalletDetail({
                       className={`w-full text-left px-3 py-2 text-[13px] font-['Inter',sans-serif] transition-colors ${
                         w.id === wallet.id
                           ? 'text-[#1F32D6] bg-[rgba(79,94,255,0.04)] font-medium'
-                          : 'text-[#0a0a0a] hover:bg-[#f5f5f5] font-normal'
+                          : 'text-[#0a0a0a] hover:bg-[#FAFAFA] font-normal'
                       }`}
                     >
                       {w.name}
@@ -200,7 +200,7 @@ export default function WalletDetail({
         <div className="flex items-center gap-2">
           <button
             onClick={onClaimWallet || noop}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-[8px] font-['Inter',sans-serif] font-medium text-[12px] text-[#7c7c7c] border border-[rgba(10,10,10,0.1)] hover:bg-[#f5f5f5] transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-[8px] font-['Inter',sans-serif] font-medium text-[12px] text-[#7c7c7c] border border-[rgba(10,10,10,0.1)] hover:bg-[#FAFAFA] transition-colors"
           >
             <Download className="w-3.5 h-3.5" />
             {t('walletPage.claimWallet')}
@@ -225,7 +225,7 @@ export default function WalletDetail({
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
-            <div className="font-['Inter',sans-serif] font-normal text-[12px] text-[#b0b0b0] mb-0.5">
+            <div className="font-['Inter',sans-serif] font-normal text-[12px] text-[#7C7C7C] mb-0.5">
               {t('onboarding.success.walletId')}
             </div>
             <code className="font-['JetBrains_Mono','SF_Mono','Consolas',monospace] text-[13px] text-[#0a0a0a]">
@@ -233,7 +233,7 @@ export default function WalletDetail({
             </code>
           </div>
           <div>
-            <div className="font-['Inter',sans-serif] font-normal text-[12px] text-[#b0b0b0] mb-0.5">
+            <div className="font-['Inter',sans-serif] font-normal text-[12px] text-[#7C7C7C] mb-0.5">
               {t('delegation.createdAt')}
             </div>
             <div className="font-['Inter',sans-serif] font-normal text-[13px] text-[#7c7c7c]">
@@ -244,7 +244,7 @@ export default function WalletDetail({
 
         {/* Addresses by chain */}
         <div>
-          <div className="font-['Inter',sans-serif] font-normal text-[12px] text-[#b0b0b0] mb-2">
+          <div className="font-['Inter',sans-serif] font-normal text-[12px] text-[#7C7C7C] mb-2">
             {t('walletDetail.addresses')}
           </div>
           {wallet.addresses.length > 0 ? (
@@ -265,7 +265,7 @@ export default function WalletDetail({
                     className={`shrink-0 p-1 rounded-[6px] transition-colors ${
                       copiedAddress === addr.address
                         ? 'text-[#22c55e]'
-                        : 'text-[#b0b0b0] hover:text-[#1F32D6] opacity-0 group-hover/addr:opacity-100'
+                        : 'text-[#7C7C7C] hover:text-[#1F32D6] opacity-0 group-hover/addr:opacity-100'
                     }`}
                     title={t('walletDetail.copyAddress')}
                   >
@@ -280,7 +280,7 @@ export default function WalletDetail({
             </div>
           ) : (
             <div className="px-3 py-2.5 rounded-[8px] bg-[#fafafa] border border-dashed border-[rgba(10,10,10,0.1)]">
-              <span className="font-['Inter',sans-serif] font-normal text-[12px] text-[#b0b0b0]">
+              <span className="font-['Inter',sans-serif] font-normal text-[12px] text-[#7C7C7C]">
                 {t('walletDetail.noAddresses')}
               </span>
             </div>
@@ -331,7 +331,7 @@ export default function WalletDetail({
             <p className="font-['Inter',sans-serif] font-medium text-[14px] text-[#7c7c7c] mb-1">
               {t('delegation.noAgent')}
             </p>
-            <p className="font-['Inter',sans-serif] font-normal text-[12px] text-[#b0b0b0] mb-4">
+            <p className="font-['Inter',sans-serif] font-normal text-[12px] text-[#7C7C7C] mb-4">
               {t('walletDelegation.noAgentsDesc')}
             </p>
             <button
@@ -416,7 +416,7 @@ function ActivityLog({ t, walletCreatedAt }: { t: (key: string) => string; walle
         <h2 className="font-['Inter',sans-serif] font-semibold text-[16px] text-[#0a0a0a]">
           {t('walletAgent.activityLog')}
         </h2>
-        <span className="font-['Inter',sans-serif] font-normal text-[12px] text-[#b0b0b0]">
+        <span className="font-['Inter',sans-serif] font-normal text-[12px] text-[#7C7C7C]">
           {MOCK_LOGS.length} entries
         </span>
       </div>
@@ -449,7 +449,7 @@ function ActivityLog({ t, walletCreatedAt }: { t: (key: string) => string; walle
                   {t(log.detailKey)}
                 </p>
               </div>
-              <span className="font-['JetBrains_Mono','SF_Mono','Consolas',monospace] text-[11px] text-[#b0b0b0] shrink-0 mt-1">
+              <span className="font-['JetBrains_Mono','SF_Mono','Consolas',monospace] text-[11px] text-[#7C7C7C] shrink-0 mt-1">
                 {formatTimeAgo(log.minutesAgo, walletCreatedAt)}
               </span>
             </div>

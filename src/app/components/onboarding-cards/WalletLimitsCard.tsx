@@ -44,7 +44,7 @@ export default function WalletLimitsCard({ status, onConfirm, confirmedPerTx, co
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Shield className="w-3.5 h-3.5 text-[#1F32D6]" />
-              <span className="text-[12px] text-[#73798B]">
+              <span className="text-[12px] text-[#4F4F4F]">
                 {language === 'zh' ? '单笔交易限额' : 'Per-Transaction Limit'}
               </span>
             </div>
@@ -56,7 +56,7 @@ export default function WalletLimitsCard({ status, onConfirm, confirmedPerTx, co
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Shield className="w-3.5 h-3.5 text-[#1F32D6]" />
-              <span className="text-[12px] text-[#73798B]">
+              <span className="text-[12px] text-[#4F4F4F]">
                 {language === 'zh' ? '每日支出限额' : 'Daily Spending Limit'}
               </span>
             </div>

@@ -176,7 +176,7 @@ export default function WalletDelegationModal({
                         <div
                           onClick={() => togglePermission(key)}
                           className={`w-9 h-5 rounded-full transition-colors relative cursor-pointer ${
-                            permissions.includes(key) ? "bg-[#22c55e]" : "bg-[#d4d4d4]"
+                            permissions.includes(key) ? "bg-[#22c55e]" : "bg-[#EBEBEB]"
                           }`}
                         >
                           <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${
@@ -270,7 +270,7 @@ export default function WalletDelegationModal({
                             <div className="font-['Inter',sans-serif] font-medium text-[13px] text-[#0a0a0a]">{agent.name}</div>
                             <div className="font-['JetBrains_Mono',monospace] text-[10px] text-[#7c7c7c] truncate">{agent.id}</div>
                           </div>
-                          <ChevronRight className="w-4 h-4 text-[#b0b0b0] flex-shrink-0" />
+                          <ChevronRight className="w-4 h-4 text-[#7C7C7C] flex-shrink-0" />
                         </button>
                       ))}
                     </div>
@@ -280,7 +280,7 @@ export default function WalletDelegationModal({
                     <p className="font-['Inter',sans-serif] font-medium text-[13px] text-[#7c7c7c] mb-1">
                       {t("walletDelegation.noAgents")}
                     </p>
-                    <p className="font-['Inter',sans-serif] font-normal text-[11px] text-[#b0b0b0]">
+                    <p className="font-['Inter',sans-serif] font-normal text-[11px] text-[#7C7C7C]">
                       {t("walletDelegation.noAgentsDesc")}
                     </p>
                   </div>
@@ -290,16 +290,16 @@ export default function WalletDelegationModal({
                 {agents.filter(a => existingAgentIds.includes(a.id)).map((agent) => (
                   <div
                     key={agent.id}
-                    className="w-full bg-[#f5f5f5] border border-[rgba(10,10,10,0.06)] rounded-[8px] px-4 py-3 flex items-center gap-3 opacity-60"
+                    className="w-full bg-[#FAFAFA] border border-[rgba(10,10,10,0.06)] rounded-[8px] px-4 py-3 flex items-center gap-3 opacity-60"
                   >
                     <div className="w-8 h-8 rounded-full bg-[rgba(10,10,10,0.05)] flex items-center justify-center flex-shrink-0">
-                      <UserPlus className="w-4 h-4 text-[#b0b0b0]" />
+                      <UserPlus className="w-4 h-4 text-[#7C7C7C]" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="font-['Inter',sans-serif] font-medium text-[13px] text-[#7c7c7c]">{agent.name}</div>
-                      <div className="font-['JetBrains_Mono',monospace] text-[10px] text-[#b0b0b0] truncate">{agent.id}</div>
+                      <div className="font-['JetBrains_Mono',monospace] text-[10px] text-[#7C7C7C] truncate">{agent.id}</div>
                     </div>
-                    <span className="font-['Inter',sans-serif] font-normal text-[10px] text-[#b0b0b0]">
+                    <span className="font-['Inter',sans-serif] font-normal text-[10px] text-[#7C7C7C]">
                       {t("walletDelegation.alreadyDelegated")}
                     </span>
                   </div>

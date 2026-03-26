@@ -77,7 +77,7 @@ export default function AgentSetupPage() {
   return (
     <div
       ref={containerRef}
-      className={`min-h-screen bg-[#F8F9FC] relative ${exiting ? 'animate-page-exit' : 'animate-page-enter'}`}
+      className={`min-h-screen bg-[#FAFAFA] relative ${exiting ? 'animate-page-exit' : 'animate-page-enter'}`}
       onAnimationEnd={() => { if (exiting) navigate('/dashboard/chat?welcome=wallet-ready'); }}
     >
       {/* Success toast */}
@@ -119,7 +119,7 @@ export default function AgentSetupPage() {
       {/* Logo */}
       <div className="absolute top-0 left-0 px-6 py-[23px]">
         <span className="text-[18px] font-semibold leading-none whitespace-nowrap" style={{ fontFamily: "'Inter', sans-serif" }}>
-          <span className="text-[#1C1C1C]">Cobo </span>
+          <span className="text-[#0A0A0A]">Cobo </span>
           <span className="text-[#1F32D6]">Pact</span>
         </span>
       </div>
@@ -129,10 +129,10 @@ export default function AgentSetupPage() {
         <div className="flex flex-col items-center w-[480px] gap-8 -mt-[120px]">
           {/* Title + subtitle — always visible, never changes */}
           <div className="flex flex-col items-center gap-3 w-full">
-            <h1 className="font-medium text-[28px] leading-[42px] text-center text-[#1C1C1C]">
+            <h1 className="font-medium text-[28px] leading-[42px] text-center text-[#0A0A0A]">
               {t('setupPage.title')}
             </h1>
-            <p className="text-[16px] leading-[26px] text-center text-[#73798B]">
+            <p className="text-[16px] leading-[26px] text-center text-[#4F4F4F]">
               {t('setupPage.tellAgent')}
             </p>
           </div>
@@ -142,8 +142,8 @@ export default function AgentSetupPage() {
             {/* Dashed code block with overlay */}
             <div className="relative w-full">
               {/* Always-visible instruction text */}
-              <div className="w-full p-4 bg-white border border-dashed border-[#B9BCC5] rounded-[16px]">
-                <p className="text-[14px] leading-[20px] text-[#73798B] whitespace-pre-line">
+              <div className="w-full p-4 bg-white border border-dashed border-[#7C7C7C] rounded-[16px]">
+                <p className="text-[14px] leading-[20px] text-[#4F4F4F] whitespace-pre-line">
                   {instructionText}
                 </p>
               </div>
@@ -179,7 +179,7 @@ export default function AgentSetupPage() {
                           />
                         </svg>
                       </div>
-                      <span className="text-[16px] leading-[24px] font-medium text-[#1C1C1C]">
+                      <span className="text-[16px] leading-[24px] font-medium text-[#0A0A0A]">
                         {t('setupSuccess.title')}
                       </span>
                     </>
@@ -198,7 +198,7 @@ export default function AgentSetupPage() {
                             <circle cx="12" cy="12" r="9" stroke="#1F32D6" strokeWidth="1.25" strokeDasharray="14 42" strokeLinecap="round" />
                           </svg>
                         )}
-                        <span className={`text-[14px] leading-[20px] ${agentDone ? 'text-[#26C165] font-medium' : 'text-[#73798B]'}`}>
+                        <span className={`text-[14px] leading-[20px] ${agentDone ? 'text-[#26C165] font-medium' : 'text-[#4F4F4F]'}`}>
                           {agentDone ? t('setupPage.agentConnected') : t('setupPage.connectingAgent')}
                         </span>
                       </div>
@@ -209,7 +209,7 @@ export default function AgentSetupPage() {
                           <svg className="animate-spin flex-shrink-0" width="20" height="20" viewBox="0 0 24 24" fill="none">
                             <circle cx="12" cy="12" r="9" stroke="#1F32D6" strokeWidth="1.25" strokeDasharray="14 42" strokeLinecap="round" />
                           </svg>
-                          <span className="text-[14px] leading-[20px] text-[#73798B]">
+                          <span className="text-[14px] leading-[20px] text-[#4F4F4F]">
                             {t('setupPage.creatingWallet')}
                           </span>
                         </div>

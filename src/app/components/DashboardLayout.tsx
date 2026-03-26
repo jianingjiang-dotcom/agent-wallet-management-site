@@ -139,7 +139,7 @@ export default function DashboardLayout() {
       {/* Sidebar */}
       <aside
         className={`
-          fixed lg:sticky top-0 left-0 h-screen bg-[#FAFAFA] flex flex-col z-[60] border-r border-[#EDEEF3]
+          fixed lg:sticky top-0 left-0 h-screen bg-[#FAFAFA] flex flex-col z-[60] border-r border-[#EBEBEB]
           transition-all duration-300 ease-in-out overflow-hidden
           ${sidebarCollapsed ? 'w-[52px] bg-white' : 'w-[260px]'}
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
@@ -167,21 +167,21 @@ export default function DashboardLayout() {
         <div id="sidebar-chat-area" className="overflow-hidden flex flex-col min-h-0 [&:not(:empty)]:flex-1" />
 
         {/* User Profile */}
-        <div className={`relative transition-[border-color] duration-300 ease-in-out ${sidebarCollapsed ? 'border-t border-transparent' : 'border-t border-[#EDEEF3]'}`} ref={accountMenuRef}>
+        <div className={`relative transition-[border-color] duration-300 ease-in-out ${sidebarCollapsed ? 'border-t border-transparent' : 'border-t border-[#EBEBEB]'}`} ref={accountMenuRef}>
           <button
             ref={avatarBtnRef}
             onClick={() => { setAvatarTooltip(false); setAccountMenuOpen(!accountMenuOpen); setMobileLangPanel(false); }}
             onMouseEnter={() => { if (sidebarCollapsed && !accountMenuOpen) setAvatarTooltip(true); }}
             onMouseLeave={() => setAvatarTooltip(false)}
-            className={`w-full flex items-center gap-[12px] transition-all duration-300 ease-in-out rounded-none overflow-hidden py-[16px] ${sidebarCollapsed ? 'px-[8px]' : 'px-[16px] hover:bg-[#EDEEF3]'}`}
+            className={`w-full flex items-center gap-[12px] transition-all duration-300 ease-in-out rounded-none overflow-hidden py-[16px] ${sidebarCollapsed ? 'px-[8px]' : 'px-[16px] hover:bg-[#EBEBEB]'}`}
           >
-            <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'rounded-none p-[8px] -m-[8px] hover:bg-[#EDEEF3] transition-colors' : ''}`}>
+            <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'rounded-none p-[8px] -m-[8px] hover:bg-[#EBEBEB] transition-colors' : ''}`}>
               <div className="w-9 h-9 rounded-full bg-[#8B95A5] flex items-center justify-center shrink-0">
                 <span className="text-white text-[13px] font-semibold leading-none">{(user.name || 'A').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}</span>
               </div>
             </div>
             <div className={`flex-1 min-w-0 text-left whitespace-nowrap transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}>
-              <div className="font-['Inter',sans-serif] font-semibold text-[14px] leading-[20px] text-[#1c1c1c] truncate">{user.name}</div>
+              <div className="font-['Inter',sans-serif] font-semibold text-[14px] leading-[20px] text-[#0A0A0A] truncate">{user.name}</div>
               <div className="font-['Inter',sans-serif] font-normal text-[12px] leading-[16px] text-[#7C7C7C] truncate">{user.email}</div>
             </div>
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className={`shrink-0 transition-all duration-300 ease-in-out ${accountMenuOpen ? '-rotate-90' : ''} ${sidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}><path d="M7.5 15L12.5 10L7.5 5" stroke="#7C7C7C" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
@@ -232,7 +232,7 @@ export default function DashboardLayout() {
                     {language === 'zh' ? '审批提示演示' : 'Approval Demo'}
                   </span>
                   <div className="ml-auto">
-                    <div className={`relative w-[36px] h-[20px] rounded-full transition-colors cursor-pointer ${demoApproval ? 'bg-[#1F32D6]' : 'bg-[#D9D9D9]'}`}>
+                    <div className={`relative w-[36px] h-[20px] rounded-full transition-colors cursor-pointer ${demoApproval ? 'bg-[#1F32D6]' : 'bg-[#EBEBEB]'}`}>
                       <div className={`absolute top-[2px] w-[16px] h-[16px] rounded-full bg-white shadow-sm transition-transform ${demoApproval ? 'translate-x-[18px]' : 'translate-x-[2px]'}`} />
                     </div>
                   </div>
@@ -276,14 +276,14 @@ export default function DashboardLayout() {
           onClick={() => { setToggleTooltip(false); setSidebarCollapsed(!sidebarCollapsed); }}
           onMouseEnter={() => setToggleTooltip(true)}
           onMouseLeave={() => setToggleTooltip(false)}
-          className="hidden lg:flex w-[36px] h-[36px] items-center justify-center rounded-[8px] hover:bg-[#EDEEF3] transition-colors text-[#7C7C7C] absolute top-[14px] z-10"
+          className="hidden lg:flex w-[36px] h-[36px] items-center justify-center rounded-[8px] hover:bg-[#EBEBEB] transition-colors text-[#7C7C7C] absolute top-[14px] z-10"
           style={{ left: sidebarCollapsed ? 'calc(50% - 18px)' : 'calc(100% - 48px)', transition: 'left 0.3s ease-in-out' }}
         >
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.8333 2.5H4.16667C3.24619 2.5 2.5 3.24619 2.5 4.16667V15.8333C2.5 16.7538 3.24619 17.5 4.16667 17.5H15.8333C16.7538 17.5 17.5 16.7538 17.5 15.8333V4.16667C17.5 3.24619 16.7538 2.5 15.8333 2.5Z" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M7.5 2.5V17.5" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
         </button>
         {toggleTooltip && createPortal(
           <div
-            className="fixed z-[200] px-[6px] py-[4px] bg-[#1C1C1C] text-white text-[12px] leading-[16px] rounded-[6px] whitespace-nowrap pointer-events-none"
+            className="fixed z-[200] px-[6px] py-[4px] bg-[#0A0A0A] text-white text-[12px] leading-[16px] rounded-[6px] whitespace-nowrap pointer-events-none"
             style={sidebarCollapsed ? {
               top: `${14 + 18}px`,
               left: `${52 + 8}px`,
@@ -300,7 +300,7 @@ export default function DashboardLayout() {
         )}
         {avatarTooltip && sidebarCollapsed && createPortal(
           <div
-            className="fixed z-[200] px-[6px] py-[4px] bg-[#1C1C1C] text-white text-[12px] leading-[16px] rounded-[6px] whitespace-nowrap pointer-events-none"
+            className="fixed z-[200] px-[6px] py-[4px] bg-[#0A0A0A] text-white text-[12px] leading-[16px] rounded-[6px] whitespace-nowrap pointer-events-none"
             style={{
               bottom: `${window.innerHeight - (avatarBtnRef.current?.getBoundingClientRect().top ?? 0) - (avatarBtnRef.current?.getBoundingClientRect().height ?? 0) / 2}px`,
               left: `${52 + 8}px`,
@@ -333,7 +333,7 @@ export default function DashboardLayout() {
           <div className="fixed top-[48px] bottom-0 left-0 right-0 z-[80] bg-white rounded-t-[20px] flex flex-col shadow-2xl animate-slide-up">
           {/* Drag handle */}
           <div className="flex justify-center pt-3 pb-1 shrink-0">
-            <div className="w-9 h-[5px] rounded-full bg-[#D9D9D9]" />
+            <div className="w-9 h-[5px] rounded-full bg-[#EBEBEB]" />
           </div>
           {/* Sub-page: Gas / Billing / Settings */}
           {mobileSettingsPage ? (
@@ -341,7 +341,7 @@ export default function DashboardLayout() {
               <div className="flex items-center justify-between px-4 h-[48px] shrink-0">
                 <button
                   onClick={() => setMobileSettingsPage(null)}
-                  className="w-9 h-9 flex items-center justify-center rounded-full bg-[#F5F5F5]"
+                  className="w-9 h-9 flex items-center justify-center rounded-full bg-[#FAFAFA]"
                 >
                   <ChevronLeft className="w-[18px] h-[18px] text-[#0A0A0A]" />
                 </button>
@@ -350,7 +350,7 @@ export default function DashboardLayout() {
                 </span>
                 <div className="w-9" />
               </div>
-              <div className="border-b border-[#EDEEF3]" />
+              <div className="border-b border-[#EBEBEB]" />
               <div className="flex-1 overflow-y-auto p-5">
                 {mobileSettingsPage === 'gas' && <Gasless />}
                 {mobileSettingsPage === 'billing' && <Billing />}
@@ -363,14 +363,14 @@ export default function DashboardLayout() {
               <div className="flex items-center justify-between px-4 h-[48px] shrink-0">
                 <button
                   onClick={() => { setAccountMenuOpen(false); setMobileLangPanel(false); setMobileSettingsPage(null); }}
-                  className="w-9 h-9 flex items-center justify-center rounded-full bg-[#F5F5F5]"
+                  className="w-9 h-9 flex items-center justify-center rounded-full bg-[#FAFAFA]"
                 >
                   <X className="w-[18px] h-[18px] text-[#0A0A0A]" />
                 </button>
                 <span className="font-semibold text-[16px] text-[#0A0A0A]">{language === 'zh' ? '菜单' : 'Menu'}</span>
                 <div className="w-9" />
               </div>
-              <div className="border-b border-[#EDEEF3]" />
+              <div className="border-b border-[#EBEBEB]" />
 
               {/* Content */}
               <div className="flex-1 overflow-y-auto px-5 pt-4 pb-8">
@@ -386,13 +386,13 @@ export default function DashboardLayout() {
                       >
                         <Icon className="w-5 h-5 text-[#0A0A0A]" strokeWidth={1.5} />
                         <span className="font-medium text-[15px]">{item.label}</span>
-                        <ChevronRight className="w-4 h-4 text-[#BDBDBD] ml-auto" />
+                        <ChevronRight className="w-4 h-4 text-[#7C7C7C] ml-auto" />
                       </button>
                     );
                   })}
                 </div>
 
-                <div className="border-t border-[#EDEEF3] my-3" />
+                <div className="border-t border-[#EBEBEB] my-3" />
 
                 {/* Approval Demo Toggle */}
                 <button
@@ -404,7 +404,7 @@ export default function DashboardLayout() {
                     {language === 'zh' ? '审批提示演示' : 'Approval Demo'}
                   </span>
                   <div className="ml-auto">
-                    <div className={`relative w-[36px] h-[20px] rounded-full transition-colors cursor-pointer ${demoApproval ? 'bg-[#1F32D6]' : 'bg-[#D9D9D9]'}`}>
+                    <div className={`relative w-[36px] h-[20px] rounded-full transition-colors cursor-pointer ${demoApproval ? 'bg-[#1F32D6]' : 'bg-[#EBEBEB]'}`}>
                       <div className={`absolute top-[2px] w-[16px] h-[16px] rounded-full bg-white shadow-sm transition-transform ${demoApproval ? 'translate-x-[18px]' : 'translate-x-[2px]'}`} />
                     </div>
                   </div>
@@ -418,10 +418,10 @@ export default function DashboardLayout() {
                   <Globe className="w-5 h-5 text-[#0A0A0A]" strokeWidth={1.5} />
                   <span className="font-medium text-[15px] text-[#0A0A0A]">{t('nav.language')}</span>
                   <span className="ml-auto text-[13px] text-[#7C7C7C] mr-1">{language === 'en' ? 'EN' : '中文'}</span>
-                  <ChevronRight className="w-4 h-4 text-[#BDBDBD]" />
+                  <ChevronRight className="w-4 h-4 text-[#7C7C7C]" />
                 </button>
 
-                <div className="border-t border-[#EDEEF3] my-3" />
+                <div className="border-t border-[#EBEBEB] my-3" />
 
                 {/* Sign Out */}
                 <button
@@ -444,19 +444,19 @@ export default function DashboardLayout() {
               <div className="flex items-center justify-between px-4 h-[48px] shrink-0">
                 <button
                   onClick={() => setMobileLangPanel(false)}
-                  className="w-9 h-9 flex items-center justify-center rounded-full bg-[#F5F5F5]"
+                  className="w-9 h-9 flex items-center justify-center rounded-full bg-[#FAFAFA]"
                 >
                   <ChevronLeft className="w-[18px] h-[18px] text-[#0A0A0A]" />
                 </button>
                 <span className="font-semibold text-[16px] text-[#0A0A0A]">{t('nav.language')}</span>
                 <div className="w-9" />
               </div>
-              <div className="border-b border-[#EDEEF3]" />
+              <div className="border-b border-[#EBEBEB]" />
 
               <div className="flex-1 overflow-y-auto px-5 pt-5 pb-8 space-y-2">
                 <button
                   onClick={() => { setLanguage('en'); setMobileLangPanel(false); setAccountMenuOpen(false); }}
-                  className={`flex items-center justify-between w-full py-4 px-4 rounded-2xl transition-colors ${language === 'en' ? 'bg-[#F0F1FF]' : 'bg-[#F5F5F7] hover:bg-[#EDEEF3]'}`}
+                  className={`flex items-center justify-between w-full py-4 px-4 rounded-2xl transition-colors ${language === 'en' ? 'bg-[#F0F1FF]' : 'bg-[#FAFAFA] hover:bg-[#EBEBEB]'}`}
                 >
                   <span className={`font-medium text-[15px] ${language === 'en' ? 'text-[#1F32D6]' : 'text-[#0A0A0A]'}`}>English</span>
                   {language === 'en' && (
@@ -465,7 +465,7 @@ export default function DashboardLayout() {
                 </button>
                 <button
                   onClick={() => { setLanguage('zh'); setMobileLangPanel(false); setAccountMenuOpen(false); }}
-                  className={`flex items-center justify-between w-full py-4 px-4 rounded-2xl transition-colors ${language === 'zh' ? 'bg-[#F0F1FF]' : 'bg-[#F5F5F7] hover:bg-[#EDEEF3]'}`}
+                  className={`flex items-center justify-between w-full py-4 px-4 rounded-2xl transition-colors ${language === 'zh' ? 'bg-[#F0F1FF]' : 'bg-[#FAFAFA] hover:bg-[#EBEBEB]'}`}
                 >
                   <span className={`font-medium text-[15px] ${language === 'zh' ? 'text-[#1F32D6]' : 'text-[#0A0A0A]'}`}>中文</span>
                   {language === 'zh' && (
@@ -487,7 +487,7 @@ export default function DashboardLayout() {
         <div className={`logo-bar-collapsed hidden lg:flex items-center h-[64px] pl-[24px] bg-white absolute top-0 left-0 right-0 z-10 transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
           <LogoText />
         </div>
-        <div className={`logo-bar-collapsed hidden lg:block absolute top-[64px] left-0 right-0 h-px bg-[#EDEEF3] z-10 transition-opacity duration-300 ease-in-out ${sidebarCollapsed && hasActiveChat ? 'opacity-100' : 'opacity-0'}`} />
+        <div className={`logo-bar-collapsed hidden lg:block absolute top-[64px] left-0 right-0 h-px bg-[#EBEBEB] z-10 transition-opacity duration-300 ease-in-out ${sidebarCollapsed && hasActiveChat ? 'opacity-100' : 'opacity-0'}`} />
 
         {/* Mobile Header */}
         <div className="lg:hidden bg-white border-b border-[rgba(10,10,10,0.08)] px-4 py-3 flex items-center justify-between sticky top-0 z-20 shadow-sm">

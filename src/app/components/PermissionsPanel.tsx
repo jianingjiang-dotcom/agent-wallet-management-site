@@ -76,7 +76,7 @@ export default function PermissionsPanel({ permissions, onUpdate, disabled }: Pe
                 onClick={() => togglePermission(item.key)}
                 disabled={disabled}
                 className={`relative w-11 h-6 rounded-full transition-colors duration-300 ease-in-out ${
-                  isEnabled ? 'bg-[#22c55e]' : 'bg-[#d4d4d4]'
+                  isEnabled ? 'bg-[#22c55e]' : 'bg-[#EBEBEB]'
                 } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
                 <span

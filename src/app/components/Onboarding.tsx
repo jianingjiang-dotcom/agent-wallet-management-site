@@ -586,7 +586,7 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
                     <Shield className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#1F32D6]" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <span className="font-['Inter',sans-serif] font-medium text-[11px] text-[#9a9a9a] uppercase tracking-wider block mb-0.5">
+                    <span className="font-['Inter',sans-serif] font-medium text-[11px] text-[#7C7C7C] uppercase tracking-wider block mb-0.5">
                       {t("onboarding.success.walletId")}
                     </span>
                     <code className="font-['JetBrains_Mono','SF_Mono','Consolas',monospace] text-[12px] sm:text-[13px] text-[#0a0a0a] break-words leading-snug">
@@ -611,7 +611,7 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
                     <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#f59e0b]" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <span className="font-['Inter',sans-serif] font-medium text-[11px] text-[#9a9a9a] uppercase tracking-wider block mb-0.5">
+                    <span className="font-['Inter',sans-serif] font-medium text-[11px] text-[#7C7C7C] uppercase tracking-wider block mb-0.5">
                       {t("onboarding.success.agentId")}
                     </span>
                     <code className="font-['JetBrains_Mono','SF_Mono','Consolas',monospace] text-[12px] sm:text-[13px] text-[#0a0a0a] break-words leading-snug">
@@ -659,7 +659,7 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
                 <h2 className="font-['Inter',sans-serif] font-semibold text-[22px] leading-[28px] text-[#0a0a0a] mb-2 text-center">
                   {t("onboarding.inviteTitle")}
                 </h2>
-                <p className="font-['Inter',sans-serif] font-normal text-[14px] text-[#9a9a9a] mb-8 text-center">
+                <p className="font-['Inter',sans-serif] font-normal text-[14px] text-[#7C7C7C] mb-8 text-center">
                   {t("onboarding.inviteDesc")}
                 </p>
 
@@ -679,7 +679,7 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
                       onChange={(e) => { setInviteCode(e.target.value); setInviteError(""); }}
                       onKeyDown={(e) => { if (e.key === "Enter") handleInviteNext(); }}
                       placeholder="0000-0000"
-                      className="flex-1 h-full bg-transparent font-['JetBrains_Mono','SF_Mono','Consolas',monospace] font-normal text-[16px] text-[#0a0a0a] placeholder:text-[#c0c0c0] focus:outline-none pr-4"
+                      className="flex-1 h-full bg-transparent font-['JetBrains_Mono','SF_Mono','Consolas',monospace] font-normal text-[16px] text-[#0a0a0a] placeholder:text-[#7C7C7C] focus:outline-none pr-4"
                     />
                   </div>
                   {inviteError && (
@@ -910,12 +910,12 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
                 <div className="border-t border-[rgba(10,10,10,0.08)]" />
                 {/* Code block */}
                 <div
-                  className={`relative bg-[#f5f5f7] rounded-b-[8px] transition-all duration-300 ${
+                  className={`relative bg-[#FAFAFA] rounded-b-[8px] transition-all duration-300 ${
                     regenerating ? "opacity-40" : "opacity-100"
                   }`}
                 >
                   <div className="p-4">
-                    <pre className="font-['Inter',sans-serif] font-normal text-[14px] text-[#333333] leading-[20px] whitespace-pre-wrap break-words">
+                    <pre className="font-['Inter',sans-serif] font-normal text-[14px] text-[#0A0A0A] leading-[20px] whitespace-pre-wrap break-words">
                       {isFirstWallet && inviteCode ? (
                         (() => {
                           const text = buildPromptText();

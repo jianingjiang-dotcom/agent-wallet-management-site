@@ -12,7 +12,7 @@ export default function WalletCard({ wallet, delegationCount, onSelect }: Wallet
   const { t } = useLanguage();
 
   const hasAgents = delegationCount > 0;
-  const statusColor = hasAgents ? 'bg-[#22c55e]' : 'bg-[#d4d4d4]';
+  const statusColor = hasAgents ? 'bg-[#22c55e]' : 'bg-[#EBEBEB]';
   const borderClass = 'border-[rgba(10,10,10,0.08)] hover:border-[rgba(79,94,255,0.2)]';
 
   return (
@@ -33,7 +33,7 @@ export default function WalletCard({ wallet, delegationCount, onSelect }: Wallet
       {/* IDs */}
       <div className="space-y-2.5 mb-4">
         <div className="flex items-center justify-between">
-          <span className="font-['Inter',sans-serif] font-normal text-[11px] text-[#b0b0b0] uppercase tracking-wider">
+          <span className="font-['Inter',sans-serif] font-normal text-[11px] text-[#7C7C7C] uppercase tracking-wider">
             Wallet ID
           </span>
           <code className="font-['JetBrains_Mono','SF_Mono','Consolas',monospace] text-[12px] text-[#0a0a0a] truncate">
@@ -41,7 +41,7 @@ export default function WalletCard({ wallet, delegationCount, onSelect }: Wallet
           </code>
         </div>
         <div className="flex items-center justify-between">
-          <span className="font-['Inter',sans-serif] font-normal text-[11px] text-[#b0b0b0] uppercase tracking-wider">
+          <span className="font-['Inter',sans-serif] font-normal text-[11px] text-[#7C7C7C] uppercase tracking-wider">
             Agents
           </span>
           {hasAgents ? (
@@ -50,7 +50,7 @@ export default function WalletCard({ wallet, delegationCount, onSelect }: Wallet
               {delegationCount} {t('walletPage.agents')}
             </span>
           ) : (
-            <span className="font-['Inter',sans-serif] font-normal text-[12px] text-[#b0b0b0]">
+            <span className="font-['Inter',sans-serif] font-normal text-[12px] text-[#7C7C7C]">
               {t('walletPage.noAgents')}
             </span>
           )}
