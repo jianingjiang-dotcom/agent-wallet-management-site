@@ -67,7 +67,7 @@ export default function ChatWelcome({ variant }: ChatWelcomeProps) {
           {greeting}{userName ? `, ${userName}` : ''}
         </h2>
       </div>
-      <p className="text-[#7C7C7C] text-[14px] leading-[21px] md:text-[16px] md:leading-[24px]">
+      <p className="text-[#4F4F4F] text-[14px] leading-[21px] md:text-[16px] md:leading-[24px]">
         {language === 'zh' ? '你的钱包助手已就绪，随时为你服务' : 'Your wallet assistant is ready to help'}
       </p>
     </div>

@@ -499,7 +499,7 @@ export default function DashboardLayout() {
             className="text-[#0A0A0A] p-2 -mr-2 hover:bg-slate-100 rounded-lg transition-colors"
             aria-label="Open menu"
           >
-            <Menu className="w-5 h-5" />
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1.5" y="1.5" width="17" height="17" rx="3" stroke="#0A0A0A" strokeWidth="1.25"/><line x1="7.5" y1="1.5" x2="7.5" y2="18.5" stroke="#0A0A0A" strokeWidth="1.25"/></svg>
           </button>
         </div>
 
