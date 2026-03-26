@@ -19,7 +19,7 @@ export default function ChatWelcome({ variant }: ChatWelcomeProps) {
 
       {/* Title */}
       <h2
-        className={`font-semibold text-[26px] sm:text-[32px] lg:text-[36px] text-[#0A0A0A] text-center leading-tight ${isFirst ? 'animate-reveal-up' : ''}`}
+        className={`font-semibold text-[22px] sm:text-[28px] lg:text-[36px] text-[#0A0A0A] text-center leading-tight ${isFirst ? 'animate-reveal-up' : ''}`}
         style={{
           ...(isFirst && { animationDelay: '800ms', animationDuration: '500ms' }),
         }}

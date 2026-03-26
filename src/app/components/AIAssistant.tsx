@@ -1081,7 +1081,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                   {message.role === 'assistant' ? (
                     <div className="bg-transparent text-slate-900 w-full min-w-0 overflow-hidden">
                       {!isGroupedWithPrev && renderAssistantHeader()}
-                      <div className="whitespace-pre-wrap break-words" style={{ fontSize: '15px', lineHeight: '25px' }}>{message.content}</div>
+                      <div className="whitespace-pre-wrap break-words text-[15px] leading-[24px] lg:text-[15px] lg:leading-[25px]">{message.content}</div>
                       {message.walletListData && wallets.length > 0 && (
                         <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
                           {wallets.map((w) => {
@@ -1102,8 +1102,8 @@ Would you like me to help adjust your current Agent's limit settings?`;
                       )}
                     </div>
                   ) : (
-                    <div className="bg-[#F1F3FF] text-slate-900 max-w-[80%] rounded-[12px] px-4 py-3">
-                      <div className="whitespace-pre-wrap break-words" style={{ fontSize: '15px', lineHeight: '25px' }}>{message.content}</div>
+                    <div className="bg-[#F1F3FF] text-slate-900 max-w-[85%] lg:max-w-[80%] rounded-[18px] lg:rounded-[12px] px-4 py-3">
+                      <div className="whitespace-pre-wrap break-words text-[15px] leading-[24px] lg:text-[15px] lg:leading-[25px]">{message.content}</div>
                     </div>
                   )}
                 </div>
@@ -1156,7 +1156,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                   : {}
                 }
               >
-                  <div className="bg-white border border-[#EBEBEB] rounded-xl shadow-[0px_10px_20px_0px_rgba(0,0,0,0.04)] focus-within:border-[#4F5EFF] focus-within:shadow-[0px_10px_20px_0px_rgba(79,94,255,0.12)] transition-all flex flex-col">
+                  <div className="bg-white border border-[#EBEBEB] rounded-[18px] lg:rounded-xl shadow-[0px_4px_16px_0px_rgba(0,0,0,0.08)] focus-within:border-[#4F5EFF] focus-within:shadow-[0px_4px_16px_0px_rgba(79,94,255,0.12)] transition-all flex flex-col">
                     {inputExpanded && (
                       <textarea
                         ref={(el) => { if (el) { el.focus(); el.selectionStart = el.selectionEnd = el.value.length; } }}
@@ -1222,14 +1222,14 @@ Would you like me to help adjust your current Agent's limit settings?`;
 
                 {/* Starter prompt pills */}
                 {!welcomeType && (
-                  <div className="flex flex-wrap gap-[10px] mt-[20px] md:mt-[28px] justify-center">
+                  <div className="flex flex-wrap gap-2 mt-4 lg:mt-[28px] justify-center max-w-[600px]">
                     {/* CTA suggestion for no-wallet users */}
                     {!hasWallets && (
                       <button
                         onClick={handleStartOnboarding}
-                        className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#4F5EFF] to-[#6C7AFF] hover:from-[#3d4dd9] hover:to-[#5b6aef] text-white text-sm rounded-full transition-colors"
+                        className="flex items-center gap-1.5 h-[36px] px-4 bg-gradient-to-r from-[#4F5EFF] to-[#6C7AFF] hover:from-[#3d4dd9] hover:to-[#5b6aef] text-white text-[13px] lg:text-sm rounded-full transition-colors"
                       >
-                        <Sparkles className="w-4 h-4" />
+                        <Sparkles className="w-3.5 h-3.5" />
                         {t('onboarding.suggestion.createWallet')}
                       </button>
                     )}
@@ -1247,9 +1247,9 @@ Would you like me to help adjust your current Agent's limit settings?`;
                       <button
                         key={item.label}
                         onClick={() => handleSendDirect(item.label)}
-                        className="flex items-center gap-2 px-4 py-2.5 bg-[#F5F5F7] hover:bg-[#EDEEF3] text-sm text-[#0A0A0A] rounded-full transition-colors"
+                        className="flex items-center gap-1.5 h-[36px] px-3.5 lg:px-4 bg-[#F5F5F7] hover:bg-[#EDEEF3] text-[13px] lg:text-sm text-[#0A0A0A] rounded-full transition-colors border border-[rgba(0,0,0,0.04)]"
                       >
-                        <span>{item.emoji}</span>
+                        <span className="text-[14px]">{item.emoji}</span>
                         {item.label}
                       </button>
                     ))}
@@ -1262,9 +1262,9 @@ Would you like me to help adjust your current Agent's limit settings?`;
 
         {/* Input area - shown when messages exist */}
         {(displayMessages.length > 0 || combinedTyping) && (
-        <div className="bg-white px-4 lg:px-6 pb-4 lg:pb-6 pt-2 flex justify-center shrink-0 sticky bottom-0 z-10">
+        <div className="bg-white px-4 lg:px-6 pb-4 lg:pb-6 pt-2 flex justify-center shrink-0 sticky bottom-0 z-10" style={{ paddingBottom: 'max(16px, env(safe-area-inset-bottom))' }}>
           <div className="w-full max-w-[744px]">
-          <div className="bg-white border border-[#EBEBEB] rounded-xl shadow-[0px_10px_20px_0px_rgba(0,0,0,0.04)] focus-within:border-[#4F5EFF] focus-within:shadow-[0px_10px_20px_0px_rgba(79,94,255,0.12)] transition-all flex flex-col">
+          <div className="bg-white border border-[#EBEBEB] rounded-[18px] lg:rounded-xl shadow-[0px_4px_16px_0px_rgba(0,0,0,0.08)] focus-within:border-[#4F5EFF] focus-within:shadow-[0px_4px_16px_0px_rgba(79,94,255,0.12)] transition-all flex flex-col">
             {inputExpanded && (
               <textarea
                 ref={(el) => { if (el) { el.focus(); el.selectionStart = el.selectionEnd = el.value.length; } }}
