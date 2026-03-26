@@ -59,18 +59,33 @@ export default function ChatWelcome({ variant }: ChatWelcomeProps) {
   }
 
   return (
-    <div className="flex items-center gap-3 mb-8 justify-center">
-      <div className="shrink-0">
-        <AvatarCharacter variant="wave" size={44} />
-      </div>
-      <div className="flex flex-col">
-        <h2 className="font-semibold text-[22px] sm:text-[28px] lg:text-[36px] text-[#0A0A0A] leading-tight">
+    <>
+      {/* Mobile: stacked centered */}
+      <div className="flex flex-col items-center text-center mb-8 lg:hidden">
+        <div className="mb-3">
+          <AvatarCharacter variant="wave" size={44} />
+        </div>
+        <h2 className="font-semibold text-[22px] text-[#0A0A0A] leading-tight">
           {greeting}{userName ? `, ${userName}` : ''}
         </h2>
-        <p className="text-[#0A0A0A] text-[14px] leading-[21px] md:text-[16px] md:leading-[24px] mt-1">
+        <p className="text-[#0A0A0A] text-[14px] leading-[21px] mt-1">
           {language === 'zh' ? '你的钱包助手已就绪，随时为你服务' : 'Your wallet assistant is ready to help'}
         </p>
       </div>
-    </div>
+      {/* Desktop: side-by-side */}
+      <div className="hidden lg:flex items-center gap-3 mb-8 justify-center">
+        <div className="shrink-0">
+          <AvatarCharacter variant="wave" size={44} />
+        </div>
+        <div className="flex flex-col">
+          <h2 className="font-semibold text-[36px] text-[#0A0A0A] leading-tight">
+            {greeting}{userName ? `, ${userName}` : ''}
+          </h2>
+          <p className="text-[#0A0A0A] text-[16px] leading-[24px] mt-1">
+            {language === 'zh' ? '你的钱包助手已就绪，随时为你服务' : 'Your wallet assistant is ready to help'}
+          </p>
+        </div>
+      </div>
+    </>
   );
 }
