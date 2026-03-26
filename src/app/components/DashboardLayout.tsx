@@ -36,6 +36,9 @@ export default function DashboardLayout() {
   const [delegationTarget, setDelegationTarget] = useState<{ open: boolean; walletId: string }>({ open: false, walletId: "" });
   const [activeModal, setActiveModal] = useState<'gas' | 'billing' | 'settings' | null>(null);
   const [hasActiveChat, setHasActiveChat] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [toggleTooltip, setToggleTooltip] = useState(false);
+  const [avatarTooltip, setAvatarTooltip] = useState(false);
   const avatarBtnRef = useRef<HTMLButtonElement>(null);
   const accountMenuRef = useRef<HTMLDivElement>(null);
   const accountMenuPortalRef = useRef<HTMLDivElement>(null);
@@ -137,7 +140,7 @@ export default function DashboardLayout() {
         className={`
           fixed lg:sticky top-0 left-0 h-screen bg-[#FAFAFA] flex flex-col z-[60] border-r border-[#EDEEF3]
           transition-all duration-300 ease-in-out overflow-hidden
-          w-[260px]
+          ${sidebarCollapsed ? 'w-[52px] bg-white' : 'w-[260px]'}
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
           shadow-xl lg:shadow-none
         `}
@@ -145,7 +148,7 @@ export default function DashboardLayout() {
         <div className="w-[260px] shrink-0 flex flex-col h-full relative z-[1]">
         {/* Logo - desktop */}
         <div className="hidden lg:flex items-center h-[64px] pl-4 pr-3 pointer-events-none">
-          <div className="shrink-0">
+          <div className={`shrink-0 transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
             <LogoText />
           </div>
         </div>
@@ -163,20 +166,22 @@ export default function DashboardLayout() {
         <div id="sidebar-chat-area" className="overflow-hidden flex flex-col min-h-0 [&:not(:empty)]:flex-1" />
 
         {/* User Profile */}
-        <div className="relative border-t border-[#EDEEF3]" ref={accountMenuRef}>
+        <div className={`relative transition-[border-color] duration-300 ease-in-out ${sidebarCollapsed ? 'border-t border-transparent' : 'border-t border-[#EDEEF3]'}`} ref={accountMenuRef}>
           <button
             ref={avatarBtnRef}
-            onClick={() => { setAccountMenuOpen(!accountMenuOpen); setMobileLangPanel(false); }}
-            className="w-full flex items-center gap-[12px] transition-all duration-300 ease-in-out rounded-none overflow-hidden py-[16px] px-[16px] hover:bg-[#EDEEF3]"
+            onClick={() => { setAvatarTooltip(false); setAccountMenuOpen(!accountMenuOpen); setMobileLangPanel(false); }}
+            onMouseEnter={() => { if (sidebarCollapsed && !accountMenuOpen) setAvatarTooltip(true); }}
+            onMouseLeave={() => setAvatarTooltip(false)}
+            className={`w-full flex items-center gap-[12px] transition-all duration-300 ease-in-out rounded-none overflow-hidden py-[16px] ${sidebarCollapsed ? 'px-[8px]' : 'px-[16px] hover:bg-[#EDEEF3]'}`}
           >
-            <div className="shrink-0 flex items-center justify-center">
+            <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'rounded-none p-[8px] -m-[8px] hover:bg-[#EDEEF3] transition-colors' : ''}`}>
               <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0"><rect width="36" height="36" rx="18" fill="#4F5EFF"/><path d="M16.8247 12H19.1753L24 24H21.7909L20.6421 20.9916H15.3579L14.2091 24H12L16.8247 12ZM15.9764 19.3782H20.0236L18.0442 14.1176H17.9735L15.9764 19.3782Z" fill="white"/></svg>
             </div>
-            <div className="flex-1 min-w-0 text-left whitespace-nowrap">
+            <div className={`flex-1 min-w-0 text-left whitespace-nowrap transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}>
               <div className="font-['Inter',sans-serif] font-semibold text-[14px] leading-[20px] text-[#1c1c1c] truncate">{user.name}</div>
               <div className="font-['Inter',sans-serif] font-normal text-[12px] leading-[16px] text-[#7C7C7C] truncate">{user.email}</div>
             </div>
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className={`shrink-0 transition-all duration-300 ease-in-out ${accountMenuOpen ? '-rotate-90' : ''}`}><path d="M7.5 15L12.5 10L7.5 5" stroke="#7C7C7C" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className={`shrink-0 transition-all duration-300 ease-in-out ${accountMenuOpen ? '-rotate-90' : ''} ${sidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}><path d="M7.5 15L12.5 10L7.5 5" stroke="#7C7C7C" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </button>
 
           {/* Account Menu Dropdown - rendered via portal to avoid sidebar overflow clipping (desktop only) */}
@@ -185,8 +190,8 @@ export default function DashboardLayout() {
               ref={accountMenuPortalRef}
               className="fixed z-[100] bg-white rounded-[8px] border border-[rgba(10,10,10,0.08)] shadow-[0px_8px_24px_0px_rgba(0,0,0,0.12)] max-h-[70vh] overflow-y-auto hidden lg:block"
               style={{
-                width: '244px',
-                left: '8px',
+                width: sidebarCollapsed ? '220px' : '244px',
+                left: sidebarCollapsed ? '4px' : '8px',
                 bottom: `${window.innerHeight - (accountMenuRef.current?.getBoundingClientRect().top ?? 0) + 4}px`,
               }}
             >
@@ -263,6 +268,46 @@ export default function DashboardLayout() {
           )}
         </div>
         </div>
+        {/* Sidebar toggle button - desktop only, paints on top of inner wrapper */}
+        <button
+          onClick={() => { setToggleTooltip(false); setSidebarCollapsed(!sidebarCollapsed); }}
+          onMouseEnter={() => setToggleTooltip(true)}
+          onMouseLeave={() => setToggleTooltip(false)}
+          className="hidden lg:flex w-[36px] h-[36px] items-center justify-center rounded-[8px] hover:bg-[#EDEEF3] transition-colors text-[#7C7C7C] absolute top-[14px] z-10"
+          style={{ left: sidebarCollapsed ? 'calc(50% - 18px)' : 'calc(100% - 48px)', transition: 'left 0.3s ease-in-out' }}
+        >
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.8333 2.5H4.16667C3.24619 2.5 2.5 3.24619 2.5 4.16667V15.8333C2.5 16.7538 3.24619 17.5 4.16667 17.5H15.8333C16.7538 17.5 17.5 16.7538 17.5 15.8333V4.16667C17.5 3.24619 16.7538 2.5 15.8333 2.5Z" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M7.5 2.5V17.5" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        </button>
+        {toggleTooltip && createPortal(
+          <div
+            className="fixed z-[200] px-[6px] py-[4px] bg-[#1C1C1C] text-white text-[12px] leading-[16px] rounded-[6px] whitespace-nowrap pointer-events-none"
+            style={sidebarCollapsed ? {
+              top: `${14 + 18}px`,
+              left: `${52 + 8}px`,
+              transform: 'translateY(-50%)',
+            } : {
+              top: `${14 + 36 + 8}px`,
+              left: `${212 + 18}px`,
+              transform: 'translateX(-50%)',
+            }}
+          >
+            {sidebarCollapsed ? (language === 'zh' ? '打开边栏' : 'Open sidebar') : (language === 'zh' ? '关闭边栏' : 'Close sidebar')}
+          </div>,
+          document.body
+        )}
+        {avatarTooltip && sidebarCollapsed && createPortal(
+          <div
+            className="fixed z-[200] px-[6px] py-[4px] bg-[#1C1C1C] text-white text-[12px] leading-[16px] rounded-[6px] whitespace-nowrap pointer-events-none"
+            style={{
+              bottom: `${window.innerHeight - (avatarBtnRef.current?.getBoundingClientRect().top ?? 0) - (avatarBtnRef.current?.getBoundingClientRect().height ?? 0) / 2}px`,
+              left: `${52 + 8}px`,
+              transform: 'translateY(50%)',
+            }}
+          >
+            {user?.name || 'Account'}
+          </div>,
+          document.body
+        )}
       </aside>
 
       {/* Overlay for mobile sidebar */}
@@ -391,6 +436,13 @@ export default function DashboardLayout() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0 min-h-0 bg-white relative">
 
+        {/* Logo bar when sidebar collapsed (desktop) */}
+        <div className={`logo-bar-collapsed hidden lg:block ${sidebarCollapsed ? 'h-[64px]' : 'h-0'}`} />
+        <div className={`logo-bar-collapsed hidden lg:flex items-center h-[64px] pl-[24px] bg-white absolute top-0 left-0 right-0 z-10 transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+          <LogoText />
+        </div>
+        <div className={`logo-bar-collapsed hidden lg:block absolute top-[64px] left-0 right-0 h-px bg-[#EDEEF3] z-10 transition-opacity duration-300 ease-in-out ${sidebarCollapsed && hasActiveChat ? 'opacity-100' : 'opacity-0'}`} />
+
         {/* Mobile Header */}
         <div className="lg:hidden bg-white border-b border-[rgba(10,10,10,0.08)] px-4 py-3 flex items-center justify-between sticky top-0 z-20 shadow-sm">
           <div className="flex items-center">
@@ -421,7 +473,7 @@ export default function DashboardLayout() {
             onShowApprovalPage: () => setActiveModal('approval-page'),
             onHideApprovalPage: () => setActiveModal(null),
             showApprovalPage: activeModal === 'approval-page',
-            sidebarCollapsed: false,
+            sidebarCollapsed,
             demoApproval,
             setHasActiveChat,
           }} />
