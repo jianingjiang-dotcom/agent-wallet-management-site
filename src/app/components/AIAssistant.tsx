@@ -1140,26 +1140,26 @@ Would you like me to help adjust your current Agent's limit settings?`;
 
                 {/* Mobile only: prompt pills below welcome text */}
                 {!welcomeType && (
-                  <div className="lg:hidden flex flex-wrap gap-2 mt-4 justify-center max-w-[600px] mx-auto">
+                  <div className="lg:hidden flex flex-wrap gap-2 mt-4 justify-center max-w-[340px] mx-auto overflow-hidden max-h-[84px]">
                     {!hasWallets && (
-                      <button onClick={handleStartOnboarding} className="flex items-center gap-1.5 h-[36px] px-4 bg-transparent border border-[#1F32D6] text-[#1F32D6] hover:bg-[#F0F2FF] text-[13px] font-medium rounded-full transition-colors">
-                        <Sparkles className="w-3.5 h-3.5" />
+                      <button onClick={handleStartOnboarding} className="flex items-center gap-1.5 h-[36px] px-3.5 bg-transparent border border-[#1F32D6] text-[#1F32D6] hover:bg-[#F0F2FF] text-[13px] font-medium rounded-full transition-colors">
+                        <span className="text-[13px]">✨</span>
                         {t('onboarding.suggestion.createWallet')}
                       </button>
                     )}
                     {(language === 'zh' ? [
-                      { emoji: '\uD83D\uDCE6', label: '如何安装 Agent' },
-                      { emoji: '\uD83D\uDD12', label: '设置安全策略' },
-                      { emoji: '\uD83D\uDCB3', label: '查看转账权限' },
-                      { emoji: '\u26FD', label: 'Gas 费用优化' },
+                      { emoji: '\uD83D\uDCE6', label: '安装 Agent' },
+                      { emoji: '\uD83D\uDD12', label: '安全策略' },
+                      { emoji: '\uD83D\uDCB3', label: '转账权限' },
+                      { emoji: '\u26FD', label: 'Gas 优化' },
                     ] : [
-                      { emoji: '\uD83D\uDCE6', label: 'How to install Agent' },
-                      { emoji: '\uD83D\uDD12', label: 'Set up security policies' },
-                      { emoji: '\uD83D\uDCB3', label: 'Check transfer permissions' },
-                      { emoji: '\u26FD', label: 'Optimize gas fees' },
+                      { emoji: '\uD83D\uDCE6', label: 'Install Agent' },
+                      { emoji: '\uD83D\uDD12', label: 'Security' },
+                      { emoji: '\uD83D\uDCB3', label: 'Permissions' },
+                      { emoji: '\u26FD', label: 'Gas fees' },
                     ]).map((item) => (
-                      <button key={item.label} onClick={() => handleSendDirect(item.label)} className="flex items-center gap-1.5 h-[36px] px-3.5 bg-transparent hover:bg-[#FAFAFA] text-[13px] font-normal text-[#7C7C7C] rounded-full transition-colors border border-[#EBEBEB]">
-                        <span className="text-[14px]">{item.emoji}</span>
+                      <button key={item.label} onClick={() => handleSendDirect(item.label)} className="flex items-center gap-1.5 h-[36px] px-3 bg-transparent hover:bg-[#FAFAFA] text-[13px] font-normal text-[#7C7C7C] rounded-full transition-colors border border-[#EBEBEB]">
+                        <span className="text-[13px]">{item.emoji}</span>
                         {item.label}
                       </button>
                     ))}
@@ -1172,7 +1172,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                     className={welcomeType === 'first-wallet' ? 'animate-reveal-up' : ''}
                     style={welcomeType === 'first-wallet' ? { animationDelay: '1500ms', animationDuration: '500ms' } : {}}
                   >
-                    <div className="bg-white border border-[#EBEBEB] rounded-xl shadow-[0px_4px_16px_0px_rgba(0,0,0,0.08)] focus-within:border-[#1F32D6] focus-within:shadow-[0px_4px_16px_0px_rgba(79,94,255,0.12)] transition-all flex flex-col">
+                    <div className="bg-white border border-[#EBEBEB] rounded-xl shadow-[0px_2px_8px_0px_rgba(0,0,0,0.04)] focus-within:border-[#1F32D6] focus-within:shadow-[0px_2px_12px_0px_rgba(31,50,214,0.08)] transition-all flex flex-col">
                       {inputExpanded && (
                         <textarea
                           ref={(el) => { if (el) { el.focus(); el.selectionStart = el.selectionEnd = el.value.length; } }}
@@ -1269,7 +1269,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
               }}
             >
               <div className="w-full max-w-[768px]">
-                  <div className="bg-white border border-[#EBEBEB] rounded-[18px] lg:rounded-xl shadow-[0px_4px_16px_0px_rgba(0,0,0,0.08)] focus-within:border-[#1F32D6] focus-within:shadow-[0px_4px_16px_0px_rgba(79,94,255,0.12)] transition-all flex flex-col">
+                  <div className="bg-white border border-[#EBEBEB] rounded-[18px] lg:rounded-xl shadow-[0px_2px_8px_0px_rgba(0,0,0,0.04)] focus-within:border-[#1F32D6] focus-within:shadow-[0px_2px_12px_0px_rgba(31,50,214,0.08)] transition-all flex flex-col">
                     {inputExpanded && (
                       <textarea
                         ref={(el) => { if (el) { el.focus(); el.selectionStart = el.selectionEnd = el.value.length; } }}
@@ -1338,7 +1338,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
         {(displayMessages.length > 0 || combinedTyping) && (
         <div className="bg-white px-4 lg:px-6 pb-4 lg:pb-6 pt-2 flex justify-center shrink-0 sticky bottom-0 z-10" style={{ paddingBottom: 'max(16px, env(safe-area-inset-bottom))' }}>
           <div className="w-full max-w-[744px]">
-          <div className="bg-white border border-[#EBEBEB] rounded-[18px] lg:rounded-xl shadow-[0px_4px_16px_0px_rgba(0,0,0,0.08)] focus-within:border-[#1F32D6] focus-within:shadow-[0px_4px_16px_0px_rgba(79,94,255,0.12)] transition-all flex flex-col">
+          <div className="bg-white border border-[#EBEBEB] rounded-[18px] lg:rounded-xl shadow-[0px_2px_8px_0px_rgba(0,0,0,0.04)] focus-within:border-[#1F32D6] focus-within:shadow-[0px_2px_12px_0px_rgba(31,50,214,0.08)] transition-all flex flex-col">
             {inputExpanded && (
               <textarea
                 ref={(el) => { if (el) { el.focus(); el.selectionStart = el.selectionEnd = el.value.length; } }}
