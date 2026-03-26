@@ -173,9 +173,9 @@ export default function DashboardLayout() {
             onClick={() => { setAvatarTooltip(false); setAccountMenuOpen(!accountMenuOpen); setMobileLangPanel(false); }}
             onMouseEnter={() => { if (sidebarCollapsed && !accountMenuOpen) setAvatarTooltip(true); }}
             onMouseLeave={() => setAvatarTooltip(false)}
-            className={`w-full flex items-center gap-[12px] transition-all duration-300 ease-in-out rounded-none overflow-hidden py-[16px] ${sidebarCollapsed ? 'px-[8px]' : 'px-[16px] hover:bg-[#EBEBEB]'}`}
+            className={`w-full flex items-center gap-[12px] transition-all duration-300 ease-in-out rounded-none overflow-hidden py-[16px] ${sidebarCollapsed ? 'px-[8px]' : 'px-[16px] hover:bg-[#F0F2FF]'}`}
           >
-            <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'rounded-none p-[8px] -m-[8px] hover:bg-[#EBEBEB] transition-colors' : ''}`}>
+            <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'rounded-none p-[8px] -m-[8px] hover:bg-[#F0F2FF] transition-colors' : ''}`}>
               <div className="w-9 h-9 rounded-full bg-[#EEF0FF] flex items-center justify-center shrink-0">
                 <span className="text-[#1F32D6] text-[13px] font-semibold leading-none">{(user.name || 'A').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}</span>
               </div>
@@ -456,7 +456,7 @@ export default function DashboardLayout() {
               <div className="flex-1 overflow-y-auto px-5 pt-5 pb-8 space-y-2">
                 <button
                   onClick={() => { setLanguage('en'); setMobileLangPanel(false); setAccountMenuOpen(false); }}
-                  className={`flex items-center justify-between w-full py-4 px-4 rounded-2xl transition-colors ${language === 'en' ? 'bg-[#F0F1FF]' : 'bg-[#FAFAFA] hover:bg-[#EBEBEB]'}`}
+                  className={`flex items-center justify-between w-full py-4 px-4 rounded-2xl transition-colors ${language === 'en' ? 'bg-[#F0F1FF]' : 'bg-[#FAFAFA] hover:bg-[#F0F2FF]'}`}
                 >
                   <span className={`font-medium text-[15px] ${language === 'en' ? 'text-[#1F32D6]' : 'text-[#0A0A0A]'}`}>English</span>
                   {language === 'en' && (
@@ -465,7 +465,7 @@ export default function DashboardLayout() {
                 </button>
                 <button
                   onClick={() => { setLanguage('zh'); setMobileLangPanel(false); setAccountMenuOpen(false); }}
-                  className={`flex items-center justify-between w-full py-4 px-4 rounded-2xl transition-colors ${language === 'zh' ? 'bg-[#F0F1FF]' : 'bg-[#FAFAFA] hover:bg-[#EBEBEB]'}`}
+                  className={`flex items-center justify-between w-full py-4 px-4 rounded-2xl transition-colors ${language === 'zh' ? 'bg-[#F0F1FF]' : 'bg-[#FAFAFA] hover:bg-[#F0F2FF]'}`}
                 >
                   <span className={`font-medium text-[15px] ${language === 'zh' ? 'text-[#1F32D6]' : 'text-[#0A0A0A]'}`}>中文</span>
                   {language === 'zh' && (
