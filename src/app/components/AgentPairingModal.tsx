@@ -265,7 +265,7 @@ ${buildCommand()}`;
               {/* Simulate button (dev) */}
               <button
                 onClick={simulatePairing}
-                className="w-full mt-2 h-[32px] rounded-[8px] border border-dashed border-[rgba(10,10,10,0.15)] font-normal text-[11px] text-[#7C7C7C] hover:bg-[#FAFAFA] transition-colors"
+                className="w-full mt-2 h-[32px] rounded-[8px] border border-dashed border-[rgba(10,10,10,0.15)] font-normal text-[11px] text-[#7C7C7C] hover:bg-[#F0F2FF] transition-colors"
               >
                 ⚡ Simulate Agent Connection
               </button>

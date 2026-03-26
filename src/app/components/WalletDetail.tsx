@@ -171,7 +171,7 @@ export default function WalletDetail({
             <div className="relative" ref={switcherRef}>
               <button
                 onClick={() => setSwitcherOpen(!switcherOpen)}
-                className="flex items-center gap-1.5 px-2.5 py-1 rounded-[8px] font-medium text-[12px] text-[#7C7C7C] border border-[rgba(10,10,10,0.1)] hover:bg-[#FAFAFA] hover:border-[rgba(10,10,10,0.15)] transition-colors"
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-[8px] font-medium text-[12px] text-[#7C7C7C] border border-[rgba(10,10,10,0.1)] hover:bg-[#F0F2FF] hover:border-[rgba(10,10,10,0.15)] transition-colors"
               >
                 <Wallet className="w-3.5 h-3.5" strokeWidth={1.5} />
                 {t('walletDetail.switchWallet')}
@@ -186,7 +186,7 @@ export default function WalletDetail({
                       className={`w-full text-left px-3 py-2 text-[13px] transition-colors ${
                         w.id === wallet.id
                           ? 'text-[#1F32D6] bg-[rgba(79,94,255,0.04)] font-medium'
-                          : 'text-[#0A0A0A] hover:bg-[#FAFAFA] font-normal'
+                          : 'text-[#0A0A0A] hover:bg-[#F0F2FF] font-normal'
                       }`}
                     >
                       {w.name}
@@ -200,7 +200,7 @@ export default function WalletDetail({
         <div className="flex items-center gap-2">
           <button
             onClick={onClaimWallet || noop}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-[8px] font-medium text-[12px] text-[#7C7C7C] border border-[rgba(10,10,10,0.1)] hover:bg-[#FAFAFA] transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-[8px] font-medium text-[12px] text-[#7C7C7C] border border-[rgba(10,10,10,0.1)] hover:bg-[#F0F2FF] transition-colors"
           >
             <Download className="w-3.5 h-3.5" strokeWidth={1.5} />
             {t('walletPage.claimWallet')}

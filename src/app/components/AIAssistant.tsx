@@ -755,7 +755,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
               <div ref={menuRef} className="absolute right-0 top-full mt-1 bg-white rounded-lg shadow-lg border border-[#EBEBEB] py-1 z-50" style={{ minWidth: '120px' }}>
                 <button
                   onClick={(e) => { e.stopPropagation(); setDeleteConfirmId(session.id); setMenuOpenId(null); }}
-                  className="w-full text-left px-3 py-2 text-sm text-red-500 hover:bg-[#FAFAFA] flex items-center gap-2"
+                  className="w-full text-left px-3 py-2 text-sm text-red-500 hover:bg-[#F0F2FF] flex items-center gap-2"
                 >
                   <Trash2 style={{ width: '14px', height: '14px' }} strokeWidth={1.5} />
                   {language === 'zh' ? '删除' : 'Delete'}
@@ -790,7 +790,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
           />
           <button
             onClick={() => setShowSearchModal(false)}
-            className="w-[28px] h-[28px] flex items-center justify-center rounded-[6px] hover:bg-[#FAFAFA] transition-colors text-[#7C7C7C]"
+            className="w-[28px] h-[28px] flex items-center justify-center rounded-[6px] hover:bg-[#F0F2FF] transition-colors text-[#7C7C7C]"
           >
             <X className="w-[16px] h-[16px]" strokeWidth={1.5} />
           </button>
@@ -806,7 +806,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
             <button
               key={session.id}
               onClick={() => { handleSwitchSession(session); setShowSearchModal(false); }}
-              className="w-full flex items-center gap-3 px-5 py-2.5 hover:bg-[#FAFAFA] transition-colors"
+              className="w-full flex items-center gap-3 px-5 py-2.5 hover:bg-[#F0F2FF] transition-colors"
             >
               <MessageCircle className="w-[16px] h-[16px] text-[#7C7C7C] shrink-0" strokeWidth={1.5} />
               <span className="text-[14px] text-[#0A0A0A] truncate">{session.title}</span>
@@ -1009,7 +1009,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                             onClick={() => {
                               handleSendDirect(label);
                             }}
-                            className="w-fit px-[16px] py-[10px] rounded-[12px] border border-[#EBEBEB] bg-white hover:bg-[#FAFAFA] transition-all text-[14px] leading-[20px] font-normal text-[#0A0A0A]"
+                            className="w-fit px-[16px] py-[10px] rounded-[12px] border border-[#EBEBEB] bg-white hover:bg-[#F0F2FF] transition-all text-[14px] leading-[20px] font-normal text-[#0A0A0A]"
                           >
                             {label}
                           </button>
@@ -1158,7 +1158,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                       { emoji: '\uD83D\uDCB3', label: 'Permissions' },
                       { emoji: '\u26FD', label: 'Gas fees' },
                     ]).map((item) => (
-                      <button key={item.label} onClick={() => handleSendDirect(item.label)} className="flex items-center gap-1.5 h-[36px] px-3 bg-transparent hover:bg-[#FAFAFA] text-[13px] font-normal text-[#7C7C7C] rounded-full transition-colors border border-[#EBEBEB]">
+                      <button key={item.label} onClick={() => handleSendDirect(item.label)} className="flex items-center gap-1.5 h-[36px] px-3 bg-transparent hover:bg-[#F0F2FF] text-[13px] font-normal text-[#7C7C7C] rounded-full transition-colors border border-[#EBEBEB]">
                         <span className="text-[13px]">{item.emoji}</span>
                         {item.label}
                       </button>
@@ -1195,7 +1195,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                       <div className={`flex items-center justify-between px-3 pb-3 ${!inputExpanded ? 'pt-3' : ''}`}>
                         <div className="flex items-center relative flex-1 min-w-0">
                           <div className="relative group shrink-0">
-                            <button onClick={() => fileInputRef.current?.click()} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] text-[#0A0A0A] hover:bg-[#FAFAFA] transition-colors">
+                            <button onClick={() => fileInputRef.current?.click()} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] text-[#0A0A0A] hover:bg-[#F0F2FF] transition-colors">
                               <Plus className="w-[18px] h-[18px]" strokeWidth={1.5} />
                             </button>
                             <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-[8px] px-[6px] py-[4px] bg-[#0A0A0A] text-white text-[12px] leading-[16px] rounded-[6px] whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
@@ -1248,7 +1248,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                           { emoji: '\uD83D\uDCB3', label: 'Permissions' },
                           { emoji: '\u26FD', label: 'Gas fees' },
                         ]).map((item) => (
-                          <button key={item.label} onClick={() => handleSendDirect(item.label)} className="flex items-center gap-1.5 h-[36px] px-4 bg-transparent hover:bg-[#FAFAFA] text-sm font-normal text-[#7C7C7C] rounded-full transition-colors border border-[#EBEBEB]">
+                          <button key={item.label} onClick={() => handleSendDirect(item.label)} className="flex items-center gap-1.5 h-[36px] px-4 bg-transparent hover:bg-[#F0F2FF] text-sm font-normal text-[#7C7C7C] rounded-full transition-colors border border-[#EBEBEB]">
                             <span className="text-[14px]">{item.emoji}</span>
                             {item.label}
                           </button>
@@ -1292,7 +1292,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                     <div className={`flex items-center justify-between px-3 pb-3 ${!inputExpanded ? 'pt-3' : ''}`}>
                       <div className="flex items-center relative flex-1 min-w-0">
                         <div className="relative group shrink-0">
-                          <button onClick={() => fileInputRef.current?.click()} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] text-[#0A0A0A] hover:bg-[#FAFAFA] transition-colors">
+                          <button onClick={() => fileInputRef.current?.click()} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] text-[#0A0A0A] hover:bg-[#F0F2FF] transition-colors">
                             <Plus className="w-[18px] h-[18px]" strokeWidth={1.5} />
                           </button>
                           <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-[8px] px-[6px] py-[4px] bg-[#0A0A0A] text-white text-[12px] leading-[16px] rounded-[6px] whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
@@ -1361,7 +1361,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
             <div className={`flex items-center justify-between px-3 pb-3 ${!inputExpanded ? 'pt-3' : ''}`}>
               <div className="flex items-center relative flex-1 min-w-0">
                 <div className="relative group shrink-0">
-                  <button onClick={() => fileInputRef.current?.click()} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] text-[#0A0A0A] hover:bg-[#FAFAFA] transition-colors">
+                  <button onClick={() => fileInputRef.current?.click()} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] text-[#0A0A0A] hover:bg-[#F0F2FF] transition-colors">
                     <Plus className="w-[18px] h-[18px]" strokeWidth={1.5} />
                   </button>
                   <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-[8px] px-[6px] py-[4px] bg-[#0A0A0A] text-white text-[12px] leading-[16px] rounded-[6px] whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
@@ -1416,7 +1416,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-[#EBEBEB]">
           <span className="text-[16px] font-medium text-[#0A0A0A]">{language === 'zh' ? '对话历史' : 'Chat History'}</span>
-          <button onClick={() => setMobileHistoryOpen(false)} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] hover:bg-[#FAFAFA] transition-colors">
+          <button onClick={() => setMobileHistoryOpen(false)} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] hover:bg-[#F0F2FF] transition-colors">
             <X className="w-[18px] h-[18px] text-[#7C7C7C]" strokeWidth={1.5} />
           </button>
         </div>
@@ -1471,7 +1471,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
             <button
               key={session.id}
               onClick={() => handleSwitchSession(session)}
-              className={`w-full text-left px-3 py-2.5 rounded-[8px] text-[14px] leading-[20px] truncate transition-colors ${activeChatId === session.id ? 'bg-[#EBEBEB] text-[#0A0A0A]' : 'text-[#0A0A0A] hover:bg-[#FAFAFA]'}`}
+              className={`w-full text-left px-3 py-2.5 rounded-[8px] text-[14px] leading-[20px] truncate transition-colors ${activeChatId === session.id ? 'bg-[#EBEBEB] text-[#0A0A0A]' : 'text-[#0A0A0A] hover:bg-[#F0F2FF]'}`}
             >
               {session.title}
             </button>

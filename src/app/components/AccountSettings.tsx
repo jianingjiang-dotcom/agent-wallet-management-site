@@ -56,7 +56,7 @@ function ConfirmModal({
         <div className="flex gap-3 pt-2">
           <button
             onClick={onCancel}
-            className="flex-1 h-[44px] rounded-xl border border-[#EBEBEB] text-[14px] font-medium text-[#0A0A0A] hover:bg-[#FAFAFA] transition-colors"
+            className="flex-1 h-[44px] rounded-xl border border-[#EBEBEB] text-[14px] font-medium text-[#0A0A0A] hover:bg-[#F0F2FF] transition-colors"
           >
             {/* Cancel */}
             {onCancel && 'Cancel'}
@@ -247,7 +247,7 @@ export default function AccountSettings() {
                 </button>
                 <button
                   onClick={handleCancelName}
-                  className="w-8 h-8 flex items-center justify-center rounded-lg border border-[#EBEBEB] text-[#7C7C7C] hover:bg-[#FAFAFA] transition-colors"
+                  className="w-8 h-8 flex items-center justify-center rounded-lg border border-[#EBEBEB] text-[#7C7C7C] hover:bg-[#F0F2FF] transition-colors"
                 >
                   <X className="w-4 h-4" strokeWidth={1.5} />
                 </button>
@@ -259,7 +259,7 @@ export default function AccountSettings() {
                 </span>
                 <button
                   onClick={() => setEditingName(true)}
-                  className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#FAFAFA] text-[#7C7C7C] hover:text-[#7C7C7C] transition-colors"
+                  className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#F0F2FF] text-[#7C7C7C] hover:text-[#7C7C7C] transition-colors"
                   title={t('account.editName')}
                 >
                   <Pencil className="w-3.5 h-3.5" strokeWidth={1.5} />

@@ -240,7 +240,7 @@ export default function ApprovalPage({ initialTab = 'all', onPendingCountChange 
                   </button>
                   <button
                     onClick={() => handleReject(record.id)}
-                    className="flex-1 h-[36px] bg-white border border-[#EBEBEB] hover:bg-[#FAFAFA] text-[#0A0A0A] text-[13px] font-medium rounded-lg transition-colors flex items-center justify-center gap-1.5"
+                    className="flex-1 h-[36px] bg-white border border-[#EBEBEB] hover:bg-[#F0F2FF] text-[#0A0A0A] text-[13px] font-medium rounded-lg transition-colors flex items-center justify-center gap-1.5"
                   >
                     <XCircle className="w-4 h-4" />
                     {language === 'zh' ? '拒绝' : 'Reject'}
