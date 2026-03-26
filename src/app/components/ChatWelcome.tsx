@@ -1,5 +1,4 @@
 import { useLanguage } from '../contexts/LanguageContext';
-import AvatarCharacter from './AvatarCharacter';
 
 interface ChatWelcomeProps {
   variant: 'first-wallet' | 'returning';
@@ -59,20 +58,13 @@ export default function ChatWelcome({ variant }: ChatWelcomeProps) {
   }
 
   return (
-    <>
-      <div className="flex flex-col lg:flex-row items-center lg:items-center gap-3 mb-8 lg:justify-center">
-        <div className="shrink-0 mb-1 lg:mb-0">
-          <AvatarCharacter variant="wave" size={44} />
-        </div>
-        <div className="flex flex-col text-center lg:text-left">
-          <h2 className="font-semibold text-[22px] lg:text-[36px] text-[#0A0A0A] leading-tight">
-            {greeting}{userName ? `, ${userName}` : ''}
-          </h2>
-          <p className="text-[#0A0A0A] text-[14px] lg:text-[16px] leading-[21px] lg:leading-[24px] mt-1">
-            {language === 'zh' ? '你的钱包助手已就绪，随时为你服务' : 'Your wallet assistant is ready to help'}
-          </p>
-        </div>
-      </div>
-    </>
+    <div className="flex flex-col items-center text-center mb-8">
+      <h2 className="font-semibold text-[22px] lg:text-[36px] text-[#0A0A0A] leading-tight">
+        {greeting}{userName ? `, ${userName}` : ''}
+      </h2>
+      <p className="text-[#0A0A0A] text-[14px] lg:text-[16px] leading-[21px] lg:leading-[24px] mt-1.5">
+        {language === 'zh' ? '你的钱包助手已就绪，随时为你服务' : 'Your wallet assistant is ready to help'}
+      </p>
+    </div>
   );
 }
