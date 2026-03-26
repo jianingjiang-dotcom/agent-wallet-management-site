@@ -176,7 +176,9 @@ export default function DashboardLayout() {
             className={`w-full flex items-center gap-[12px] transition-all duration-300 ease-in-out rounded-none overflow-hidden py-[16px] ${sidebarCollapsed ? 'px-[8px]' : 'px-[16px] hover:bg-[#EDEEF3]'}`}
           >
             <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'rounded-none p-[8px] -m-[8px] hover:bg-[#EDEEF3] transition-colors' : ''}`}>
-              <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0"><rect width="36" height="36" rx="18" fill="#1F32D6"/><path d="M16.8247 12H19.1753L24 24H21.7909L20.6421 20.9916H15.3579L14.2091 24H12L16.8247 12ZM15.9764 19.3782H20.0236L18.0442 14.1176H17.9735L15.9764 19.3782Z" fill="white"/></svg>
+              <div className="w-9 h-9 rounded-full bg-[#E8725A] flex items-center justify-center shrink-0">
+                <span className="text-white text-[13px] font-semibold leading-none">{(user.name || 'A').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}</span>
+              </div>
             </div>
             <div className={`flex-1 min-w-0 text-left whitespace-nowrap transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}>
               <div className="font-['Inter',sans-serif] font-semibold text-[14px] leading-[20px] text-[#1c1c1c] truncate">{user.name}</div>
