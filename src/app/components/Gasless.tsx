@@ -7,7 +7,7 @@ export default function Gasless() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="font-['Inter',sans-serif] font-semibold text-[28px] text-[#0a0a0a] mb-1">
+        <h1 className="font-['Inter',sans-serif] font-semibold text-[22px] sm:text-[28px] text-[#0a0a0a] mb-1">
           {t('gasAccount.title')}
         </h1>
         <p className="font-['Inter',sans-serif] font-normal text-[15px] text-[#7c7c7c]">
@@ -15,7 +15,7 @@ export default function Gasless() {
         </p>
       </div>
 
-      <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[16px] flex flex-col items-center justify-center py-20 px-8">
+      <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[16px] flex flex-col items-center justify-center py-10 sm:py-20 px-8">
         <div className="w-[72px] h-[72px] rounded-[16px] bg-[rgba(79,94,255,0.08)] border-2 border-[rgba(79,94,255,0.12)] flex items-center justify-center mb-6">
           <Fuel className="w-9 h-9 text-[#4f5eff]" />
         </div>

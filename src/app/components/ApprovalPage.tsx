@@ -156,7 +156,7 @@ export default function ApprovalPage({ initialTab = 'all', onPendingCountChange 
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-1 mb-6 border-b border-[#EBEBEB]">
+      <div className="flex items-center gap-1 mb-6 border-b border-[#EBEBEB] overflow-x-auto whitespace-nowrap">
         {tabs.map(tab => (
           <button
             key={tab.key}
@@ -200,7 +200,7 @@ export default function ApprovalPage({ initialTab = 'all', onPendingCountChange 
                 <span className="text-[14px] font-semibold text-[#0A0A0A]">{record.amount}</span>
               </div>
 
-              <div className="grid grid-cols-2 gap-y-2 gap-x-4 mb-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4 mb-3">
                 <div className="flex items-center gap-2 text-[13px]">
                   <Wallet className="w-3.5 h-3.5 text-[#999]" strokeWidth={1.5} />
                   <span className="text-[#73798B]">{language === 'zh' ? '钱包' : 'Wallet'}:</span>

@@ -19,7 +19,7 @@ export default function ChatWelcome({ variant }: ChatWelcomeProps) {
 
       {/* Title */}
       <h2
-        className={`font-semibold text-[20px] leading-[30px] md:text-[28px] md:leading-[36px] md:h-[36px] md:overflow-hidden ${isFirst ? 'animate-reveal-up' : ''}`}
+        className={`font-semibold text-[26px] sm:text-[32px] lg:text-[36px] text-[#0A0A0A] text-center leading-tight ${isFirst ? 'animate-reveal-up' : ''}`}
         style={{
           ...(isFirst && { animationDelay: '800ms', animationDuration: '500ms' }),
         }}
@@ -41,7 +41,7 @@ export default function ChatWelcome({ variant }: ChatWelcomeProps) {
       {/* Subtitle - only show for first wallet */}
       {isFirst && (
         <p
-          className="text-[#73798B] text-[14px] leading-[21px] md:text-[16px] md:leading-[24px] animate-reveal-up"
+          className="text-[#7C7C7C] text-[14px] leading-[21px] md:text-[16px] md:leading-[24px] animate-reveal-up"
           style={{
             maxWidth: '600px',
             animationDelay: '1100ms',

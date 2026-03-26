@@ -76,7 +76,7 @@ export default function Login() {
         <LanguageSwitcher />
       </div>
 
-      <div className="w-full max-w-[446px] flex flex-col gap-[40px] items-center">
+      <div className="w-full max-w-[446px] flex flex-col gap-6 sm:gap-[40px] items-center">
         {/* Logo and Header */}
         <div className="content-stretch flex flex-col gap-[8px] items-center w-full">
           <div
@@ -95,7 +95,7 @@ export default function Login() {
 
         {/* Login Card */}
         <div className="bg-white relative rounded-[12px] w-full shadow-[0px_8px_64px_0px_rgba(0,0,0,0.08)] border border-[rgba(10,10,10,0.08)]">
-          <div className="content-stretch flex flex-col gap-[24px] items-start p-[32px] w-full">
+          <div className="content-stretch flex flex-col gap-[24px] items-start px-5 py-6 sm:p-[32px] w-full">
             <div className="text-center w-full">
               <h2 className="font-['Inter',sans-serif] font-semibold leading-[1.2] text-[24px] text-[#0a0a0a] mb-2">
                 {t('auth.login')}

@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { Outlet, useNavigate, Link, useLocation } from 'react-router';
-import { Wallet, LogOut, Menu, X, User, Fuel, ReceiptJapaneseYen, Settings, Globe, ChevronRight, Play } from 'lucide-react';
+import { Wallet, LogOut, Menu, X, User, Fuel, ReceiptJapaneseYen, Settings, Globe, ChevronRight, Play, ChevronLeft } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useWalletStore } from '../hooks/useWalletStore';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -26,7 +26,8 @@ export default function DashboardLayout() {
   const [user, setUser] = useState<any>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [languageFlyoutOpen, setLanguageFlyoutOpen] = useState(false);
+  const [mobileLangPanel, setMobileLangPanel] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [demoApproval, setDemoApproval] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -35,8 +36,6 @@ export default function DashboardLayout() {
   const [delegationTarget, setDelegationTarget] = useState<{ open: boolean; walletId: string }>({ open: false, walletId: "" });
   const [activeModal, setActiveModal] = useState<'gas' | 'billing' | 'settings' | null>(null);
   const [hasActiveChat, setHasActiveChat] = useState(false);
-  const [toggleTooltip, setToggleTooltip] = useState(false);
-  const [avatarTooltip, setAvatarTooltip] = useState(false);
   const avatarBtnRef = useRef<HTMLButtonElement>(null);
   const accountMenuRef = useRef<HTMLDivElement>(null);
   const accountMenuPortalRef = useRef<HTMLDivElement>(null);
@@ -54,6 +53,8 @@ export default function DashboardLayout() {
   // Close account menu on click outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
+      // On mobile, the bottom-sheet uses its own backdrop — skip click-outside logic
+      if (window.innerWidth < 1024) return;
       if (accountMenuRef.current && !accountMenuRef.current.contains(e.target as Node) && !accountMenuPortalRef.current?.contains(e.target as Node)) {
         setAccountMenuOpen(false);
       }
@@ -134,22 +135,23 @@ export default function DashboardLayout() {
       {/* Sidebar */}
       <aside
         className={`
-          fixed md:sticky top-0 left-0 h-screen bg-[#F8F9FC] flex flex-col z-40 border-r border-[#EDEEF3]
+          fixed lg:sticky top-0 left-0 h-screen bg-[#FAFAFA] flex flex-col z-[60] border-r border-[#EDEEF3]
           transition-all duration-300 ease-in-out overflow-hidden
-          ${sidebarCollapsed ? 'w-[52px] bg-white' : 'w-[260px]'}
-          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
-          shadow-xl md:shadow-none
+          w-[260px]
+          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+          shadow-xl lg:shadow-none
         `}
       >
         <div className="w-[260px] shrink-0 flex flex-col h-full relative z-[1]">
         {/* Logo - desktop */}
-        <div className="hidden md:flex items-center h-[64px] pl-4 pr-3 pointer-events-none">
-          <div className={`shrink-0 transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+        <div className="hidden lg:flex items-center h-[64px] pl-4 pr-3 pointer-events-none">
+          <div className="shrink-0">
             <LogoText />
           </div>
         </div>
-        {/* Mobile close button */}
-        <div className="pt-[24px] pb-[16px] flex items-center justify-end px-[8px] md:hidden">
+        {/* Mobile header — logo + close */}
+        <div className="h-[64px] flex items-center justify-between px-4 lg:hidden">
+          <LogoText />
           <button
             onClick={() => setSidebarOpen(false)}
             className="p-2 -mr-2 rounded-lg hover:bg-slate-100 transition-colors"
@@ -161,32 +163,30 @@ export default function DashboardLayout() {
         <div id="sidebar-chat-area" className="overflow-hidden flex flex-col min-h-0 [&:not(:empty)]:flex-1" />
 
         {/* User Profile */}
-        <div className={`relative transition-[border-color] duration-300 ease-in-out ${sidebarCollapsed ? 'border-t border-transparent' : 'border-t border-[#EDEEF3]'}`} ref={accountMenuRef}>
+        <div className="relative border-t border-[#EDEEF3]" ref={accountMenuRef}>
           <button
             ref={avatarBtnRef}
-            onClick={() => { setAvatarTooltip(false); setAccountMenuOpen(!accountMenuOpen); }}
-            onMouseEnter={() => { if (sidebarCollapsed && !accountMenuOpen) setAvatarTooltip(true); }}
-            onMouseLeave={() => setAvatarTooltip(false)}
-            className={`w-full flex items-center gap-[12px] transition-all duration-300 ease-in-out rounded-none overflow-hidden py-[16px] ${sidebarCollapsed ? 'px-[8px]' : 'px-[16px] hover:bg-[#EDEEF3]'}`}
+            onClick={() => { setAccountMenuOpen(!accountMenuOpen); setMobileLangPanel(false); }}
+            className="w-full flex items-center gap-[12px] transition-all duration-300 ease-in-out rounded-none overflow-hidden py-[16px] px-[16px] hover:bg-[#EDEEF3]"
           >
-            <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'rounded-none p-[8px] -m-[8px] hover:bg-[#EDEEF3] transition-colors' : ''}`}>
+            <div className="shrink-0 flex items-center justify-center">
               <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0"><rect width="36" height="36" rx="18" fill="#4F5EFF"/><path d="M16.8247 12H19.1753L24 24H21.7909L20.6421 20.9916H15.3579L14.2091 24H12L16.8247 12ZM15.9764 19.3782H20.0236L18.0442 14.1176H17.9735L15.9764 19.3782Z" fill="white"/></svg>
             </div>
-            <div className={`flex-1 min-w-0 text-left whitespace-nowrap transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}>
+            <div className="flex-1 min-w-0 text-left whitespace-nowrap">
               <div className="font-['Inter',sans-serif] font-semibold text-[14px] leading-[20px] text-[#1c1c1c] truncate">{user.name}</div>
-              <div className="font-['Inter',sans-serif] font-normal text-[12px] leading-[16px] text-[#73798B] truncate">{user.email}</div>
+              <div className="font-['Inter',sans-serif] font-normal text-[12px] leading-[16px] text-[#7C7C7C] truncate">{user.email}</div>
             </div>
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className={`shrink-0 transition-all duration-300 ease-in-out ${accountMenuOpen ? '-rotate-90' : ''} ${sidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}><path d="M7.5 15L12.5 10L7.5 5" stroke="#73798B" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className={`shrink-0 transition-all duration-300 ease-in-out ${accountMenuOpen ? '-rotate-90' : ''}`}><path d="M7.5 15L12.5 10L7.5 5" stroke="#7C7C7C" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </button>
 
-          {/* Account Menu Dropdown - rendered via portal to avoid sidebar overflow clipping */}
+          {/* Account Menu Dropdown - rendered via portal to avoid sidebar overflow clipping (desktop only) */}
           {accountMenuOpen && createPortal(
             <div
               ref={accountMenuPortalRef}
-              className="fixed z-[100] bg-white rounded-[8px] border border-[rgba(10,10,10,0.08)] shadow-[0px_8px_24px_0px_rgba(0,0,0,0.12)] max-h-[70vh] overflow-y-auto"
+              className="fixed z-[100] bg-white rounded-[8px] border border-[rgba(10,10,10,0.08)] shadow-[0px_8px_24px_0px_rgba(0,0,0,0.12)] max-h-[70vh] overflow-y-auto hidden lg:block"
               style={{
-                width: sidebarCollapsed ? '220px' : '244px',
-                left: sidebarCollapsed ? '4px' : '8px',
+                width: '244px',
+                left: '8px',
                 bottom: `${window.innerHeight - (accountMenuRef.current?.getBoundingClientRect().top ?? 0) + 4}px`,
               }}
             >
@@ -263,89 +263,145 @@ export default function DashboardLayout() {
           )}
         </div>
         </div>
-        {/* Sidebar toggle button - after inner wrapper so it paints on top */}
-        <button
-          onClick={() => { setToggleTooltip(false); setSidebarCollapsed(!sidebarCollapsed); }}
-          onMouseEnter={() => setToggleTooltip(true)}
-          onMouseLeave={() => setToggleTooltip(false)}
-          className="hidden md:flex w-[36px] h-[36px] items-center justify-center rounded-[8px] hover:bg-[#EDEEF3] transition-colors text-[#73798B] absolute top-[14px] z-10"
-          style={{ left: sidebarCollapsed ? 'calc(50% - 18px)' : 'calc(100% - 48px)', transition: 'left 0.3s ease-in-out' }}
-        >
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.8333 2.5H4.16667C3.24619 2.5 2.5 3.24619 2.5 4.16667V15.8333C2.5 16.7538 3.24619 17.5 4.16667 17.5H15.8333C16.7538 17.5 17.5 16.7538 17.5 15.8333V4.16667C17.5 3.24619 16.7538 2.5 15.8333 2.5Z" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M7.5 2.5V17.5" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
-        </button>
-        {toggleTooltip && createPortal(
-          <div
-            className="fixed z-[200] px-[6px] py-[4px] bg-[#1C1C1C] text-white text-[12px] leading-[16px] rounded-[6px] whitespace-nowrap pointer-events-none"
-            style={sidebarCollapsed ? {
-              top: `${14 + 18}px`,
-              left: `${52 + 8}px`,
-              transform: 'translateY(-50%)',
-            } : {
-              top: `${14 + 36 + 8}px`,
-              left: `${212 + 18}px`,
-              transform: 'translateX(-50%)',
-            }}
-          >
-            {sidebarCollapsed ? (language === 'zh' ? '打开边栏' : 'Open sidebar') : (language === 'zh' ? '关闭边栏' : 'Close sidebar')}
-          </div>,
-          document.body
-        )}
-        {avatarTooltip && sidebarCollapsed && createPortal(
-          <div
-            className="fixed z-[200] px-[6px] py-[4px] bg-[#1C1C1C] text-white text-[12px] leading-[16px] rounded-[6px] whitespace-nowrap pointer-events-none"
-            style={{
-              bottom: `${window.innerHeight - (avatarBtnRef.current?.getBoundingClientRect().top ?? 0) - (avatarBtnRef.current?.getBoundingClientRect().height ?? 0) / 2}px`,
-              left: `${52 + 8}px`,
-              transform: 'translateY(50%)',
-            }}
-          >
-            {user?.name || 'Account'}
-          </div>,
-          document.body
-        )}
       </aside>
 
       {/* Overlay for mobile sidebar */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/40 z-30 md:hidden backdrop-blur-sm"
+          className="fixed inset-0 bg-black/40 z-[55] lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
+      )}
+
+      {/* Mobile bottom-sheet account menu */}
+      {accountMenuOpen && (
+        <div className="lg:hidden">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/30 z-40"
+            onClick={() => { setAccountMenuOpen(false); setMobileLangPanel(false); }}
+          />
+          {/* Bottom sheet */}
+          <div className="fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl z-50 shadow-2xl">
+            <div className="overflow-hidden">
+              <div
+                className="flex transition-transform duration-300 ease-in-out"
+                style={{ transform: mobileLangPanel ? 'translateX(-50%)' : 'translateX(0)' }}
+              >
+                {/* Panel 1: Account menu */}
+                <div className="w-full shrink-0 px-6 pt-6 pb-8">
+                  {/* User info */}
+                  <div className="flex items-center gap-3 mb-5">
+                    <svg width="40" height="40" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0"><rect width="36" height="36" rx="18" fill="#4F5EFF"/><path d="M16.8247 12H19.1753L24 24H21.7909L20.6421 20.9916H15.3579L14.2091 24H12L16.8247 12ZM15.9764 19.3782H20.0236L18.0442 14.1176H17.9735L15.9764 19.3782Z" fill="white"/></svg>
+                    <div className="min-w-0">
+                      <div className="font-semibold text-[15px] text-[#1c1c1c] truncate">{user.name}</div>
+                      <div className="text-[13px] text-[#7C7C7C] truncate">{user.email}</div>
+                    </div>
+                  </div>
+
+                  {/* Nav items */}
+                  {navItems.map((item) => {
+                    const Icon = item.icon;
+                    return (
+                      <button
+                        key={item.key}
+                        onClick={() => {
+                          setAccountMenuOpen(false);
+                          setMobileLangPanel(false);
+                          setSidebarOpen(false);
+                          setActiveModal(item.key);
+                        }}
+                        className="flex items-center gap-3 w-full py-3 text-[#0A0A0A]"
+                      >
+                        <Icon className="w-5 h-5 text-[#4F4F4F]" />
+                        <span className="font-medium text-[15px]">{item.label}</span>
+                        <ChevronRight className="w-4 h-4 text-[#7C7C7C] ml-auto" />
+                      </button>
+                    );
+                  })}
+
+                  <div className="border-t border-[rgba(10,10,10,0.06)] my-2" />
+
+                  {/* Language button */}
+                  <button
+                    onClick={() => setMobileLangPanel(true)}
+                    className="flex items-center gap-3 w-full py-3"
+                  >
+                    <Globe className="w-5 h-5 text-[#4F4F4F]" />
+                    <span className="font-medium text-[15px] text-[#0A0A0A]">{t('nav.language')}</span>
+                    <span className="ml-auto text-[13px] text-[#7C7C7C] mr-1">{language === 'en' ? 'English' : '中文'}</span>
+                    <ChevronRight className="w-4 h-4 text-[#7C7C7C]" />
+                  </button>
+
+                  <div className="border-t border-[rgba(10,10,10,0.06)] my-2" />
+
+                  {/* Sign Out */}
+                  <button
+                    onClick={() => {
+                      setAccountMenuOpen(false);
+                      setMobileLangPanel(false);
+                      setShowLogoutConfirm(true);
+                    }}
+                    className="flex items-center gap-3 w-full py-3"
+                  >
+                    <LogOut className="w-5 h-5 text-[#4F4F4F]" />
+                    <span className="font-medium text-[15px] text-[#0A0A0A]">{t('auth.logout')}</span>
+                  </button>
+
+                  {/* Cancel */}
+                  <button
+                    onClick={() => { setAccountMenuOpen(false); setMobileLangPanel(false); }}
+                    className="w-full mt-3 py-3 text-center font-medium text-[15px] text-[#7C7C7C] rounded-xl bg-[#F5F5F5]"
+                  >
+                    {language === 'zh' ? '取消' : 'Cancel'}
+                  </button>
+                </div>
+
+                {/* Panel 2: Language picker */}
+                <div className="w-full shrink-0 px-6 pt-6 pb-8">
+                  <button
+                    onClick={() => setMobileLangPanel(false)}
+                    className="flex items-center gap-2 mb-5 text-[#0A0A0A]"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                    <span className="font-semibold text-[15px]">{t('nav.language')}</span>
+                  </button>
+
+                  <button
+                    onClick={() => { setLanguage('en'); setMobileLangPanel(false); setAccountMenuOpen(false); }}
+                    className={`flex items-center justify-between w-full py-3 px-3 rounded-xl mb-2 ${language === 'en' ? 'bg-[#F0F1FF]' : 'bg-[#F5F5F5]'}`}
+                  >
+                    <span className="font-medium text-[15px] text-[#0A0A0A]">English</span>
+                    {language === 'en' && <div className="w-2 h-2 rounded-full bg-[#4F5EFF]" />}
+                  </button>
+                  <button
+                    onClick={() => { setLanguage('zh'); setMobileLangPanel(false); setAccountMenuOpen(false); }}
+                    className={`flex items-center justify-between w-full py-3 px-3 rounded-xl ${language === 'zh' ? 'bg-[#F0F1FF]' : 'bg-[#F5F5F5]'}`}
+                  >
+                    <span className="font-medium text-[15px] text-[#0A0A0A]">中文</span>
+                    {language === 'zh' && <div className="w-2 h-2 rounded-full bg-[#4F5EFF]" />}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0 min-h-0 bg-white relative">
 
-        {/* Logo bar when sidebar collapsed */}
-        {/* Spacer: instant height, no animation */}
-        <div className={`logo-bar-collapsed hidden md:block ${sidebarCollapsed ? 'h-[64px]' : 'h-0'}`} />
-        {/* Logo + divider: absolute positioned, opacity-only fade */}
-        <div className={`logo-bar-collapsed hidden md:flex items-center h-[64px] pl-[24px] bg-white absolute top-0 left-0 right-0 z-10 transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-          <LogoText />
-        </div>
-        <div className={`logo-bar-collapsed hidden md:block absolute top-[64px] left-0 right-0 h-px bg-[#EDEEF3] z-10 transition-opacity duration-300 ease-in-out ${sidebarCollapsed && hasActiveChat ? 'opacity-100' : 'opacity-0'}`} />
-        {/* Logo for wide screens (>= 1184px): absolute, no bar */}
-        <div className={`logo-bar-wide hidden md:block absolute top-[23px] left-[24px] z-10 transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-          <LogoText />
-        </div>
-
         {/* Mobile Header */}
-        <div className="md:hidden bg-white border-b border-[rgba(10,10,10,0.08)] px-4 py-3 flex items-center justify-between sticky top-0 z-20 shadow-sm">
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="text-[#0A0A0A] p-2 -ml-2 hover:bg-slate-100 rounded-lg transition-colors"
-            aria-label="Open menu"
-          >
-            <Menu className="w-6 h-6" />
-          </button>
+        <div className="lg:hidden bg-white border-b border-[rgba(10,10,10,0.08)] px-4 py-3 flex items-center justify-between sticky top-0 z-20 shadow-sm">
           <div className="flex items-center">
             <LogoText />
           </div>
           <button
-            onClick={() => setAccountMenuOpen(!accountMenuOpen)}
-            className="flex items-center justify-center"
+            onClick={() => setSidebarOpen(true)}
+            className="text-[#0A0A0A] p-2 -mr-2 hover:bg-slate-100 rounded-lg transition-colors"
+            aria-label="Open menu"
           >
-            <svg width="32" height="32" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="36" height="36" rx="18" fill="#4F5EFF"/><path d="M16.8247 12H19.1753L24 24H21.7909L20.6421 20.9916H15.3579L14.2091 24H12L16.8247 12ZM15.9764 19.3782H20.0236L18.0442 14.1176H17.9735L15.9764 19.3782Z" fill="white"/></svg>
+            <Menu className="w-6 h-6" />
           </button>
         </div>
 
@@ -365,7 +421,7 @@ export default function DashboardLayout() {
             onShowApprovalPage: () => setActiveModal('approval-page'),
             onHideApprovalPage: () => setActiveModal(null),
             showApprovalPage: activeModal === 'approval-page',
-            sidebarCollapsed,
+            sidebarCollapsed: false,
             demoApproval,
             setHasActiveChat,
           }} />

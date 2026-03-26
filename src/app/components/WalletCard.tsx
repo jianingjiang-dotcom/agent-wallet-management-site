@@ -36,7 +36,7 @@ export default function WalletCard({ wallet, delegationCount, onSelect }: Wallet
           <span className="font-['Inter',sans-serif] font-normal text-[11px] text-[#b0b0b0] uppercase tracking-wider">
             Wallet ID
           </span>
-          <code className="font-['JetBrains_Mono','SF_Mono','Consolas',monospace] text-[12px] text-[#0a0a0a]">
+          <code className="font-['JetBrains_Mono','SF_Mono','Consolas',monospace] text-[12px] text-[#0a0a0a] truncate">
             {wallet.id}
           </code>
         </div>

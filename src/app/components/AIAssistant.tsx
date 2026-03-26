@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useSearchParams, useOutletContext } from 'react-router';
-import { ArrowUp, Plus, AtSign, AlertTriangle, CheckCircle, XCircle, Search, MoreHorizontal, Bot, Trash2, Sparkles, Wallet, ChevronRight, SquarePen, PanelLeftClose, X, MessageCircle, ClipboardCheck, Send, Users, Link, FileText, Settings, Clock } from 'lucide-react';
+import { ArrowUp, Plus, AtSign, AlertTriangle, CheckCircle, XCircle, Search, MoreHorizontal, Bot, Trash2, Sparkles, Wallet, ChevronRight, SquarePen, PanelLeftClose, X, MessageCircle, ClipboardCheck, Send, Users, Link, FileText, Settings, Clock, History } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useWalletStore } from '../hooks/useWalletStore';
 import { useOnboardingChat } from '../hooks/useOnboardingChat';
@@ -75,6 +75,7 @@ export default function AIAssistant() {
   const [approvalInitialTab, setApprovalInitialTab] = useState<'all' | 'pending'>('all');
   const [sidebarPortal, setSidebarPortal] = useState<HTMLElement | null>(null);
   const [showWalletPicker, setShowWalletPicker] = useState<'empty' | 'chat' | null>(null);
+  const [mobileHistoryOpen, setMobileHistoryOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -249,6 +250,7 @@ export default function AIAssistant() {
   const handleSwitchSession = (session: ChatSession) => {
     setActiveChatId(session.id);
     setMessages(session.messages);
+    setMobileHistoryOpen(false);
     if (showWalletPage || showApprovalPage) onHideWalletPage();
   };
 
@@ -724,7 +726,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
       <div className={`flex-1 overflow-y-auto overflow-x-hidden px-2 flex flex-col gap-[2px] transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
         {chatSessions.length > 0 && (
           <div className="p-[8px]">
-            <span className="text-[14px] leading-[20px] font-normal text-[#73798B] opacity-50">
+            <span className="text-[14px] leading-[20px] font-normal text-[#7C7C7C] opacity-50">
               {language === 'zh' ? '对话历史' : 'History'}
             </span>
           </div>
@@ -743,7 +745,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
             </button>
             <button
               onClick={(e) => { e.stopPropagation(); setMenuOpenId(menuOpenId === session.id ? null : session.id); }}
-              className={`absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded transition-opacity text-[#73798B] hover:text-[#1c1c1c] ${
+              className={`absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded transition-opacity text-[#7C7C7C] hover:text-[#1c1c1c] ${
                 activeChatId === session.id || menuOpenId === session.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
               }`}
             >
@@ -966,7 +968,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
         )}
         {/* Messages area */}
         {(displayMessages.length > 0 || combinedTyping) && (
-        <div className="flex-1 overflow-y-auto px-6 pb-6 flex flex-col items-center" style={{ gap: '24px', paddingTop: demoApproval && hasWallets && pendingApprovalCount > 0 && !approvalBannerDismissed ? '92px' : '32px' }}>
+        <div className="flex-1 overflow-y-auto px-4 lg:px-6 pb-6 flex flex-col items-center" style={{ gap: '24px', paddingTop: demoApproval && hasWallets && pendingApprovalCount > 0 && !approvalBannerDismissed ? '92px' : '24px' }}>
           <div className="w-full max-w-[744px] flex-1" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
 
           {displayMessages.map((message, msgIndex) => {
@@ -1007,7 +1009,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                             onClick={() => {
                               handleSendDirect(label);
                             }}
-                            className="w-fit px-[16px] py-[10px] rounded-[12px] border border-[#EDEEF3] bg-white hover:bg-[#F8F9FC] transition-all text-[14px] leading-[20px] font-normal text-[#1C1C1C]"
+                            className="w-fit px-[16px] py-[10px] rounded-[12px] border border-[#EDEEF3] bg-white hover:bg-[#FAFAFA] transition-all text-[14px] leading-[20px] font-normal text-[#1C1C1C]"
                           >
                             {label}
                           </button>
@@ -1112,11 +1114,11 @@ Would you like me to help adjust your current Agent's limit settings?`;
 
           {combinedTyping && (
             <div className="flex items-start">
-              <div className="bg-white border border-[#EBEBEB] rounded-2xl px-4 py-3">
+              <div className="px-1 py-3">
                 <div className="flex space-x-1.5">
-                  <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                  <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                  <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                  <div className="w-1.5 h-1.5 bg-[#4f5eff]/30 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                  <div className="w-1.5 h-1.5 bg-[#4f5eff]/30 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                  <div className="w-1.5 h-1.5 bg-[#4f5eff]/30 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                 </div>
               </div>
             </div>
@@ -1177,13 +1179,16 @@ Would you like me to help adjust your current Agent's limit settings?`;
                     <div className={`flex items-center justify-between px-3 pb-3 ${!inputExpanded ? 'pt-3' : ''}`}>
                       <div className="flex items-center relative flex-1 min-w-0">
                         <div className="relative group shrink-0">
-                          <button onClick={() => fileInputRef.current?.click()} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] text-[#1C1C1C] hover:bg-[#F8F9FC] transition-colors">
+                          <button onClick={() => fileInputRef.current?.click()} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] text-[#1C1C1C] hover:bg-[#FAFAFA] transition-colors">
                             <Plus className="w-[18px] h-[18px]" strokeWidth={2} />
                           </button>
                           <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-[8px] px-[6px] py-[4px] bg-[#1C1C1C] text-white text-[12px] leading-[16px] rounded-[6px] whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
                             添加图片/附件
                           </div>
                         </div>
+                        <button onClick={() => setMobileHistoryOpen(true)} className="lg:hidden w-[32px] h-[32px] flex items-center justify-center rounded-[8px] text-[#1C1C1C] hover:bg-[#FAFAFA] transition-colors shrink-0">
+                          <History className="w-[18px] h-[18px]" strokeWidth={2} />
+                        </button>
                         {!inputExpanded && (
                           <input
                             ref={(el) => { if (el && shouldFocusInputRef.current) { el.focus(); shouldFocusInputRef.current = false; } }}
@@ -1215,34 +1220,37 @@ Would you like me to help adjust your current Agent's limit settings?`;
                     </div>
                   </div>
 
-                {/* Suggestions */}
+                {/* Starter prompt pills */}
                 {!welcomeType && (
-                  <div className="flex flex-wrap gap-[12px] mt-[24px] md:mt-[32px] justify-center">
+                  <div className="flex flex-wrap gap-[10px] mt-[20px] md:mt-[28px] justify-center">
                     {/* CTA suggestion for no-wallet users */}
                     {!hasWallets && (
                       <button
                         onClick={handleStartOnboarding}
-                        className="w-fit px-[12px] py-[8px] md:px-[16px] md:py-[10px] rounded-[12px] bg-gradient-to-r from-[#4F5EFF] to-[#6C7AFF] hover:from-[#3d4dd9] hover:to-[#5b6aef] text-white text-[13px] md:text-[14px] leading-[20px] font-normal transition-all shadow-none hover:shadow-none flex items-center gap-1.5"
+                        className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#4F5EFF] to-[#6C7AFF] hover:from-[#3d4dd9] hover:to-[#5b6aef] text-white text-sm rounded-full transition-colors"
                       >
                         <Sparkles className="w-4 h-4" />
                         {t('onboarding.suggestion.createWallet')}
                       </button>
                     )}
                     {(language === 'zh' ? [
-                      'Cobo Pact 能做什么？',
-                      '第一次如何给钱包充值？',
-                      '如何设置 Agent 的每日花费上限？',
+                      { emoji: '\uD83D\uDCE6', label: '如何安装 Agent' },
+                      { emoji: '\uD83D\uDD12', label: '设置安全策略' },
+                      { emoji: '\uD83D\uDCB3', label: '查看转账权限' },
+                      { emoji: '\u26FD', label: 'Gas 费用优化' },
                     ] : [
-                      'Introduce Cobo Pact capabilities',
-                      'How to make the first deposit',
-                      'How to limit Agent daily spending',
-                    ]).map((label) => (
+                      { emoji: '\uD83D\uDCE6', label: 'How to install Agent' },
+                      { emoji: '\uD83D\uDD12', label: 'Set up security policies' },
+                      { emoji: '\uD83D\uDCB3', label: 'Check transfer permissions' },
+                      { emoji: '\u26FD', label: 'Optimize gas fees' },
+                    ]).map((item) => (
                       <button
-                        key={label}
-                        onClick={() => handleSendDirect(label)}
-                        className="w-fit px-[12px] py-[8px] md:px-[16px] md:py-[10px] rounded-[12px] border border-[#EDEEF3] bg-white hover:bg-[#F8F9FC] transition-all text-[13px] md:text-[14px] leading-[20px] font-normal text-[#73798B] text-left"
+                        key={item.label}
+                        onClick={() => handleSendDirect(item.label)}
+                        className="flex items-center gap-2 px-4 py-2.5 bg-[#F5F5F7] hover:bg-[#EDEEF3] text-sm text-[#0A0A0A] rounded-full transition-colors"
                       >
-                        {label}
+                        <span>{item.emoji}</span>
+                        {item.label}
                       </button>
                     ))}
                   </div>
@@ -1254,7 +1262,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
 
         {/* Input area - shown when messages exist */}
         {(displayMessages.length > 0 || combinedTyping) && (
-        <div className="bg-white px-6 pb-[8px] flex justify-center shrink-0 sticky bottom-0 z-10">
+        <div className="bg-white px-4 lg:px-6 pb-4 lg:pb-6 pt-2 flex justify-center shrink-0 sticky bottom-0 z-10">
           <div className="w-full max-w-[744px]">
           <div className="bg-white border border-[#EBEBEB] rounded-xl shadow-[0px_10px_20px_0px_rgba(0,0,0,0.04)] focus-within:border-[#4F5EFF] focus-within:shadow-[0px_10px_20px_0px_rgba(79,94,255,0.12)] transition-all flex flex-col">
             {inputExpanded && (
@@ -1279,13 +1287,16 @@ Would you like me to help adjust your current Agent's limit settings?`;
             <div className={`flex items-center justify-between px-3 pb-3 ${!inputExpanded ? 'pt-3' : ''}`}>
               <div className="flex items-center relative flex-1 min-w-0">
                 <div className="relative group shrink-0">
-                  <button onClick={() => fileInputRef.current?.click()} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] text-[#1C1C1C] hover:bg-[#F8F9FC] transition-colors">
+                  <button onClick={() => fileInputRef.current?.click()} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] text-[#1C1C1C] hover:bg-[#FAFAFA] transition-colors">
                     <Plus className="w-[18px] h-[18px]" strokeWidth={2} />
                   </button>
                   <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-[8px] px-[6px] py-[4px] bg-[#1C1C1C] text-white text-[12px] leading-[16px] rounded-[6px] whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
                     添加图片/附件
                   </div>
                 </div>
+                <button onClick={() => setMobileHistoryOpen(true)} className="lg:hidden w-[32px] h-[32px] flex items-center justify-center rounded-[8px] text-[#1C1C1C] hover:bg-[#FAFAFA] transition-colors shrink-0">
+                  <History className="w-[18px] h-[18px]" strokeWidth={2} />
+                </button>
                 {!inputExpanded && (
                   <input
                     ref={(el) => { if (el && shouldFocusInputRef.current) { el.focus(); shouldFocusInputRef.current = false; } }}
@@ -1315,7 +1326,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
               </button>
             </div>
           </div>
-          <p className="text-center mt-2" style={{ fontSize: '12px', lineHeight: '16px', color: '#73798B' }}>
+          <p className="text-center mt-2" style={{ fontSize: '12px', lineHeight: '16px', color: '#7C7C7C' }}>
             {language === 'zh' ? 'AI 钱包助手也可能会犯错，请仔细核对回答的内容。' : 'AI Wallet Assistant may make mistakes. Please verify the responses carefully.'}
           </p>
           </div>
@@ -1323,6 +1334,60 @@ Would you like me to help adjust your current Agent's limit settings?`;
         )}
       </div>
       )}
+
+      {/* Mobile history drawer backdrop */}
+      {mobileHistoryOpen && (
+        <div className="lg:hidden fixed inset-0 bg-black/20 z-[55]" onClick={() => setMobileHistoryOpen(false)} />
+      )}
+
+      {/* Mobile history drawer */}
+      <div className={`lg:hidden fixed top-0 right-0 h-screen w-[80vw] max-w-[320px] bg-white z-[60] shadow-xl flex flex-col transition-transform duration-300 ease-in-out ${mobileHistoryOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        {/* Header */}
+        <div className="flex items-center justify-between px-4 py-3 border-b border-[#EBEBEB]">
+          <span className="text-[16px] font-medium text-[#0A0A0A]">{language === 'zh' ? '对话历史' : 'Chat History'}</span>
+          <button onClick={() => setMobileHistoryOpen(false)} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] hover:bg-[#F5F5F5] transition-colors">
+            <X className="w-[18px] h-[18px] text-[#7C7C7C]" strokeWidth={2} />
+          </button>
+        </div>
+        {/* New Chat button */}
+        <div className="px-3 pt-3 pb-2">
+          <button
+            onClick={() => { handleNewChat(); setMobileHistoryOpen(false); }}
+            className="w-full h-[40px] flex items-center justify-center gap-2 rounded-[10px] bg-[#0A0A0A] text-white text-[14px] font-medium transition-colors hover:bg-[#333]"
+          >
+            <Plus className="w-[16px] h-[16px]" strokeWidth={2} />
+            {language === 'zh' ? '新对话' : 'New Chat'}
+          </button>
+        </div>
+        {/* Search */}
+        <div className="px-3 pb-2">
+          <div className="flex items-center gap-2 px-3 h-[36px] rounded-[8px] bg-[#F5F5F5]">
+            <Search className="w-[16px] h-[16px] text-[#999] shrink-0" strokeWidth={1.5} />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={language === 'zh' ? '搜索...' : 'Search...'}
+              className="flex-1 bg-transparent text-[14px] text-[#0A0A0A] placeholder-[#999] focus:outline-none"
+            />
+          </div>
+        </div>
+        {/* Session list */}
+        <div className="flex-1 overflow-y-auto px-2 pb-4">
+          {filteredSessions.length === 0 && (
+            <p className="text-center text-[13px] text-[#999] mt-6">{language === 'zh' ? '暂无对话' : 'No conversations'}</p>
+          )}
+          {filteredSessions.map((session) => (
+            <button
+              key={session.id}
+              onClick={() => handleSwitchSession(session)}
+              className={`w-full text-left px-3 py-2.5 rounded-[8px] text-[14px] leading-[20px] truncate transition-colors ${activeChatId === session.id ? 'bg-[#EDEEF3] text-[#1c1c1c]' : 'text-[#1c1c1c] hover:bg-[#F5F5F5]'}`}
+            >
+              {session.title}
+            </button>
+          ))}
+        </div>
+      </div>
     </>
   );
 }
