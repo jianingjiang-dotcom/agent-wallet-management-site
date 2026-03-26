@@ -318,16 +318,16 @@ export default function DashboardLayout() {
         />
       )}
 
-      {/* Mobile bottom-sheet account menu */}
+      {/* Mobile bottom-sheet account menu — must sit above sidebar (z-[60]) */}
       {accountMenuOpen && (
         <div className="lg:hidden">
           {/* Backdrop */}
           <div
-            className="fixed inset-0 bg-black/30 z-40"
+            className="fixed inset-0 bg-black/30 z-[70]"
             onClick={() => { setAccountMenuOpen(false); setMobileLangPanel(false); }}
           />
           {/* Bottom sheet */}
-          <div className="fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl z-50 shadow-2xl">
+          <div className="fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl z-[80] shadow-2xl">
             <div className="overflow-hidden">
               <div
                 className="flex transition-transform duration-300 ease-in-out"
