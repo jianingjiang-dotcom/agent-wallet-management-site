@@ -22,8 +22,8 @@ export default function AvatarCharacter({ variant, size = 64 }: AvatarCharacterP
           {/* Body: rounded square with gradient, no outer shadow */}
           <defs>
             <linearGradient id="avatar-bg" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stopColor="#6c7aff" />
-              <stop offset="100%" stopColor="#4f5eff" />
+              <stop offset="0%" stopColor="#3B4FE8" />
+              <stop offset="100%" stopColor="#1F32D6" />
             </linearGradient>
           </defs>
           <rect

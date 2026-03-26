@@ -85,7 +85,7 @@ export default function Login() {
           >
             <span className="text-[28px] font-semibold leading-none" style={{ fontFamily: "'Inter', sans-serif" }}>
               <span className="text-[#0A0A0A]">Cobo </span>
-              <span className="text-[#4F5EFF]">Pact</span>
+              <span className="text-[#1F32D6]">Pact</span>
             </span>
           </div>
           <p className="font-['Inter',sans-serif] font-normal leading-[1.5] text-[16px] text-black text-center w-full">
@@ -143,7 +143,7 @@ export default function Login() {
                 <div className="text-center pt-2">
                   <button
                     onClick={() => setShowMagicLink(true)}
-                    className="font-['Inter',sans-serif] font-normal text-[14px] text-[#4f5eff] hover:text-[#3d4dd9] underline cursor-pointer"
+                    className="font-['Inter',sans-serif] font-normal text-[14px] text-[#1F32D6] hover:text-[#1828AB] underline cursor-pointer"
                   >
                     {t('auth.useMagicLink')}
                   </button>
@@ -155,13 +155,13 @@ export default function Login() {
                     value={magicLinkEmail}
                     onChange={(e) => setMagicLinkEmail(e.target.value)}
                     placeholder={t('auth.enterEmail')}
-                    className="w-full h-[48px] rounded-[8px] border border-[rgba(10,10,10,0.08)] px-4 focus:outline-none focus:ring-2 focus:ring-[#4f5eff] focus:border-transparent"
+                    className="w-full h-[48px] rounded-[8px] border border-[rgba(10,10,10,0.08)] px-4 focus:outline-none focus:ring-2 focus:ring-[#1F32D6] focus:border-transparent"
                   />
                   {!magicLinkSent ? (
                     <button
                       onClick={handleSendMagicLink}
                       disabled={!magicLinkEmail}
-                      className="bg-[#4F5EFF] w-full h-[48px] rounded-[8px] hover:bg-[#3d4dd9] disabled:bg-slate-300 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-[12px] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]"
+                      className="bg-[#1F32D6] w-full h-[48px] rounded-[8px] hover:bg-[#1828AB] disabled:bg-slate-300 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-[12px] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]"
                     >
                       <Mail className="w-5 h-5 text-white" />
                       <span className="font-['Inter',sans-serif] font-medium text-[16px] text-white">
@@ -179,7 +179,7 @@ export default function Login() {
                       </div>
                       <button
                         onClick={handleMagicLinkLogin}
-                        className="bg-[#4F5EFF] w-full h-[48px] rounded-[8px] hover:bg-[#3d4dd9] transition-all flex items-center justify-center gap-[12px] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]"
+                        className="bg-[#1F32D6] w-full h-[48px] rounded-[8px] hover:bg-[#1828AB] transition-all flex items-center justify-center gap-[12px] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]"
                       >
                         <CheckCircle className="w-5 h-5 text-white" />
                         <span className="font-['Inter',sans-serif] font-medium text-[16px] text-white">

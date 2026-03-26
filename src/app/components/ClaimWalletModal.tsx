@@ -132,7 +132,7 @@ caw claim`;
           {/* Header */}
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-full bg-[rgba(79,94,255,0.1)] flex items-center justify-center">
-              <Download className="w-5 h-5 text-[#4f5eff]" />
+              <Download className="w-5 h-5 text-[#1F32D6]" />
             </div>
             <div>
               <h2 className="font-['Inter',sans-serif] font-semibold text-[16px] text-[#0a0a0a]">
@@ -148,9 +148,9 @@ caw claim`;
           {phase === "idle" && (
             <div className="bg-[rgba(79,94,255,0.06)] border border-[rgba(79,94,255,0.15)] rounded-[8px] px-4 py-3 mb-4 flex items-center gap-2">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 flex-shrink-0">
-                <path d="M10 20C15.51 20 20 15.51 20 10C20 4.49 15.51 3.92528e-07 10 8.74228e-07C4.49 1.35593e-06 -1.35593e-06 4.49 -8.74228e-07 10C-3.92528e-07 15.51 4.49 20 10 20ZM10.75 14C10.75 14.41 10.41 14.75 10 14.75C9.59 14.75 9.25 14.41 9.25 14L9.25 9C9.25 8.59 9.59 8.25 10 8.25C10.41 8.25 10.75 8.59 10.75 9L10.75 14ZM9.08 5.62C9.13 5.49 9.2 5.39 9.29 5.29C9.39 5.2 9.5 5.13 9.62 5.08C9.74 5.03 9.87 5 10 5C10.13 5 10.26 5.03 10.38 5.08C10.5 5.13 10.61 5.2 10.71 5.29C10.8 5.39 10.87 5.49 10.92 5.62C10.97 5.74 11 5.87 11 6C11 6.13 10.97 6.26 10.92 6.38C10.87 6.5 10.8 6.61 10.71 6.71C10.61 6.8 10.5 6.87 10.38 6.92C10.14 7.02 9.86 7.02 9.62 6.92C9.5 6.87 9.39 6.8 9.29 6.71C9.2 6.61 9.13 6.5 9.08 6.38C9.03 6.26 9 6.13 9 6C9 5.87 9.03 5.74 9.08 5.62Z" fill="#4f5eff"/>
+                <path d="M10 20C15.51 20 20 15.51 20 10C20 4.49 15.51 3.92528e-07 10 8.74228e-07C4.49 1.35593e-06 -1.35593e-06 4.49 -8.74228e-07 10C-3.92528e-07 15.51 4.49 20 10 20ZM10.75 14C10.75 14.41 10.41 14.75 10 14.75C9.59 14.75 9.25 14.41 9.25 14L9.25 9C9.25 8.59 9.59 8.25 10 8.25C10.41 8.25 10.75 8.59 10.75 9L10.75 14ZM9.08 5.62C9.13 5.49 9.2 5.39 9.29 5.29C9.39 5.2 9.5 5.13 9.62 5.08C9.74 5.03 9.87 5 10 5C10.13 5 10.26 5.03 10.38 5.08C10.5 5.13 10.61 5.2 10.71 5.29C10.8 5.39 10.87 5.49 10.92 5.62C10.97 5.74 11 5.87 11 6C11 6.13 10.97 6.26 10.92 6.38C10.87 6.5 10.8 6.61 10.71 6.71C10.61 6.8 10.5 6.87 10.38 6.92C10.14 7.02 9.86 7.02 9.62 6.92C9.5 6.87 9.39 6.8 9.29 6.71C9.2 6.61 9.13 6.5 9.08 6.38C9.03 6.26 9 6.13 9 6C9 5.87 9.03 5.74 9.08 5.62Z" fill="#1F32D6"/>
               </svg>
-              <p className="font-['Inter',sans-serif] font-medium text-[14px] text-[#4f5eff] leading-[20px]">
+              <p className="font-['Inter',sans-serif] font-medium text-[14px] text-[#1F32D6] leading-[20px]">
                 {t("claimWallet.tip")}
               </p>
             </div>
@@ -168,7 +168,7 @@ caw claim`;
               <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[8px] px-4 py-3 space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Wallet className="w-4 h-4 text-[#4f5eff]" />
+                    <Wallet className="w-4 h-4 text-[#1F32D6]" />
                     <span className="font-['Inter',sans-serif] font-medium text-[13px] text-[#0a0a0a]">
                       {t("claimWallet.walletId")}
                     </span>
@@ -178,7 +178,7 @@ caw claim`;
                 <div className="border-t border-[rgba(10,10,10,0.06)]" />
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Bot className="w-4 h-4 text-[#4f5eff]" />
+                    <Bot className="w-4 h-4 text-[#1F32D6]" />
                     <span className="font-['Inter',sans-serif] font-medium text-[13px] text-[#0a0a0a]">
                       {t("claimWallet.agentId")}
                     </span>
@@ -197,7 +197,7 @@ caw claim`;
                 </button>
                 <button
                   onClick={handleConfirmClaim}
-                  className="flex-1 bg-[#4f5eff] hover:bg-[#3d4dd9] h-[40px] rounded-[8px] font-['Inter',sans-serif] font-medium text-[14px] text-white transition-colors"
+                  className="flex-1 bg-[#1F32D6] hover:bg-[#1828AB] h-[40px] rounded-[8px] font-['Inter',sans-serif] font-medium text-[14px] text-white transition-colors"
                 >
                   {t("claimWallet.confirmBtn")}
                 </button>
@@ -226,14 +226,14 @@ caw claim`;
               </div>
               <button
                 onClick={handleDone}
-                className="w-full bg-[#4f5eff] hover:bg-[#3d4dd9] h-[40px] rounded-[8px] font-['Inter',sans-serif] font-medium text-[14px] text-white transition-colors"
+                className="w-full bg-[#1F32D6] hover:bg-[#1828AB] h-[40px] rounded-[8px] font-['Inter',sans-serif] font-medium text-[14px] text-white transition-colors"
               >
                 {t("claimWallet.done")}
               </button>
             </div>
           ) : phase === "waiting" || phase === "transferring" ? (
             <div className="text-center py-8">
-              <Loader2 className="w-8 h-8 text-[#4f5eff] animate-spin mx-auto mb-3" />
+              <Loader2 className="w-8 h-8 text-[#1F32D6] animate-spin mx-auto mb-3" />
               <p className="font-['Inter',sans-serif] font-medium text-[14px] text-[#4F4F4F]">
                 {phase === "waiting" ? t("claimWallet.verifying") : t("claimWallet.transferring")}
               </p>
@@ -256,7 +256,7 @@ caw claim`;
               <button
                 onClick={handleCopy}
                 className={`w-full flex items-center justify-center gap-2 h-[40px] rounded-[8px] font-['Inter',sans-serif] font-medium text-[14px] text-white transition-all shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)] ${
-                  copied ? "bg-[#22c55e] hover:bg-[#16a34a]" : "bg-[#4f5eff] hover:bg-[#3d4dd9]"
+                  copied ? "bg-[#22c55e] hover:bg-[#16a34a]" : "bg-[#1F32D6] hover:bg-[#1828AB]"
                 }`}
               >
                 {copied ? (

@@ -43,7 +43,7 @@ export default function WalletLimitsCard({ status, onConfirm, confirmedPerTx, co
         <div className="rounded-[12px] bg-[#FAFAFA] border border-[rgba(10,10,10,0.06)] px-3.5 py-2.5 space-y-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Shield className="w-3.5 h-3.5 text-[#4f5eff]" />
+              <Shield className="w-3.5 h-3.5 text-[#1F32D6]" />
               <span className="text-[12px] text-[#73798B]">
                 {language === 'zh' ? '单笔交易限额' : 'Per-Transaction Limit'}
               </span>
@@ -55,7 +55,7 @@ export default function WalletLimitsCard({ status, onConfirm, confirmedPerTx, co
           <div className="h-px bg-[rgba(10,10,10,0.06)]" />
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Shield className="w-3.5 h-3.5 text-[#4f5eff]" />
+              <Shield className="w-3.5 h-3.5 text-[#1F32D6]" />
               <span className="text-[12px] text-[#73798B]">
                 {language === 'zh' ? '每日支出限额' : 'Daily Spending Limit'}
               </span>
@@ -80,7 +80,7 @@ export default function WalletLimitsCard({ status, onConfirm, confirmedPerTx, co
             type="radio" name={name} value={val}
             checked={value === val}
             onChange={() => onSelect(val)}
-            className="w-4 h-4 text-[#4f5eff] border-[#EBEBEB] focus:ring-0 focus:ring-offset-0"
+            className="w-4 h-4 text-[#1F32D6] border-[#EBEBEB] focus:ring-0 focus:ring-offset-0"
           />
           <span className="ml-1.5 font-['Inter',sans-serif] font-normal text-[13px] text-[#0a0a0a]">${val}</span>
         </label>
@@ -90,7 +90,7 @@ export default function WalletLimitsCard({ status, onConfirm, confirmedPerTx, co
           type="radio" name={name} value="custom"
           checked={value === 'custom'}
           onChange={() => onSelect('custom')}
-          className="w-4 h-4 text-[#4f5eff] border-[#EBEBEB] focus:ring-0 focus:ring-offset-0"
+          className="w-4 h-4 text-[#1F32D6] border-[#EBEBEB] focus:ring-0 focus:ring-offset-0"
         />
         <span className="ml-1.5 font-['Inter',sans-serif] font-normal text-[13px] text-[#0a0a0a]">
           {t('onboarding.limits.others')}:
@@ -103,7 +103,7 @@ export default function WalletLimitsCard({ status, onConfirm, confirmedPerTx, co
           onChange={(e) => onCustomChange(e.target.value)}
           onFocus={() => onSelect('custom')}
           placeholder="0"
-          className="w-16 bg-white border border-[#EBEBEB] rounded-[6px] px-2 py-1 font-['Inter',sans-serif] font-normal text-[13px] text-[#0a0a0a] focus:outline-none focus:border-[#4f5eff] focus:ring-1 focus:ring-[#4f5eff]"
+          className="w-16 bg-white border border-[#EBEBEB] rounded-[6px] px-2 py-1 font-['Inter',sans-serif] font-normal text-[13px] text-[#0a0a0a] focus:outline-none focus:border-[#1F32D6] focus:ring-1 focus:ring-[#1F32D6]"
         />
       </div>
     </div>
@@ -138,7 +138,7 @@ export default function WalletLimitsCard({ status, onConfirm, confirmedPerTx, co
       {/* Confirm */}
       <button
         onClick={() => onConfirm(getEffectivePerTx(), getEffectiveDaily())}
-        className="w-full bg-[#4f5eff] hover:bg-[#3d4dd9] h-[38px] rounded-[8px] transition-colors font-['Inter',sans-serif] font-medium text-[13px] text-white flex items-center justify-center"
+        className="w-full bg-[#1F32D6] hover:bg-[#1828AB] h-[38px] rounded-[8px] transition-colors font-['Inter',sans-serif] font-medium text-[13px] text-white flex items-center justify-center"
       >
         {t('onboarding.limits.confirm')}
       </button>

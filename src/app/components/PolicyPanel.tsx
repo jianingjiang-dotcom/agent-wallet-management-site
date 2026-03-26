@@ -51,7 +51,7 @@ export default function PolicyPanel({ policy, disabled }: PolicyPanelProps) {
     <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[12px] p-6 mb-6">
       {/* Header */}
       <div className="flex items-center gap-2 mb-1">
-        <Shield className="w-4 h-4 text-[#4f5eff]" />
+        <Shield className="w-4 h-4 text-[#1F32D6]" />
         <h2 className="font-['Inter',sans-serif] font-semibold text-[16px] text-[#0a0a0a]">
           {t('policyPanel.title')}
         </h2>
@@ -107,7 +107,7 @@ export default function PolicyPanel({ policy, disabled }: PolicyPanelProps) {
         <div className="grid grid-cols-2 gap-x-4 gap-y-2 mb-4">
           {advancedItems.map(({ icon: Icon, key }) => (
             <div key={key} className="flex items-center gap-2">
-              <Icon className="w-3.5 h-3.5 text-[#4f5eff] shrink-0" />
+              <Icon className="w-3.5 h-3.5 text-[#1F32D6] shrink-0" />
               <span className="font-['Inter',sans-serif] font-normal text-[12px] text-[#4F4F4F]">
                 {t(key)}
               </span>
@@ -117,7 +117,7 @@ export default function PolicyPanel({ policy, disabled }: PolicyPanelProps) {
 
         <button
           onClick={() => navigate('/dashboard/chat')}
-          className="flex items-center gap-1.5 px-4 py-2 rounded-[8px] bg-[#4f5eff] hover:bg-[#2837d0] text-white font-['Inter',sans-serif] font-medium text-[13px] transition-colors shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)]"
+          className="flex items-center gap-1.5 px-4 py-2 rounded-[8px] bg-[#1F32D6] hover:bg-[#2837d0] text-white font-['Inter',sans-serif] font-medium text-[13px] transition-colors shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)]"
         >
           {t('policy.goToChat')}
           <ArrowRight className="w-3.5 h-3.5" />

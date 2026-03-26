@@ -57,7 +57,9 @@
       "Bash(grep -ohE \"rounded-\\\\[[0-9]+px\\\\]|rounded-\\(none|xs|sm|md|lg|xl|2xl|3xl|full\\)\" src/app/components/*.tsx src/app/components/**/*.tsx src/imports/*.tsx src/components/ui/*.tsx src/styles/*.css)",
       "Bash(sed -i '' 's/rounded-\\\\[4px\\\\]/rounded-[2px]/g' src/app/components/ui/checkbox.tsx)",
       "Bash(sed -i '' 's/rounded-\\\\[4px\\\\]/rounded-[6px]/g' src/app/components/WalletDetail.tsx)",
-      "Bash(xargs sed:*)"
+      "Bash(xargs sed:*)",
+      "Bash(npm run:*)",
+      "Bash(ls -la /Users/oliviatay/agent-wallet-management-site/src/assets/*.png)"
     ]
   }
 }

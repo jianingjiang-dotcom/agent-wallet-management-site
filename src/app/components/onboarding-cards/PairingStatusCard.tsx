@@ -8,8 +8,8 @@ interface PairingStatusCardProps {
 }
 
 const phaseConfig: Record<Phase, { icon: 'spinner' | 'wifi' | 'settings' | 'check'; colorClass: string }> = {
-  waiting:     { icon: 'spinner',  colorClass: 'text-[#4f5eff]' },
-  connected:   { icon: 'wifi',     colorClass: 'text-[#4f5eff]' },
+  waiting:     { icon: 'spinner',  colorClass: 'text-[#1F32D6]' },
+  connected:   { icon: 'wifi',     colorClass: 'text-[#1F32D6]' },
   configuring: { icon: 'settings', colorClass: 'text-[#f59e0b]' },
   success:     { icon: 'check',    colorClass: 'text-[#22c55e]' },
 };
@@ -61,7 +61,7 @@ export default function PairingStatusCard({ phase }: PairingStatusCardProps) {
               <div
                 key={p}
                 className={`h-1 rounded-full transition-all duration-500 ${
-                  i <= currentIdx ? 'bg-[#4f5eff] w-6' : 'bg-[#EBEBEB] w-4'
+                  i <= currentIdx ? 'bg-[#1F32D6] w-6' : 'bg-[#EBEBEB] w-4'
                 }`}
               />
             );

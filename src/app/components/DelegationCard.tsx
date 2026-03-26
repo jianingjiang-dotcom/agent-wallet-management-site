@@ -84,7 +84,7 @@ export default function DelegationCard({
         <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
           isFrozen ? "bg-[rgba(234,179,8,0.1)]" : "bg-[rgba(79,94,255,0.1)]"
         }`}>
-          <UserPlus className={`w-4 h-4 ${isFrozen ? "text-[#eab308]" : "text-[#4f5eff]"}`} />
+          <UserPlus className={`w-4 h-4 ${isFrozen ? "text-[#eab308]" : "text-[#1F32D6]"}`} />
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 group/agentname">
@@ -99,9 +99,9 @@ export default function DelegationCard({
                     if (e.key === "Enter") handleSaveName();
                     if (e.key === "Escape") { setEditName(agent?.name || ""); setIsEditingName(false); }
                   }}
-                  className="font-['Inter',sans-serif] font-medium text-[13px] text-[#0a0a0a] bg-transparent border-b border-[#4f5eff] outline-none py-0 px-0 w-[120px]"
+                  className="font-['Inter',sans-serif] font-medium text-[13px] text-[#0a0a0a] bg-transparent border-b border-[#1F32D6] outline-none py-0 px-0 w-[120px]"
                 />
-                <button onClick={handleSaveName} className="text-[#4f5eff] hover:text-[#2837d0] transition-colors p-0.5">
+                <button onClick={handleSaveName} className="text-[#1F32D6] hover:text-[#2837d0] transition-colors p-0.5">
                   <Check className="w-3.5 h-3.5" />
                 </button>
               </div>
@@ -116,14 +116,14 @@ export default function DelegationCard({
                     setEditName(agent?.name || "");
                     setIsEditingName(true);
                   }}
-                  className="text-[#b0b0b0] hover:text-[#4f5eff] transition-colors p-0.5 opacity-0 group-hover/agentname:opacity-100"
+                  className="text-[#b0b0b0] hover:text-[#1F32D6] transition-colors p-0.5 opacity-0 group-hover/agentname:opacity-100"
                 >
                   <Pencil className="w-3 h-3" />
                 </button>
               </>
             )}
             {isOriginAgent && (
-              <span className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-[rgba(79,94,255,0.08)] text-[#4f5eff]">
+              <span className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-[rgba(79,94,255,0.08)] text-[#1F32D6]">
                 <Star className="w-2.5 h-2.5" />
                 <span className="font-['Inter',sans-serif] font-normal text-[9px]">{t("delegationCard.signer")}</span>
               </span>

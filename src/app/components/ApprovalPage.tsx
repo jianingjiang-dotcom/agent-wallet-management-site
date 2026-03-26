@@ -163,7 +163,7 @@ export default function ApprovalPage({ initialTab = 'all', onPendingCountChange 
             onClick={() => setActiveTab(tab.key)}
             className={`px-4 py-2.5 text-[14px] font-medium border-b-2 transition-colors ${
               activeTab === tab.key
-                ? 'border-[#4f5eff] text-[#4f5eff]'
+                ? 'border-[#1F32D6] text-[#1F32D6]'
                 : 'border-transparent text-[#73798B] hover:text-[#0A0A0A]'
             }`}
           >
@@ -233,7 +233,7 @@ export default function ApprovalPage({ initialTab = 'all', onPendingCountChange 
                 <div className="flex gap-2 pt-1">
                   <button
                     onClick={() => handleApprove(record.id)}
-                    className="flex-1 h-[36px] bg-[#4f5eff] hover:bg-[#3d4dd9] text-white text-[13px] font-medium rounded-lg transition-colors flex items-center justify-center gap-1.5"
+                    className="flex-1 h-[36px] bg-[#1F32D6] hover:bg-[#1828AB] text-white text-[13px] font-medium rounded-lg transition-colors flex items-center justify-center gap-1.5"
                   >
                     <CheckCircle className="w-4 h-4" />
                     {language === 'zh' ? '批准' : 'Approve'}

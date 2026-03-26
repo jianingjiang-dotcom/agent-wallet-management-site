@@ -108,7 +108,7 @@ export default function SetupCommandCard({ command, onCopy, status, pairingPhase
                     </svg>
                   ) : (
                     <svg className="animate-spin flex-shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none">
-                      <circle cx="12" cy="12" r="9" stroke="#4F5EFF" strokeWidth="1.25" strokeDasharray="14 42" strokeLinecap="round" />
+                      <circle cx="12" cy="12" r="9" stroke="#1F32D6" strokeWidth="1.25" strokeDasharray="14 42" strokeLinecap="round" />
                     </svg>
                   )}
                   <span className={`text-[13px] leading-[18px] ${agentDone ? 'text-[#26C165] font-medium' : 'text-[#73798B]'}`}>
@@ -120,7 +120,7 @@ export default function SetupCommandCard({ command, onCopy, status, pairingPhase
                 {(walletLoading || walletDone) && (
                   <div className="flex items-center gap-2" style={{ animation: 'fadeIn 0.3s ease-out forwards' }}>
                     <svg className="animate-spin flex-shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none">
-                      <circle cx="12" cy="12" r="9" stroke="#4F5EFF" strokeWidth="1.25" strokeDasharray="14 42" strokeLinecap="round" />
+                      <circle cx="12" cy="12" r="9" stroke="#1F32D6" strokeWidth="1.25" strokeDasharray="14 42" strokeLinecap="round" />
                     </svg>
                     <span className="text-[13px] leading-[18px] text-[#73798B]">
                       {t('setupPage.creatingWallet')}
@@ -143,7 +143,7 @@ export default function SetupCommandCard({ command, onCopy, status, pairingPhase
             onClick={handleCopy}
             disabled={copied || showOverlay}
             className={`w-full flex items-center justify-center gap-2 h-[38px] rounded-[8px] font-['Inter',sans-serif] font-medium text-[13px] transition-all shadow-[0px_1px_3px_0px_rgba(0,0,0,0.06)] text-white ${
-              copied ? 'bg-[#22c55e]' : 'bg-[#4f5eff] hover:bg-[#3d4dd9] disabled:opacity-50'
+              copied ? 'bg-[#22c55e]' : 'bg-[#1F32D6] hover:bg-[#1828AB] disabled:opacity-50'
             }`}
           >
             {copied ? (

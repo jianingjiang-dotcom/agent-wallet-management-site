@@ -113,7 +113,7 @@ export default function WalletDelegationModal({
             {/* Header */}
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-full bg-[rgba(79,94,255,0.1)] flex items-center justify-center">
-                <Shield className="w-5 h-5 text-[#4f5eff]" />
+                <Shield className="w-5 h-5 text-[#1F32D6]" />
               </div>
               <div>
                 <h2 className="font-['Inter',sans-serif] font-semibold text-[16px] text-[#0a0a0a]">
@@ -138,14 +138,14 @@ export default function WalletDelegationModal({
                 </p>
                 <button
                   onClick={onClose}
-                  className="w-full bg-[#4f5eff] hover:bg-[#3d4dd9] h-[40px] rounded-[8px] font-['Inter',sans-serif] font-medium text-[14px] text-white transition-colors"
+                  className="w-full bg-[#1F32D6] hover:bg-[#1828AB] h-[40px] rounded-[8px] font-['Inter',sans-serif] font-medium text-[14px] text-white transition-colors"
                 >
                   {t("agentPairing.done")}
                 </button>
               </div>
             ) : step === "delegating" ? (
               <div className="text-center py-8">
-                <Loader2 className="w-8 h-8 text-[#4f5eff] animate-spin mx-auto mb-3" />
+                <Loader2 className="w-8 h-8 text-[#1F32D6] animate-spin mx-auto mb-3" />
                 <p className="font-['Inter',sans-serif] font-medium text-[14px] text-[#4F4F4F]">
                   {t("walletDelegation.delegating")}
                 </p>
@@ -156,7 +156,7 @@ export default function WalletDelegationModal({
                 {selectedAgent && (
                   <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[8px] px-4 py-3 flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-[rgba(79,94,255,0.1)] flex items-center justify-center">
-                      <UserPlus className="w-4 h-4 text-[#4f5eff]" />
+                      <UserPlus className="w-4 h-4 text-[#1F32D6]" />
                     </div>
                     <div>
                       <div className="font-['Inter',sans-serif] font-medium text-[13px] text-[#0a0a0a]">{selectedAgent.name}</div>
@@ -208,7 +208,7 @@ export default function WalletDelegationModal({
                           type="number"
                           value={policy.singleTxLimit}
                           onChange={(e) => setPolicy({ ...policy, singleTxLimit: Number(e.target.value) || 0 })}
-                          className="w-20 bg-[#fafafa] border border-[rgba(10,10,10,0.12)] rounded-[6px] px-2 py-1.5 font-['Inter',sans-serif] text-[13px] text-[#0a0a0a] focus:outline-none focus:border-[#4f5eff]"
+                          className="w-20 bg-[#fafafa] border border-[rgba(10,10,10,0.12)] rounded-[6px] px-2 py-1.5 font-['Inter',sans-serif] text-[13px] text-[#0a0a0a] focus:outline-none focus:border-[#1F32D6]"
                         />
                       </div>
                     </div>
@@ -222,7 +222,7 @@ export default function WalletDelegationModal({
                           type="number"
                           value={policy.dailyLimit}
                           onChange={(e) => setPolicy({ ...policy, dailyLimit: Number(e.target.value) || 0 })}
-                          className="w-20 bg-[#fafafa] border border-[rgba(10,10,10,0.12)] rounded-[6px] px-2 py-1.5 font-['Inter',sans-serif] text-[13px] text-[#0a0a0a] focus:outline-none focus:border-[#4f5eff]"
+                          className="w-20 bg-[#fafafa] border border-[rgba(10,10,10,0.12)] rounded-[6px] px-2 py-1.5 font-['Inter',sans-serif] text-[13px] text-[#0a0a0a] focus:outline-none focus:border-[#1F32D6]"
                         />
                       </div>
                     </div>
@@ -231,7 +231,7 @@ export default function WalletDelegationModal({
                         type="checkbox"
                         checked={policy.approvalRequired}
                         onChange={(e) => setPolicy({ ...policy, approvalRequired: e.target.checked })}
-                        className="w-4 h-4 text-[#4f5eff] rounded focus:ring-0"
+                        className="w-4 h-4 text-[#1F32D6] rounded focus:ring-0"
                       />
                       <span className="font-['Inter',sans-serif] font-normal text-[12px] text-[#4F4F4F]">
                         {t("policy.approvalRequired")}
@@ -243,7 +243,7 @@ export default function WalletDelegationModal({
                 <button
                   onClick={handleConfirm}
                   disabled={permissions.length === 0}
-                  className="w-full bg-[#4f5eff] hover:bg-[#3d4dd9] h-[40px] rounded-[8px] font-['Inter',sans-serif] font-medium text-[14px] text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-[#1F32D6] hover:bg-[#1828AB] h-[40px] rounded-[8px] font-['Inter',sans-serif] font-medium text-[14px] text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {t("walletDelegation.confirm")}
                 </button>
@@ -261,10 +261,10 @@ export default function WalletDelegationModal({
                         <button
                           key={agent.id}
                           onClick={() => handleSelectAgent(agent.id)}
-                          className="w-full bg-white border border-[rgba(10,10,10,0.08)] rounded-[8px] px-4 py-3 flex items-center gap-3 hover:border-[#4f5eff] hover:bg-[rgba(79,94,255,0.02)] transition-colors text-left"
+                          className="w-full bg-white border border-[rgba(10,10,10,0.08)] rounded-[8px] px-4 py-3 flex items-center gap-3 hover:border-[#1F32D6] hover:bg-[rgba(79,94,255,0.02)] transition-colors text-left"
                         >
                           <div className="w-8 h-8 rounded-full bg-[rgba(79,94,255,0.1)] flex items-center justify-center flex-shrink-0">
-                            <UserPlus className="w-4 h-4 text-[#4f5eff]" />
+                            <UserPlus className="w-4 h-4 text-[#1F32D6]" />
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="font-['Inter',sans-serif] font-medium text-[13px] text-[#0a0a0a]">{agent.name}</div>
@@ -312,13 +312,13 @@ export default function WalletDelegationModal({
                     className="w-full border border-dashed border-[rgba(79,94,255,0.3)] rounded-[8px] px-4 py-3 flex items-center gap-3 hover:bg-[rgba(79,94,255,0.02)] transition-colors text-left"
                   >
                     <div className="w-8 h-8 rounded-full bg-[rgba(79,94,255,0.08)] flex items-center justify-center flex-shrink-0">
-                      <UserPlus className="w-4 h-4 text-[#4f5eff]" />
+                      <UserPlus className="w-4 h-4 text-[#1F32D6]" />
                     </div>
                     <div className="flex-1">
-                      <div className="font-['Inter',sans-serif] font-medium text-[13px] text-[#4f5eff]">{t("walletDelegation.pairNew")}</div>
+                      <div className="font-['Inter',sans-serif] font-medium text-[13px] text-[#1F32D6]">{t("walletDelegation.pairNew")}</div>
                       <div className="font-['Inter',sans-serif] font-normal text-[11px] text-[#7c7c7c]">{t("walletDelegation.pairNewDesc")}</div>
                     </div>
-                    <ChevronRight className="w-4 h-4 text-[#4f5eff] flex-shrink-0" />
+                    <ChevronRight className="w-4 h-4 text-[#1F32D6] flex-shrink-0" />
                   </button>
                 </div>
               </div>

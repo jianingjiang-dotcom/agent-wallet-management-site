@@ -136,9 +136,9 @@ export default function WalletDetail({
                   if (e.key === 'Enter') handleSaveName();
                   if (e.key === 'Escape') { setEditName(wallet.name); setIsEditingName(false); }
                 }}
-                className="font-['Inter',sans-serif] font-normal text-[24px] leading-[32px] text-[#0a0a0a] bg-transparent border-b-2 border-[#4f5eff] outline-none py-0 px-0 w-[240px]"
+                className="font-['Inter',sans-serif] font-normal text-[24px] leading-[32px] text-[#0a0a0a] bg-transparent border-b-2 border-[#1F32D6] outline-none py-0 px-0 w-[240px]"
               />
-              <button onClick={handleSaveName} className="text-[#4f5eff] hover:text-[#2837d0] transition-colors p-1">
+              <button onClick={handleSaveName} className="text-[#1F32D6] hover:text-[#2837d0] transition-colors p-1">
                 <Check className="w-5 h-5" />
               </button>
             </div>
@@ -149,7 +149,7 @@ export default function WalletDetail({
               </h1>
               <button
                 onClick={() => { setEditName(wallet.name); setIsEditingName(true); }}
-                className="text-[#b0b0b0] hover:text-[#4f5eff] transition-colors p-1"
+                className="text-[#b0b0b0] hover:text-[#1F32D6] transition-colors p-1"
               >
                 <Pencil className="w-4 h-4" />
               </button>
@@ -185,7 +185,7 @@ export default function WalletDetail({
                       onClick={() => { onSwitchWallet(w.id); setSwitcherOpen(false); }}
                       className={`w-full text-left px-3 py-2 text-[13px] font-['Inter',sans-serif] transition-colors ${
                         w.id === wallet.id
-                          ? 'text-[#4f5eff] bg-[rgba(79,94,255,0.04)] font-medium'
+                          ? 'text-[#1F32D6] bg-[rgba(79,94,255,0.04)] font-medium'
                           : 'text-[#0a0a0a] hover:bg-[#f5f5f5] font-normal'
                       }`}
                     >
@@ -207,7 +207,7 @@ export default function WalletDetail({
           </button>
           <button
             onClick={onSetupWallet || noop}
-            className="flex items-center gap-2 px-4 py-2 rounded-[8px] font-['Inter',sans-serif] font-medium text-[13px] text-white bg-[#4f5eff] hover:bg-[#3d4dd9] transition-colors"
+            className="flex items-center gap-2 px-4 py-2 rounded-[8px] font-['Inter',sans-serif] font-medium text-[13px] text-white bg-[#1F32D6] hover:bg-[#1828AB] transition-colors"
           >
             <Plus className="w-4 h-4" />
             {t('walletPage.createNew')}
@@ -218,7 +218,7 @@ export default function WalletDetail({
       {/* Wallet Overview */}
       <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[12px] p-6 mb-6">
         <div className="flex items-center gap-2 mb-4">
-          <Wallet className="w-4 h-4 text-[#4f5eff]" />
+          <Wallet className="w-4 h-4 text-[#1F32D6]" />
           <span className="font-['Inter',sans-serif] font-medium text-[13px] text-[#7c7c7c] uppercase tracking-wide">
             {t('walletAgent.yourWallet')}
           </span>
@@ -254,7 +254,7 @@ export default function WalletDetail({
                   key={idx}
                   className="flex items-center gap-3 px-3 py-2.5 rounded-[8px] bg-[#fafafa] border border-[rgba(10,10,10,0.06)] group/addr"
                 >
-                  <span className="font-['Inter',sans-serif] font-medium text-[11px] text-[#4f5eff] bg-[rgba(79,94,255,0.08)] px-2 py-0.5 rounded-[6px] uppercase tracking-wider shrink-0 min-w-[44px] text-center">
+                  <span className="font-['Inter',sans-serif] font-medium text-[11px] text-[#1F32D6] bg-[rgba(79,94,255,0.08)] px-2 py-0.5 rounded-[6px] uppercase tracking-wider shrink-0 min-w-[44px] text-center">
                     {addr.chain}
                   </span>
                   <code className="font-['JetBrains_Mono','SF_Mono','Consolas',monospace] text-[12px] text-[#0a0a0a] break-all flex-1">
@@ -265,7 +265,7 @@ export default function WalletDetail({
                     className={`shrink-0 p-1 rounded-[6px] transition-colors ${
                       copiedAddress === addr.address
                         ? 'text-[#22c55e]'
-                        : 'text-[#b0b0b0] hover:text-[#4f5eff] opacity-0 group-hover/addr:opacity-100'
+                        : 'text-[#b0b0b0] hover:text-[#1F32D6] opacity-0 group-hover/addr:opacity-100'
                     }`}
                     title={t('walletDetail.copyAddress')}
                   >
@@ -292,14 +292,14 @@ export default function WalletDetail({
       <div className="mb-6">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <Shield className="w-4 h-4 text-[#4f5eff]" />
+            <Shield className="w-4 h-4 text-[#1F32D6]" />
             <span className="font-['Inter',sans-serif] font-semibold text-[16px] text-[#0a0a0a]">
               {t('walletAgent.connectedAgent')}
             </span>
           </div>
           <button
             onClick={() => onDelegateAgent(wallet.id)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] font-['Inter',sans-serif] font-medium text-[12px] text-[#4f5eff] border border-dashed border-[rgba(79,94,255,0.3)] hover:bg-[rgba(79,94,255,0.04)] transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] font-['Inter',sans-serif] font-medium text-[12px] text-[#1F32D6] border border-dashed border-[rgba(79,94,255,0.3)] hover:bg-[rgba(79,94,255,0.04)] transition-colors"
           >
             <Plus className="w-3.5 h-3.5" />
             {t('walletDetail.delegateAgent')}
@@ -326,7 +326,7 @@ export default function WalletDetail({
         ) : (
           <div className="bg-white border border-dashed border-[rgba(10,10,10,0.12)] rounded-[12px] p-8 text-center">
             <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-[rgba(79,94,255,0.08)] flex items-center justify-center">
-              <UserPlus className="w-6 h-6 text-[#4f5eff]" />
+              <UserPlus className="w-6 h-6 text-[#1F32D6]" />
             </div>
             <p className="font-['Inter',sans-serif] font-medium text-[14px] text-[#7c7c7c] mb-1">
               {t('delegation.noAgent')}
@@ -336,7 +336,7 @@ export default function WalletDetail({
             </p>
             <button
               onClick={() => onDelegateAgent(wallet.id)}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-[8px] font-['Inter',sans-serif] font-medium text-[13px] text-white bg-[#4f5eff] hover:bg-[#3d4dd9] transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-[8px] font-['Inter',sans-serif] font-medium text-[13px] text-white bg-[#1F32D6] hover:bg-[#1828AB] transition-colors"
             >
               <Plus className="w-4 h-4" />
               {t('walletDetail.delegateAgent')}
@@ -366,14 +366,14 @@ interface LogEntry {
 }
 
 const MOCK_LOGS: LogEntry[] = [
-  { id: '1',  actionType: 'wallet_created',      actor: 'system', labelKey: 'log.walletCreated',      detailKey: 'log.detail.walletCreated',      status: 'success', icon: Wallet,        iconColor: '#4f5eff', minutesAgo: 4320 },
-  { id: '2',  actionType: 'agent_delegated',      actor: 'user',   labelKey: 'log.agentDelegated',      detailKey: 'log.detail.agentDelegated',      status: 'success', icon: UserPlus,      iconColor: '#4f5eff', minutesAgo: 4310 },
+  { id: '1',  actionType: 'wallet_created',      actor: 'system', labelKey: 'log.walletCreated',      detailKey: 'log.detail.walletCreated',      status: 'success', icon: Wallet,        iconColor: '#1F32D6', minutesAgo: 4320 },
+  { id: '2',  actionType: 'agent_delegated',      actor: 'user',   labelKey: 'log.agentDelegated',      detailKey: 'log.detail.agentDelegated',      status: 'success', icon: UserPlus,      iconColor: '#1F32D6', minutesAgo: 4310 },
   { id: '3',  actionType: 'transfer_executed',    actor: 'agent',  labelKey: 'log.transferExecuted',    detailKey: 'log.detail.transferExecuted',    status: 'success', icon: Send,          iconColor: '#22c55e', minutesAgo: 3600 },
   { id: '4',  actionType: 'contract_called',      actor: 'agent',  labelKey: 'log.contractCalled',      detailKey: 'log.detail.contractCalled',      status: 'success', icon: FileCode,      iconColor: '#22c55e', minutesAgo: 3000 },
-  { id: '5',  actionType: 'permission_updated',   actor: 'user',   labelKey: 'log.permissionUpdated',   detailKey: 'log.detail.permissionEnabled',   status: 'success', icon: ToggleRight,   iconColor: '#4f5eff', minutesAgo: 2800 },
+  { id: '5',  actionType: 'permission_updated',   actor: 'user',   labelKey: 'log.permissionUpdated',   detailKey: 'log.detail.permissionEnabled',   status: 'success', icon: ToggleRight,   iconColor: '#1F32D6', minutesAgo: 2800 },
   { id: '6',  actionType: 'swap_executed',         actor: 'agent',  labelKey: 'log.swapExecuted',        detailKey: 'log.detail.swapExecuted',        status: 'success', icon: RefreshCw,     iconColor: '#22c55e', minutesAgo: 2400 },
-  { id: '7',  actionType: 'policy_updated',        actor: 'user',   labelKey: 'log.policyUpdated',       detailKey: 'log.detail.policyLimitUpdated',  status: 'success', icon: Settings,      iconColor: '#4f5eff', minutesAgo: 2000 },
-  { id: '8',  actionType: 'policy_updated',        actor: 'user',   labelKey: 'log.policyUpdated',       detailKey: 'log.detail.dailyLimitUpdated',   status: 'success', icon: Settings,      iconColor: '#4f5eff', minutesAgo: 1999 },
+  { id: '7',  actionType: 'policy_updated',        actor: 'user',   labelKey: 'log.policyUpdated',       detailKey: 'log.detail.policyLimitUpdated',  status: 'success', icon: Settings,      iconColor: '#1F32D6', minutesAgo: 2000 },
+  { id: '8',  actionType: 'policy_updated',        actor: 'user',   labelKey: 'log.policyUpdated',       detailKey: 'log.detail.dailyLimitUpdated',   status: 'success', icon: Settings,      iconColor: '#1F32D6', minutesAgo: 1999 },
   { id: '9',  actionType: 'transfer_rejected',     actor: 'system', labelKey: 'log.transferRejected',    detailKey: 'log.detail.transferRejected',    status: 'failed',  icon: AlertTriangle, iconColor: '#ef4444', minutesAgo: 1500 },
   { id: '10', actionType: 'approval_requested',    actor: 'agent',  labelKey: 'log.approvalRequested',   detailKey: 'log.detail.approvalRequested',   status: 'pending', icon: Clock,         iconColor: '#f59e0b', minutesAgo: 1200 },
   { id: '11', actionType: 'approval_granted',      actor: 'user',   labelKey: 'log.approvalGranted',     detailKey: 'log.detail.approvalGranted',     status: 'success', icon: CheckCircle,   iconColor: '#22c55e', minutesAgo: 1180 },
@@ -381,7 +381,7 @@ const MOCK_LOGS: LogEntry[] = [
   { id: '13', actionType: 'wallet_renamed',         actor: 'user',   labelKey: 'log.walletRenamed',       detailKey: 'log.detail.walletRenamed',       status: 'success', icon: Pencil,        iconColor: '#7c7c7c', minutesAgo: 600  },
   { id: '14', actionType: 'delegation_frozen',      actor: 'user',   labelKey: 'log.delegationFrozen',    detailKey: 'log.detail.delegationFrozen',    status: 'success', icon: Snowflake,     iconColor: '#eab308', minutesAgo: 300  },
   { id: '15', actionType: 'delegation_resumed',     actor: 'user',   labelKey: 'log.delegationResumed',   detailKey: 'log.detail.delegationResumed',   status: 'success', icon: Play,          iconColor: '#22c55e', minutesAgo: 120  },
-  { id: '16', actionType: 'permission_updated',    actor: 'user',   labelKey: 'log.permissionUpdated',   detailKey: 'log.detail.permissionDisabled',  status: 'success', icon: ToggleRight,   iconColor: '#4f5eff', minutesAgo: 60   },
+  { id: '16', actionType: 'permission_updated',    actor: 'user',   labelKey: 'log.permissionUpdated',   detailKey: 'log.detail.permissionDisabled',  status: 'success', icon: ToggleRight,   iconColor: '#1F32D6', minutesAgo: 60   },
   { id: '17', actionType: 'approval_requested',    actor: 'agent',  labelKey: 'log.approvalRequested',   detailKey: 'log.detail.approvalRequested',   status: 'pending', icon: Clock,         iconColor: '#f59e0b', minutesAgo: 30   },
   { id: '18', actionType: 'approval_denied',        actor: 'user',   labelKey: 'log.approvalDenied',      detailKey: 'log.detail.approvalDenied',      status: 'success', icon: XCircle,       iconColor: '#ef4444', minutesAgo: 25   },
   { id: '19', actionType: 'delegation_revoked',     actor: 'user',   labelKey: 'log.delegationRevoked',   detailKey: 'log.detail.delegationRevoked',   status: 'success', icon: Ban,           iconColor: '#ef4444', minutesAgo: 10   },
@@ -404,7 +404,7 @@ const STATUS_STYLES: Record<string, { bg: string; text: string }> = {
 };
 
 const ACTOR_STYLES: Record<string, { bg: string; text: string }> = {
-  user:   { bg: 'bg-[#4f5eff]/10', text: 'text-[#4f5eff]' },
+  user:   { bg: 'bg-[#1F32D6]/10', text: 'text-[#1F32D6]' },
   agent:  { bg: 'bg-[#22c55e]/10', text: 'text-[#22c55e]' },
   system: { bg: 'bg-[#7c7c7c]/10', text: 'text-[#7c7c7c]' },
 };

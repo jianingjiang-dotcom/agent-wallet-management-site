@@ -45,7 +45,7 @@ export default function WalletCard({ wallet, delegationCount, onSelect }: Wallet
             Agents
           </span>
           {hasAgents ? (
-            <span className="flex items-center gap-1 font-['Inter',sans-serif] font-medium text-[12px] text-[#4f5eff]">
+            <span className="flex items-center gap-1 font-['Inter',sans-serif] font-medium text-[12px] text-[#1F32D6]">
               <Users className="w-3 h-3" />
               {delegationCount} {t('walletPage.agents')}
             </span>
@@ -59,7 +59,7 @@ export default function WalletCard({ wallet, delegationCount, onSelect }: Wallet
 
       {/* Bottom Right: Manage link */}
       <div className="flex justify-end">
-        <span className="font-['Inter',sans-serif] font-medium text-[13px] text-[#4f5eff] flex items-center gap-1 opacity-70 group-hover:opacity-100 transition-opacity">
+        <span className="font-['Inter',sans-serif] font-medium text-[13px] text-[#1F32D6] flex items-center gap-1 opacity-70 group-hover:opacity-100 transition-opacity">
           {t('walletCard.manage')}
           <ArrowRight className="w-3.5 h-3.5" />
         </span>

@@ -41,7 +41,7 @@ export default function PermissionsPanel({ permissions, onUpdate, disabled }: Pe
     <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[12px] p-6 mb-6 relative">
       {/* Header */}
       <div className="flex items-center gap-2 mb-1">
-        <Shield className="w-4 h-4 text-[#4f5eff]" />
+        <Shield className="w-4 h-4 text-[#1F32D6]" />
         <h2 className="font-['Inter',sans-serif] font-semibold text-[16px] text-[#0a0a0a]">
           {t('permissions.title')}
         </h2>
@@ -62,7 +62,7 @@ export default function PermissionsPanel({ permissions, onUpdate, disabled }: Pe
               className="flex items-center justify-between p-3 rounded-[8px] border border-[rgba(10,10,10,0.06)] bg-[#fafafa]"
             >
               <div className="flex items-center gap-3">
-                <Icon className="w-4 h-4 text-[#4f5eff]" />
+                <Icon className="w-4 h-4 text-[#1F32D6]" />
                 <div>
                   <div className="font-['Inter',sans-serif] font-medium text-[14px] text-[#0a0a0a]">
                     {t(item.labelKey)}
