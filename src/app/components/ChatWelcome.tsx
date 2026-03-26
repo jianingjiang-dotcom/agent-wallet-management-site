@@ -59,8 +59,8 @@ export default function ChatWelcome({ variant }: ChatWelcomeProps) {
   }
 
   return (
-    <div className="flex items-start gap-3 mb-8 justify-center">
-      <div className="shrink-0 mt-0.5">
+    <div className="flex items-center gap-3 mb-8 justify-center">
+      <div className="shrink-0">
         <AvatarCharacter variant="wave" size={44} />
       </div>
       <div className="flex flex-col">
