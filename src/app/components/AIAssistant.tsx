@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useSearchParams, useOutletContext } from 'react-router';
-import { ArrowUp, Plus, AtSign, AlertTriangle, CheckCircle, XCircle, Search, MoreHorizontal, Bot, Trash2, Sparkles, Wallet, ChevronRight, SquarePen, PanelLeftClose, X, MessageCircle, ClipboardCheck, Send, Users, Link, FileText, Settings, Clock } from 'lucide-react';
+import { ArrowUp, Plus, AtSign, AlertTriangle, CheckCircle, XCircle, Search, MoreHorizontal, Bot, Trash2, Sparkles, Wallet, ChevronRight, SquarePen, PanelLeftClose, X, MessageCircle, ClipboardCheck, Send, Users, Link, FileText, Settings, Clock, Copy } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useWalletStore } from '../hooks/useWalletStore';
 import { useOnboardingChat } from '../hooks/useOnboardingChat';
@@ -69,6 +69,7 @@ export default function AIAssistant() {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchModalInputRef = useRef<HTMLInputElement>(null);
   const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [navTooltip, setNavTooltip] = useState<{ label: string; top: number } | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [welcomeType, setWelcomeType] = useState<'first-wallet' | null>(null);
@@ -145,6 +146,14 @@ export default function AIAssistant() {
       }
     },
   };
+
+  // Auto-trigger onComplete when onboarding reaches 'success' step
+  useEffect(() => {
+    if (onboarding.currentStep === 'success' && onboarding.isOnboardingActive) {
+      onboardingCallbacks.onComplete();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [onboarding.currentStep]);
 
   // Merge onboarding messages for display
   const displayMessages: Message[] = onboarding.isOnboardingActive
@@ -750,7 +759,20 @@ Would you like me to help adjust your current Agent's limit settings?`;
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 10.8333C10.4602 10.8333 10.8333 10.4602 10.8333 9.99996C10.8333 9.53972 10.4602 9.16663 10 9.16663C9.53977 9.16663 9.16667 9.53972 9.16667 9.99996C9.16667 10.4602 9.53977 10.8333 10 10.8333Z" fill="currentColor" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M15.8333 10.8333C16.2936 10.8333 16.6667 10.4602 16.6667 9.99996C16.6667 9.53972 16.2936 9.16663 15.8333 9.16663C15.3731 9.16663 15 9.53972 15 9.99996C15 10.4602 15.3731 10.8333 15.8333 10.8333Z" fill="currentColor" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M4.16666 10.8333C4.6269 10.8333 4.99999 10.4602 4.99999 9.99996C4.99999 9.53972 4.6269 9.16663 4.16666 9.16663C3.70642 9.16663 3.33333 9.53972 3.33333 9.99996C3.33333 10.4602 3.70642 10.8333 4.16666 10.8333Z" fill="currentColor" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </button>
             {menuOpenId === session.id && (
-              <div ref={menuRef} className="absolute right-0 top-full mt-1 bg-white rounded-lg shadow-lg border border-[#EBEBEB] py-1 z-50" style={{ minWidth: '120px' }}>
+              <div ref={menuRef} className="absolute right-0 top-full mt-1 bg-white rounded-lg shadow-lg border border-[#EBEBEB] py-1 z-50" style={{ minWidth: '150px' }}>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    try { navigator.clipboard.writeText(session.id).catch(() => {}); } catch {}
+                    setMenuOpenId(null);
+                    setToastMessage(language === 'zh' ? '复制成功' : 'Copied');
+                    setTimeout(() => setToastMessage(null), 2000);
+                  }}
+                  className="w-full text-left px-3 py-2 text-sm text-[#1c1c1c] hover:bg-[#FAFAFA] flex items-center gap-2"
+                >
+                  <Copy style={{ width: '16px', height: '16px' }} />
+                  {language === 'zh' ? '复制会话 ID' : 'Copy Session ID'}
+                </button>
                 <button
                   onClick={(e) => { e.stopPropagation(); setDeleteConfirmId(session.id); setMenuOpenId(null); }}
                   className="w-full text-left px-3 py-2 text-sm text-red-500 hover:bg-[#FAFAFA] flex items-center gap-2"
@@ -832,6 +854,14 @@ Would you like me to help adjust your current Agent's limit settings?`;
     <>
       {/* Portal chat sessions into the layout sidebar */}
       {sidebarPortal && createPortal(chatSessionsSidebar, sidebarPortal)}
+
+      {/* Global toast message */}
+      {toastMessage && createPortal(
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[300] px-4 py-2 bg-[#1C1C1C] text-white text-[14px] leading-[20px] rounded-[8px] shadow-lg animate-reveal-up" style={{ animationDuration: '200ms' }}>
+          {toastMessage}
+        </div>,
+        document.body
+      )}
 
       {/* Nav tooltip - rendered via portal to avoid sidebar clipping */}
       {navTooltip && createPortal(
