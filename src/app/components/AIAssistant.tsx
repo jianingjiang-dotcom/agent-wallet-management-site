@@ -1216,7 +1216,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                                 if (el.scrollWidth > el.clientWidth) { setInputExpanded(true); }
                               }}
                               placeholder={t('ai.inputPlaceholder')}
-                              className="flex-1 min-w-0 bg-transparent px-[8px] text-[15px] leading-[22px] text-[#0A0A0A] font-normal focus:outline-none chat-input-placeholder"
+                              className="flex-1 min-w-0 bg-transparent px-[8px] text-[14px] leading-[20px] text-[#0A0A0A] font-normal focus:outline-none chat-input-placeholder"
                             />
                           )}
                         </div>
@@ -1315,7 +1315,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                               }
                             }}
                             placeholder={t('ai.inputPlaceholder')}
-                            className="flex-1 min-w-0 bg-transparent px-[8px] text-[15px] leading-[22px] text-[#0A0A0A] font-normal focus:outline-none chat-input-placeholder"
+                            className="flex-1 min-w-0 bg-transparent px-[8px] text-[14px] leading-[20px] text-[#0A0A0A] font-normal focus:outline-none chat-input-placeholder"
                           />
                         )}
                       </div>
@@ -1387,7 +1387,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                       }
                     }}
                     placeholder={t('ai.inputPlaceholder')}
-                    className="flex-1 min-w-0 bg-transparent px-[8px] text-[15px] leading-[22px] text-[#0A0A0A] font-normal focus:outline-none chat-input-placeholder"
+                    className="flex-1 min-w-0 bg-transparent px-[8px] text-[14px] leading-[20px] text-[#0A0A0A] font-normal focus:outline-none chat-input-placeholder"
                   />
                 )}
               </div>

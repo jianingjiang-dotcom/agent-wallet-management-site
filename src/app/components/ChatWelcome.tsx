@@ -59,7 +59,7 @@ export default function ChatWelcome({ variant }: ChatWelcomeProps) {
 
   return (
     <div className="flex flex-col items-center text-center mb-8">
-      <h2 className="font-semibold text-[22px] lg:text-[36px] text-[#0A0A0A] leading-tight">
+      <h2 className="font-semibold text-[26px] lg:text-[36px] text-[#0A0A0A] leading-tight">
         {greeting}{userName ? `, ${userName}` : ''}
       </h2>
       <p className="text-[#0A0A0A] text-[14px] lg:text-[16px] leading-[21px] lg:leading-[24px] mt-1.5">
