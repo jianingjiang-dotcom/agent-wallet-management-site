@@ -1081,7 +1081,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                   {message.role === 'assistant' ? (
                     <div className="bg-transparent text-[#0A0A0A] w-full min-w-0 overflow-hidden">
                       {!isGroupedWithPrev && renderAssistantHeader()}
-                      <div className="whitespace-pre-wrap break-words text-[15px] leading-[24px] lg:text-[15px] lg:leading-[25px]">{message.content}</div>
+                      <div className="whitespace-pre-wrap break-words text-[14px] leading-[22px] lg:text-[14px] lg:leading-[22px]">{message.content}</div>
                       {message.walletListData && wallets.length > 0 && (
                         <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
                           {wallets.map((w) => {
@@ -1103,7 +1103,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                     </div>
                   ) : (
                     <div className="bg-[#F1F3FF] text-[#0A0A0A] max-w-[85%] lg:max-w-[80%] rounded-[18px] lg:rounded-[12px] px-4 py-3">
-                      <div className="whitespace-pre-wrap break-words text-[15px] leading-[24px] lg:text-[15px] lg:leading-[25px]">{message.content}</div>
+                      <div className="whitespace-pre-wrap break-words text-[14px] leading-[22px] lg:text-[14px] lg:leading-[22px]">{message.content}</div>
                     </div>
                   )}
                 </div>
