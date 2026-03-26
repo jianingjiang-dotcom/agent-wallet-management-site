@@ -176,7 +176,7 @@ export default function DashboardLayout() {
             className={`w-full flex items-center gap-[12px] transition-all duration-300 ease-in-out rounded-none overflow-hidden py-[16px] ${sidebarCollapsed ? 'px-[8px]' : 'px-[16px] hover:bg-[#EDEEF3]'}`}
           >
             <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'rounded-none p-[8px] -m-[8px] hover:bg-[#EDEEF3] transition-colors' : ''}`}>
-              <div className="w-9 h-9 rounded-full bg-[#E8725A] flex items-center justify-center shrink-0">
+              <div className="w-9 h-9 rounded-full bg-[#8B95A5] flex items-center justify-center shrink-0">
                 <span className="text-white text-[13px] font-semibold leading-none">{(user.name || 'A').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}</span>
               </div>
             </div>
