@@ -318,33 +318,36 @@ export default function DashboardLayout() {
         />
       )}
 
-      {/* Mobile bottom-sheet account menu — must sit above sidebar (z-[60]) */}
+      {/* Mobile full-screen account/settings panel (Claude mobile pattern) */}
       {accountMenuOpen && (
-        <div className="lg:hidden">
-          {/* Backdrop */}
-          <div
-            className="fixed inset-0 bg-black/30 z-[70]"
-            onClick={() => { setAccountMenuOpen(false); setMobileLangPanel(false); }}
-          />
-          {/* Bottom sheet */}
-          <div className="fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl z-[80] shadow-2xl">
-            <div className="overflow-hidden">
-              <div
-                className="flex transition-transform duration-300 ease-in-out"
-                style={{ transform: mobileLangPanel ? 'translateX(-50%)' : 'translateX(0)' }}
-              >
-                {/* Panel 1: Account menu */}
-                <div className="w-full shrink-0 px-6 pt-6 pb-8">
-                  {/* User info */}
-                  <div className="flex items-center gap-3 mb-5">
-                    <svg width="40" height="40" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0"><rect width="36" height="36" rx="18" fill="#4F5EFF"/><path d="M16.8247 12H19.1753L24 24H21.7909L20.6421 20.9916H15.3579L14.2091 24H12L16.8247 12ZM15.9764 19.3782H20.0236L18.0442 14.1176H17.9735L15.9764 19.3782Z" fill="white"/></svg>
-                    <div className="min-w-0">
-                      <div className="font-semibold text-[15px] text-[#1c1c1c] truncate">{user.name}</div>
-                      <div className="text-[13px] text-[#7C7C7C] truncate">{user.email}</div>
-                    </div>
-                  </div>
+        <div className="lg:hidden fixed inset-0 z-[80] bg-white flex flex-col">
+          {!mobileLangPanel ? (
+            <>
+              {/* Header — Settings */}
+              <div className="flex items-center justify-between px-4 h-[56px] shrink-0 border-b border-[#EDEEF3]">
+                <button
+                  onClick={() => { setAccountMenuOpen(false); setMobileLangPanel(false); }}
+                  className="w-9 h-9 flex items-center justify-center rounded-full bg-[#F5F5F5]"
+                >
+                  <X className="w-[18px] h-[18px] text-[#0A0A0A]" />
+                </button>
+                <span className="font-semibold text-[16px] text-[#0A0A0A]">{t('nav.settings')}</span>
+                <div className="w-9" />
+              </div>
 
-                  {/* Nav items */}
+              {/* Content */}
+              <div className="flex-1 overflow-y-auto px-5 pt-5 pb-8">
+                {/* User card */}
+                <div className="flex items-center gap-3 p-4 bg-[#F5F5F7] rounded-2xl mb-5">
+                  <svg width="40" height="40" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0"><rect width="36" height="36" rx="18" fill="#4F5EFF"/><path d="M16.8247 12H19.1753L24 24H21.7909L20.6421 20.9916H15.3579L14.2091 24H12L16.8247 12ZM15.9764 19.3782H20.0236L18.0442 14.1176H17.9735L15.9764 19.3782Z" fill="white"/></svg>
+                  <div className="min-w-0 flex-1">
+                    <div className="font-semibold text-[15px] text-[#1c1c1c] truncate">{user.name}</div>
+                    <div className="text-[13px] text-[#7C7C7C] truncate">{user.email}</div>
+                  </div>
+                </div>
+
+                {/* Nav items */}
+                <div className="space-y-1">
                   {navItems.map((item) => {
                     const Icon = item.icon;
                     return (
@@ -356,80 +359,81 @@ export default function DashboardLayout() {
                           setSidebarOpen(false);
                           setActiveModal(item.key);
                         }}
-                        className="flex items-center gap-3 w-full py-3 text-[#0A0A0A]"
+                        className="flex items-center gap-3 w-full py-3.5 px-1 text-[#0A0A0A]"
                       >
-                        <Icon className="w-5 h-5 text-[#4F4F4F]" />
+                        <Icon className="w-5 h-5 text-[#7C7C7C]" />
                         <span className="font-medium text-[15px]">{item.label}</span>
-                        <ChevronRight className="w-4 h-4 text-[#7C7C7C] ml-auto" />
+                        <ChevronRight className="w-4 h-4 text-[#BDBDBD] ml-auto" />
                       </button>
                     );
                   })}
-
-                  <div className="border-t border-[rgba(10,10,10,0.06)] my-2" />
-
-                  {/* Language button */}
-                  <button
-                    onClick={() => setMobileLangPanel(true)}
-                    className="flex items-center gap-3 w-full py-3"
-                  >
-                    <Globe className="w-5 h-5 text-[#4F4F4F]" />
-                    <span className="font-medium text-[15px] text-[#0A0A0A]">{t('nav.language')}</span>
-                    <span className="ml-auto text-[13px] text-[#7C7C7C] mr-1">{language === 'en' ? 'English' : '中文'}</span>
-                    <ChevronRight className="w-4 h-4 text-[#7C7C7C]" />
-                  </button>
-
-                  <div className="border-t border-[rgba(10,10,10,0.06)] my-2" />
-
-                  {/* Sign Out */}
-                  <button
-                    onClick={() => {
-                      setAccountMenuOpen(false);
-                      setMobileLangPanel(false);
-                      setShowLogoutConfirm(true);
-                    }}
-                    className="flex items-center gap-3 w-full py-3"
-                  >
-                    <LogOut className="w-5 h-5 text-[#4F4F4F]" />
-                    <span className="font-medium text-[15px] text-[#0A0A0A]">{t('auth.logout')}</span>
-                  </button>
-
-                  {/* Cancel */}
-                  <button
-                    onClick={() => { setAccountMenuOpen(false); setMobileLangPanel(false); }}
-                    className="w-full mt-3 py-3 text-center font-medium text-[15px] text-[#7C7C7C] rounded-xl bg-[#F5F5F5]"
-                  >
-                    {language === 'zh' ? '取消' : 'Cancel'}
-                  </button>
                 </div>
 
-                {/* Panel 2: Language picker */}
-                <div className="w-full shrink-0 px-6 pt-6 pb-8">
-                  <button
-                    onClick={() => setMobileLangPanel(false)}
-                    className="flex items-center gap-2 mb-5 text-[#0A0A0A]"
-                  >
-                    <ChevronLeft className="w-5 h-5" />
-                    <span className="font-semibold text-[15px]">{t('nav.language')}</span>
-                  </button>
+                <div className="border-t border-[#EDEEF3] my-3" />
 
-                  <button
-                    onClick={() => { setLanguage('en'); setMobileLangPanel(false); setAccountMenuOpen(false); }}
-                    className={`flex items-center justify-between w-full py-3 px-3 rounded-xl mb-2 ${language === 'en' ? 'bg-[#F0F1FF]' : 'bg-[#F5F5F5]'}`}
-                  >
-                    <span className="font-medium text-[15px] text-[#0A0A0A]">English</span>
-                    {language === 'en' && <div className="w-2 h-2 rounded-full bg-[#4F5EFF]" />}
-                  </button>
-                  <button
-                    onClick={() => { setLanguage('zh'); setMobileLangPanel(false); setAccountMenuOpen(false); }}
-                    className={`flex items-center justify-between w-full py-3 px-3 rounded-xl ${language === 'zh' ? 'bg-[#F0F1FF]' : 'bg-[#F5F5F5]'}`}
-                  >
-                    <span className="font-medium text-[15px] text-[#0A0A0A]">中文</span>
-                    {language === 'zh' && <div className="w-2 h-2 rounded-full bg-[#4F5EFF]" />}
-                  </button>
-                </div>
+                {/* Language */}
+                <button
+                  onClick={() => setMobileLangPanel(true)}
+                  className="flex items-center gap-3 w-full py-3.5 px-1"
+                >
+                  <Globe className="w-5 h-5 text-[#7C7C7C]" />
+                  <span className="font-medium text-[15px] text-[#0A0A0A]">{t('nav.language')}</span>
+                  <span className="ml-auto text-[13px] text-[#7C7C7C] mr-1">{language === 'en' ? 'EN' : '中文'}</span>
+                  <ChevronRight className="w-4 h-4 text-[#BDBDBD]" />
+                </button>
+
+                <div className="border-t border-[#EDEEF3] my-3" />
+
+                {/* Sign Out */}
+                <button
+                  onClick={() => {
+                    setAccountMenuOpen(false);
+                    setMobileLangPanel(false);
+                    setShowLogoutConfirm(true);
+                  }}
+                  className="flex items-center gap-3 w-full py-3.5 px-1"
+                >
+                  <LogOut className="w-5 h-5 text-[#7C7C7C]" />
+                  <span className="font-medium text-[15px] text-[#0A0A0A]">{t('auth.logout')}</span>
+                </button>
               </div>
-            </div>
-          </div>
+            </>
+          ) : (
+            <>
+              {/* Language picker — full screen with back */}
+              <div className="flex items-center justify-between px-4 h-[56px] shrink-0 border-b border-[#EDEEF3]">
+                <button
+                  onClick={() => setMobileLangPanel(false)}
+                  className="w-9 h-9 flex items-center justify-center rounded-full bg-[#F5F5F5]"
+                >
+                  <ChevronLeft className="w-[18px] h-[18px] text-[#0A0A0A]" />
+                </button>
+                <span className="font-semibold text-[16px] text-[#0A0A0A]">{t('nav.language')}</span>
+                <div className="w-9" />
+              </div>
+
+              <div className="flex-1 overflow-y-auto px-5 pt-5 pb-8 space-y-2">
+                <button
+                  onClick={() => { setLanguage('en'); setMobileLangPanel(false); setAccountMenuOpen(false); }}
+                  className={`flex items-center justify-between w-full py-4 px-4 rounded-2xl transition-colors ${language === 'en' ? 'bg-[#F0F1FF]' : 'bg-[#F5F5F7] hover:bg-[#EDEEF3]'}`}
+                >
+                  <span className={`font-medium text-[15px] ${language === 'en' ? 'text-[#4F5EFF]' : 'text-[#0A0A0A]'}`}>English</span>
+                  {language === 'en' && (
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4F5EFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  )}
+                </button>
+                <button
+                  onClick={() => { setLanguage('zh'); setMobileLangPanel(false); setAccountMenuOpen(false); }}
+                  className={`flex items-center justify-between w-full py-4 px-4 rounded-2xl transition-colors ${language === 'zh' ? 'bg-[#F0F1FF]' : 'bg-[#F5F5F7] hover:bg-[#EDEEF3]'}`}
+                >
+                  <span className={`font-medium text-[15px] ${language === 'zh' ? 'text-[#4F5EFF]' : 'text-[#0A0A0A]'}`}>中文</span>
+                  {language === 'zh' && (
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4F5EFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  )}
+                </button>
+              </div>
+            </>
+          )}
         </div>
       )}
 
