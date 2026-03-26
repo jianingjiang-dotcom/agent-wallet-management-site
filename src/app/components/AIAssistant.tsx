@@ -664,22 +664,22 @@ Would you like me to help adjust your current Agent's limit settings?`;
       <div className="px-2 pt-0 pb-[8px] flex flex-col gap-[2px]">
         <button
           onClick={handleNewChat}
-          className={`h-[36px] flex items-center gap-[8px] px-[8px] rounded-[8px] transition-colors text-[#0A0A0A] overflow-hidden w-full ${sidebarCollapsed ? '' : 'hover:bg-[#EBEBEB]'}`}
+          className={`h-[36px] flex items-center gap-[8px] px-[8px] rounded-[8px] transition-colors text-[#0A0A0A] overflow-hidden w-full ${sidebarCollapsed ? '' : 'hover:bg-[#F0F2FF]'}`}
           onMouseEnter={(e) => { if (sidebarCollapsed) { const rect = e.currentTarget.getBoundingClientRect(); setNavTooltip({ label: language === 'zh' ? '新对话' : 'New Chat', top: rect.top + rect.height / 2 }); } }}
           onMouseLeave={() => setNavTooltip(null)}
         >
-          <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'w-[36px] h-[36px] -m-[8px] rounded-[8px] hover:bg-[#EBEBEB] transition-colors' : ''}`}>
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0"><path d="M9.99999 18.3333C14.6024 18.3333 18.3333 14.6023 18.3333 9.99996C18.3333 5.39759 14.6024 1.66663 9.99999 1.66663C5.39762 1.66663 1.66666 5.39759 1.66666 9.99996C1.66666 14.6023 5.39762 18.3333 9.99999 18.3333Z" fill="#0A0A0A" stroke="#0A0A0A" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M6.66666 10H13.3333" stroke="white" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M10 6.66663V13.3333" stroke="white" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'w-[36px] h-[36px] -m-[8px] rounded-[8px] hover:bg-[#F0F2FF] transition-colors' : ''}`}>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0"><path d="M9.99999 18.3333C14.6024 18.3333 18.3333 14.6023 18.3333 9.99996C18.3333 5.39759 14.6024 1.66663 9.99999 1.66663C5.39762 1.66663 1.66666 5.39759 1.66666 9.99996C1.66666 14.6023 5.39762 18.3333 9.99999 18.3333Z" fill="#EEF0FF" stroke="#EEF0FF" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M6.66666 10H13.3333" stroke="#1F32D6" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M10 6.66663V13.3333" stroke="#1F32D6" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </div>
           <span className={`text-[14px] leading-[20px] font-normal whitespace-nowrap transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}>{t('ai.newChat')}</span>
         </button>
         <button
           onClick={() => { setShowSearchModal(true); setSearchQuery(''); }}
-          className={`h-[36px] flex items-center gap-[8px] px-[8px] rounded-[8px] transition-colors text-[#0A0A0A] overflow-hidden w-full ${sidebarCollapsed ? '' : 'hover:bg-[#EBEBEB]'}`}
+          className={`h-[36px] flex items-center gap-[8px] px-[8px] rounded-[8px] transition-colors text-[#0A0A0A] overflow-hidden w-full ${sidebarCollapsed ? '' : 'hover:bg-[#F0F2FF]'}`}
           onMouseEnter={(e) => { if (sidebarCollapsed) { const rect = e.currentTarget.getBoundingClientRect(); setNavTooltip({ label: language === 'zh' ? '搜索对话' : 'Search Chats', top: rect.top + rect.height / 2 }); } }}
           onMouseLeave={() => setNavTooltip(null)}
         >
-          <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'w-[36px] h-[36px] -m-[8px] rounded-[8px] hover:bg-[#EBEBEB] transition-colors' : ''}`}>
+          <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'w-[36px] h-[36px] -m-[8px] rounded-[8px] hover:bg-[#F0F2FF] transition-colors' : ''}`}>
             <Search className="w-[20px] h-[20px] shrink-0" strokeWidth={1.5} />
           </div>
           <span className={`text-[14px] leading-[20px] font-normal whitespace-nowrap transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}>{language === 'zh' ? '搜索对话' : 'Search Chats'}</span>
@@ -688,22 +688,22 @@ Would you like me to help adjust your current Agent's limit settings?`;
           <>
             <button
               onClick={() => { if (!showWalletPage) { onShowWalletPage(); setActiveChatId('current'); } }}
-              className={`h-[36px] flex items-center gap-[8px] px-[8px] rounded-[8px] transition-colors overflow-hidden w-full ${sidebarCollapsed ? '' : 'hover:bg-[#EBEBEB]'} ${showWalletPage && !sidebarCollapsed ? 'bg-[#EBEBEB] text-[#0A0A0A]' : 'text-[#0A0A0A]'}`}
+              className={`h-[36px] flex items-center gap-[8px] px-[8px] rounded-[8px] transition-colors overflow-hidden w-full ${sidebarCollapsed ? '' : 'hover:bg-[#F0F2FF]'} ${showWalletPage && !sidebarCollapsed ? 'bg-[#F0F2FF] text-[#0A0A0A]' : 'text-[#0A0A0A]'}`}
               onMouseEnter={(e) => { if (sidebarCollapsed) { const rect = e.currentTarget.getBoundingClientRect(); setNavTooltip({ label: language === 'zh' ? '我的钱包' : 'My Wallets', top: rect.top + rect.height / 2 }); } }}
               onMouseLeave={() => setNavTooltip(null)}
             >
-              <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'w-[36px] h-[36px] -m-[8px] rounded-[8px] hover:bg-[#EBEBEB] transition-colors' : ''} ${showWalletPage && sidebarCollapsed ? 'bg-[#EBEBEB]' : ''}`}>
+              <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'w-[36px] h-[36px] -m-[8px] rounded-[8px] hover:bg-[#F0F2FF] transition-colors' : ''} ${showWalletPage && sidebarCollapsed ? 'bg-[#F0F2FF]' : ''}`}>
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0"><path d="M14.1667 11.6666H14.175" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M5.83333 5.83333H15.8333C16.2754 5.83333 16.6993 6.00893 17.0118 6.32149C17.3244 6.63405 17.5 7.05797 17.5 7.5V15.8333C17.5 16.2754 17.3244 16.6993 17.0118 17.0118C16.6993 17.3244 16.2754 17.5 15.8333 17.5H4.16667C3.72464 17.5 3.30072 17.3244 2.98816 17.0118C2.67559 16.6993 2.5 16.2754 2.5 15.8333V4.16667C2.5 3.72464 2.67559 3.30072 2.98816 2.98816C3.30072 2.67559 3.72464 2.5 4.16667 2.5H15.8333" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
               </div>
               <span className={`text-[14px] leading-[20px] font-normal whitespace-nowrap transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}>{language === 'zh' ? '我的钱包' : 'My Wallets'}</span>
             </button>
             <button
               onClick={() => { if (!showApprovalPage) { setApprovalInitialTab('all'); onShowApprovalPage(); setActiveChatId('current'); } }}
-              className={`h-[36px] flex items-center gap-[8px] px-[8px] rounded-[8px] transition-colors overflow-hidden w-full ${sidebarCollapsed ? '' : 'hover:bg-[#EBEBEB]'} ${showApprovalPage && !sidebarCollapsed ? 'bg-[#EBEBEB] text-[#0A0A0A]' : 'text-[#0A0A0A]'}`}
+              className={`h-[36px] flex items-center gap-[8px] px-[8px] rounded-[8px] transition-colors overflow-hidden w-full ${sidebarCollapsed ? '' : 'hover:bg-[#F0F2FF]'} ${showApprovalPage && !sidebarCollapsed ? 'bg-[#F0F2FF] text-[#0A0A0A]' : 'text-[#0A0A0A]'}`}
               onMouseEnter={(e) => { if (sidebarCollapsed) { const rect = e.currentTarget.getBoundingClientRect(); setNavTooltip({ label: language === 'zh' ? '交易审批' : 'Approvals', top: rect.top + rect.height / 2 }); } }}
               onMouseLeave={() => setNavTooltip(null)}
             >
-              <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'w-[36px] h-[36px] -m-[8px] rounded-[8px] hover:bg-[#EBEBEB] transition-colors' : ''} ${showApprovalPage && sidebarCollapsed ? 'bg-[#EBEBEB]' : ''}`}>
+              <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'w-[36px] h-[36px] -m-[8px] rounded-[8px] hover:bg-[#F0F2FF] transition-colors' : ''} ${showApprovalPage && sidebarCollapsed ? 'bg-[#F0F2FF]' : ''}`}>
                 <div className="relative shrink-0">
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0"><path d="M16.6667 10.8333C16.6667 15 13.75 17.0833 10.2833 18.2916C10.1018 18.3532 9.90462 18.3502 9.72501 18.2833C6.25001 17.0833 3.33334 15 3.33334 10.8333V4.99997C3.33334 4.77895 3.42114 4.56699 3.57742 4.41071C3.7337 4.25443 3.94566 4.16663 4.16668 4.16663C5.83334 4.16663 7.91668 3.16663 9.36668 1.89997C9.54322 1.74913 9.7678 1.66626 10 1.66626C10.2322 1.66626 10.4568 1.74913 10.6333 1.89997C12.0917 3.17497 14.1667 4.16663 15.8333 4.16663C16.0544 4.16663 16.2663 4.25443 16.4226 4.41071C16.5789 4.56699 16.6667 4.77895 16.6667 4.99997V10.8333Z" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M7.5 10L9.16667 11.6667L12.5 8.33337" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
                   {demoApproval && pendingApprovalCount > 0 && (
@@ -732,7 +732,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
           </div>
         )}
         {chatSessions.map((session) => (
-          <div key={session.id} className={`relative group rounded-[8px] transition-colors ${activeChatId === session.id ? 'bg-[#EBEBEB]' : 'hover:bg-[#EBEBEB]'}`}>
+          <div key={session.id} className={`relative group rounded-[8px] transition-colors ${activeChatId === session.id ? 'bg-[#F0F2FF]' : 'hover:bg-[#F0F2FF]'}`}>
             <button
               onClick={() => handleSwitchSession(session)}
               className={`w-full text-left px-[8px] py-[8px] pr-8 rounded-[8px] text-[14px] leading-[20px] font-normal truncate ${
@@ -866,7 +866,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
             <div className="flex gap-3 justify-end">
               <button
                 onClick={() => setDeleteConfirmId(null)}
-                className="px-4 py-2 text-sm text-[#4F4F4F] bg-[#FAFAFA] rounded-lg hover:bg-[#EBEBEB] transition-colors"
+                className="px-4 py-2 text-sm text-[#4F4F4F] bg-[#FAFAFA] rounded-lg hover:bg-[#F0F2FF] transition-colors"
               >
                 {language === 'zh' ? '取消' : 'Cancel'}
               </button>
@@ -1233,7 +1233,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                       <div className="flex flex-wrap gap-2 mt-[28px] justify-center max-w-[600px] mx-auto overflow-hidden max-h-[84px]">
                         {!hasWallets && (
                           <button onClick={handleStartOnboarding} className="flex items-center gap-1.5 h-[36px] px-4 bg-[#EEF0FF] border border-transparent text-[#1F32D6] hover:bg-[#E2E5FF] text-sm font-medium rounded-full transition-colors">
-                            <Sparkles className="w-3.5 h-3.5" strokeWidth={1.5} />
+                            <span className="text-[13px]">✨</span>
                             {t('onboarding.suggestion.createWallet')}
                           </button>
                         )}
@@ -1448,14 +1448,14 @@ Would you like me to help adjust your current Agent's limit settings?`;
           <div className="px-3 pb-2 flex gap-2">
             <button
               onClick={() => { onShowWalletPage(); setMobileHistoryOpen(false); }}
-              className={`flex-1 flex items-center justify-center gap-1.5 h-[36px] rounded-[8px] text-[13px] font-medium transition-colors ${showWalletPage ? 'bg-[#EBEBEB] text-[#0A0A0A]' : 'bg-[#FAFAFA] text-[#7C7C7C] hover:bg-[#EBEBEB]'}`}
+              className={`flex-1 flex items-center justify-center gap-1.5 h-[36px] rounded-[8px] text-[13px] font-medium transition-colors ${showWalletPage ? 'bg-[#F0F2FF] text-[#0A0A0A]' : 'bg-[#FAFAFA] text-[#7C7C7C] hover:bg-[#F0F2FF]'}`}
             >
               <Wallet className="w-[14px] h-[14px]" strokeWidth={1.5} />
               {language === 'zh' ? '我的钱包' : 'My Wallets'}
             </button>
             <button
               onClick={() => { onShowApprovalPage(); setMobileHistoryOpen(false); }}
-              className={`flex-1 flex items-center justify-center gap-1.5 h-[36px] rounded-[8px] text-[13px] font-medium transition-colors ${showApprovalPage ? 'bg-[#EBEBEB] text-[#0A0A0A]' : 'bg-[#FAFAFA] text-[#7C7C7C] hover:bg-[#EBEBEB]'}`}
+              className={`flex-1 flex items-center justify-center gap-1.5 h-[36px] rounded-[8px] text-[13px] font-medium transition-colors ${showApprovalPage ? 'bg-[#F0F2FF] text-[#0A0A0A]' : 'bg-[#FAFAFA] text-[#7C7C7C] hover:bg-[#F0F2FF]'}`}
             >
               <ClipboardCheck className="w-[14px] h-[14px]" strokeWidth={1.5} />
               {language === 'zh' ? '交易审批' : 'Approvals'}
@@ -1471,7 +1471,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
             <button
               key={session.id}
               onClick={() => handleSwitchSession(session)}
-              className={`w-full text-left px-3 py-2.5 rounded-[8px] text-[14px] leading-[20px] truncate transition-colors ${activeChatId === session.id ? 'bg-[#EBEBEB] text-[#0A0A0A]' : 'text-[#0A0A0A] hover:bg-[#F0F2FF]'}`}
+              className={`w-full text-left px-3 py-2.5 rounded-[8px] text-[14px] leading-[20px] truncate transition-colors ${activeChatId === session.id ? 'bg-[#F0F2FF] text-[#0A0A0A]' : 'text-[#0A0A0A] hover:bg-[#F0F2FF]'}`}
             >
               {session.title}
             </button>
