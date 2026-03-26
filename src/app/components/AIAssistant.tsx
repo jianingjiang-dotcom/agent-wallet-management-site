@@ -777,8 +777,8 @@ Would you like me to help adjust your current Agent's limit settings?`;
         onClick={e => e.stopPropagation()}
       >
         {/* Search input */}
-        <div className="flex items-center gap-3 px-[24px] py-[16px] border-b border-[#EBEBEB]">
-          <Search className="w-[20px] h-[20px] text-[#999] shrink-0" strokeWidth={1.5} />
+        <div className="flex items-center gap-3 px-[20px] py-[12px] border-b border-[#EBEBEB]">
+          <Search className="w-[16px] h-[16px] text-[#7C7C7C] shrink-0" strokeWidth={1.5} />
           <input
             ref={searchModalInputRef}
             autoFocus
@@ -786,30 +786,30 @@ Would you like me to help adjust your current Agent's limit settings?`;
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={language === 'zh' ? '搜索聊天...' : 'Search chats...'}
-            className="flex-1 text-[16px] bg-transparent text-[#0A0A0A] placeholder-[#999] focus:outline-none"
+            className="flex-1 text-[14px] bg-transparent text-[#0A0A0A] placeholder-[#7C7C7C] focus:outline-none"
           />
           <button
             onClick={() => setShowSearchModal(false)}
-            className="w-[28px] h-[28px] flex items-center justify-center rounded-[6px] hover:bg-[#FAFAFA] transition-colors text-[#999]"
+            className="w-[28px] h-[28px] flex items-center justify-center rounded-[6px] hover:bg-[#FAFAFA] transition-colors text-[#7C7C7C]"
           >
-            <X className="w-[18px] h-[18px]" strokeWidth={1.5} />
+            <X className="w-[16px] h-[16px]" strokeWidth={1.5} />
           </button>
         </div>
 
         {/* Results */}
         <div className="flex-1 overflow-y-auto py-2">
           <div className="px-5 pt-2 pb-1">
-            <span className="text-[12px] font-medium text-[#999]">{language === 'zh' ? '近期对话' : 'Recent Chats'}</span>
+            <span className="text-[12px] font-medium text-[#7C7C7C]">{language === 'zh' ? '近期对话' : 'Recent Chats'}</span>
           </div>
           {/* All sessions flat list */}
           {filteredSessions.map((session) => (
             <button
               key={session.id}
               onClick={() => { handleSwitchSession(session); setShowSearchModal(false); }}
-              className="w-full flex items-center gap-3 px-5 py-3 hover:bg-[#FAFAFA] transition-colors"
+              className="w-full flex items-center gap-3 px-5 py-2.5 hover:bg-[#FAFAFA] transition-colors"
             >
-              <MessageCircle className="w-[20px] h-[20px] text-[#999] shrink-0" strokeWidth={1.5} />
-              <span className="text-[15px] text-[#0A0A0A] truncate">{session.title}</span>
+              <MessageCircle className="w-[16px] h-[16px] text-[#7C7C7C] shrink-0" strokeWidth={1.5} />
+              <span className="text-[14px] text-[#0A0A0A] truncate">{session.title}</span>
             </button>
           ))}
         </div>
