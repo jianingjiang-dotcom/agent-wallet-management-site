@@ -491,9 +491,9 @@ export default function DashboardLayout() {
 
         {/* Mobile Header */}
         <div className="lg:hidden bg-white border-b border-[rgba(10,10,10,0.08)] px-4 py-3 flex items-center justify-between sticky top-0 z-20 shadow-sm">
-          <div className="flex items-center">
+          <button className="flex items-center" onClick={() => navigate('/dashboard/chat')}>
             <LogoText />
-          </div>
+          </button>
           <button
             onClick={() => setSidebarOpen(true)}
             className="text-[#0A0A0A] p-2 -mr-2 hover:bg-slate-100 rounded-lg transition-colors"
@@ -522,6 +522,7 @@ export default function DashboardLayout() {
             sidebarCollapsed,
             demoApproval,
             setHasActiveChat,
+            closeSidebar: () => setSidebarOpen(false),
           }} />
         </main>
       </div>

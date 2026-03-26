@@ -38,7 +38,7 @@ interface ChatSession {
 export default function AIAssistant() {
   const { t, language } = useLanguage();
   const { wallets, hasWallets, addWalletWithAgent, delegations, selectWallet } = useWalletStore();
-  const { onClaimWallet, onOpenWalletModal, onShowWalletPage, onHideWalletPage, showWalletPage, onDelegateWallet, onShowApprovalPage, onHideApprovalPage, showApprovalPage, sidebarCollapsed, demoApproval, setHasActiveChat } = useOutletContext<{
+  const { onClaimWallet, onOpenWalletModal, onShowWalletPage, onHideWalletPage, showWalletPage, onDelegateWallet, onShowApprovalPage, onHideApprovalPage, showApprovalPage, sidebarCollapsed, demoApproval, setHasActiveChat, closeSidebar } = useOutletContext<{
     onSetupWallet: () => void;
     onClaimWallet: () => void;
     onOpenWalletModal: () => void;
@@ -52,6 +52,7 @@ export default function AIAssistant() {
     sidebarCollapsed: boolean;
     demoApproval: boolean;
     setHasActiveChat: (v: boolean) => void;
+    closeSidebar: () => void;
   }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const [pendingApprovalCount, setPendingApprovalCount] = useState(hasWallets ? 2 : 0);
@@ -663,7 +664,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
       {/* Action items */}
       <div className="px-2 pt-0 pb-[8px] flex flex-col gap-[2px]">
         <button
-          onClick={handleNewChat}
+          onClick={() => { handleNewChat(); closeSidebar(); }}
           className={`h-[36px] flex items-center gap-[8px] px-[8px] rounded-[8px] transition-colors text-[#0A0A0A] overflow-hidden w-full ${sidebarCollapsed ? '' : 'hover:bg-[#F0F2FF]'}`}
           onMouseEnter={(e) => { if (sidebarCollapsed) { const rect = e.currentTarget.getBoundingClientRect(); setNavTooltip({ label: language === 'zh' ? '新对话' : 'New Chat', top: rect.top + rect.height / 2 }); } }}
           onMouseLeave={() => setNavTooltip(null)}
@@ -771,9 +772,9 @@ Would you like me to help adjust your current Agent's limit settings?`;
 
   // Search modal - rendered at top level, not inside sidebar portal
   const searchModal = showSearchModal ? (
-    <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-[60]" onClick={() => setShowSearchModal(false)}>
+    <div className="fixed inset-0 bg-black/30 lg:flex lg:items-center lg:justify-center z-[60]" onClick={() => setShowSearchModal(false)}>
       <div
-        className="bg-white rounded-[16px] shadow-2xl w-[680px] h-[440px] flex flex-col overflow-hidden"
+        className="bg-white w-full h-full lg:w-[680px] lg:h-[440px] lg:rounded-[16px] shadow-2xl flex flex-col overflow-hidden"
         onClick={e => e.stopPropagation()}
       >
         {/* Search input */}
