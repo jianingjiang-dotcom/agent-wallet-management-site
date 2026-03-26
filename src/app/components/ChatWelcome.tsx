@@ -62,8 +62,8 @@ export default function ChatWelcome({ variant }: ChatWelcomeProps) {
         )}
       </h2>
 
-      {/* Subtitle - only show for first wallet */}
-      {isFirst && (
+      {/* Subtitle */}
+      {isFirst ? (
         <p
           className="text-[#7C7C7C] text-[14px] leading-[21px] md:text-[16px] md:leading-[24px] animate-reveal-up"
           style={{
@@ -73,6 +73,10 @@ export default function ChatWelcome({ variant }: ChatWelcomeProps) {
           }}
         >
           {t('chat.welcome.firstWallet.subtitle')}
+        </p>
+      ) : (
+        <p className="text-[#7C7C7C] text-[14px] leading-[21px] md:text-[16px] md:leading-[24px] mt-2">
+          {language === 'zh' ? '你的钱包助手已就绪，随时为你服务' : 'Your wallet assistant is ready to help'}
         </p>
       )}
     </div>
