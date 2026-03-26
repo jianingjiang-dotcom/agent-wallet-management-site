@@ -35,7 +35,7 @@ export default function SuccessCard({ walletId, agentId, onComplete, completed }
         >
           <CheckCircle className="w-6 h-6 text-[#22c55e]" />
         </div>
-        <h3 className="font-semibold text-[18px] text-[#0a0a0a]">
+        <h3 className="font-semibold text-[18px] text-[#0A0A0A]">
           {t('onboarding.success.title')}
         </h3>
       </div>
@@ -50,7 +50,7 @@ export default function SuccessCard({ walletId, agentId, onComplete, completed }
             <span className="font-medium text-[10px] text-[#7C7C7C] uppercase tracking-wider block mb-0.5">
               {t('onboarding.success.walletId')}
             </span>
-            <code className="font-['JetBrains_Mono',monospace] text-[12px] text-[#0a0a0a] break-words leading-snug">
+            <code className="font-['JetBrains_Mono',monospace] text-[12px] text-[#0A0A0A] break-words leading-snug">
               {walletId}
             </code>
           </div>
@@ -75,7 +75,7 @@ export default function SuccessCard({ walletId, agentId, onComplete, completed }
             <span className="font-medium text-[10px] text-[#7C7C7C] uppercase tracking-wider block mb-0.5">
               {t('onboarding.success.agentId')}
             </span>
-            <code className="font-['JetBrains_Mono',monospace] text-[12px] text-[#0a0a0a] break-words leading-snug">
+            <code className="font-['JetBrains_Mono',monospace] text-[12px] text-[#0A0A0A] break-words leading-snug">
               {agentId}
             </code>
           </div>

@@ -135,10 +135,10 @@ caw claim`;
               <Download className="w-5 h-5 text-[#1F32D6]" />
             </div>
             <div>
-              <h2 className="font-semibold text-[16px] text-[#0a0a0a]">
+              <h2 className="font-semibold text-[16px] text-[#0A0A0A]">
                 {t("claimWallet.title")}
               </h2>
-              <p className="font-normal text-[12px] text-[#7c7c7c]">
+              <p className="font-normal text-[12px] text-[#7C7C7C]">
                 {t("claimWallet.subtitle")}
               </p>
             </div>
@@ -158,10 +158,10 @@ caw claim`;
 
           {phase === "confirming" ? (
             <div>
-              <h3 className="font-semibold text-[16px] text-[#0a0a0a] mb-1">
+              <h3 className="font-semibold text-[16px] text-[#0A0A0A] mb-1">
                 {t("claimWallet.confirmTitle")}
               </h3>
-              <p className="font-normal text-[12px] text-[#7c7c7c] mb-4">
+              <p className="font-normal text-[12px] text-[#7C7C7C] mb-4">
                 {t("claimWallet.confirmDesc")}
               </p>
 
@@ -169,7 +169,7 @@ caw claim`;
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Wallet className="w-4 h-4 text-[#1F32D6]" />
-                    <span className="font-medium text-[13px] text-[#0a0a0a]">
+                    <span className="font-medium text-[13px] text-[#0A0A0A]">
                       {t("claimWallet.walletId")}
                     </span>
                   </div>
@@ -179,7 +179,7 @@ caw claim`;
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Bot className="w-4 h-4 text-[#1F32D6]" />
-                    <span className="font-medium text-[13px] text-[#0a0a0a]">
+                    <span className="font-medium text-[13px] text-[#0A0A0A]">
                       {t("claimWallet.agentId")}
                     </span>
                   </div>
@@ -208,20 +208,20 @@ caw claim`;
               <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-[rgba(34,197,94,0.1)] flex items-center justify-center">
                 <CheckCircle className="w-7 h-7 text-[#22c55e]" />
               </div>
-              <h3 className="font-semibold text-[16px] text-[#0a0a0a] mb-1">
+              <h3 className="font-semibold text-[16px] text-[#0A0A0A] mb-1">
                 {t("claimWallet.success")}
               </h3>
-              <p className="font-normal text-[12px] text-[#7c7c7c] mb-4">
+              <p className="font-normal text-[12px] text-[#7C7C7C] mb-4">
                 {t("claimWallet.successDesc")}
               </p>
               <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[8px] px-4 py-3 mb-4 text-left space-y-2">
                 <div>
-                  <span className="font-normal text-[11px] text-[#7c7c7c]">{t("claimWallet.walletId")}</span>
-                  <div className="font-['JetBrains_Mono',monospace] text-[11px] text-[#0a0a0a]">{walletId}</div>
+                  <span className="font-normal text-[11px] text-[#7C7C7C]">{t("claimWallet.walletId")}</span>
+                  <div className="font-['JetBrains_Mono',monospace] text-[11px] text-[#0A0A0A]">{walletId}</div>
                 </div>
                 <div>
-                  <span className="font-normal text-[11px] text-[#7c7c7c]">{t("claimWallet.agentId")}</span>
-                  <div className="font-['JetBrains_Mono',monospace] text-[11px] text-[#0a0a0a]">{agentId}</div>
+                  <span className="font-normal text-[11px] text-[#7C7C7C]">{t("claimWallet.agentId")}</span>
+                  <div className="font-['JetBrains_Mono',monospace] text-[11px] text-[#0A0A0A]">{agentId}</div>
                 </div>
               </div>
               <button
@@ -270,7 +270,7 @@ caw claim`;
               {/* Simulate button (dev) */}
               <button
                 onClick={simulateClaim}
-                className="w-full mt-2 h-[32px] rounded-[8px] border border-dashed border-[rgba(10,10,10,0.15)] font-normal text-[11px] text-[#7c7c7c] hover:bg-[#FAFAFA] transition-colors"
+                className="w-full mt-2 h-[32px] rounded-[8px] border border-dashed border-[rgba(10,10,10,0.15)] font-normal text-[11px] text-[#7C7C7C] hover:bg-[#FAFAFA] transition-colors"
               >
                 ⚡ Simulate Claim
               </button>

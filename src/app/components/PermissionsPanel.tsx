@@ -41,12 +41,12 @@ export default function PermissionsPanel({ permissions, onUpdate, disabled }: Pe
     <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[12px] p-6 mb-6 relative">
       {/* Header */}
       <div className="flex items-center gap-2 mb-1">
-        <Shield className="w-4 h-4 text-[#1F32D6]" />
-        <h2 className="font-semibold text-[16px] text-[#0a0a0a]">
+        <Shield className="w-4 h-4 text-[#1F32D6]" strokeWidth={1.5} />
+        <h2 className="font-semibold text-[16px] text-[#0A0A0A]">
           {t('permissions.title')}
         </h2>
       </div>
-      <p className="font-normal text-[13px] text-[#7c7c7c] mb-5">
+      <p className="font-normal text-[13px] text-[#7C7C7C] mb-5">
         {t('permissions.desc')}
       </p>
 
@@ -62,12 +62,12 @@ export default function PermissionsPanel({ permissions, onUpdate, disabled }: Pe
               className="flex items-center justify-between p-3 rounded-[8px] border border-[rgba(10,10,10,0.06)] bg-[#fafafa]"
             >
               <div className="flex items-center gap-3">
-                <Icon className="w-4 h-4 text-[#1F32D6]" />
+                <Icon className="w-4 h-4 text-[#1F32D6]" strokeWidth={1.5} />
                 <div>
-                  <div className="font-medium text-[14px] text-[#0a0a0a]">
+                  <div className="font-medium text-[14px] text-[#0A0A0A]">
                     {t(item.labelKey)}
                   </div>
-                  <div className="font-normal text-[12px] text-[#7c7c7c]">
+                  <div className="font-normal text-[12px] text-[#7C7C7C]">
                     {t(item.descKey)}
                   </div>
                 </div>
@@ -94,7 +94,7 @@ export default function PermissionsPanel({ permissions, onUpdate, disabled }: Pe
       {disabled && (
         <div className="absolute inset-0 bg-white/60 rounded-[12px] flex items-center justify-center z-10">
           <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[8px] px-5 py-3 shadow-sm">
-            <span className="font-medium text-[14px] text-[#7c7c7c]">
+            <span className="font-medium text-[14px] text-[#7C7C7C]">
               {t('permissions.needAgent')}
             </span>
           </div>

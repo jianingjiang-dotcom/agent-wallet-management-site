@@ -136,22 +136,22 @@ export default function WalletDetail({
                   if (e.key === 'Enter') handleSaveName();
                   if (e.key === 'Escape') { setEditName(wallet.name); setIsEditingName(false); }
                 }}
-                className="font-normal text-[24px] leading-[32px] text-[#0a0a0a] bg-transparent border-b-2 border-[#1F32D6] outline-none py-0 px-0 w-[240px]"
+                className="font-semibold text-[24px] leading-[32px] text-[#0A0A0A] bg-transparent border-b-2 border-[#1F32D6] outline-none py-0 px-0 w-[240px]"
               />
               <button onClick={handleSaveName} className="text-[#1F32D6] hover:text-[#2837d0] transition-colors p-1">
-                <Check className="w-5 h-5" />
+                <Check className="w-5 h-5" strokeWidth={1.5} />
               </button>
             </div>
           ) : (
             <div className="flex items-center gap-2 group/name">
-              <h1 className="font-normal text-[24px] leading-[32px] text-[#0a0a0a]">
+              <h1 className="font-semibold text-[24px] leading-[32px] text-[#0A0A0A]">
                 {wallet.name}
               </h1>
               <button
                 onClick={() => { setEditName(wallet.name); setIsEditingName(true); }}
                 className="text-[#7C7C7C] hover:text-[#1F32D6] transition-colors p-1"
               >
-                <Pencil className="w-4 h-4" />
+                <Pencil className="w-4 h-4" strokeWidth={1.5} />
               </button>
             </div>
           )}
@@ -171,11 +171,11 @@ export default function WalletDetail({
             <div className="relative" ref={switcherRef}>
               <button
                 onClick={() => setSwitcherOpen(!switcherOpen)}
-                className="flex items-center gap-1.5 px-2.5 py-1 rounded-[8px] font-medium text-[12px] text-[#7c7c7c] border border-[rgba(10,10,10,0.1)] hover:bg-[#FAFAFA] hover:border-[rgba(10,10,10,0.15)] transition-colors"
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-[8px] font-medium text-[12px] text-[#7C7C7C] border border-[rgba(10,10,10,0.1)] hover:bg-[#FAFAFA] hover:border-[rgba(10,10,10,0.15)] transition-colors"
               >
-                <Wallet className="w-3.5 h-3.5" />
+                <Wallet className="w-3.5 h-3.5" strokeWidth={1.5} />
                 {t('walletDetail.switchWallet')}
-                <ChevronDown className={`w-3.5 h-3.5 transition-transform ${switcherOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform ${switcherOpen ? 'rotate-180' : ''}`} strokeWidth={1.5} />
               </button>
               {switcherOpen && (
                 <div className="absolute top-full left-0 mt-1 w-[220px] bg-white border border-[rgba(10,10,10,0.1)] rounded-[8px] shadow-[0px_4px_16px_rgba(0,0,0,0.08)] z-20 py-1">
@@ -186,7 +186,7 @@ export default function WalletDetail({
                       className={`w-full text-left px-3 py-2 text-[13px] transition-colors ${
                         w.id === wallet.id
                           ? 'text-[#1F32D6] bg-[rgba(79,94,255,0.04)] font-medium'
-                          : 'text-[#0a0a0a] hover:bg-[#FAFAFA] font-normal'
+                          : 'text-[#0A0A0A] hover:bg-[#FAFAFA] font-normal'
                       }`}
                     >
                       {w.name}
@@ -200,16 +200,16 @@ export default function WalletDetail({
         <div className="flex items-center gap-2">
           <button
             onClick={onClaimWallet || noop}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-[8px] font-medium text-[12px] text-[#7c7c7c] border border-[rgba(10,10,10,0.1)] hover:bg-[#FAFAFA] transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-[8px] font-medium text-[12px] text-[#7C7C7C] border border-[rgba(10,10,10,0.1)] hover:bg-[#FAFAFA] transition-colors"
           >
-            <Download className="w-3.5 h-3.5" />
+            <Download className="w-3.5 h-3.5" strokeWidth={1.5} />
             {t('walletPage.claimWallet')}
           </button>
           <button
             onClick={onSetupWallet || noop}
             className="flex items-center gap-2 px-4 py-2 rounded-[8px] font-medium text-[13px] text-white bg-[#1F32D6] hover:bg-[#1828AB] transition-colors"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-4 h-4" strokeWidth={1.5} />
             {t('walletPage.createNew')}
           </button>
         </div>
@@ -218,8 +218,8 @@ export default function WalletDetail({
       {/* Wallet Overview */}
       <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[12px] p-6 mb-6">
         <div className="flex items-center gap-2 mb-4">
-          <Wallet className="w-4 h-4 text-[#1F32D6]" />
-          <span className="font-medium text-[13px] text-[#7c7c7c] uppercase tracking-wide">
+          <Wallet className="w-4 h-4 text-[#1F32D6]" strokeWidth={1.5} />
+          <span className="font-medium text-[13px] text-[#7C7C7C] uppercase tracking-wide">
             {t('walletAgent.yourWallet')}
           </span>
         </div>
@@ -228,7 +228,7 @@ export default function WalletDetail({
             <div className="font-normal text-[12px] text-[#7C7C7C] mb-0.5">
               {t('onboarding.success.walletId')}
             </div>
-            <code className="font-['JetBrains_Mono','SF_Mono','Consolas',monospace] text-[13px] text-[#0a0a0a]">
+            <code className="font-['JetBrains_Mono','SF_Mono','Consolas',monospace] text-[13px] text-[#0A0A0A]">
               {wallet.id}
             </code>
           </div>
@@ -236,7 +236,7 @@ export default function WalletDetail({
             <div className="font-normal text-[12px] text-[#7C7C7C] mb-0.5">
               {t('delegation.createdAt')}
             </div>
-            <div className="font-normal text-[13px] text-[#7c7c7c]">
+            <div className="font-normal text-[13px] text-[#7C7C7C]">
               {formatDate(wallet.createdAt)}
             </div>
           </div>
@@ -257,7 +257,7 @@ export default function WalletDetail({
                   <span className="font-medium text-[11px] text-[#1F32D6] bg-[rgba(79,94,255,0.08)] px-2 py-0.5 rounded-[6px] uppercase tracking-wider shrink-0 min-w-[44px] text-center">
                     {addr.chain}
                   </span>
-                  <code className="font-['JetBrains_Mono','SF_Mono','Consolas',monospace] text-[12px] text-[#0a0a0a] break-all flex-1">
+                  <code className="font-['JetBrains_Mono','SF_Mono','Consolas',monospace] text-[12px] text-[#0A0A0A] break-all flex-1">
                     {addr.address}
                   </code>
                   <button
@@ -270,9 +270,9 @@ export default function WalletDetail({
                     title={t('walletDetail.copyAddress')}
                   >
                     {copiedAddress === addr.address ? (
-                      <CheckCircle className="w-3.5 h-3.5" />
+                      <CheckCircle className="w-3.5 h-3.5" strokeWidth={1.5} />
                     ) : (
-                      <Copy className="w-3.5 h-3.5" />
+                      <Copy className="w-3.5 h-3.5" strokeWidth={1.5} />
                     )}
                   </button>
                 </div>
@@ -292,8 +292,8 @@ export default function WalletDetail({
       <div className="mb-6">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <Shield className="w-4 h-4 text-[#1F32D6]" />
-            <span className="font-semibold text-[16px] text-[#0a0a0a]">
+            <Shield className="w-4 h-4 text-[#1F32D6]" strokeWidth={1.5} />
+            <span className="font-semibold text-[16px] text-[#0A0A0A]">
               {t('walletAgent.connectedAgent')}
             </span>
           </div>
@@ -301,7 +301,7 @@ export default function WalletDetail({
             onClick={() => onDelegateAgent(wallet.id)}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] font-medium text-[12px] text-[#1F32D6] border border-dashed border-[rgba(79,94,255,0.3)] hover:bg-[rgba(79,94,255,0.04)] transition-colors"
           >
-            <Plus className="w-3.5 h-3.5" />
+            <Plus className="w-3.5 h-3.5" strokeWidth={1.5} />
             {t('walletDetail.delegateAgent')}
           </button>
         </div>
@@ -326,9 +326,9 @@ export default function WalletDetail({
         ) : (
           <div className="bg-white border border-dashed border-[rgba(10,10,10,0.12)] rounded-[12px] p-8 text-center">
             <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-[rgba(79,94,255,0.08)] flex items-center justify-center">
-              <UserPlus className="w-6 h-6 text-[#1F32D6]" />
+              <UserPlus className="w-6 h-6 text-[#1F32D6]" strokeWidth={1.5} />
             </div>
-            <p className="font-medium text-[14px] text-[#7c7c7c] mb-1">
+            <p className="font-medium text-[14px] text-[#7C7C7C] mb-1">
               {t('delegation.noAgent')}
             </p>
             <p className="font-normal text-[12px] text-[#7C7C7C] mb-4">
@@ -338,7 +338,7 @@ export default function WalletDetail({
               onClick={() => onDelegateAgent(wallet.id)}
               className="inline-flex items-center gap-2 px-4 py-2.5 rounded-[8px] font-medium text-[13px] text-white bg-[#1F32D6] hover:bg-[#1828AB] transition-colors"
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="w-4 h-4" strokeWidth={1.5} />
               {t('walletDetail.delegateAgent')}
             </button>
           </div>
@@ -378,7 +378,7 @@ const MOCK_LOGS: LogEntry[] = [
   { id: '10', actionType: 'approval_requested',    actor: 'agent',  labelKey: 'log.approvalRequested',   detailKey: 'log.detail.approvalRequested',   status: 'pending', icon: Clock,         iconColor: '#f59e0b', minutesAgo: 1200 },
   { id: '11', actionType: 'approval_granted',      actor: 'user',   labelKey: 'log.approvalGranted',     detailKey: 'log.detail.approvalGranted',     status: 'success', icon: CheckCircle,   iconColor: '#22c55e', minutesAgo: 1180 },
   { id: '12', actionType: 'stake_executed',         actor: 'agent',  labelKey: 'log.stakeExecuted',       detailKey: 'log.detail.stakeExecuted',       status: 'success', icon: Lock,          iconColor: '#22c55e', minutesAgo: 900  },
-  { id: '13', actionType: 'wallet_renamed',         actor: 'user',   labelKey: 'log.walletRenamed',       detailKey: 'log.detail.walletRenamed',       status: 'success', icon: Pencil,        iconColor: '#7c7c7c', minutesAgo: 600  },
+  { id: '13', actionType: 'wallet_renamed',         actor: 'user',   labelKey: 'log.walletRenamed',       detailKey: 'log.detail.walletRenamed',       status: 'success', icon: Pencil,        iconColor: '#7C7C7C', minutesAgo: 600  },
   { id: '14', actionType: 'delegation_frozen',      actor: 'user',   labelKey: 'log.delegationFrozen',    detailKey: 'log.detail.delegationFrozen',    status: 'success', icon: Snowflake,     iconColor: '#eab308', minutesAgo: 300  },
   { id: '15', actionType: 'delegation_resumed',     actor: 'user',   labelKey: 'log.delegationResumed',   detailKey: 'log.detail.delegationResumed',   status: 'success', icon: Play,          iconColor: '#22c55e', minutesAgo: 120  },
   { id: '16', actionType: 'permission_updated',    actor: 'user',   labelKey: 'log.permissionUpdated',   detailKey: 'log.detail.permissionDisabled',  status: 'success', icon: ToggleRight,   iconColor: '#1F32D6', minutesAgo: 60   },
@@ -406,14 +406,14 @@ const STATUS_STYLES: Record<string, { bg: string; text: string }> = {
 const ACTOR_STYLES: Record<string, { bg: string; text: string }> = {
   user:   { bg: 'bg-[#1F32D6]/10', text: 'text-[#1F32D6]' },
   agent:  { bg: 'bg-[#22c55e]/10', text: 'text-[#22c55e]' },
-  system: { bg: 'bg-[#7c7c7c]/10', text: 'text-[#7c7c7c]' },
+  system: { bg: 'bg-[#7C7C7C]/10', text: 'text-[#7C7C7C]' },
 };
 
 function ActivityLog({ t, walletCreatedAt }: { t: (key: string) => string; walletCreatedAt: string }) {
   return (
     <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[12px] p-5">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="font-semibold text-[16px] text-[#0a0a0a]">
+        <h2 className="font-semibold text-[16px] text-[#0A0A0A]">
           {t('walletAgent.activityLog')}
         </h2>
         <span className="font-normal text-[12px] text-[#7C7C7C]">
@@ -431,11 +431,11 @@ function ActivityLog({ t, walletCreatedAt }: { t: (key: string) => string; walle
                 className="w-8 h-8 rounded-[8px] flex items-center justify-center shrink-0 mt-0.5"
                 style={{ backgroundColor: `${log.iconColor}14` }}
               >
-                <Icon className="w-4 h-4" style={{ color: log.iconColor }} />
+                <Icon className="w-4 h-4" style={{ color: log.iconColor }} strokeWidth={1.5} />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="font-medium text-[13px] text-[#0a0a0a]">
+                  <span className="font-medium text-[13px] text-[#0A0A0A]">
                     {t(log.labelKey)}
                   </span>
                   <span className={`inline-flex px-1.5 py-0.5 rounded-[6px] font-medium text-[10px] ${actorStyle.bg} ${actorStyle.text}`}>
@@ -445,7 +445,7 @@ function ActivityLog({ t, walletCreatedAt }: { t: (key: string) => string; walle
                     {t(`log.status.${log.status}`)}
                   </span>
                 </div>
-                <p className="font-normal text-[12px] text-[#7c7c7c] mt-0.5 truncate">
+                <p className="font-normal text-[12px] text-[#7C7C7C] mt-0.5 truncate">
                   {t(log.detailKey)}
                 </p>
               </div>

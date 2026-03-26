@@ -279,7 +279,7 @@ export default function DashboardLayout() {
           className="hidden lg:flex w-[36px] h-[36px] items-center justify-center rounded-[8px] hover:bg-[#EBEBEB] transition-colors text-[#7C7C7C] absolute top-[14px] z-10"
           style={{ left: sidebarCollapsed ? 'calc(50% - 18px)' : 'calc(100% - 48px)', transition: 'left 0.3s ease-in-out' }}
         >
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.8333 2.5H4.16667C3.24619 2.5 2.5 3.24619 2.5 4.16667V15.8333C2.5 16.7538 3.24619 17.5 4.16667 17.5H15.8333C16.7538 17.5 17.5 16.7538 17.5 15.8333V4.16667C17.5 3.24619 16.7538 2.5 15.8333 2.5Z" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M7.5 2.5V17.5" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0.625" y="0.625" width="18.75" height="14.75" rx="2.5" stroke="currentColor" strokeWidth="1.25"/><line x1="7" y1="0.625" x2="7" y2="15.375" stroke="currentColor" strokeWidth="1.25"/></svg>
         </button>
         {toggleTooltip && createPortal(
           <div
@@ -499,7 +499,7 @@ export default function DashboardLayout() {
             className="text-[#0A0A0A] p-2 -mr-2 hover:bg-slate-100 rounded-lg transition-colors"
             aria-label="Open menu"
           >
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1.5" y="1.5" width="17" height="17" rx="3" stroke="#0A0A0A" strokeWidth="1.25"/><line x1="7.5" y1="1.5" x2="7.5" y2="18.5" stroke="#0A0A0A" strokeWidth="1.25"/></svg>
+            <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0.625" y="0.625" width="18.75" height="14.75" rx="2.5" stroke="#0A0A0A" strokeWidth="1.25"/><line x1="7" y1="0.625" x2="7" y2="15.375" stroke="#0A0A0A" strokeWidth="1.25"/></svg>
           </button>
         </div>
 

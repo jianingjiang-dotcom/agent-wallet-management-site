@@ -48,7 +48,7 @@ export default function WalletLimitsCard({ status, onConfirm, confirmedPerTx, co
                 {language === 'zh' ? '单笔交易限额' : 'Per-Transaction Limit'}
               </span>
             </div>
-            <span className="font-['JetBrains_Mono',monospace] text-[13px] font-medium text-[#0a0a0a]">
+            <span className="font-['JetBrains_Mono',monospace] text-[13px] font-medium text-[#0A0A0A]">
               ${confirmedPerTx}
             </span>
           </div>
@@ -60,7 +60,7 @@ export default function WalletLimitsCard({ status, onConfirm, confirmedPerTx, co
                 {language === 'zh' ? '每日支出限额' : 'Daily Spending Limit'}
               </span>
             </div>
-            <span className="font-['JetBrains_Mono',monospace] text-[13px] font-medium text-[#0a0a0a]">
+            <span className="font-['JetBrains_Mono',monospace] text-[13px] font-medium text-[#0A0A0A]">
               ${confirmedDaily}
             </span>
           </div>
@@ -82,7 +82,7 @@ export default function WalletLimitsCard({ status, onConfirm, confirmedPerTx, co
             onChange={() => onSelect(val)}
             className="w-4 h-4 text-[#1F32D6] border-[#EBEBEB] focus:ring-0 focus:ring-offset-0"
           />
-          <span className="ml-1.5 font-normal text-[13px] text-[#0a0a0a]">${val}</span>
+          <span className="ml-1.5 font-normal text-[13px] text-[#0A0A0A]">${val}</span>
         </label>
       ))}
       <label className="flex items-center cursor-pointer">
@@ -92,18 +92,18 @@ export default function WalletLimitsCard({ status, onConfirm, confirmedPerTx, co
           onChange={() => onSelect('custom')}
           className="w-4 h-4 text-[#1F32D6] border-[#EBEBEB] focus:ring-0 focus:ring-offset-0"
         />
-        <span className="ml-1.5 font-normal text-[13px] text-[#0a0a0a]">
+        <span className="ml-1.5 font-normal text-[13px] text-[#0A0A0A]">
           {t('onboarding.limits.others')}:
         </span>
       </label>
       <div className="flex items-center">
-        <span className="font-normal text-[13px] text-[#7c7c7c] mr-1">$</span>
+        <span className="font-normal text-[13px] text-[#7C7C7C] mr-1">$</span>
         <input
           type="number" value={customValue}
           onChange={(e) => onCustomChange(e.target.value)}
           onFocus={() => onSelect('custom')}
           placeholder="0"
-          className="w-16 bg-white border border-[#EBEBEB] rounded-[6px] px-2 py-1 font-normal text-[13px] text-[#0a0a0a] focus:outline-none focus:border-[#1F32D6] focus:ring-1 focus:ring-[#1F32D6]"
+          className="w-16 bg-white border border-[#EBEBEB] rounded-[6px] px-2 py-1 font-normal text-[13px] text-[#0A0A0A] focus:outline-none focus:border-[#1F32D6] focus:ring-1 focus:ring-[#1F32D6]"
         />
       </div>
     </div>

@@ -51,12 +51,12 @@ function ConfirmModal({
       <div className="absolute inset-0 bg-black/40" onClick={onCancel} />
       {/* card */}
       <div className="relative bg-white rounded-2xl p-6 w-[340px] shadow-xl space-y-4">
-        <h3 className="text-[18px] font-semibold text-[#0a0a0a]">{title}</h3>
-        <p className="text-[14px] text-[#7c7c7c] leading-relaxed">{desc}</p>
+        <h3 className="text-[18px] font-semibold text-[#0A0A0A]">{title}</h3>
+        <p className="text-[14px] text-[#7C7C7C] leading-relaxed">{desc}</p>
         <div className="flex gap-3 pt-2">
           <button
             onClick={onCancel}
-            className="flex-1 h-[44px] rounded-xl border border-[#EBEBEB] text-[14px] font-medium text-[#0a0a0a] hover:bg-[#FAFAFA] transition-colors"
+            className="flex-1 h-[44px] rounded-xl border border-[#EBEBEB] text-[14px] font-medium text-[#0A0A0A] hover:bg-[#FAFAFA] transition-colors"
           >
             {/* Cancel */}
             {onCancel && 'Cancel'}
@@ -185,28 +185,28 @@ export default function AccountSettings() {
   return (
     <div className="max-w-[640px] mx-auto space-y-[16px]">
       {/* Page header */}
-      <h1 className="font-semibold text-[24px] text-[#0a0a0a]">
+      <h1 className="font-semibold text-[24px] text-[#0A0A0A]">
         {t('account.title')}
       </h1>
 
       {/* Security banner */}
       {!secureBannerDismissed && (
         <div className="bg-[#FFF8E1] border border-[#FFE082] rounded-2xl p-4 flex items-start gap-3">
-          <ShieldCheck className="w-5 h-5 text-[#F5A623] flex-shrink-0 mt-0.5" />
+          <ShieldCheck className="w-5 h-5 text-[#F5A623] flex-shrink-0 mt-0.5" strokeWidth={1.5} />
           <div className="flex-1 min-w-0">
-            <p className="text-[14px] font-semibold text-[#0a0a0a]">{t('account.secureTitle')}</p>
-            <p className="text-[13px] text-[#7c7c7c] mt-0.5">{t('account.secureDesc')}</p>
+            <p className="text-[14px] font-semibold text-[#0A0A0A]">{t('account.secureTitle')}</p>
+            <p className="text-[13px] text-[#7C7C7C] mt-0.5">{t('account.secureDesc')}</p>
             <div className="flex items-center gap-3 mt-3">
               <button
                 onClick={handleConnectBackup}
                 className="text-[13px] font-medium text-[#F5A623] hover:underline flex items-center gap-1"
               >
                 {t('account.secureAction')}
-                <ChevronRight className="w-4 h-4" />
+                <ChevronRight className="w-4 h-4" strokeWidth={1.5} />
               </button>
               <button
                 onClick={() => setSecureBannerDismissed(true)}
-                className="text-[13px] text-[#7C7C7C] hover:text-[#7c7c7c]"
+                className="text-[13px] text-[#7C7C7C] hover:text-[#7C7C7C]"
               >
                 {t('account.secureDismiss')}
               </button>
@@ -217,7 +217,7 @@ export default function AccountSettings() {
 
       {/* Profile card */}
       <div className="bg-white border border-[#EBEBEB] rounded-2xl p-5 shadow-sm space-y-4">
-        <h2 className="text-[16px] font-semibold text-[#0a0a0a]">{t('account.profile')}</h2>
+        <h2 className="text-[16px] font-semibold text-[#0A0A0A]">{t('account.profile')}</h2>
 
         {/* Avatar + name row */}
         <div className="flex items-center gap-4">
@@ -243,33 +243,33 @@ export default function AccountSettings() {
                   onClick={handleSaveName}
                   className="w-8 h-8 flex items-center justify-center rounded-lg bg-[#F5A623] text-white hover:bg-[#e0951c] transition-colors"
                 >
-                  <Check className="w-4 h-4" />
+                  <Check className="w-4 h-4" strokeWidth={1.5} />
                 </button>
                 <button
                   onClick={handleCancelName}
-                  className="w-8 h-8 flex items-center justify-center rounded-lg border border-[#EBEBEB] text-[#7c7c7c] hover:bg-[#FAFAFA] transition-colors"
+                  className="w-8 h-8 flex items-center justify-center rounded-lg border border-[#EBEBEB] text-[#7C7C7C] hover:bg-[#FAFAFA] transition-colors"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-4 h-4" strokeWidth={1.5} />
                 </button>
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <span className="text-[16px] font-medium text-[#0a0a0a] truncate">
+                <span className="text-[16px] font-medium text-[#0A0A0A] truncate">
                   {nameValue}
                 </span>
                 <button
                   onClick={() => setEditingName(true)}
-                  className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#FAFAFA] text-[#7C7C7C] hover:text-[#7c7c7c] transition-colors"
+                  className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#FAFAFA] text-[#7C7C7C] hover:text-[#7C7C7C] transition-colors"
                   title={t('account.editName')}
                 >
-                  <Pencil className="w-3.5 h-3.5" />
+                  <Pencil className="w-3.5 h-3.5" strokeWidth={1.5} />
                 </button>
               </div>
             )}
             {nameError && (
               <p className="text-[12px] text-red-500 mt-1">{nameError}</p>
             )}
-            <p className="text-[13px] text-[#7c7c7c] mt-0.5">{user.email}</p>
+            <p className="text-[13px] text-[#7C7C7C] mt-0.5">{user.email}</p>
           </div>
         </div>
 
@@ -286,10 +286,10 @@ export default function AccountSettings() {
         }`}
       >
         <div>
-          <h2 className="text-[16px] font-semibold text-[#0a0a0a]">
+          <h2 className="text-[16px] font-semibold text-[#0A0A0A]">
             {t('account.connectedAccounts')}
           </h2>
-          <p className="text-[13px] text-[#7c7c7c] mt-0.5">
+          <p className="text-[13px] text-[#7C7C7C] mt-0.5">
             {t('account.connectedAccountsDesc')}
           </p>
         </div>
@@ -318,7 +318,7 @@ export default function AccountSettings() {
               </svg>
             </div>
             <div>
-              <p className="text-[14px] font-medium text-[#0a0a0a]">{t('account.loginMethod')}</p>
+              <p className="text-[14px] font-medium text-[#0A0A0A]">{t('account.loginMethod')}</p>
               <p className="text-[12px] text-[#7C7C7C]">{user.email}</p>
             </div>
           </div>
@@ -333,7 +333,7 @@ export default function AccountSettings() {
             <div className="w-9 h-9 rounded-full bg-[#E3F2FD] flex items-center justify-center">
               <TelegramIcon className="w-5 h-5 text-[#0088cc]" />
             </div>
-            <p className="text-[14px] font-medium text-[#0a0a0a]">Telegram</p>
+            <p className="text-[14px] font-medium text-[#0A0A0A]">Telegram</p>
           </div>
           <button
             onClick={() => handleToggleProvider('telegram')}
@@ -353,7 +353,7 @@ export default function AccountSettings() {
             <div className="w-9 h-9 rounded-full bg-[#EDE7F6] flex items-center justify-center">
               <DiscordIcon className="w-5 h-5 text-[#5865F2]" />
             </div>
-            <p className="text-[14px] font-medium text-[#0a0a0a]">Discord</p>
+            <p className="text-[14px] font-medium text-[#0A0A0A]">Discord</p>
           </div>
           <button
             onClick={() => handleToggleProvider('discord')}
@@ -372,13 +372,13 @@ export default function AccountSettings() {
       <div className="bg-white border border-[#EBEBEB] rounded-2xl p-5 shadow-sm">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-[16px] font-semibold text-[#0a0a0a]">{t('account.dangerZone')}</h2>
+            <h2 className="text-[16px] font-semibold text-[#0A0A0A]">{t('account.dangerZone')}</h2>
           </div>
           <button
             onClick={() => setShowSignOutModal(true)}
             className="flex items-center gap-2 text-[14px] font-medium text-red-500 border border-red-200 hover:bg-red-50 px-4 py-2 rounded-xl transition-colors"
           >
-            <LogOut className="w-4 h-4" />
+            <LogOut className="w-4 h-4" strokeWidth={1.5} />
             {t('account.logout')}
           </button>
         </div>

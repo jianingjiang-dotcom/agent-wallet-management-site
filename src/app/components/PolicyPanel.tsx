@@ -25,8 +25,8 @@ export default function PolicyPanel({ policy, disabled }: PolicyPanelProps) {
       <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[12px] p-6 mb-6">
         {/* Header */}
         <div className="flex items-center gap-2 mb-1">
-          <Shield className="w-4 h-4 text-[#7C7C7C]" />
-          <h2 className="font-semibold text-[16px] text-[#0a0a0a]">
+          <Shield className="w-4 h-4 text-[#7C7C7C]" strokeWidth={1.5} />
+          <h2 className="font-semibold text-[16px] text-[#0A0A0A]">
             {t('policyPanel.title')}
           </h2>
         </div>
@@ -34,9 +34,9 @@ export default function PolicyPanel({ policy, disabled }: PolicyPanelProps) {
         {/* Empty State */}
         <div className="flex flex-col items-center justify-center py-10">
           <div className="w-12 h-12 rounded-full bg-[#fafafa] flex items-center justify-center mb-4">
-            <Shield className="w-6 h-6 text-[#EBEBEB]" />
+            <Shield className="w-6 h-6 text-[#EBEBEB]" strokeWidth={1.5} />
           </div>
-          <span className="font-medium text-[14px] text-[#7c7c7c] mb-1">
+          <span className="font-medium text-[14px] text-[#7C7C7C] mb-1">
             {t('permissions.needAgent')}
           </span>
           <span className="font-normal text-[12px] text-[#7C7C7C]">
@@ -51,12 +51,12 @@ export default function PolicyPanel({ policy, disabled }: PolicyPanelProps) {
     <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[12px] p-6 mb-6">
       {/* Header */}
       <div className="flex items-center gap-2 mb-1">
-        <Shield className="w-4 h-4 text-[#1F32D6]" />
-        <h2 className="font-semibold text-[16px] text-[#0a0a0a]">
+        <Shield className="w-4 h-4 text-[#1F32D6]" strokeWidth={1.5} />
+        <h2 className="font-semibold text-[16px] text-[#0A0A0A]">
           {t('policyPanel.title')}
         </h2>
       </div>
-      <p className="font-normal text-[13px] text-[#7c7c7c] mb-5">
+      <p className="font-normal text-[13px] text-[#7C7C7C] mb-5">
         {t('policy.currentConfig')}
       </p>
 
@@ -64,7 +64,7 @@ export default function PolicyPanel({ policy, disabled }: PolicyPanelProps) {
       <div className="grid grid-cols-3 gap-3 mb-6">
         {/* Per-tx limit */}
         <div className="bg-[#fafafa] rounded-[8px] p-4 text-center">
-          <div className="font-semibold text-[22px] text-[#0a0a0a] mb-1">
+          <div className="font-semibold text-[22px] text-[#0A0A0A] mb-1">
             ${policy.singleTxLimit}
           </div>
           <div className="font-normal text-[11px] text-[#7C7C7C] uppercase tracking-wider">
@@ -74,7 +74,7 @@ export default function PolicyPanel({ policy, disabled }: PolicyPanelProps) {
 
         {/* Daily limit */}
         <div className="bg-[#fafafa] rounded-[8px] p-4 text-center">
-          <div className="font-semibold text-[22px] text-[#0a0a0a] mb-1">
+          <div className="font-semibold text-[22px] text-[#0A0A0A] mb-1">
             ${policy.dailyLimit}
           </div>
           <div className="font-normal text-[11px] text-[#7C7C7C] uppercase tracking-wider">
@@ -97,17 +97,17 @@ export default function PolicyPanel({ policy, disabled }: PolicyPanelProps) {
 
       {/* Area B: Advanced config guide */}
       <div className="rounded-[8px] bg-gradient-to-br from-[rgba(79,94,255,0.04)] to-[rgba(79,94,255,0.08)] border border-[rgba(79,94,255,0.1)] p-5">
-        <h3 className="font-semibold text-[14px] text-[#0a0a0a] mb-2">
+        <h3 className="font-semibold text-[14px] text-[#0A0A0A] mb-2">
           {t('policy.advancedTitle')}
         </h3>
-        <p className="font-normal text-[12px] text-[#7c7c7c] mb-3 leading-relaxed">
+        <p className="font-normal text-[12px] text-[#7C7C7C] mb-3 leading-relaxed">
           {t('policy.advancedDesc')}
         </p>
 
         <div className="grid grid-cols-2 gap-x-4 gap-y-2 mb-4">
           {advancedItems.map(({ icon: Icon, key }) => (
             <div key={key} className="flex items-center gap-2">
-              <Icon className="w-3.5 h-3.5 text-[#1F32D6] shrink-0" />
+              <Icon className="w-3.5 h-3.5 text-[#1F32D6] shrink-0" strokeWidth={1.5} />
               <span className="font-normal text-[12px] text-[#4F4F4F]">
                 {t(key)}
               </span>
@@ -120,7 +120,7 @@ export default function PolicyPanel({ policy, disabled }: PolicyPanelProps) {
           className="flex items-center gap-1.5 px-4 py-2 rounded-[8px] bg-[#1F32D6] hover:bg-[#2837d0] text-white font-medium text-[13px] transition-colors shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)]"
         >
           {t('policy.goToChat')}
-          <ArrowRight className="w-3.5 h-3.5" />
+          <ArrowRight className="w-3.5 h-3.5" strokeWidth={1.5} />
         </button>
       </div>
     </div>

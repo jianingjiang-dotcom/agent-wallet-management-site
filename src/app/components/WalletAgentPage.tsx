@@ -83,10 +83,10 @@ export default function WalletAgentPage({ onSetupWallet, onClaimWallet, onDelega
             <div className="inline-flex items-center justify-center w-[72px] h-[72px] bg-gradient-to-br from-[rgba(79,94,255,0.12)] to-[rgba(79,94,255,0.04)] border-2 border-[rgba(79,94,255,0.15)] rounded-[16px] mb-6">
               <Shield className="w-9 h-9 text-[#1F32D6]" />
             </div>
-            <h1 className="font-bold text-[28px] md:text-[32px] text-[#0a0a0a] mb-3 leading-tight">
+            <h1 className="font-bold text-[28px] md:text-[32px] text-[#0A0A0A] mb-3 leading-tight">
               {t('welcome.greeting')}
             </h1>
-            <p className="font-normal text-[15px] md:text-[16px] text-[#7c7c7c] mb-8 max-w-xl mx-auto leading-relaxed">
+            <p className="font-normal text-[15px] md:text-[16px] text-[#7C7C7C] mb-8 max-w-xl mx-auto leading-relaxed">
               {t('welcome.subtitle')}
             </p>
             <button
@@ -99,7 +99,7 @@ export default function WalletAgentPage({ onSetupWallet, onClaimWallet, onDelega
             <div className="mt-4">
               <button
                 onClick={onClaimWallet || noop}
-                className="font-normal text-[13px] text-[#7c7c7c] hover:text-[#1F32D6] transition-colors inline-flex items-center gap-1.5"
+                className="font-normal text-[13px] text-[#7C7C7C] hover:text-[#1F32D6] transition-colors inline-flex items-center gap-1.5"
               >
                 <Download className="w-3.5 h-3.5" />
                 {t('welcome.claimWallet')} <span className="underline">{t('welcome.claimAction')}</span>

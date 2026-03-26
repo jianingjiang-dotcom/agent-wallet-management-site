@@ -22,7 +22,7 @@ export default function WalletCard({ wallet, delegationCount, onSelect }: Wallet
     >
       {/* Top: Name + Status */}
       <div className="flex items-center justify-between mb-4">
-        <span className="font-semibold text-[15px] text-[#0a0a0a]">
+        <span className="font-semibold text-[15px] text-[#0A0A0A]">
           {wallet.name}
         </span>
         <div className="flex items-center gap-1.5">
@@ -36,7 +36,7 @@ export default function WalletCard({ wallet, delegationCount, onSelect }: Wallet
           <span className="font-normal text-[11px] text-[#7C7C7C] uppercase tracking-wider">
             Wallet ID
           </span>
-          <code className="font-['JetBrains_Mono','SF_Mono','Consolas',monospace] text-[12px] text-[#0a0a0a] truncate">
+          <code className="font-['JetBrains_Mono','SF_Mono','Consolas',monospace] text-[12px] text-[#0A0A0A] truncate">
             {wallet.id}
           </code>
         </div>
@@ -46,7 +46,7 @@ export default function WalletCard({ wallet, delegationCount, onSelect }: Wallet
           </span>
           {hasAgents ? (
             <span className="flex items-center gap-1 font-medium text-[12px] text-[#1F32D6]">
-              <Users className="w-3 h-3" />
+              <Users className="w-3 h-3" strokeWidth={1.5} />
               {delegationCount} {t('walletPage.agents')}
             </span>
           ) : (
@@ -61,7 +61,7 @@ export default function WalletCard({ wallet, delegationCount, onSelect }: Wallet
       <div className="flex justify-end">
         <span className="font-medium text-[13px] text-[#1F32D6] flex items-center gap-1 opacity-70 group-hover:opacity-100 transition-opacity">
           {t('walletCard.manage')}
-          <ArrowRight className="w-3.5 h-3.5" />
+          <ArrowRight className="w-3.5 h-3.5" strokeWidth={1.5} />
         </span>
       </div>
     </button>

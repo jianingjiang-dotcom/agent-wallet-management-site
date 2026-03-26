@@ -97,7 +97,7 @@ export default function Login() {
         <div className="bg-white relative rounded-[12px] w-full shadow-[0px_8px_64px_0px_rgba(0,0,0,0.08)] border border-[rgba(10,10,10,0.08)]">
           <div className="content-stretch flex flex-col gap-[24px] items-start px-5 py-6 sm:p-[32px] w-full">
             <div className="text-center w-full">
-              <h2 className="font-semibold leading-[1.2] text-[24px] text-[#0a0a0a] mb-2">
+              <h2 className="font-semibold leading-[1.2] text-[24px] text-[#0A0A0A] mb-2">
                 {t('auth.login')}
               </h2>
               <p className="font-normal text-[14px] text-[#4F4F4F]">
@@ -118,7 +118,7 @@ export default function Login() {
                   <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                   <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                 </svg>
-                <span className="font-medium text-[16px] text-[#0a0a0a]">
+                <span className="font-medium text-[16px] text-[#0A0A0A]">
                   {t('auth.continueWithGoogle')}
                 </span>
               </button>
@@ -131,7 +131,7 @@ export default function Login() {
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 20 20">
                   <path d={svgPaths.p27132880} fill="#0A0A0A" />
                 </svg>
-                <span className="font-medium text-[16px] text-[#0a0a0a]">
+                <span className="font-medium text-[16px] text-[#0A0A0A]">
                   {t('auth.continueWithApple')}
                 </span>
               </button>
@@ -161,9 +161,9 @@ export default function Login() {
                     <button
                       onClick={handleSendMagicLink}
                       disabled={!magicLinkEmail}
-                      className="bg-[#1F32D6] w-full h-[48px] rounded-[8px] hover:bg-[#1828AB] disabled:bg-slate-300 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-[12px] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]"
+                      className="bg-[#1F32D6] w-full h-[48px] rounded-[8px] hover:bg-[#1828AB] disabled:bg-[#EBEBEB] disabled:cursor-not-allowed transition-all flex items-center justify-center gap-[12px] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]"
                     >
-                      <Mail className="w-5 h-5 text-white" />
+                      <Mail className="w-5 h-5 text-white" strokeWidth={1.5} />
                       <span className="font-medium text-[16px] text-white">
                         {t('auth.sendMagicLink')}
                       </span>
@@ -171,7 +171,7 @@ export default function Login() {
                   ) : (
                     <div className="space-y-3">
                       <div className="bg-green-50 border border-green-200 rounded-[8px] p-4 flex items-start gap-3">
-                        <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                        <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" strokeWidth={1.5} />
                         <div className="text-sm text-green-800">
                           <p className="font-medium mb-1">{t('auth.sent')}</p>
                           <p>Please check your email and click the login link. For demo purposes, click the button below.</p>
@@ -181,7 +181,7 @@ export default function Login() {
                         onClick={handleMagicLinkLogin}
                         className="bg-[#1F32D6] w-full h-[48px] rounded-[8px] hover:bg-[#1828AB] transition-all flex items-center justify-center gap-[12px] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]"
                       >
-                        <CheckCircle className="w-5 h-5 text-white" />
+                        <CheckCircle className="w-5 h-5 text-white" strokeWidth={1.5} />
                         <span className="font-medium text-[16px] text-white">
                           {t('auth.loginWithMagicLink')}
                         </span>
@@ -194,7 +194,7 @@ export default function Login() {
 
             {/* Privacy Notice */}
             <div className="w-full">
-              <p className="font-normal text-[12px] text-[#7c7c7c] text-center leading-[1.5]">
+              <p className="font-normal text-[12px] text-[#7C7C7C] text-center leading-[1.5]">
                 {t('auth.privacyNotice')}
               </p>
             </div>

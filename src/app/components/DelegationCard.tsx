@@ -84,7 +84,7 @@ export default function DelegationCard({
         <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
           isFrozen ? "bg-[rgba(234,179,8,0.1)]" : "bg-[rgba(79,94,255,0.1)]"
         }`}>
-          <UserPlus className={`w-4 h-4 ${isFrozen ? "text-[#eab308]" : "text-[#1F32D6]"}`} />
+          <UserPlus className={`w-4 h-4 ${isFrozen ? "text-[#eab308]" : "text-[#1F32D6]"}`} strokeWidth={1.5} />
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 group/agentname">
@@ -99,15 +99,15 @@ export default function DelegationCard({
                     if (e.key === "Enter") handleSaveName();
                     if (e.key === "Escape") { setEditName(agent?.name || ""); setIsEditingName(false); }
                   }}
-                  className="font-medium text-[13px] text-[#0a0a0a] bg-transparent border-b border-[#1F32D6] outline-none py-0 px-0 w-[120px]"
+                  className="font-medium text-[13px] text-[#0A0A0A] bg-transparent border-b border-[#1F32D6] outline-none py-0 px-0 w-[120px]"
                 />
                 <button onClick={handleSaveName} className="text-[#1F32D6] hover:text-[#2837d0] transition-colors p-0.5">
-                  <Check className="w-3.5 h-3.5" />
+                  <Check className="w-3.5 h-3.5" strokeWidth={1.5} />
                 </button>
               </div>
             ) : (
               <>
-                <span className="font-medium text-[13px] text-[#0a0a0a]">
+                <span className="font-medium text-[13px] text-[#0A0A0A]">
                   {agent?.name || delegation.agentId}
                 </span>
                 <button
@@ -118,13 +118,13 @@ export default function DelegationCard({
                   }}
                   className="text-[#7C7C7C] hover:text-[#1F32D6] transition-colors p-0.5 opacity-0 group-hover/agentname:opacity-100"
                 >
-                  <Pencil className="w-3 h-3" />
+                  <Pencil className="w-3 h-3" strokeWidth={1.5} />
                 </button>
               </>
             )}
             {isOriginAgent && (
               <span className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-[rgba(79,94,255,0.08)] text-[#1F32D6]">
-                <Star className="w-2.5 h-2.5" />
+                <Star className="w-2.5 h-2.5" strokeWidth={1.5} />
                 <span className="font-normal text-[9px]">{t("delegationCard.signer")}</span>
               </span>
             )}
@@ -134,7 +134,7 @@ export default function DelegationCard({
               </span>
             )}
           </div>
-          <div className="font-['JetBrains_Mono',monospace] text-[10px] text-[#7c7c7c] truncate">
+          <div className="font-['JetBrains_Mono',monospace] text-[10px] text-[#7C7C7C] truncate">
             {delegation.agentId}
           </div>
         </div>
@@ -143,9 +143,9 @@ export default function DelegationCard({
             {delegation.permissions.length} {t("delegationCard.permissions")}
           </span>
           {expanded ? (
-            <ChevronDown className="w-4 h-4 text-[#7c7c7c]" />
+            <ChevronDown className="w-4 h-4 text-[#7C7C7C]" strokeWidth={1.5} />
           ) : (
-            <ChevronRight className="w-4 h-4 text-[#7c7c7c]" />
+            <ChevronRight className="w-4 h-4 text-[#7C7C7C]" strokeWidth={1.5} />
           )}
         </div>
       </div>
@@ -186,7 +186,7 @@ export default function DelegationCard({
                 onClick={() => onUnfreeze(delegation.id)}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-[6px] bg-[rgba(34,197,94,0.08)] hover:bg-[rgba(34,197,94,0.15)] transition-colors"
               >
-                <Play className="w-3.5 h-3.5 text-[#22c55e]" />
+                <Play className="w-3.5 h-3.5 text-[#22c55e]" strokeWidth={1.5} />
                 <span className="font-medium text-[11px] text-[#166534]">{t("delegation.resumeAction")}</span>
               </button>
             ) : (
@@ -194,7 +194,7 @@ export default function DelegationCard({
                 onClick={() => onFreeze(delegation.id)}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-[6px] bg-[rgba(234,179,8,0.08)] hover:bg-[rgba(234,179,8,0.15)] transition-colors"
               >
-                <Pause className="w-3.5 h-3.5 text-[#eab308]" />
+                <Pause className="w-3.5 h-3.5 text-[#eab308]" strokeWidth={1.5} />
                 <span className="font-medium text-[11px] text-[#92400e]">{t("delegation.pauseAction")}</span>
               </button>
             )}
@@ -202,7 +202,7 @@ export default function DelegationCard({
               onClick={() => setShowRevokeConfirm(true)}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-[6px] bg-[rgba(239,68,68,0.08)] hover:bg-[rgba(239,68,68,0.15)] transition-colors"
             >
-              <Trash2 className="w-3.5 h-3.5 text-[#ef4444]" />
+              <Trash2 className="w-3.5 h-3.5 text-[#ef4444]" strokeWidth={1.5} />
               <span className="font-medium text-[11px] text-[#dc2626]">{t("delegation.revokeAction")}</span>
             </button>
           </div>
@@ -213,10 +213,10 @@ export default function DelegationCard({
       {showRevokeConfirm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-[12px] p-5 max-w-sm w-full shadow-xl">
-            <h3 className="font-semibold text-[16px] text-[#0a0a0a] mb-2">
+            <h3 className="font-semibold text-[16px] text-[#0A0A0A] mb-2">
               {t("delegation.revokeConfirmTitle")}
             </h3>
-            <p className="font-normal text-[13px] text-[#7c7c7c] mb-1">
+            <p className="font-normal text-[13px] text-[#7C7C7C] mb-1">
               {t("delegation.revokeConfirmDesc")}
             </p>
             <p className="font-['JetBrains_Mono',monospace] text-[11px] text-[#4F4F4F] mb-4">

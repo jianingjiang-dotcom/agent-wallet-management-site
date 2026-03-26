@@ -50,7 +50,7 @@ export default function InviteCodeCard({ status, onVerify, error, verifiedCode }
             <div className="text-[11px] font-medium text-[#999] uppercase tracking-wider mb-0.5">
               {language === 'zh' ? '邀请码' : 'Invite Code'}
             </div>
-            <code className="font-['JetBrains_Mono',monospace] text-[13px] text-[#0a0a0a] font-medium">
+            <code className="font-['JetBrains_Mono',monospace] text-[13px] text-[#0A0A0A] font-medium">
               COBO-{verifiedCode}
             </code>
           </div>
@@ -111,7 +111,7 @@ export default function InviteCodeCard({ status, onVerify, error, verifiedCode }
             onKeyDown={(e) => { if (e.key === 'Enter') handleVerify(); }}
             placeholder="0000-0000"
             maxLength={9}
-            className="flex-1 h-full bg-transparent font-['JetBrains_Mono',monospace] font-normal text-[15px] text-[#0a0a0a] placeholder:text-[#7C7C7C] focus:outline-none pr-3"
+            className="flex-1 h-full bg-transparent font-['JetBrains_Mono',monospace] font-normal text-[15px] text-[#0A0A0A] placeholder:text-[#7C7C7C] focus:outline-none pr-3"
           />
         </div>
         {error && (
