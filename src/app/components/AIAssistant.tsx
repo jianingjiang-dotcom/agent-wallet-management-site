@@ -1397,7 +1397,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
               </button>
             </div>
           </div>
-          <p className="text-center mt-2" style={{ fontSize: '12px', lineHeight: '16px', color: '#7C7C7C' }}>
+          <p className="text-center mt-2" style={{ fontSize: '11px', lineHeight: '14px', color: '#EBEBEB' }}>
             {language === 'zh' ? 'AI 钱包助手也可能会犯错，请仔细核对回答的内容。' : 'AI Wallet Assistant may make mistakes. Please verify the responses carefully.'}
           </p>
           </div>
