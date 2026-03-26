@@ -1138,6 +1138,34 @@ Would you like me to help adjust your current Agent's limit settings?`;
                 {welcomeType === 'first-wallet' && <ChatWelcome variant="first-wallet" />}
                 {hasWallets && !welcomeType && <ChatWelcome variant="returning" />}
 
+                {/* Mobile only: prompt pills below welcome text */}
+                {!welcomeType && (
+                  <div className="lg:hidden flex flex-wrap gap-2 mt-4 justify-center max-w-[600px] mx-auto">
+                    {!hasWallets && (
+                      <button onClick={handleStartOnboarding} className="flex items-center gap-1.5 h-[36px] px-4 bg-gradient-to-r from-[#4F5EFF] to-[#6C7AFF] hover:from-[#3d4dd9] hover:to-[#5b6aef] text-white text-[13px] rounded-full transition-colors">
+                        <Sparkles className="w-3.5 h-3.5" />
+                        {t('onboarding.suggestion.createWallet')}
+                      </button>
+                    )}
+                    {(language === 'zh' ? [
+                      { emoji: '\uD83D\uDCE6', label: '如何安装 Agent' },
+                      { emoji: '\uD83D\uDD12', label: '设置安全策略' },
+                      { emoji: '\uD83D\uDCB3', label: '查看转账权限' },
+                      { emoji: '\u26FD', label: 'Gas 费用优化' },
+                    ] : [
+                      { emoji: '\uD83D\uDCE6', label: 'How to install Agent' },
+                      { emoji: '\uD83D\uDD12', label: 'Set up security policies' },
+                      { emoji: '\uD83D\uDCB3', label: 'Check transfer permissions' },
+                      { emoji: '\u26FD', label: 'Optimize gas fees' },
+                    ]).map((item) => (
+                      <button key={item.label} onClick={() => handleSendDirect(item.label)} className="flex items-center gap-1.5 h-[36px] px-3.5 bg-[#F5F5F7] hover:bg-[#EDEEF3] text-[13px] text-[#0A0A0A] rounded-full transition-colors border border-[rgba(0,0,0,0.04)]">
+                        <span className="text-[14px]">{item.emoji}</span>
+                        {item.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
                 {/* Desktop only: input inline below welcome (original layout) */}
                 <div className="hidden lg:block">
                   <div
@@ -1304,40 +1332,6 @@ Would you like me to help adjust your current Agent's limit settings?`;
                     </div>
                   </div>
 
-                {/* Starter prompt pills */}
-                {!welcomeType && (
-                  <div className="flex flex-wrap gap-2 mt-3 lg:mt-[28px] justify-center max-w-[600px] mx-auto">
-                    {!hasWallets && (
-                      <button
-                        onClick={handleStartOnboarding}
-                        className="flex items-center gap-1.5 h-[36px] px-4 bg-gradient-to-r from-[#4F5EFF] to-[#6C7AFF] hover:from-[#3d4dd9] hover:to-[#5b6aef] text-white text-[13px] lg:text-sm rounded-full transition-colors"
-                      >
-                        <Sparkles className="w-3.5 h-3.5" />
-                        {t('onboarding.suggestion.createWallet')}
-                      </button>
-                    )}
-                    {(language === 'zh' ? [
-                      { emoji: '\uD83D\uDCE6', label: '如何安装 Agent' },
-                      { emoji: '\uD83D\uDD12', label: '设置安全策略' },
-                      { emoji: '\uD83D\uDCB3', label: '查看转账权限' },
-                      { emoji: '\u26FD', label: 'Gas 费用优化' },
-                    ] : [
-                      { emoji: '\uD83D\uDCE6', label: 'How to install Agent' },
-                      { emoji: '\uD83D\uDD12', label: 'Set up security policies' },
-                      { emoji: '\uD83D\uDCB3', label: 'Check transfer permissions' },
-                      { emoji: '\u26FD', label: 'Optimize gas fees' },
-                    ]).map((item) => (
-                      <button
-                        key={item.label}
-                        onClick={() => handleSendDirect(item.label)}
-                        className="flex items-center gap-1.5 h-[36px] px-3.5 lg:px-4 bg-[#F5F5F7] hover:bg-[#EDEEF3] text-[13px] lg:text-sm text-[#0A0A0A] rounded-full transition-colors border border-[rgba(0,0,0,0.04)]"
-                      >
-                        <span className="text-[14px]">{item.emoji}</span>
-                        {item.label}
-                      </button>
-                    ))}
-                  </div>
-                )}
               </div>
             </div>
           </div>
