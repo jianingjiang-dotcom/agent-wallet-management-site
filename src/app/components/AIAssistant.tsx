@@ -1130,32 +1130,25 @@ Would you like me to help adjust your current Agent's limit settings?`;
 
         {/* Empty state — only when no messages AND onboarding not active */}
         {displayMessages.length === 0 && !combinedTyping && !onboarding.isOnboardingActive && (
-          <div className="absolute inset-0 flex items-center justify-center px-4 md:px-6 z-0" style={{ marginTop: '-15vh' }}>
-            <div className="w-full max-w-[768px]">
+          <div className="absolute inset-0 flex flex-col z-0">
+            {/* Welcome content — centered in remaining space above input */}
+            <div className="flex-1 flex items-center justify-center px-4 md:px-6 lg:mt-[-10vh]">
+              <div className="w-full max-w-[768px]">
+                {!hasWallets && !welcomeType && <ChatWelcome variant="returning" />}
+                {welcomeType === 'first-wallet' && <ChatWelcome variant="first-wallet" />}
+                {hasWallets && !welcomeType && <ChatWelcome variant="returning" />}
+              </div>
+            </div>
 
-              {/* Scenario C: No wallet, no welcome — CTA suggestion + other suggestions */}
-              {!hasWallets && !welcomeType && (
-                <ChatWelcome variant="returning" />
-              )}
-
-              {/* Scenario A: First wallet just created */}
-              {welcomeType === 'first-wallet' && (
-                <ChatWelcome variant="first-wallet" />
-              )}
-
-              {/* Scenario B: Returning user, new chat */}
-              {hasWallets && !welcomeType && (
-                <ChatWelcome variant="returning" />
-              )}
-
-              {/* Input box for empty state */}
-              <div
-                className={welcomeType === 'first-wallet' ? 'animate-reveal-up' : ''}
-                style={welcomeType === 'first-wallet'
-                  ? { animationDelay: '1500ms', animationDuration: '500ms' }
-                  : {}
-                }
-              >
+            {/* Input + pills — pinned to bottom */}
+            <div
+              className={`shrink-0 px-4 md:px-6 pb-4 lg:pb-6 flex justify-center ${welcomeType === 'first-wallet' ? 'animate-reveal-up' : ''}`}
+              style={{
+                paddingBottom: 'max(16px, env(safe-area-inset-bottom))',
+                ...(welcomeType === 'first-wallet' && { animationDelay: '1500ms', animationDuration: '500ms' }),
+              }}
+            >
+              <div className="w-full max-w-[768px]">
                   <div className="bg-white border border-[#EBEBEB] rounded-[18px] lg:rounded-xl shadow-[0px_4px_16px_0px_rgba(0,0,0,0.08)] focus-within:border-[#4F5EFF] focus-within:shadow-[0px_4px_16px_0px_rgba(79,94,255,0.12)] transition-all flex flex-col">
                     {inputExpanded && (
                       <textarea
@@ -1200,7 +1193,6 @@ Would you like me to help adjust your current Agent's limit settings?`;
                             }}
                             onInput={(e) => {
                               const el = e.currentTarget;
-                              // Check if text would overflow by comparing scrollWidth
                               if (el.scrollWidth > el.clientWidth) {
                                 setInputExpanded(true);
                               }
@@ -1222,8 +1214,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
 
                 {/* Starter prompt pills */}
                 {!welcomeType && (
-                  <div className="flex flex-wrap gap-2 mt-4 lg:mt-[28px] justify-center max-w-[600px]">
-                    {/* CTA suggestion for no-wallet users */}
+                  <div className="flex flex-wrap gap-2 mt-3 lg:mt-[28px] justify-center max-w-[600px] mx-auto">
                     {!hasWallets && (
                       <button
                         onClick={handleStartOnboarding}
@@ -1255,7 +1246,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                     ))}
                   </div>
                 )}
-                </div>
+              </div>
             </div>
           </div>
         )}
