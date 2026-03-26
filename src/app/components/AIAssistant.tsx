@@ -903,7 +903,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
             <div className="absolute top-0 left-0 right-0 z-10 flex justify-center px-6 pt-[24px] pointer-events-none">
               <div className="w-full max-w-[768px] flex items-center justify-between px-4 py-3 rounded-xl bg-[#FEF1E8] pointer-events-auto">
                 <div className="flex items-center gap-2">
-                  <div className="w-5 h-5 flex items-center justify-center">
+                  <div className="w-[18px] h-[18px] flex items-center justify-center">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.6667 10.8333C16.6667 15 13.75 17.0833 10.2833 18.2916C10.1018 18.3532 9.90461 18.3502 9.72499 18.2833C6.24999 17.0833 3.33333 15 3.33333 10.8333V4.99997C3.33333 4.77895 3.42113 4.56699 3.57741 4.41071C3.73369 4.25443 3.94565 4.16663 4.16666 4.16663C5.83333 4.16663 7.91666 3.16663 9.36666 1.89997C9.54321 1.74913 9.76779 1.66626 9.99999 1.66626C10.2322 1.66626 10.4568 1.74913 10.6333 1.89997C12.0917 3.17497 14.1667 4.16663 15.8333 4.16663C16.0543 4.16663 16.2663 4.25443 16.4226 4.41071C16.5789 4.56699 16.6667 4.77895 16.6667 4.99997V10.8333Z" stroke="#F97316" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M7.5 9.99992L9.16667 11.6666L12.5 8.33325" stroke="#F97316" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
                   </div>
                   <span className="text-[14px] leading-[20px] text-[#0A0A0A] font-normal">
@@ -1022,7 +1022,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                 <div className="flex justify-center">
                   <div className="bg-white border-2 border-yellow-300 rounded-xl p-4 w-full max-w-md shadow-sm">
                     <div className="flex items-center mb-3">
-                      <AlertTriangle className="w-5 h-5 text-yellow-600 mr-2" strokeWidth={1.5} />
+                      <AlertTriangle className="w-[18px] h-[18px] text-[#F5A623] mr-2" strokeWidth={1.5} />
                       <h4 className="font-semibold text-[#0A0A0A]">{t('ai.approvalRequest')}</h4>
                     </div>
                     <div className="space-y-2 mb-4">
@@ -1450,14 +1450,14 @@ Would you like me to help adjust your current Agent's limit settings?`;
               onClick={() => { onShowWalletPage(); setMobileHistoryOpen(false); }}
               className={`flex-1 flex items-center justify-center gap-1.5 h-[36px] rounded-[8px] text-[13px] font-medium transition-colors ${showWalletPage ? 'bg-[#F0F2FF] text-[#0A0A0A]' : 'bg-[#FAFAFA] text-[#7C7C7C] hover:bg-[#F0F2FF]'}`}
             >
-              <Wallet className="w-[14px] h-[14px]" strokeWidth={1.5} />
+              <Wallet className="w-[16px] h-[16px]" strokeWidth={1.5} />
               {language === 'zh' ? '我的钱包' : 'My Wallets'}
             </button>
             <button
               onClick={() => { onShowApprovalPage(); setMobileHistoryOpen(false); }}
               className={`flex-1 flex items-center justify-center gap-1.5 h-[36px] rounded-[8px] text-[13px] font-medium transition-colors ${showApprovalPage ? 'bg-[#F0F2FF] text-[#0A0A0A]' : 'bg-[#FAFAFA] text-[#7C7C7C] hover:bg-[#F0F2FF]'}`}
             >
-              <ClipboardCheck className="w-[14px] h-[14px]" strokeWidth={1.5} />
+              <ClipboardCheck className="w-[16px] h-[16px]" strokeWidth={1.5} />
               {language === 'zh' ? '交易审批' : 'Approvals'}
             </button>
           </div>

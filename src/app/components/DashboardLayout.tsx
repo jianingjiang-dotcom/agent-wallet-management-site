@@ -160,7 +160,7 @@ export default function DashboardLayout() {
             onClick={() => setSidebarOpen(false)}
             className="p-2 -mr-2 rounded-lg hover:bg-slate-100 transition-colors"
           >
-            <X className="w-5 h-5 text-[#0A0A0A]" />
+            <X className="w-[18px] h-[18px] text-[#0A0A0A]" strokeWidth={1.5} />
           </button>
         </div>
         {/* Chat sessions portal area - AIAssistant will render here */}
@@ -384,7 +384,7 @@ export default function DashboardLayout() {
                         onClick={() => setMobileSettingsPage(item.key)}
                         className="flex items-center gap-3 w-full py-3.5 px-1 text-[#0A0A0A]"
                       >
-                        <Icon className="w-5 h-5 text-[#0A0A0A]" strokeWidth={1.5} />
+                        <Icon className="w-[18px] h-[18px] text-[#0A0A0A]" strokeWidth={1.5} />
                         <span className="font-medium text-[15px]">{item.label}</span>
                         <ChevronRight className="w-4 h-4 text-[#7C7C7C] ml-auto" />
                       </button>
@@ -399,7 +399,7 @@ export default function DashboardLayout() {
                   onClick={() => setDemoApproval(!demoApproval)}
                   className="flex items-center gap-3 w-full py-3.5 px-1"
                 >
-                  <Play className="w-5 h-5 text-[#0A0A0A]" strokeWidth={1.5} />
+                  <Play className="w-[18px] h-[18px] text-[#0A0A0A]" strokeWidth={1.5} />
                   <span className="font-medium text-[15px] text-[#0A0A0A]">
                     {language === 'zh' ? '审批提示演示' : 'Approval Demo'}
                   </span>
@@ -415,7 +415,7 @@ export default function DashboardLayout() {
                   onClick={() => setMobileLangPanel(true)}
                   className="flex items-center gap-3 w-full py-3.5 px-1"
                 >
-                  <Globe className="w-5 h-5 text-[#0A0A0A]" strokeWidth={1.5} />
+                  <Globe className="w-[18px] h-[18px] text-[#0A0A0A]" strokeWidth={1.5} />
                   <span className="font-medium text-[15px] text-[#0A0A0A]">{t('nav.language')}</span>
                   <span className="ml-auto text-[13px] text-[#7C7C7C] mr-1">{language === 'en' ? 'EN' : '中文'}</span>
                   <ChevronRight className="w-4 h-4 text-[#7C7C7C]" />
@@ -433,7 +433,7 @@ export default function DashboardLayout() {
                   }}
                   className="flex items-center gap-3 w-full py-3.5 px-1"
                 >
-                  <LogOut className="w-5 h-5 text-[#0A0A0A]" strokeWidth={1.5} />
+                  <LogOut className="w-[18px] h-[18px] text-[#0A0A0A]" strokeWidth={1.5} />
                   <span className="font-medium text-[15px] text-[#0A0A0A]">{t('auth.logout')}</span>
                 </button>
               </div>
@@ -499,7 +499,7 @@ export default function DashboardLayout() {
             className="text-[#0A0A0A] p-2 -mr-2 hover:bg-slate-100 rounded-lg transition-colors"
             aria-label="Open menu"
           >
-            <Menu className="w-5 h-5" strokeWidth={1.5} />
+            <Menu className="w-[18px] h-[18px]" strokeWidth={1.5} />
           </button>
         </div>
 
