@@ -1130,19 +1130,111 @@ Would you like me to help adjust your current Agent's limit settings?`;
 
         {/* Empty state — only when no messages AND onboarding not active */}
         {displayMessages.length === 0 && !combinedTyping && !onboarding.isOnboardingActive && (
-          <div className="absolute inset-0 flex flex-col z-0">
-            {/* Welcome content — centered in remaining space above input */}
-            <div className="flex-1 flex items-center justify-center px-4 md:px-6 lg:mt-[-10vh]">
+          <div className="absolute inset-0 flex flex-col lg:flex-col z-0">
+            {/* Welcome content — on mobile: centered above bottom input; on desktop: centered with offset */}
+            <div className="flex-1 flex items-center justify-center px-4 md:px-6 lg:-mt-[15vh]">
               <div className="w-full max-w-[768px]">
                 {!hasWallets && !welcomeType && <ChatWelcome variant="returning" />}
                 {welcomeType === 'first-wallet' && <ChatWelcome variant="first-wallet" />}
                 {hasWallets && !welcomeType && <ChatWelcome variant="returning" />}
+
+                {/* Desktop only: input inline below welcome (original layout) */}
+                <div className="hidden lg:block">
+                  <div
+                    className={welcomeType === 'first-wallet' ? 'animate-reveal-up' : ''}
+                    style={welcomeType === 'first-wallet' ? { animationDelay: '1500ms', animationDuration: '500ms' } : {}}
+                  >
+                    <div className="bg-white border border-[#EBEBEB] rounded-xl shadow-[0px_4px_16px_0px_rgba(0,0,0,0.08)] focus-within:border-[#4F5EFF] focus-within:shadow-[0px_4px_16px_0px_rgba(79,94,255,0.12)] transition-all flex flex-col">
+                      {inputExpanded && (
+                        <textarea
+                          ref={(el) => { if (el) { el.focus(); el.selectionStart = el.selectionEnd = el.value.length; } }}
+                          value={inputValue}
+                          onChange={(e) => {
+                            setInputValue(e.target.value);
+                            if (e.target.value === '') { shouldFocusInputRef.current = true; setInputExpanded(false); }
+                          }}
+                          onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
+                          placeholder={t('ai.inputPlaceholder')}
+                          className="w-full bg-transparent px-[16px] py-3 text-[15px] leading-[22px] text-slate-900 font-normal focus:outline-none resize-none chat-input-placeholder overflow-y-auto"
+                          style={{ minHeight: '72px', maxHeight: '144px', height: '72px' }}
+                          onInput={(e) => {
+                            const el = e.currentTarget;
+                            el.style.height = '72px';
+                            el.style.height = Math.min(el.scrollHeight, 144) + 'px';
+                          }}
+                        />
+                      )}
+                      <div className={`flex items-center justify-between px-3 pb-3 ${!inputExpanded ? 'pt-3' : ''}`}>
+                        <div className="flex items-center relative flex-1 min-w-0">
+                          <div className="relative group shrink-0">
+                            <button onClick={() => fileInputRef.current?.click()} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] text-[#1C1C1C] hover:bg-[#FAFAFA] transition-colors">
+                              <Plus className="w-[18px] h-[18px]" strokeWidth={2} />
+                            </button>
+                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-[8px] px-[6px] py-[4px] bg-[#1C1C1C] text-white text-[12px] leading-[16px] rounded-[6px] whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
+                              添加图片/附件
+                            </div>
+                          </div>
+                          {!inputExpanded && (
+                            <input
+                              ref={(el) => { if (el && shouldFocusInputRef.current) { el.focus(); shouldFocusInputRef.current = false; } }}
+                              type="text"
+                              value={inputValue}
+                              onChange={(e) => setInputValue(e.target.value)}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); }
+                              }}
+                              onInput={(e) => {
+                                const el = e.currentTarget;
+                                if (el.scrollWidth > el.clientWidth) { setInputExpanded(true); }
+                              }}
+                              placeholder={t('ai.inputPlaceholder')}
+                              className="flex-1 min-w-0 bg-transparent px-[8px] text-[15px] leading-[22px] text-slate-900 font-normal focus:outline-none chat-input-placeholder"
+                            />
+                          )}
+                        </div>
+                        <button
+                          onClick={handleSendMessage}
+                          disabled={!inputValue.trim() || isTyping}
+                          className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] bg-[#4f5eff] hover:bg-[#3d4dd9] disabled:bg-slate-200 disabled:cursor-not-allowed text-white transition-all shrink-0"
+                        >
+                          <ArrowUp className="w-[18px] h-[18px]" />
+                        </button>
+                      </div>
+                    </div>
+                    {!welcomeType && (
+                      <div className="flex flex-wrap gap-2 mt-[28px] justify-center max-w-[600px] mx-auto">
+                        {!hasWallets && (
+                          <button onClick={handleStartOnboarding} className="flex items-center gap-1.5 h-[36px] px-4 bg-gradient-to-r from-[#4F5EFF] to-[#6C7AFF] hover:from-[#3d4dd9] hover:to-[#5b6aef] text-white text-sm rounded-full transition-colors">
+                            <Sparkles className="w-3.5 h-3.5" />
+                            {t('onboarding.suggestion.createWallet')}
+                          </button>
+                        )}
+                        {(language === 'zh' ? [
+                          { emoji: '\uD83D\uDCE6', label: '如何安装 Agent' },
+                          { emoji: '\uD83D\uDD12', label: '设置安全策略' },
+                          { emoji: '\uD83D\uDCB3', label: '查看转账权限' },
+                          { emoji: '\u26FD', label: 'Gas 费用优化' },
+                        ] : [
+                          { emoji: '\uD83D\uDCE6', label: 'How to install Agent' },
+                          { emoji: '\uD83D\uDD12', label: 'Set up security policies' },
+                          { emoji: '\uD83D\uDCB3', label: 'Check transfer permissions' },
+                          { emoji: '\u26FD', label: 'Optimize gas fees' },
+                        ]).map((item) => (
+                          <button key={item.label} onClick={() => handleSendDirect(item.label)} className="flex items-center gap-1.5 h-[36px] px-4 bg-[#F5F5F7] hover:bg-[#EDEEF3] text-sm text-[#0A0A0A] rounded-full transition-colors border border-[rgba(0,0,0,0.04)]">
+                            <span className="text-[14px]">{item.emoji}</span>
+                            {item.label}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Input + pills — pinned to bottom */}
+            {/* Mobile only: Input + pills pinned to bottom */}
             <div
-              className={`shrink-0 px-4 md:px-6 pb-4 lg:pb-6 flex justify-center ${welcomeType === 'first-wallet' ? 'animate-reveal-up' : ''}`}
+              className={`lg:hidden shrink-0 px-4 pb-4 flex justify-center ${welcomeType === 'first-wallet' ? 'animate-reveal-up' : ''}`}
               style={{
                 paddingBottom: 'max(16px, env(safe-area-inset-bottom))',
                 ...(welcomeType === 'first-wallet' && { animationDelay: '1500ms', animationDuration: '500ms' }),
