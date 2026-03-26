@@ -1140,7 +1140,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
 
                 {/* Mobile only: prompt pills below welcome text */}
                 {!welcomeType && (
-                  <div className="lg:hidden flex flex-wrap gap-2 mt-4 justify-center max-w-[340px] mx-auto overflow-hidden max-h-[84px]">
+                  <div className="lg:hidden flex flex-wrap gap-2 mt-4 justify-center max-w-[340px] mx-auto">
                     {!hasWallets && (
                       <button onClick={handleStartOnboarding} className="flex items-center gap-1.5 h-[36px] px-3.5 bg-[#EEF0FF] border border-transparent text-[#1F32D6] hover:bg-[#E2E5FF] text-[13px] font-medium rounded-full transition-colors">
                         <span className="text-[13px]">✨</span>
