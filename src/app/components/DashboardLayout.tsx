@@ -383,6 +383,22 @@ export default function DashboardLayout() {
 
                 <div className="border-t border-[#EDEEF3] my-3" />
 
+                {/* Approval Demo Toggle */}
+                <button
+                  onClick={() => setDemoApproval(!demoApproval)}
+                  className="flex items-center gap-3 w-full py-3.5 px-1"
+                >
+                  <Play className="w-5 h-5 text-[#7C7C7C]" />
+                  <span className="font-medium text-[15px] text-[#0A0A0A]">
+                    {language === 'zh' ? '审批提示演示' : 'Approval Demo'}
+                  </span>
+                  <div className="ml-auto">
+                    <div className={`relative w-[36px] h-[20px] rounded-full transition-colors cursor-pointer ${demoApproval ? 'bg-[#4F5EFF]' : 'bg-[#D9D9D9]'}`}>
+                      <div className={`absolute top-[2px] w-[16px] h-[16px] rounded-full bg-white shadow-sm transition-transform ${demoApproval ? 'translate-x-[18px]' : 'translate-x-[2px]'}`} />
+                    </div>
+                  </div>
+                </button>
+
                 {/* Language */}
                 <button
                   onClick={() => setMobileLangPanel(true)}
@@ -549,20 +565,20 @@ export default function DashboardLayout() {
       {showLogoutConfirm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl">
-            <h3 className="text-xl font-semibold text-slate-900 mb-2">Confirm Logout</h3>
-            <p className="text-slate-600 mb-6">Are you sure you want to logout? You'll need to sign in again to access your account.</p>
+            <h3 className="text-xl font-semibold text-slate-900 mb-2">{language === 'zh' ? '确认退出' : 'Confirm Logout'}</h3>
+            <p className="text-slate-600 mb-6">{language === 'zh' ? '确定要退出登录吗？您需要重新登录才能访问您的账户。' : "Are you sure you want to logout? You'll need to sign in again to access your account."}</p>
             <div className="flex gap-3">
               <button
                 onClick={() => setShowLogoutConfirm(false)}
                 className="flex-1 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-900 font-medium py-3 rounded-xl transition-colors"
               >
-                Cancel
+                {language === 'zh' ? '取消' : 'Cancel'}
               </button>
               <button
                 onClick={handleLogout}
                 className="flex-1 bg-[#4f5eff] hover:bg-[#3d4dd9] active:bg-[#2d3db9] text-white font-medium py-3 rounded-xl transition-colors"
               >
-                Logout
+                {language === 'zh' ? '退出登录' : 'Logout'}
               </button>
             </div>
           </div>

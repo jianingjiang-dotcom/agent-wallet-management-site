@@ -1372,6 +1372,25 @@ Would you like me to help adjust your current Agent's limit settings?`;
             />
           </div>
         </div>
+        {/* Quick nav — My Wallets & Approvals */}
+        {hasWallets && (
+          <div className="px-3 pb-2 flex gap-2">
+            <button
+              onClick={() => { onShowWalletPage(); setMobileHistoryOpen(false); }}
+              className={`flex-1 flex items-center justify-center gap-1.5 h-[36px] rounded-[8px] text-[13px] font-medium transition-colors ${showWalletPage ? 'bg-[#EDEEF3] text-[#1c1c1c]' : 'bg-[#F5F5F5] text-[#7C7C7C] hover:bg-[#EDEEF3]'}`}
+            >
+              <Wallet className="w-[14px] h-[14px]" />
+              {language === 'zh' ? '我的钱包' : 'My Wallets'}
+            </button>
+            <button
+              onClick={() => { onShowApprovalPage(); setMobileHistoryOpen(false); }}
+              className={`flex-1 flex items-center justify-center gap-1.5 h-[36px] rounded-[8px] text-[13px] font-medium transition-colors ${showApprovalPage ? 'bg-[#EDEEF3] text-[#1c1c1c]' : 'bg-[#F5F5F5] text-[#7C7C7C] hover:bg-[#EDEEF3]'}`}
+            >
+              <ClipboardCheck className="w-[14px] h-[14px]" />
+              {language === 'zh' ? '交易审批' : 'Approvals'}
+            </button>
+          </div>
+        )}
         {/* Session list */}
         <div className="flex-1 overflow-y-auto px-2 pb-4">
           {filteredSessions.length === 0 && (
