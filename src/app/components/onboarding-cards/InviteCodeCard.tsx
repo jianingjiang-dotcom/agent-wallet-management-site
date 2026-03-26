@@ -41,7 +41,7 @@ export default function InviteCodeCard({ status, onVerify, error, verifiedCode }
           <div className="w-8 h-8 rounded-full bg-[rgba(34,197,94,0.1)] flex items-center justify-center transition-transform duration-300 scale-100">
             <CheckCircle className="w-4 h-4 text-[#22c55e]" />
           </div>
-          <span className="font-['Inter',sans-serif] font-medium text-[13px] text-[#22c55e]">
+          <span className="font-medium text-[13px] text-[#22c55e]">
             {t('onboarding.chat.inviteVerified')}
           </span>
         </div>
@@ -117,7 +117,7 @@ export default function InviteCodeCard({ status, onVerify, error, verifiedCode }
         {error && (
           <div className="flex items-center gap-1.5 mt-2 px-0.5">
             <AlertCircle className="w-3.5 h-3.5 text-[#ef4444] flex-shrink-0" />
-            <span className="font-['Inter',sans-serif] font-normal text-[12px] text-[#ef4444]">
+            <span className="font-normal text-[12px] text-[#ef4444]">
               {t(error)}
             </span>
           </div>
@@ -129,7 +129,7 @@ export default function InviteCodeCard({ status, onVerify, error, verifiedCode }
         <button
           onClick={handleVerify}
           disabled={!isCodeComplete || validating}
-          className="flex-1 flex items-center justify-center gap-2 h-[40px] rounded-[8px] font-['Inter',sans-serif] font-medium text-[13px] transition-all disabled:opacity-40 disabled:cursor-not-allowed text-white bg-[#1F32D6] hover:bg-[#1828AB]"
+          className="flex-1 flex items-center justify-center gap-2 h-[40px] rounded-[8px] font-medium text-[13px] transition-all disabled:opacity-40 disabled:cursor-not-allowed text-white bg-[#1F32D6] hover:bg-[#1828AB]"
         >
           {validating ? (
             <Loader2 className="w-4 h-4 animate-spin" />
@@ -141,7 +141,7 @@ export default function InviteCodeCard({ status, onVerify, error, verifiedCode }
           href="https://cobo.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-0.5 font-['Inter',sans-serif] text-[12px] text-[#1F32D6] hover:text-[#1828AB] transition-colors whitespace-nowrap"
+          className="inline-flex items-center gap-0.5 text-[12px] text-[#1F32D6] hover:text-[#1828AB] transition-colors whitespace-nowrap"
         >
           {t('onboarding.getInviteCode')}
           <ExternalLink className="w-3 h-3" />

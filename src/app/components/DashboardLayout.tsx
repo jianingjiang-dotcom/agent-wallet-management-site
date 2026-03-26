@@ -181,8 +181,8 @@ export default function DashboardLayout() {
               </div>
             </div>
             <div className={`flex-1 min-w-0 text-left whitespace-nowrap transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}>
-              <div className="font-['Inter',sans-serif] font-semibold text-[14px] leading-[20px] text-[#0A0A0A] truncate">{user.name}</div>
-              <div className="font-['Inter',sans-serif] font-normal text-[12px] leading-[16px] text-[#7C7C7C] truncate">{user.email}</div>
+              <div className="font-semibold text-[14px] leading-[20px] text-[#0A0A0A] truncate">{user.name}</div>
+              <div className="font-normal text-[12px] leading-[16px] text-[#7C7C7C] truncate">{user.email}</div>
             </div>
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className={`shrink-0 transition-all duration-300 ease-in-out ${accountMenuOpen ? '-rotate-90' : ''} ${sidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}><path d="M7.5 15L12.5 10L7.5 5" stroke="#7C7C7C" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </button>
@@ -210,10 +210,10 @@ export default function DashboardLayout() {
                         setSidebarOpen(false);
                         setActiveModal(item.key);
                       }}
-                      className="flex items-center gap-[8px] px-[12px] py-[8px] rounded-[8px] hover:bg-[#FAFAFA] transition-colors w-full text-[#0A0A0A]"
+                      className="flex items-center gap-[8px] px-[12px] py-[8px] rounded-[8px] hover:bg-[#F0F2FF] transition-colors w-full text-[#0A0A0A]"
                     >
-                      <Icon className="w-4 h-4 text-[#4F4F4F]" />
-                      <span className="font-['Inter',sans-serif] font-medium text-[13px]">
+                      <Icon className="w-[18px] h-[18px] text-[#0A0A0A]" strokeWidth={1.5} />
+                      <span className="font-medium text-[13px]">
                         {item.label}
                       </span>
                     </button>
@@ -225,10 +225,10 @@ export default function DashboardLayout() {
                 {/* Demo Approval Toggle */}
                 <button
                   onClick={() => setDemoApproval(!demoApproval)}
-                  className="flex items-center gap-[8px] px-[12px] py-[8px] rounded-[8px] hover:bg-[#FAFAFA] transition-colors w-full"
+                  className="flex items-center gap-[8px] px-[12px] py-[8px] rounded-[8px] hover:bg-[#F0F2FF] transition-colors w-full"
                 >
-                  <Play className="w-4 h-4 text-[#4F4F4F]" />
-                  <span className="font-['Inter',sans-serif] font-medium text-[13px] text-[#0A0A0A]">
+                  <Play className="w-[18px] h-[18px] text-[#0A0A0A]" strokeWidth={1.5} />
+                  <span className="font-medium text-[13px] text-[#0A0A0A]">
                     {language === 'zh' ? '审批提示演示' : 'Approval Demo'}
                   </span>
                   <div className="ml-auto">
@@ -241,10 +241,10 @@ export default function DashboardLayout() {
                 {/* Language */}
                 <button
                   onClick={() => setLanguage(language === 'zh' ? 'en' : 'zh')}
-                  className="flex items-center gap-[8px] px-[12px] py-[8px] rounded-[8px] hover:bg-[#FAFAFA] transition-colors w-full"
+                  className="flex items-center gap-[8px] px-[12px] py-[8px] rounded-[8px] hover:bg-[#F0F2FF] transition-colors w-full"
                 >
-                  <Globe className="w-4 h-4 text-[#4F4F4F]" />
-                  <span className="font-['Inter',sans-serif] font-medium text-[13px] text-[#0A0A0A] mr-2">
+                  <Globe className="w-[18px] h-[18px] text-[#0A0A0A]" strokeWidth={1.5} />
+                  <span className="font-medium text-[13px] text-[#0A0A0A] mr-2">
                     {t('nav.language')}
                   </span>
                   <div className="ml-auto">
@@ -258,10 +258,10 @@ export default function DashboardLayout() {
                     setAccountMenuOpen(false);
                     setShowLogoutConfirm(true);
                   }}
-                  className="flex items-center gap-[8px] px-[12px] py-[8px] rounded-[8px] hover:bg-[#FAFAFA] transition-colors w-full"
+                  className="flex items-center gap-[8px] px-[12px] py-[8px] rounded-[8px] hover:bg-[#F0F2FF] transition-colors w-full"
                 >
-                  <LogOut className="w-4 h-4 text-[#4F4F4F]" />
-                  <span className="font-['Inter',sans-serif] font-medium text-[13px] text-[#0A0A0A]">
+                  <LogOut className="w-[18px] h-[18px] text-[#0A0A0A]" strokeWidth={1.5} />
+                  <span className="font-medium text-[13px] text-[#0A0A0A]">
                     {t('auth.logout')}
                   </span>
                 </button>

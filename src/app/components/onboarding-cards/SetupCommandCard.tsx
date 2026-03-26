@@ -60,7 +60,7 @@ export default function SetupCommandCard({ command, onCopy, status, pairingPhase
       {/* Command area with overlay */}
       <div className="relative">
         <div className="bg-[#FAFAFA] p-4">
-          <pre className="font-['Inter',sans-serif] font-normal text-[13px] text-[#0A0A0A] leading-[20px] whitespace-pre-wrap break-words">
+          <pre className="font-normal text-[13px] text-[#0A0A0A] leading-[20px] whitespace-pre-wrap break-words">
             {command}
           </pre>
         </div>
@@ -142,7 +142,7 @@ export default function SetupCommandCard({ command, onCopy, status, pairingPhase
           <button
             onClick={handleCopy}
             disabled={copied || showOverlay}
-            className={`w-full flex items-center justify-center gap-2 h-[38px] rounded-[8px] font-['Inter',sans-serif] font-medium text-[13px] transition-all shadow-[0px_1px_3px_0px_rgba(0,0,0,0.06)] text-white ${
+            className={`w-full flex items-center justify-center gap-2 h-[38px] rounded-[8px] font-medium text-[13px] transition-all shadow-[0px_1px_3px_0px_rgba(0,0,0,0.06)] text-white ${
               copied ? 'bg-[#22c55e]' : 'bg-[#1F32D6] hover:bg-[#1828AB] disabled:opacity-50'
             }`}
           >

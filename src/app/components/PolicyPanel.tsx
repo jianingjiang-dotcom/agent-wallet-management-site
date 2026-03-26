@@ -26,7 +26,7 @@ export default function PolicyPanel({ policy, disabled }: PolicyPanelProps) {
         {/* Header */}
         <div className="flex items-center gap-2 mb-1">
           <Shield className="w-4 h-4 text-[#7C7C7C]" />
-          <h2 className="font-['Inter',sans-serif] font-semibold text-[16px] text-[#0a0a0a]">
+          <h2 className="font-semibold text-[16px] text-[#0a0a0a]">
             {t('policyPanel.title')}
           </h2>
         </div>
@@ -36,10 +36,10 @@ export default function PolicyPanel({ policy, disabled }: PolicyPanelProps) {
           <div className="w-12 h-12 rounded-full bg-[#fafafa] flex items-center justify-center mb-4">
             <Shield className="w-6 h-6 text-[#EBEBEB]" />
           </div>
-          <span className="font-['Inter',sans-serif] font-medium text-[14px] text-[#7c7c7c] mb-1">
+          <span className="font-medium text-[14px] text-[#7c7c7c] mb-1">
             {t('permissions.needAgent')}
           </span>
-          <span className="font-['Inter',sans-serif] font-normal text-[12px] text-[#7C7C7C]">
+          <span className="font-normal text-[12px] text-[#7C7C7C]">
             {t('policy.emptyStateDesc')}
           </span>
         </div>
@@ -52,11 +52,11 @@ export default function PolicyPanel({ policy, disabled }: PolicyPanelProps) {
       {/* Header */}
       <div className="flex items-center gap-2 mb-1">
         <Shield className="w-4 h-4 text-[#1F32D6]" />
-        <h2 className="font-['Inter',sans-serif] font-semibold text-[16px] text-[#0a0a0a]">
+        <h2 className="font-semibold text-[16px] text-[#0a0a0a]">
           {t('policyPanel.title')}
         </h2>
       </div>
-      <p className="font-['Inter',sans-serif] font-normal text-[13px] text-[#7c7c7c] mb-5">
+      <p className="font-normal text-[13px] text-[#7c7c7c] mb-5">
         {t('policy.currentConfig')}
       </p>
 
@@ -64,32 +64,32 @@ export default function PolicyPanel({ policy, disabled }: PolicyPanelProps) {
       <div className="grid grid-cols-3 gap-3 mb-6">
         {/* Per-tx limit */}
         <div className="bg-[#fafafa] rounded-[8px] p-4 text-center">
-          <div className="font-['Inter',sans-serif] font-semibold text-[22px] text-[#0a0a0a] mb-1">
+          <div className="font-semibold text-[22px] text-[#0a0a0a] mb-1">
             ${policy.singleTxLimit}
           </div>
-          <div className="font-['Inter',sans-serif] font-normal text-[11px] text-[#7C7C7C] uppercase tracking-wider">
+          <div className="font-normal text-[11px] text-[#7C7C7C] uppercase tracking-wider">
             {t('policy.perTxLimit')}
           </div>
         </div>
 
         {/* Daily limit */}
         <div className="bg-[#fafafa] rounded-[8px] p-4 text-center">
-          <div className="font-['Inter',sans-serif] font-semibold text-[22px] text-[#0a0a0a] mb-1">
+          <div className="font-semibold text-[22px] text-[#0a0a0a] mb-1">
             ${policy.dailyLimit}
           </div>
-          <div className="font-['Inter',sans-serif] font-normal text-[11px] text-[#7C7C7C] uppercase tracking-wider">
+          <div className="font-normal text-[11px] text-[#7C7C7C] uppercase tracking-wider">
             {t('policy.dailyLimitLabel')}
           </div>
         </div>
 
         {/* Approval status */}
         <div className="bg-[#fafafa] rounded-[8px] p-4 text-center">
-          <div className={`font-['Inter',sans-serif] font-semibold text-[16px] mb-1 ${
+          <div className={`font-semibold text-[16px] mb-1 ${
             policy.approvalRequired ? 'text-[#22c55e]' : 'text-[#7C7C7C]'
           }`}>
             {policy.approvalRequired ? t('policy.approvalOn') : t('policy.approvalOff')}
           </div>
-          <div className="font-['Inter',sans-serif] font-normal text-[11px] text-[#7C7C7C] uppercase tracking-wider">
+          <div className="font-normal text-[11px] text-[#7C7C7C] uppercase tracking-wider">
             {t('policy.approvalLabel')}
           </div>
         </div>
@@ -97,10 +97,10 @@ export default function PolicyPanel({ policy, disabled }: PolicyPanelProps) {
 
       {/* Area B: Advanced config guide */}
       <div className="rounded-[8px] bg-gradient-to-br from-[rgba(79,94,255,0.04)] to-[rgba(79,94,255,0.08)] border border-[rgba(79,94,255,0.1)] p-5">
-        <h3 className="font-['Inter',sans-serif] font-semibold text-[14px] text-[#0a0a0a] mb-2">
+        <h3 className="font-semibold text-[14px] text-[#0a0a0a] mb-2">
           {t('policy.advancedTitle')}
         </h3>
-        <p className="font-['Inter',sans-serif] font-normal text-[12px] text-[#7c7c7c] mb-3 leading-relaxed">
+        <p className="font-normal text-[12px] text-[#7c7c7c] mb-3 leading-relaxed">
           {t('policy.advancedDesc')}
         </p>
 
@@ -108,7 +108,7 @@ export default function PolicyPanel({ policy, disabled }: PolicyPanelProps) {
           {advancedItems.map(({ icon: Icon, key }) => (
             <div key={key} className="flex items-center gap-2">
               <Icon className="w-3.5 h-3.5 text-[#1F32D6] shrink-0" />
-              <span className="font-['Inter',sans-serif] font-normal text-[12px] text-[#4F4F4F]">
+              <span className="font-normal text-[12px] text-[#4F4F4F]">
                 {t(key)}
               </span>
             </div>
@@ -117,7 +117,7 @@ export default function PolicyPanel({ policy, disabled }: PolicyPanelProps) {
 
         <button
           onClick={() => navigate('/dashboard/chat')}
-          className="flex items-center gap-1.5 px-4 py-2 rounded-[8px] bg-[#1F32D6] hover:bg-[#2837d0] text-white font-['Inter',sans-serif] font-medium text-[13px] transition-colors shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)]"
+          className="flex items-center gap-1.5 px-4 py-2 rounded-[8px] bg-[#1F32D6] hover:bg-[#2837d0] text-white font-medium text-[13px] transition-colors shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)]"
         >
           {t('policy.goToChat')}
           <ArrowRight className="w-3.5 h-3.5" />

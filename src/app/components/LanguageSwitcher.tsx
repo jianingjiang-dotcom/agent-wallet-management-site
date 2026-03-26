@@ -12,7 +12,7 @@ export default function LanguageSwitcher({ compact = false }: { compact?: boolea
     return (
       <span className="flex items-center gap-[4px]">
         <Globe className="w-3 h-3 text-[#4F4F4F]" />
-        <span className="font-['Inter',sans-serif] font-normal text-[12px] text-[#0a0a0a]">
+        <span className="font-normal text-[12px] text-[#0a0a0a]">
           {language === 'zh' ? 'ZH' : 'EN'}
         </span>
       </span>

@@ -83,15 +83,15 @@ export default function WalletAgentPage({ onSetupWallet, onClaimWallet, onDelega
             <div className="inline-flex items-center justify-center w-[72px] h-[72px] bg-gradient-to-br from-[rgba(79,94,255,0.12)] to-[rgba(79,94,255,0.04)] border-2 border-[rgba(79,94,255,0.15)] rounded-[16px] mb-6">
               <Shield className="w-9 h-9 text-[#1F32D6]" />
             </div>
-            <h1 className="font-['Inter',sans-serif] font-bold text-[28px] md:text-[32px] text-[#0a0a0a] mb-3 leading-tight">
+            <h1 className="font-bold text-[28px] md:text-[32px] text-[#0a0a0a] mb-3 leading-tight">
               {t('welcome.greeting')}
             </h1>
-            <p className="font-['Inter',sans-serif] font-normal text-[15px] md:text-[16px] text-[#7c7c7c] mb-8 max-w-xl mx-auto leading-relaxed">
+            <p className="font-normal text-[15px] md:text-[16px] text-[#7c7c7c] mb-8 max-w-xl mx-auto leading-relaxed">
               {t('welcome.subtitle')}
             </p>
             <button
               onClick={onSetupWallet || noop}
-              className="bg-[#1F32D6] hover:bg-[#1828AB] active:bg-[#2d3db9] text-white font-['Inter',sans-serif] font-semibold text-[15px] px-8 py-3.5 rounded-[12px] transition-all shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1),0px_4px_12px_0px_rgba(79,94,255,0.2)] inline-flex items-center gap-2.5 hover:shadow-[0px_2px_6px_0px_rgba(0,0,0,0.12),0px_6px_20px_0px_rgba(79,94,255,0.28)]"
+              className="bg-[#1F32D6] hover:bg-[#1828AB] active:bg-[#2d3db9] text-white font-semibold text-[15px] px-8 py-3.5 rounded-[12px] transition-all shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1),0px_4px_12px_0px_rgba(79,94,255,0.2)] inline-flex items-center gap-2.5 hover:shadow-[0px_2px_6px_0px_rgba(0,0,0,0.12),0px_6px_20px_0px_rgba(79,94,255,0.28)]"
             >
               {t('welcome.cta')}
               <ArrowRight className="w-4 h-4" />
@@ -99,7 +99,7 @@ export default function WalletAgentPage({ onSetupWallet, onClaimWallet, onDelega
             <div className="mt-4">
               <button
                 onClick={onClaimWallet || noop}
-                className="font-['Inter',sans-serif] font-normal text-[13px] text-[#7c7c7c] hover:text-[#1F32D6] transition-colors inline-flex items-center gap-1.5"
+                className="font-normal text-[13px] text-[#7c7c7c] hover:text-[#1F32D6] transition-colors inline-flex items-center gap-1.5"
               >
                 <Download className="w-3.5 h-3.5" />
                 {t('welcome.claimWallet')} <span className="underline">{t('welcome.claimAction')}</span>

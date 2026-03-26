@@ -7,10 +7,10 @@ export default function Gasless() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="font-['Inter',sans-serif] font-semibold text-[22px] sm:text-[28px] text-[#0a0a0a] mb-1">
+        <h1 className="font-semibold text-[22px] sm:text-[28px] text-[#0a0a0a] mb-1">
           {t('gasAccount.title')}
         </h1>
-        <p className="font-['Inter',sans-serif] font-normal text-[15px] text-[#7c7c7c]">
+        <p className="font-normal text-[15px] text-[#7c7c7c]">
           {t('gasAccount.subtitle')}
         </p>
       </div>
@@ -24,14 +24,14 @@ export default function Gasless() {
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#1F32D6] opacity-75" />
             <span className="relative inline-flex rounded-full h-2 w-2 bg-[#1F32D6]" />
           </span>
-          <span className="font-['Inter',sans-serif] font-medium text-[12px] text-[#1F32D6]">
+          <span className="font-medium text-[12px] text-[#1F32D6]">
             {t('gasAccount.comingSoonBadge')}
           </span>
         </div>
-        <h2 className="font-['Inter',sans-serif] font-semibold text-[20px] text-[#0a0a0a] mb-2">
+        <h2 className="font-semibold text-[20px] text-[#0a0a0a] mb-2">
           {t('gasAccount.comingSoonTitle')}
         </h2>
-        <p className="font-['Inter',sans-serif] font-normal text-[14px] text-[#7c7c7c] text-center max-w-md leading-relaxed">
+        <p className="font-normal text-[14px] text-[#7c7c7c] text-center max-w-md leading-relaxed">
           {t('gasAccount.comingSoonDesc')}
         </p>
       </div>

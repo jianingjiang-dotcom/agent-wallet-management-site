@@ -136,7 +136,7 @@ export default function WalletDetail({
                   if (e.key === 'Enter') handleSaveName();
                   if (e.key === 'Escape') { setEditName(wallet.name); setIsEditingName(false); }
                 }}
-                className="font-['Inter',sans-serif] font-normal text-[24px] leading-[32px] text-[#0a0a0a] bg-transparent border-b-2 border-[#1F32D6] outline-none py-0 px-0 w-[240px]"
+                className="font-normal text-[24px] leading-[32px] text-[#0a0a0a] bg-transparent border-b-2 border-[#1F32D6] outline-none py-0 px-0 w-[240px]"
               />
               <button onClick={handleSaveName} className="text-[#1F32D6] hover:text-[#2837d0] transition-colors p-1">
                 <Check className="w-5 h-5" />
@@ -144,7 +144,7 @@ export default function WalletDetail({
             </div>
           ) : (
             <div className="flex items-center gap-2 group/name">
-              <h1 className="font-['Inter',sans-serif] font-normal text-[24px] leading-[32px] text-[#0a0a0a]">
+              <h1 className="font-normal text-[24px] leading-[32px] text-[#0a0a0a]">
                 {wallet.name}
               </h1>
               <button
@@ -156,12 +156,12 @@ export default function WalletDetail({
             </div>
           )}
           {hasDelegations ? (
-            <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#22c55e]/10 text-[#22c55e] font-['Inter',sans-serif] font-medium text-[12px]">
+            <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#22c55e]/10 text-[#22c55e] font-medium text-[12px]">
               <div className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
               {walletDelegations.length} {t('walletPage.agents')}
             </span>
           ) : (
-            <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#EBEBEB]/20 text-[#7C7C7C] font-['Inter',sans-serif] font-medium text-[12px]">
+            <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#EBEBEB]/20 text-[#7C7C7C] font-medium text-[12px]">
               <div className="w-1.5 h-1.5 rounded-full bg-[#EBEBEB]" />
               {t('delegation.noAgent')}
             </span>
@@ -171,7 +171,7 @@ export default function WalletDetail({
             <div className="relative" ref={switcherRef}>
               <button
                 onClick={() => setSwitcherOpen(!switcherOpen)}
-                className="flex items-center gap-1.5 px-2.5 py-1 rounded-[8px] font-['Inter',sans-serif] font-medium text-[12px] text-[#7c7c7c] border border-[rgba(10,10,10,0.1)] hover:bg-[#FAFAFA] hover:border-[rgba(10,10,10,0.15)] transition-colors"
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-[8px] font-medium text-[12px] text-[#7c7c7c] border border-[rgba(10,10,10,0.1)] hover:bg-[#FAFAFA] hover:border-[rgba(10,10,10,0.15)] transition-colors"
               >
                 <Wallet className="w-3.5 h-3.5" />
                 {t('walletDetail.switchWallet')}
@@ -183,7 +183,7 @@ export default function WalletDetail({
                     <button
                       key={w.id}
                       onClick={() => { onSwitchWallet(w.id); setSwitcherOpen(false); }}
-                      className={`w-full text-left px-3 py-2 text-[13px] font-['Inter',sans-serif] transition-colors ${
+                      className={`w-full text-left px-3 py-2 text-[13px] transition-colors ${
                         w.id === wallet.id
                           ? 'text-[#1F32D6] bg-[rgba(79,94,255,0.04)] font-medium'
                           : 'text-[#0a0a0a] hover:bg-[#FAFAFA] font-normal'
@@ -200,14 +200,14 @@ export default function WalletDetail({
         <div className="flex items-center gap-2">
           <button
             onClick={onClaimWallet || noop}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-[8px] font-['Inter',sans-serif] font-medium text-[12px] text-[#7c7c7c] border border-[rgba(10,10,10,0.1)] hover:bg-[#FAFAFA] transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-[8px] font-medium text-[12px] text-[#7c7c7c] border border-[rgba(10,10,10,0.1)] hover:bg-[#FAFAFA] transition-colors"
           >
             <Download className="w-3.5 h-3.5" />
             {t('walletPage.claimWallet')}
           </button>
           <button
             onClick={onSetupWallet || noop}
-            className="flex items-center gap-2 px-4 py-2 rounded-[8px] font-['Inter',sans-serif] font-medium text-[13px] text-white bg-[#1F32D6] hover:bg-[#1828AB] transition-colors"
+            className="flex items-center gap-2 px-4 py-2 rounded-[8px] font-medium text-[13px] text-white bg-[#1F32D6] hover:bg-[#1828AB] transition-colors"
           >
             <Plus className="w-4 h-4" />
             {t('walletPage.createNew')}
@@ -219,13 +219,13 @@ export default function WalletDetail({
       <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[12px] p-6 mb-6">
         <div className="flex items-center gap-2 mb-4">
           <Wallet className="w-4 h-4 text-[#1F32D6]" />
-          <span className="font-['Inter',sans-serif] font-medium text-[13px] text-[#7c7c7c] uppercase tracking-wide">
+          <span className="font-medium text-[13px] text-[#7c7c7c] uppercase tracking-wide">
             {t('walletAgent.yourWallet')}
           </span>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
-            <div className="font-['Inter',sans-serif] font-normal text-[12px] text-[#7C7C7C] mb-0.5">
+            <div className="font-normal text-[12px] text-[#7C7C7C] mb-0.5">
               {t('onboarding.success.walletId')}
             </div>
             <code className="font-['JetBrains_Mono','SF_Mono','Consolas',monospace] text-[13px] text-[#0a0a0a]">
@@ -233,10 +233,10 @@ export default function WalletDetail({
             </code>
           </div>
           <div>
-            <div className="font-['Inter',sans-serif] font-normal text-[12px] text-[#7C7C7C] mb-0.5">
+            <div className="font-normal text-[12px] text-[#7C7C7C] mb-0.5">
               {t('delegation.createdAt')}
             </div>
-            <div className="font-['Inter',sans-serif] font-normal text-[13px] text-[#7c7c7c]">
+            <div className="font-normal text-[13px] text-[#7c7c7c]">
               {formatDate(wallet.createdAt)}
             </div>
           </div>
@@ -244,7 +244,7 @@ export default function WalletDetail({
 
         {/* Addresses by chain */}
         <div>
-          <div className="font-['Inter',sans-serif] font-normal text-[12px] text-[#7C7C7C] mb-2">
+          <div className="font-normal text-[12px] text-[#7C7C7C] mb-2">
             {t('walletDetail.addresses')}
           </div>
           {wallet.addresses.length > 0 ? (
@@ -254,7 +254,7 @@ export default function WalletDetail({
                   key={idx}
                   className="flex items-center gap-3 px-3 py-2.5 rounded-[8px] bg-[#fafafa] border border-[rgba(10,10,10,0.06)] group/addr"
                 >
-                  <span className="font-['Inter',sans-serif] font-medium text-[11px] text-[#1F32D6] bg-[rgba(79,94,255,0.08)] px-2 py-0.5 rounded-[6px] uppercase tracking-wider shrink-0 min-w-[44px] text-center">
+                  <span className="font-medium text-[11px] text-[#1F32D6] bg-[rgba(79,94,255,0.08)] px-2 py-0.5 rounded-[6px] uppercase tracking-wider shrink-0 min-w-[44px] text-center">
                     {addr.chain}
                   </span>
                   <code className="font-['JetBrains_Mono','SF_Mono','Consolas',monospace] text-[12px] text-[#0a0a0a] break-all flex-1">
@@ -280,7 +280,7 @@ export default function WalletDetail({
             </div>
           ) : (
             <div className="px-3 py-2.5 rounded-[8px] bg-[#fafafa] border border-dashed border-[rgba(10,10,10,0.1)]">
-              <span className="font-['Inter',sans-serif] font-normal text-[12px] text-[#7C7C7C]">
+              <span className="font-normal text-[12px] text-[#7C7C7C]">
                 {t('walletDetail.noAddresses')}
               </span>
             </div>
@@ -293,13 +293,13 @@ export default function WalletDetail({
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <Shield className="w-4 h-4 text-[#1F32D6]" />
-            <span className="font-['Inter',sans-serif] font-semibold text-[16px] text-[#0a0a0a]">
+            <span className="font-semibold text-[16px] text-[#0a0a0a]">
               {t('walletAgent.connectedAgent')}
             </span>
           </div>
           <button
             onClick={() => onDelegateAgent(wallet.id)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] font-['Inter',sans-serif] font-medium text-[12px] text-[#1F32D6] border border-dashed border-[rgba(79,94,255,0.3)] hover:bg-[rgba(79,94,255,0.04)] transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] font-medium text-[12px] text-[#1F32D6] border border-dashed border-[rgba(79,94,255,0.3)] hover:bg-[rgba(79,94,255,0.04)] transition-colors"
           >
             <Plus className="w-3.5 h-3.5" />
             {t('walletDetail.delegateAgent')}
@@ -328,15 +328,15 @@ export default function WalletDetail({
             <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-[rgba(79,94,255,0.08)] flex items-center justify-center">
               <UserPlus className="w-6 h-6 text-[#1F32D6]" />
             </div>
-            <p className="font-['Inter',sans-serif] font-medium text-[14px] text-[#7c7c7c] mb-1">
+            <p className="font-medium text-[14px] text-[#7c7c7c] mb-1">
               {t('delegation.noAgent')}
             </p>
-            <p className="font-['Inter',sans-serif] font-normal text-[12px] text-[#7C7C7C] mb-4">
+            <p className="font-normal text-[12px] text-[#7C7C7C] mb-4">
               {t('walletDelegation.noAgentsDesc')}
             </p>
             <button
               onClick={() => onDelegateAgent(wallet.id)}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-[8px] font-['Inter',sans-serif] font-medium text-[13px] text-white bg-[#1F32D6] hover:bg-[#1828AB] transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-[8px] font-medium text-[13px] text-white bg-[#1F32D6] hover:bg-[#1828AB] transition-colors"
             >
               <Plus className="w-4 h-4" />
               {t('walletDetail.delegateAgent')}
@@ -413,10 +413,10 @@ function ActivityLog({ t, walletCreatedAt }: { t: (key: string) => string; walle
   return (
     <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[12px] p-5">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="font-['Inter',sans-serif] font-semibold text-[16px] text-[#0a0a0a]">
+        <h2 className="font-semibold text-[16px] text-[#0a0a0a]">
           {t('walletAgent.activityLog')}
         </h2>
-        <span className="font-['Inter',sans-serif] font-normal text-[12px] text-[#7C7C7C]">
+        <span className="font-normal text-[12px] text-[#7C7C7C]">
           {MOCK_LOGS.length} entries
         </span>
       </div>
@@ -435,17 +435,17 @@ function ActivityLog({ t, walletCreatedAt }: { t: (key: string) => string; walle
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="font-['Inter',sans-serif] font-medium text-[13px] text-[#0a0a0a]">
+                  <span className="font-medium text-[13px] text-[#0a0a0a]">
                     {t(log.labelKey)}
                   </span>
-                  <span className={`inline-flex px-1.5 py-0.5 rounded-[6px] font-['Inter',sans-serif] font-medium text-[10px] ${actorStyle.bg} ${actorStyle.text}`}>
+                  <span className={`inline-flex px-1.5 py-0.5 rounded-[6px] font-medium text-[10px] ${actorStyle.bg} ${actorStyle.text}`}>
                     {t(`log.actor.${log.actor}`)}
                   </span>
-                  <span className={`inline-flex px-1.5 py-0.5 rounded-[6px] font-['Inter',sans-serif] font-medium text-[10px] ${statusStyle.bg} ${statusStyle.text}`}>
+                  <span className={`inline-flex px-1.5 py-0.5 rounded-[6px] font-medium text-[10px] ${statusStyle.bg} ${statusStyle.text}`}>
                     {t(`log.status.${log.status}`)}
                   </span>
                 </div>
-                <p className="font-['Inter',sans-serif] font-normal text-[12px] text-[#7c7c7c] mt-0.5 truncate">
+                <p className="font-normal text-[12px] text-[#7c7c7c] mt-0.5 truncate">
                   {t(log.detailKey)}
                 </p>
               </div>

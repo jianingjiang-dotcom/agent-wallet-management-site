@@ -35,7 +35,7 @@ export default function SuccessCard({ walletId, agentId, onComplete, completed }
         >
           <CheckCircle className="w-6 h-6 text-[#22c55e]" />
         </div>
-        <h3 className="font-['Inter',sans-serif] font-semibold text-[18px] text-[#0a0a0a]">
+        <h3 className="font-semibold text-[18px] text-[#0a0a0a]">
           {t('onboarding.success.title')}
         </h3>
       </div>
@@ -47,7 +47,7 @@ export default function SuccessCard({ walletId, agentId, onComplete, completed }
             <Shield className="w-3.5 h-3.5 text-[#1F32D6]" />
           </div>
           <div className="min-w-0 flex-1">
-            <span className="font-['Inter',sans-serif] font-medium text-[10px] text-[#7C7C7C] uppercase tracking-wider block mb-0.5">
+            <span className="font-medium text-[10px] text-[#7C7C7C] uppercase tracking-wider block mb-0.5">
               {t('onboarding.success.walletId')}
             </span>
             <code className="font-['JetBrains_Mono',monospace] text-[12px] text-[#0a0a0a] break-words leading-snug">
@@ -61,7 +61,7 @@ export default function SuccessCard({ walletId, agentId, onComplete, completed }
             <div className="w-4 h-4 rounded-full bg-[rgba(34,197,94,0.1)] flex items-center justify-center">
               <Link2 className="w-2.5 h-2.5 text-[#22c55e]" />
             </div>
-            <span className="font-['Inter',sans-serif] font-medium text-[10px] text-[#22c55e]">
+            <span className="font-medium text-[10px] text-[#22c55e]">
               {t('onboarding.success.linked')}
             </span>
           </div>
@@ -72,7 +72,7 @@ export default function SuccessCard({ walletId, agentId, onComplete, completed }
             <Zap className="w-3.5 h-3.5 text-[#f59e0b]" />
           </div>
           <div className="min-w-0 flex-1">
-            <span className="font-['Inter',sans-serif] font-medium text-[10px] text-[#7C7C7C] uppercase tracking-wider block mb-0.5">
+            <span className="font-medium text-[10px] text-[#7C7C7C] uppercase tracking-wider block mb-0.5">
               {t('onboarding.success.agentId')}
             </span>
             <code className="font-['JetBrains_Mono',monospace] text-[12px] text-[#0a0a0a] break-words leading-snug">

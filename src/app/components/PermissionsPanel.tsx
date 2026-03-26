@@ -42,11 +42,11 @@ export default function PermissionsPanel({ permissions, onUpdate, disabled }: Pe
       {/* Header */}
       <div className="flex items-center gap-2 mb-1">
         <Shield className="w-4 h-4 text-[#1F32D6]" />
-        <h2 className="font-['Inter',sans-serif] font-semibold text-[16px] text-[#0a0a0a]">
+        <h2 className="font-semibold text-[16px] text-[#0a0a0a]">
           {t('permissions.title')}
         </h2>
       </div>
-      <p className="font-['Inter',sans-serif] font-normal text-[13px] text-[#7c7c7c] mb-5">
+      <p className="font-normal text-[13px] text-[#7c7c7c] mb-5">
         {t('permissions.desc')}
       </p>
 
@@ -64,10 +64,10 @@ export default function PermissionsPanel({ permissions, onUpdate, disabled }: Pe
               <div className="flex items-center gap-3">
                 <Icon className="w-4 h-4 text-[#1F32D6]" />
                 <div>
-                  <div className="font-['Inter',sans-serif] font-medium text-[14px] text-[#0a0a0a]">
+                  <div className="font-medium text-[14px] text-[#0a0a0a]">
                     {t(item.labelKey)}
                   </div>
-                  <div className="font-['Inter',sans-serif] font-normal text-[12px] text-[#7c7c7c]">
+                  <div className="font-normal text-[12px] text-[#7c7c7c]">
                     {t(item.descKey)}
                   </div>
                 </div>
@@ -94,7 +94,7 @@ export default function PermissionsPanel({ permissions, onUpdate, disabled }: Pe
       {disabled && (
         <div className="absolute inset-0 bg-white/60 rounded-[12px] flex items-center justify-center z-10">
           <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[8px] px-5 py-3 shadow-sm">
-            <span className="font-['Inter',sans-serif] font-medium text-[14px] text-[#7c7c7c]">
+            <span className="font-medium text-[14px] text-[#7c7c7c]">
               {t('permissions.needAgent')}
             </span>
           </div>

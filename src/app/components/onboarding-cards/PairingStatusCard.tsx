@@ -46,7 +46,7 @@ export default function PairingStatusCard({ phase }: PairingStatusCardProps) {
         }`}>
           {renderIcon()}
         </div>
-        <span className="font-['Inter',sans-serif] font-medium text-[14px] text-[#0a0a0a] transition-opacity duration-300">
+        <span className="font-medium text-[14px] text-[#0a0a0a] transition-opacity duration-300">
           {getPhaseText()}
         </span>
       </div>

@@ -671,7 +671,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
           <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'w-[36px] h-[36px] -m-[8px] rounded-[8px] hover:bg-[#EBEBEB] transition-colors' : ''}`}>
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0"><path d="M9.99999 18.3333C14.6024 18.3333 18.3333 14.6023 18.3333 9.99996C18.3333 5.39759 14.6024 1.66663 9.99999 1.66663C5.39762 1.66663 1.66666 5.39759 1.66666 9.99996C1.66666 14.6023 5.39762 18.3333 9.99999 18.3333Z" fill="#0A0A0A" stroke="#0A0A0A" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M6.66666 10H13.3333" stroke="white" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M10 6.66663V13.3333" stroke="white" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </div>
-          <span className={`font-['Inter',sans-serif] text-[14px] leading-[20px] font-normal whitespace-nowrap transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}>{t('ai.newChat')}</span>
+          <span className={`text-[14px] leading-[20px] font-normal whitespace-nowrap transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}>{t('ai.newChat')}</span>
         </button>
         <button
           onClick={() => { setShowSearchModal(true); setSearchQuery(''); }}
@@ -682,7 +682,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
           <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'w-[36px] h-[36px] -m-[8px] rounded-[8px] hover:bg-[#EBEBEB] transition-colors' : ''}`}>
             <Search className="w-[20px] h-[20px] shrink-0" strokeWidth={1.5} />
           </div>
-          <span className={`font-['Inter',sans-serif] text-[14px] leading-[20px] font-normal whitespace-nowrap transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}>{language === 'zh' ? '搜索对话' : 'Search Chats'}</span>
+          <span className={`text-[14px] leading-[20px] font-normal whitespace-nowrap transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}>{language === 'zh' ? '搜索对话' : 'Search Chats'}</span>
         </button>
         {hasWallets && (
           <>
@@ -695,7 +695,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
               <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'w-[36px] h-[36px] -m-[8px] rounded-[8px] hover:bg-[#EBEBEB] transition-colors' : ''} ${showWalletPage && sidebarCollapsed ? 'bg-[#EBEBEB]' : ''}`}>
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0"><path d="M14.1667 11.6666H14.175" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M5.83333 5.83333H15.8333C16.2754 5.83333 16.6993 6.00893 17.0118 6.32149C17.3244 6.63405 17.5 7.05797 17.5 7.5V15.8333C17.5 16.2754 17.3244 16.6993 17.0118 17.0118C16.6993 17.3244 16.2754 17.5 15.8333 17.5H4.16667C3.72464 17.5 3.30072 17.3244 2.98816 17.0118C2.67559 16.6993 2.5 16.2754 2.5 15.8333V4.16667C2.5 3.72464 2.67559 3.30072 2.98816 2.98816C3.30072 2.67559 3.72464 2.5 4.16667 2.5H15.8333" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
               </div>
-              <span className={`font-['Inter',sans-serif] text-[14px] leading-[20px] font-normal whitespace-nowrap transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}>{language === 'zh' ? '我的钱包' : 'My Wallets'}</span>
+              <span className={`text-[14px] leading-[20px] font-normal whitespace-nowrap transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}>{language === 'zh' ? '我的钱包' : 'My Wallets'}</span>
             </button>
             <button
               onClick={() => { if (!showApprovalPage) { setApprovalInitialTab('all'); onShowApprovalPage(); setActiveChatId('current'); } }}
@@ -711,7 +711,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                   )}
                 </div>
               </div>
-              <span className={`font-['Inter',sans-serif] text-[14px] leading-[20px] font-normal whitespace-nowrap transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}>{language === 'zh' ? '交易审批' : 'Approvals'}</span>
+              <span className={`text-[14px] leading-[20px] font-normal whitespace-nowrap transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}>{language === 'zh' ? '交易审批' : 'Approvals'}</span>
               {demoApproval && pendingApprovalCount > 0 && (
                 <span className={`shrink-0 min-w-[16px] h-[16px] flex items-center justify-center rounded-full bg-[#FF3B30] text-white text-[11px] leading-[1] font-medium px-[4px] transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}>
                   {pendingApprovalCount}
@@ -1299,9 +1299,6 @@ Would you like me to help adjust your current Agent's limit settings?`;
                             添加图片/附件
                           </div>
                         </div>
-                        <button onClick={() => setMobileHistoryOpen(true)} className="lg:hidden w-[32px] h-[32px] flex items-center justify-center rounded-[8px] text-[#0A0A0A] hover:bg-[#FAFAFA] transition-colors shrink-0">
-                          <History className="w-[18px] h-[18px]" strokeWidth={2} />
-                        </button>
                         {!inputExpanded && (
                           <input
                             ref={(el) => { if (el && shouldFocusInputRef.current) { el.focus(); shouldFocusInputRef.current = false; } }}
