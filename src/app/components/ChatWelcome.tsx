@@ -5,9 +5,36 @@ interface ChatWelcomeProps {
   variant: 'first-wallet' | 'returning';
 }
 
+function getTimeGreeting(language: string): string {
+  const hour = new Date().getHours();
+  if (language === 'zh') {
+    if (hour < 6) return '夜深了';
+    if (hour < 12) return '早上好';
+    if (hour < 18) return '下午好';
+    return '晚上好';
+  }
+  if (hour < 6) return 'Good evening';
+  if (hour < 12) return 'Good morning';
+  if (hour < 18) return 'Good afternoon';
+  return 'Good evening';
+}
+
+function getUserName(): string {
+  try {
+    const raw = localStorage.getItem('agent_wallet_current_user');
+    if (raw) {
+      const user = JSON.parse(raw);
+      if (user.name && user.name !== 'Account') return user.name;
+    }
+  } catch {}
+  return '';
+}
+
 export default function ChatWelcome({ variant }: ChatWelcomeProps) {
   const { t, language } = useLanguage();
   const isFirst = variant === 'first-wallet';
+  const userName = getUserName();
+  const greeting = getTimeGreeting(language);
 
   return (
     <div className="flex flex-col items-center text-center mb-8">
@@ -29,12 +56,9 @@ export default function ChatWelcome({ variant }: ChatWelcomeProps) {
             {t('chat.welcome.firstWallet.title')}
           </span>
         ) : (
-          <>
-            <span className="text-[#0A0A0A]">
-              {language === 'zh' ? 'Hi buddy，欢迎使用 ' : 'Hi buddy, welcome to '}
-            </span>
-            <span className="font-space-grotesk" style={{ color: '#1c1c1c' }}>Cobo</span><span className="font-space-grotesk" style={{ color: '#1F32D6' }}>Pact</span>
-          </>
+          <span className="text-[#0A0A0A]">
+            {greeting}{userName ? `, ${userName}` : ''}
+          </span>
         )}
       </h2>
 

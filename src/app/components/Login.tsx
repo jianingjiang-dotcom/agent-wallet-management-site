@@ -17,8 +17,8 @@ export default function Login() {
     // Simulate social login
     const socialUser = {
       id: Date.now().toString(),
-      name: 'Account',
-      email: `user@${provider.toLowerCase()}.com`,
+      name: 'Olivia',
+      email: 'olivia@cobo.com',
       createdAt: new Date().toISOString(),
       walletPaired: false, // New user needs onboarding
     };
@@ -41,7 +41,7 @@ export default function Login() {
   const handleMagicLinkLogin = () => {
     const magicLinkUser = {
       id: Date.now().toString(),
-      name: 'Account',
+      name: 'Olivia',
       email: magicLinkEmail,
       createdAt: new Date().toISOString(),
       walletPaired: false, // New user needs onboarding
