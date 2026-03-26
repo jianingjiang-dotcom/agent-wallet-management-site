@@ -28,6 +28,7 @@ export default function DashboardLayout() {
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const [languageFlyoutOpen, setLanguageFlyoutOpen] = useState(false);
   const [mobileLangPanel, setMobileLangPanel] = useState(false);
+  const [mobileSettingsPage, setMobileSettingsPage] = useState<'gas' | 'billing' | 'settings' | null>(null);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [demoApproval, setDemoApproval] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -152,14 +153,14 @@ export default function DashboardLayout() {
             <LogoText />
           </div>
         </div>
-        {/* Mobile header — logo + sidebar panel toggle */}
+        {/* Mobile header — logo + close */}
         <div className="h-[64px] flex items-center justify-between px-4 lg:hidden">
           <LogoText />
           <button
             onClick={() => setSidebarOpen(false)}
-            className="p-2 -mr-2 rounded-lg hover:bg-slate-100 transition-colors text-[#7C7C7C]"
+            className="p-2 -mr-2 rounded-lg hover:bg-slate-100 transition-colors"
           >
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.8333 2.5H4.16667C3.24619 2.5 2.5 3.24619 2.5 4.16667V15.8333C2.5 16.7538 3.24619 17.5 4.16667 17.5H15.8333C16.7538 17.5 17.5 16.7538 17.5 15.8333V4.16667C17.5 3.24619 16.7538 2.5 15.8333 2.5Z" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M7.5 2.5V17.5" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            <X className="w-5 h-5 text-[#0A0A0A]" />
           </button>
         </div>
         {/* Chat sessions portal area - AIAssistant will render here */}
@@ -324,7 +325,7 @@ export default function DashboardLayout() {
           {/* Backdrop */}
           <div
             className="fixed inset-0 bg-black/30 z-[70]"
-            onClick={() => { setAccountMenuOpen(false); setMobileLangPanel(false); }}
+            onClick={() => { setAccountMenuOpen(false); setMobileLangPanel(false); setMobileSettingsPage(null); }}
           />
           {/* Sheet — slides up, leaves gap at top */}
           <div className="fixed top-[48px] bottom-0 left-0 right-0 z-[80] bg-white rounded-t-[20px] flex flex-col shadow-2xl animate-slide-up">
@@ -332,48 +333,56 @@ export default function DashboardLayout() {
           <div className="flex justify-center pt-3 pb-1 shrink-0">
             <div className="w-9 h-[5px] rounded-full bg-[#D9D9D9]" />
           </div>
-          {!mobileLangPanel ? (
+          {/* Sub-page: Gas / Billing / Settings */}
+          {mobileSettingsPage ? (
             <>
-              {/* Header — Settings */}
               <div className="flex items-center justify-between px-4 h-[48px] shrink-0">
                 <button
-                  onClick={() => { setAccountMenuOpen(false); setMobileLangPanel(false); }}
+                  onClick={() => setMobileSettingsPage(null)}
+                  className="w-9 h-9 flex items-center justify-center rounded-full bg-[#F5F5F5]"
+                >
+                  <ChevronLeft className="w-[18px] h-[18px] text-[#0A0A0A]" />
+                </button>
+                <span className="font-semibold text-[16px] text-[#0A0A0A]">
+                  {mobileSettingsPage === 'gas' ? t('nav.gasAccount') : mobileSettingsPage === 'billing' ? t('nav.billing') : t('nav.settings')}
+                </span>
+                <div className="w-9" />
+              </div>
+              <div className="border-b border-[#EDEEF3]" />
+              <div className="flex-1 overflow-y-auto p-5">
+                {mobileSettingsPage === 'gas' && <Gasless />}
+                {mobileSettingsPage === 'billing' && <Billing />}
+                {mobileSettingsPage === 'settings' && <AccountSettings />}
+              </div>
+            </>
+          ) : !mobileLangPanel ? (
+            <>
+              {/* Header */}
+              <div className="flex items-center justify-between px-4 h-[48px] shrink-0">
+                <button
+                  onClick={() => { setAccountMenuOpen(false); setMobileLangPanel(false); setMobileSettingsPage(null); }}
                   className="w-9 h-9 flex items-center justify-center rounded-full bg-[#F5F5F5]"
                 >
                   <X className="w-[18px] h-[18px] text-[#0A0A0A]" />
                 </button>
-                <span className="font-semibold text-[16px] text-[#0A0A0A]">{t('nav.settings')}</span>
+                <span className="font-semibold text-[16px] text-[#0A0A0A]">{language === 'zh' ? '菜单' : 'Menu'}</span>
                 <div className="w-9" />
               </div>
               <div className="border-b border-[#EDEEF3]" />
 
               {/* Content */}
-              <div className="flex-1 overflow-y-auto px-5 pt-5 pb-8">
-                {/* User card */}
-                <div className="flex items-center gap-3 p-4 bg-[#F5F5F7] rounded-2xl mb-5">
-                  <svg width="40" height="40" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0"><rect width="36" height="36" rx="18" fill="#4F5EFF"/><path d="M16.8247 12H19.1753L24 24H21.7909L20.6421 20.9916H15.3579L14.2091 24H12L16.8247 12ZM15.9764 19.3782H20.0236L18.0442 14.1176H17.9735L15.9764 19.3782Z" fill="white"/></svg>
-                  <div className="min-w-0 flex-1">
-                    <div className="font-semibold text-[15px] text-[#1c1c1c] truncate">{user.name}</div>
-                    <div className="text-[13px] text-[#7C7C7C] truncate">{user.email}</div>
-                  </div>
-                </div>
-
-                {/* Nav items */}
-                <div className="space-y-1">
+              <div className="flex-1 overflow-y-auto px-5 pt-4 pb-8">
+                {/* Nav items — open as sub-pages */}
+                <div className="space-y-0">
                   {navItems.map((item) => {
                     const Icon = item.icon;
                     return (
                       <button
                         key={item.key}
-                        onClick={() => {
-                          setAccountMenuOpen(false);
-                          setMobileLangPanel(false);
-                          setSidebarOpen(false);
-                          setActiveModal(item.key);
-                        }}
+                        onClick={() => setMobileSettingsPage(item.key)}
                         className="flex items-center gap-3 w-full py-3.5 px-1 text-[#0A0A0A]"
                       >
-                        <Icon className="w-5 h-5 text-[#7C7C7C]" />
+                        <Icon className="w-5 h-5 text-[#0A0A0A]" strokeWidth={1.5} />
                         <span className="font-medium text-[15px]">{item.label}</span>
                         <ChevronRight className="w-4 h-4 text-[#BDBDBD] ml-auto" />
                       </button>
@@ -388,7 +397,7 @@ export default function DashboardLayout() {
                   onClick={() => setDemoApproval(!demoApproval)}
                   className="flex items-center gap-3 w-full py-3.5 px-1"
                 >
-                  <Play className="w-5 h-5 text-[#7C7C7C]" />
+                  <Play className="w-5 h-5 text-[#0A0A0A]" strokeWidth={1.5} />
                   <span className="font-medium text-[15px] text-[#0A0A0A]">
                     {language === 'zh' ? '审批提示演示' : 'Approval Demo'}
                   </span>
@@ -404,7 +413,7 @@ export default function DashboardLayout() {
                   onClick={() => setMobileLangPanel(true)}
                   className="flex items-center gap-3 w-full py-3.5 px-1"
                 >
-                  <Globe className="w-5 h-5 text-[#7C7C7C]" />
+                  <Globe className="w-5 h-5 text-[#0A0A0A]" strokeWidth={1.5} />
                   <span className="font-medium text-[15px] text-[#0A0A0A]">{t('nav.language')}</span>
                   <span className="ml-auto text-[13px] text-[#7C7C7C] mr-1">{language === 'en' ? 'EN' : '中文'}</span>
                   <ChevronRight className="w-4 h-4 text-[#BDBDBD]" />
@@ -417,11 +426,12 @@ export default function DashboardLayout() {
                   onClick={() => {
                     setAccountMenuOpen(false);
                     setMobileLangPanel(false);
+                    setMobileSettingsPage(null);
                     setShowLogoutConfirm(true);
                   }}
                   className="flex items-center gap-3 w-full py-3.5 px-1"
                 >
-                  <LogOut className="w-5 h-5 text-[#7C7C7C]" />
+                  <LogOut className="w-5 h-5 text-[#0A0A0A]" strokeWidth={1.5} />
                   <span className="font-medium text-[15px] text-[#0A0A0A]">{t('auth.logout')}</span>
                 </button>
               </div>
@@ -429,7 +439,7 @@ export default function DashboardLayout() {
           ) : (
             <>
               {/* Language picker */}
-              <div className="flex items-center justify-between px-4 h-[48px] shrink-0 border-b border-[#EDEEF3]">
+              <div className="flex items-center justify-between px-4 h-[48px] shrink-0">
                 <button
                   onClick={() => setMobileLangPanel(false)}
                   className="w-9 h-9 flex items-center justify-center rounded-full bg-[#F5F5F5]"
@@ -439,6 +449,7 @@ export default function DashboardLayout() {
                 <span className="font-semibold text-[16px] text-[#0A0A0A]">{t('nav.language')}</span>
                 <div className="w-9" />
               </div>
+              <div className="border-b border-[#EDEEF3]" />
 
               <div className="flex-1 overflow-y-auto px-5 pt-5 pb-8 space-y-2">
                 <button
@@ -486,7 +497,7 @@ export default function DashboardLayout() {
             className="text-[#0A0A0A] p-2 -mr-2 hover:bg-slate-100 rounded-lg transition-colors"
             aria-label="Open menu"
           >
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.8333 2.5H4.16667C3.24619 2.5 2.5 3.24619 2.5 4.16667V15.8333C2.5 16.7538 3.24619 17.5 4.16667 17.5H15.8333C16.7538 17.5 17.5 16.7538 17.5 15.8333V4.16667C17.5 3.24619 16.7538 2.5 15.8333 2.5Z" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M7.5 2.5V17.5" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            <Menu className="w-5 h-5" />
           </button>
         </div>
 
