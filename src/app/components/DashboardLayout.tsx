@@ -152,14 +152,14 @@ export default function DashboardLayout() {
             <LogoText />
           </div>
         </div>
-        {/* Mobile header — logo + close */}
+        {/* Mobile header — logo + sidebar panel toggle */}
         <div className="h-[64px] flex items-center justify-between px-4 lg:hidden">
           <LogoText />
           <button
             onClick={() => setSidebarOpen(false)}
-            className="p-2 -mr-2 rounded-lg hover:bg-slate-100 transition-colors"
+            className="p-2 -mr-2 rounded-lg hover:bg-slate-100 transition-colors text-[#7C7C7C]"
           >
-            <X className="w-5 h-5 text-slate-600" />
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.8333 2.5H4.16667C3.24619 2.5 2.5 3.24619 2.5 4.16667V15.8333C2.5 16.7538 3.24619 17.5 4.16667 17.5H15.8333C16.7538 17.5 17.5 16.7538 17.5 15.8333V4.16667C17.5 3.24619 16.7538 2.5 15.8333 2.5Z" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M7.5 2.5V17.5" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </button>
         </div>
         {/* Chat sessions portal area - AIAssistant will render here */}
@@ -453,7 +453,7 @@ export default function DashboardLayout() {
             className="text-[#0A0A0A] p-2 -mr-2 hover:bg-slate-100 rounded-lg transition-colors"
             aria-label="Open menu"
           >
-            <Menu className="w-6 h-6" />
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.8333 2.5H4.16667C3.24619 2.5 2.5 3.24619 2.5 4.16667V15.8333C2.5 16.7538 3.24619 17.5 4.16667 17.5H15.8333C16.7538 17.5 17.5 16.7538 17.5 15.8333V4.16667C17.5 3.24619 16.7538 2.5 15.8333 2.5Z" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M7.5 2.5V17.5" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </button>
         </div>
 
