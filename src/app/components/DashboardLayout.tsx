@@ -318,13 +318,24 @@ export default function DashboardLayout() {
         />
       )}
 
-      {/* Mobile full-screen account/settings panel (Claude mobile pattern) */}
+      {/* Mobile slide-up account/settings sheet */}
       {accountMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-[80] bg-white flex flex-col">
+        <div className="lg:hidden">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/30 z-[70]"
+            onClick={() => { setAccountMenuOpen(false); setMobileLangPanel(false); }}
+          />
+          {/* Sheet — slides up, leaves gap at top */}
+          <div className="fixed top-[48px] bottom-0 left-0 right-0 z-[80] bg-white rounded-t-[20px] flex flex-col shadow-2xl animate-slide-up">
+          {/* Drag handle */}
+          <div className="flex justify-center pt-3 pb-1 shrink-0">
+            <div className="w-9 h-[5px] rounded-full bg-[#D9D9D9]" />
+          </div>
           {!mobileLangPanel ? (
             <>
               {/* Header — Settings */}
-              <div className="flex items-center justify-between px-4 h-[56px] shrink-0 border-b border-[#EDEEF3]">
+              <div className="flex items-center justify-between px-4 h-[48px] shrink-0">
                 <button
                   onClick={() => { setAccountMenuOpen(false); setMobileLangPanel(false); }}
                   className="w-9 h-9 flex items-center justify-center rounded-full bg-[#F5F5F5]"
@@ -334,6 +345,7 @@ export default function DashboardLayout() {
                 <span className="font-semibold text-[16px] text-[#0A0A0A]">{t('nav.settings')}</span>
                 <div className="w-9" />
               </div>
+              <div className="border-b border-[#EDEEF3]" />
 
               {/* Content */}
               <div className="flex-1 overflow-y-auto px-5 pt-5 pb-8">
@@ -400,8 +412,8 @@ export default function DashboardLayout() {
             </>
           ) : (
             <>
-              {/* Language picker — full screen with back */}
-              <div className="flex items-center justify-between px-4 h-[56px] shrink-0 border-b border-[#EDEEF3]">
+              {/* Language picker */}
+              <div className="flex items-center justify-between px-4 h-[48px] shrink-0 border-b border-[#EDEEF3]">
                 <button
                   onClick={() => setMobileLangPanel(false)}
                   className="w-9 h-9 flex items-center justify-center rounded-full bg-[#F5F5F5]"
@@ -434,6 +446,7 @@ export default function DashboardLayout() {
               </div>
             </>
           )}
+          </div>
         </div>
       )}
 
