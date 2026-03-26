@@ -276,10 +276,10 @@ export default function DashboardLayout() {
           onClick={() => { setToggleTooltip(false); setSidebarCollapsed(!sidebarCollapsed); }}
           onMouseEnter={() => setToggleTooltip(true)}
           onMouseLeave={() => setToggleTooltip(false)}
-          className="hidden lg:flex w-[36px] h-[36px] items-center justify-center rounded-[8px] hover:bg-[#EBEBEB] transition-colors text-[#7C7C7C] absolute top-[14px] z-10"
-          style={{ left: sidebarCollapsed ? 'calc(50% - 18px)' : 'calc(100% - 48px)', transition: 'left 0.3s ease-in-out' }}
+          className="hidden lg:flex w-[28px] h-[28px] items-center justify-center rounded-[6px] hover:bg-[#F0F2FF] transition-colors text-[#7C7C7C] absolute top-[18px] z-10"
+          style={{ left: sidebarCollapsed ? 'calc(50% - 14px)' : 'calc(100% - 44px)', transition: 'left 0.3s ease-in-out' }}
         >
-          <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0.625" y="0.625" width="18.75" height="14.75" rx="2.5" stroke="currentColor" strokeWidth="1.25"/><line x1="7" y1="0.625" x2="7" y2="15.375" stroke="currentColor" strokeWidth="1.25"/></svg>
+          <svg width="16" height="13" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0.625" y="0.625" width="18.75" height="14.75" rx="2.5" stroke="currentColor" strokeWidth="1.25"/><line x1="7" y1="0.625" x2="7" y2="15.375" stroke="currentColor" strokeWidth="1.25"/></svg>
         </button>
         {toggleTooltip && createPortal(
           <div
