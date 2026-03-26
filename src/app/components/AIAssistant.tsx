@@ -1142,7 +1142,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                 {!welcomeType && (
                   <div className="lg:hidden flex flex-wrap gap-2 mt-4 justify-center max-w-[600px] mx-auto">
                     {!hasWallets && (
-                      <button onClick={handleStartOnboarding} className="flex items-center gap-1.5 h-[36px] px-4 bg-gradient-to-r from-[#1F32D6] to-[#3B4FE8] hover:from-[#1828AB] hover:to-[#2E42D0] text-white text-[13px] rounded-full transition-colors">
+                      <button onClick={handleStartOnboarding} className="flex items-center gap-1.5 h-[36px] px-4 bg-transparent border border-[#1F32D6] text-[#1F32D6] hover:bg-[#F0F2FF] text-[13px] font-medium rounded-full transition-colors">
                         <Sparkles className="w-3.5 h-3.5" />
                         {t('onboarding.suggestion.createWallet')}
                       </button>
@@ -1158,7 +1158,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                       { emoji: '\uD83D\uDCB3', label: 'Check transfer permissions' },
                       { emoji: '\u26FD', label: 'Optimize gas fees' },
                     ]).map((item) => (
-                      <button key={item.label} onClick={() => handleSendDirect(item.label)} className="flex items-center gap-1.5 h-[36px] px-3.5 bg-[#FAFAFA] hover:bg-[#EBEBEB] text-[13px] text-[#0A0A0A] rounded-full transition-colors border border-[rgba(0,0,0,0.04)]">
+                      <button key={item.label} onClick={() => handleSendDirect(item.label)} className="flex items-center gap-1.5 h-[36px] px-3.5 bg-transparent hover:bg-[#FAFAFA] text-[13px] font-normal text-[#7C7C7C] rounded-full transition-colors border border-[#EBEBEB]">
                         <span className="text-[14px]">{item.emoji}</span>
                         {item.label}
                       </button>
@@ -1232,7 +1232,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                     {!welcomeType && (
                       <div className="flex flex-wrap gap-2 mt-[28px] justify-center max-w-[600px] mx-auto">
                         {!hasWallets && (
-                          <button onClick={handleStartOnboarding} className="flex items-center gap-1.5 h-[36px] px-4 bg-gradient-to-r from-[#1F32D6] to-[#3B4FE8] hover:from-[#1828AB] hover:to-[#2E42D0] text-white text-sm rounded-full transition-colors">
+                          <button onClick={handleStartOnboarding} className="flex items-center gap-1.5 h-[36px] px-4 bg-transparent border border-[#1F32D6] text-[#1F32D6] hover:bg-[#F0F2FF] text-sm font-medium rounded-full transition-colors">
                             <Sparkles className="w-3.5 h-3.5" />
                             {t('onboarding.suggestion.createWallet')}
                           </button>
@@ -1248,7 +1248,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                           { emoji: '\uD83D\uDCB3', label: 'Check transfer permissions' },
                           { emoji: '\u26FD', label: 'Optimize gas fees' },
                         ]).map((item) => (
-                          <button key={item.label} onClick={() => handleSendDirect(item.label)} className="flex items-center gap-1.5 h-[36px] px-4 bg-[#FAFAFA] hover:bg-[#EBEBEB] text-sm text-[#0A0A0A] rounded-full transition-colors border border-[rgba(0,0,0,0.04)]">
+                          <button key={item.label} onClick={() => handleSendDirect(item.label)} className="flex items-center gap-1.5 h-[36px] px-4 bg-transparent hover:bg-[#FAFAFA] text-sm font-normal text-[#7C7C7C] rounded-full transition-colors border border-[#EBEBEB]">
                             <span className="text-[14px]">{item.emoji}</span>
                             {item.label}
                           </button>
