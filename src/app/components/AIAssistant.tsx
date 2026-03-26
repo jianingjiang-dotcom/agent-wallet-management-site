@@ -680,7 +680,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
           onMouseLeave={() => setNavTooltip(null)}
         >
           <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'w-[36px] h-[36px] -m-[8px] rounded-[8px] hover:bg-[#F0F2FF] transition-colors' : ''}`}>
-            <Search className="w-[20px] h-[20px] shrink-0" strokeWidth={1.5} />
+            <Search className="w-[18px] h-[18px] shrink-0" strokeWidth={1.5} />
           </div>
           <span className={`text-[14px] leading-[20px] font-normal whitespace-nowrap transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}>{language === 'zh' ? '搜索对话' : 'Search Chats'}</span>
         </button>
