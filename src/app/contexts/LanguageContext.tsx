@@ -188,8 +188,8 @@ const translations = {
     "ai.send": "Send",
     "chat.welcome.firstWallet.title": "Your wallet is ready",
     "chat.welcome.firstWallet.subtitle": "I'm your AI assistant, authorized to act on your behalf.",
-    "chat.welcome.returning.title": "Hi buddy, welcome to Cobo Pact",
-    "chat.welcome.returning.subtitle": "I can help you manage wallets and configure risk controls — just let me know!",
+    "chat.welcome.returning.title": "Good morning",
+    "chat.welcome.returning.subtitle": "How can I help you today?",
     "ai.quickQuestions": "Quick Questions:",
     "ai.placeholder": "Type your question...",
     "ai.greeting":
@@ -932,8 +932,8 @@ const translations = {
     "ai.send": "发送",
     "chat.welcome.firstWallet.title": "钱包已准备就绪",
     "chat.welcome.firstWallet.subtitle": "我是你的 AI 助手，已获授权为你执行操作。",
-    "chat.welcome.returning.title": "Hi buddy，欢迎使用 Cobo Pact",
-    "chat.welcome.returning.subtitle": "我能帮你管理钱包，配置风控，有需要请随时告诉我！",
+    "chat.welcome.returning.title": "早上好",
+    "chat.welcome.returning.subtitle": "有什么可以帮你的吗？",
 
     // Onboarding
     "onboarding.title": "创建 Cobo Pact 钱包",

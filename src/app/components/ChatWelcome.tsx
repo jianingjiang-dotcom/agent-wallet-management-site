@@ -57,12 +57,9 @@ export default function ChatWelcome({ variant }: ChatWelcomeProps) {
             {t('chat.welcome.firstWallet.title')}
           </span>
         ) : (
-          <>
-            <span className="text-[var(--app-text)]">
-              {language === 'zh' ? 'Hi buddy，欢迎使用 ' : 'Hi buddy, welcome to '}
-            </span>
-            <span className="font-space-grotesk" style={{ color: '#1c1c1c' }}>Cobo</span><span className="font-space-grotesk" style={{ color: '#4F5EFF' }}>Pact</span>
-          </>
+          <span className="text-[var(--app-text)]">
+            {language === 'zh' ? `${greeting}，${userName || 'buddy'}` : `${greeting}${userName ? `, ${userName}` : ''}`}
+          </span>
         )}
       </h2>
 
@@ -79,7 +76,7 @@ export default function ChatWelcome({ variant }: ChatWelcomeProps) {
           className="text-[#0A0A0A] text-[14px] lg:text-[16px] leading-[21px] lg:leading-[24px] mt-1.5 animate-reveal-up"
           style={{ animationDuration: '0.5s', animationDelay: '150ms' }}
         >
-          {language === 'zh' ? '你的钱包助手已就绪，随时为你服务' : 'Your wallet assistant is ready to help'}
+          {language === 'zh' ? '有什么可以帮你的吗？' : 'How can I help you today?'}
         </p>
       )}
     </div>
