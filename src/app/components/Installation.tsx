@@ -55,7 +55,7 @@ const wallet = new AgentWallet({
               className="bg-white border border-[#EBEBEB] rounded-2xl p-6 hover:shadow-md transition-shadow"
             >
               <div className="flex items-start mb-4">
-                <div className="bg-gradient-to-br from-amber-500 to-orange-600 p-3 rounded-xl mr-4 shadow-sm">
+                <div className="bg-[#1F32D6] p-3 rounded-xl mr-4 shadow-sm">
                   <Icon className="w-6 h-6 text-white" />
                 </div>
                 <div className="flex-1">
@@ -90,25 +90,25 @@ const wallet = new AgentWallet({
         <div className="space-y-3">
           <a
             href="#"
-            className="block text-amber-600 hover:text-amber-700 transition-colors font-medium"
+            className="block text-[#1F32D6] hover:text-[#1828AB] transition-colors font-medium"
           >
             {t('install.apiDocs')}
           </a>
           <a
             href="#"
-            className="block text-amber-600 hover:text-amber-700 transition-colors font-medium"
+            className="block text-[#1F32D6] hover:text-[#1828AB] transition-colors font-medium"
           >
             {t('install.examples')}
           </a>
           <a
             href="#"
-            className="block text-amber-600 hover:text-amber-700 transition-colors font-medium"
+            className="block text-[#1F32D6] hover:text-[#1828AB] transition-colors font-medium"
           >
             {t('install.faq')}
           </a>
           <a
             href="#"
-            className="block text-amber-600 hover:text-amber-700 transition-colors font-medium"
+            className="block text-[#1F32D6] hover:text-[#1828AB] transition-colors font-medium"
           >
             {t('install.community')}
           </a>
@@ -116,12 +116,12 @@ const wallet = new AgentWallet({
       </div>
 
       {/* Support Banner */}
-      <div className="mt-6 bg-gradient-to-r from-amber-500 to-orange-600 rounded-2xl p-6 text-center shadow-md">
+      <div className="mt-6 bg-[#1F32D6] rounded-2xl p-6 text-center shadow-md">
         <h3 className="text-xl font-semibold text-white mb-2">{t('install.needHelp')}</h3>
-        <p className="text-amber-50 mb-4">
+        <p className="text-[#C8CEFF] mb-4">
           {t('install.supportText')}
         </p>
-        <button className="bg-white text-amber-600 px-6 py-2.5 rounded-xl font-medium hover:bg-amber-50 transition-colors shadow-sm">
+        <button className="bg-white text-[#1F32D6] px-6 py-2.5 rounded-xl font-medium hover:bg-[#EEF0FF] transition-colors shadow-sm">
           {t('install.contactSupport')}
         </button>
       </div>

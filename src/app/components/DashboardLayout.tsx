@@ -575,10 +575,10 @@ export default function DashboardLayout() {
 
       {/* Logout Confirmation Modal */}
       {showLogoutConfirm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 lg:left-[260px] bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl">
-            <h3 className="text-xl font-semibold text-slate-900 mb-2">{language === 'zh' ? '确认退出' : 'Confirm Logout'}</h3>
-            <p className="text-slate-600 mb-6">{language === 'zh' ? '确定要退出登录吗？您需要重新登录才能访问您的账户。' : "Are you sure you want to logout? You'll need to sign in again to access your account."}</p>
+            <h3 className="text-xl font-semibold text-[#0A0A0A] mb-2">{language === 'zh' ? '确认退出' : 'Confirm Logout'}</h3>
+            <p className="text-[#7C7C7C] mb-6">{language === 'zh' ? '确定要退出登录吗？您需要重新登录才能访问您的账户。' : "Are you sure you want to logout? You'll need to sign in again to access your account."}</p>
             <div className="flex gap-3">
               <button
                 onClick={() => setShowLogoutConfirm(false)}

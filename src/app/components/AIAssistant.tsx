@@ -1020,9 +1020,9 @@ Would you like me to help adjust your current Agent's limit settings?`;
                 </div>
               ) : message.role === 'approval' && message.approvalData ? (
                 <div className="flex justify-center">
-                  <div className="bg-white border-2 border-yellow-300 rounded-xl p-4 w-full max-w-md shadow-sm">
+                  <div className="bg-white border-2 border-[#C8CEFF] rounded-xl p-4 w-full max-w-md shadow-sm">
                     <div className="flex items-center mb-3">
-                      <AlertTriangle className="w-[18px] h-[18px] text-[#F5A623] mr-2" strokeWidth={1.5} />
+                      <AlertTriangle className="w-[18px] h-[18px] text-[#1F32D6] mr-2" strokeWidth={1.5} />
                       <h4 className="font-semibold text-[#0A0A0A]">{t('ai.approvalRequest')}</h4>
                     </div>
                     <div className="space-y-2 mb-4">
@@ -1040,7 +1040,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                       </div>
                       <div className="border-t border-[#EBEBEB] pt-2 mt-2">
                         <span className="text-xs text-[#7C7C7C]">{t('ai.reason')}: </span>
-                        <span className="text-xs text-yellow-700">{message.approvalData.reason}</span>
+                        <span className="text-xs text-[#1F32D6]">{message.approvalData.reason}</span>
                       </div>
                     </div>
                     {message.approvalData.status === 'pending' ? (

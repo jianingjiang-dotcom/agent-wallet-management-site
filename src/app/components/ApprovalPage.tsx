@@ -119,7 +119,7 @@ export default function ApprovalPage({ initialTab = 'all', onPendingCountChange 
 
   const statusIcon = (status: ApprovalStatus) => {
     switch (status) {
-      case 'pending': return <Clock className="w-4 h-4 text-amber-500" />;
+      case 'pending': return <Clock className="w-4 h-4 text-[#1F32D6]" />;
       case 'approved': return <CheckCircle className="w-4 h-4 text-green-500" />;
       case 'rejected': return <XCircle className="w-4 h-4 text-red-500" />;
     }
@@ -135,7 +135,7 @@ export default function ApprovalPage({ initialTab = 'all', onPendingCountChange 
 
   const statusColor = (status: ApprovalStatus) => {
     switch (status) {
-      case 'pending': return 'text-amber-600 bg-amber-50';
+      case 'pending': return 'text-[#1F32D6] bg-[#EEF0FF]';
       case 'approved': return 'text-green-600 bg-green-50';
       case 'rejected': return 'text-red-600 bg-red-50';
     }
@@ -169,7 +169,7 @@ export default function ApprovalPage({ initialTab = 'all', onPendingCountChange 
           >
             {tab.label}
             {tab.key === 'pending' && pendingCount > 0 && (
-              <span className="ml-1.5 px-1.5 py-0.5 text-[11px] font-medium bg-amber-100 text-amber-600 rounded-full">
+              <span className="ml-1.5 px-1.5 py-0.5 text-[11px] font-medium bg-[#EEF0FF] text-[#1F32D6] rounded-full">
                 {pendingCount}
               </span>
             )}
@@ -224,7 +224,7 @@ export default function ApprovalPage({ initialTab = 'all', onPendingCountChange 
               <div className={`text-[12px] px-3 py-1.5 rounded-lg mb-3 ${
                 record.status === 'approved' ? 'text-green-600 bg-green-50'
                 : record.status === 'rejected' ? 'text-red-600 bg-red-50'
-                : 'text-amber-600 bg-amber-50'
+                : 'text-[#1F32D6] bg-[#EEF0FF]'
               }`}>
                 {language === 'zh' ? '触发原因' : 'Trigger'}: {record.reason}
               </div>

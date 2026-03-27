@@ -607,8 +607,8 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
                   <div className="flex-1 h-px bg-[rgba(10,10,10,0.06)]" />
                 </div>
                 <div className="flex items-center gap-3 px-3.5 sm:px-4 py-3 sm:py-3.5">
-                  <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-[8px] bg-[rgba(245,158,11,0.08)] flex items-center justify-center flex-shrink-0">
-                    <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#f59e0b]" strokeWidth={1.5} />
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-[8px] bg-[rgba(31,50,214,0.08)] flex items-center justify-center flex-shrink-0">
+                    <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#1F32D6]" strokeWidth={1.5} />
                   </div>
                   <div className="min-w-0 flex-1">
                     <span className="font-medium text-[11px] text-[#7C7C7C] uppercase tracking-wider block mb-0.5">

@@ -74,7 +74,7 @@ export default function DelegationCard({
 
   return (
     <div className={`bg-white border rounded-[8px] transition-colors ${
-      isFrozen ? "border-[#eab308] bg-[rgba(234,179,8,0.02)]" : "border-[rgba(10,10,10,0.08)]"
+      isFrozen ? "border-[#1F32D6] bg-[rgba(234,179,8,0.02)]" : "border-[rgba(10,10,10,0.08)]"
     }`}>
       {/* Header */}
       <div
@@ -84,7 +84,7 @@ export default function DelegationCard({
         <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
           isFrozen ? "bg-[rgba(234,179,8,0.1)]" : "bg-[rgba(79,94,255,0.1)]"
         }`}>
-          <UserPlus className={`w-4 h-4 ${isFrozen ? "text-[#eab308]" : "text-[#1F32D6]"}`} strokeWidth={1.5} />
+          <UserPlus className={`w-4 h-4 ${isFrozen ? "text-[#1F32D6]" : "text-[#1F32D6]"}`} strokeWidth={1.5} />
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 group/agentname">
@@ -129,7 +129,7 @@ export default function DelegationCard({
               </span>
             )}
             {isFrozen && (
-              <span className="px-1.5 py-0.5 rounded-full font-normal text-[9px] bg-[rgba(234,179,8,0.1)] text-[#92400e]">
+              <span className="px-1.5 py-0.5 rounded-full font-normal text-[9px] bg-[rgba(31,50,214,0.1)] text-[#1F32D6]">
                 {t("delegationCard.frozen")}
               </span>
             )}
@@ -155,8 +155,8 @@ export default function DelegationCard({
         <div className="border-t border-[rgba(10,10,10,0.06)] px-4 py-4 space-y-4">
           {/* Frozen banner */}
           {isFrozen && (
-            <div className="bg-[rgba(234,179,8,0.08)] border border-[rgba(234,179,8,0.2)] rounded-[8px] px-3 py-2">
-              <p className="font-normal text-[11px] text-[#92400e]">
+            <div className="bg-[rgba(31,50,214,0.08)] border border-[rgba(31,50,214,0.2)] rounded-[8px] px-3 py-2">
+              <p className="font-normal text-[11px] text-[#1F32D6]">
                 {t("delegation.frozenBanner")}
               </p>
             </div>
@@ -192,10 +192,10 @@ export default function DelegationCard({
             ) : (
               <button
                 onClick={() => onFreeze(delegation.id)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-[6px] bg-[rgba(234,179,8,0.08)] hover:bg-[rgba(234,179,8,0.15)] transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-[6px] bg-[rgba(31,50,214,0.08)] hover:bg-[rgba(31,50,214,0.15)] transition-colors"
               >
-                <Pause className="w-3.5 h-3.5 text-[#eab308]" strokeWidth={1.5} />
-                <span className="font-medium text-[11px] text-[#92400e]">{t("delegation.pauseAction")}</span>
+                <Pause className="w-3.5 h-3.5 text-[#1F32D6]" strokeWidth={1.5} />
+                <span className="font-medium text-[11px] text-[#1F32D6]">{t("delegation.pauseAction")}</span>
               </button>
             )}
             <button

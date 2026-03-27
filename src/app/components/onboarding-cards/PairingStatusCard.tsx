@@ -10,7 +10,7 @@ interface PairingStatusCardProps {
 const phaseConfig: Record<Phase, { icon: 'spinner' | 'wifi' | 'settings' | 'check'; colorClass: string }> = {
   waiting:     { icon: 'spinner',  colorClass: 'text-[#1F32D6]' },
   connected:   { icon: 'wifi',     colorClass: 'text-[#1F32D6]' },
-  configuring: { icon: 'settings', colorClass: 'text-[#f59e0b]' },
+  configuring: { icon: 'settings', colorClass: 'text-[#1F32D6]' },
   success:     { icon: 'check',    colorClass: 'text-[#22c55e]' },
 };
 

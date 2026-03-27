@@ -68,8 +68,8 @@ export default function SuccessCard({ walletId, agentId, onComplete, completed }
           <div className="flex-1 h-px bg-[rgba(10,10,10,0.06)]" />
         </div>
         <div className="flex items-center gap-3 px-3.5 py-3">
-          <div className="w-8 h-8 rounded-[8px] bg-[rgba(245,158,11,0.08)] flex items-center justify-center flex-shrink-0">
-            <Zap className="w-3.5 h-3.5 text-[#f59e0b]" />
+          <div className="w-8 h-8 rounded-[8px] bg-[rgba(31,50,214,0.08)] flex items-center justify-center flex-shrink-0">
+            <Zap className="w-3.5 h-3.5 text-[#1F32D6]" />
           </div>
           <div className="min-w-0 flex-1">
             <span className="font-medium text-[10px] text-[#7C7C7C] uppercase tracking-wider block mb-0.5">
