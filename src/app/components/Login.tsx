@@ -76,9 +76,9 @@ export default function Login() {
         <LanguageSwitcher />
       </div>
 
-      <div className="w-full max-w-[446px] flex flex-col gap-6 sm:gap-[40px] items-center">
+      <div className="w-full max-w-[446px] flex flex-col gap-[24px] items-center">
         {/* Logo and Header */}
-        <div className="content-stretch flex flex-col gap-[20px] items-center w-full mb-6">
+        <div className="content-stretch flex flex-col gap-[16px] items-center w-full">
           <div
             className="cursor-pointer"
             onClick={handleLogoClick}
