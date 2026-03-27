@@ -368,8 +368,8 @@ export default function AccountSettings() {
         </div>
       </div>
 
-      {/* Sign Out section */}
-      <div className="bg-white border border-[#EBEBEB] rounded-2xl p-5 shadow-sm">
+      {/* Sign Out — desktop only (mobile has it in the menu card) */}
+      <div className="hidden lg:block bg-white border border-[#EBEBEB] rounded-2xl p-5 shadow-sm">
         <button
           onClick={() => setShowSignOutModal(true)}
           className="h-[44px] w-full rounded-[10px] border border-[#ef4444] text-[#ef4444] text-[14px] font-medium hover:bg-red-50 transition-colors"
