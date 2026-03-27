@@ -39,6 +39,53 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* App semantic colors */
+  --app-bg: #FAFAFA;
+  --app-card-bg: #ffffff;
+  --app-text: #0a0a0a;
+  --app-text-secondary: #7c7c7c;
+  --app-text-tertiary: #b0b0b0;
+  --app-text-muted: #73798B;
+  --app-accent: #4f5eff;
+  --app-accent-hover: #3d4dd9;
+  --app-accent-soft: rgba(79, 94, 255, 0.08);
+  --app-accent-soft-hover: rgba(79, 94, 255, 0.04);
+  --app-border: rgba(10, 10, 10, 0.08);
+  --app-border-medium: rgba(10, 10, 10, 0.1);
+  --app-border-strong: rgba(10, 10, 10, 0.12);
+  --app-border-dashed: rgba(10, 10, 10, 0.12);
+  --app-hover-bg: #f5f5f5;
+  --app-hover-bg-dark: #ebebeb;
+  --app-dropdown-bg: #ffffff;
+  --app-dropdown-shadow: 0px 4px 16px rgba(0, 0, 0, 0.08);
+  --app-sidebar-bg: #F8F9FC;
+  --app-sidebar-border: #EDEEF3;
+  --app-logo-primary: #1C1C1C;
+  --app-success: #22c55e;
+  --app-success-soft: rgba(34, 197, 94, 0.1);
+  --app-danger: #ef4444;
+  --app-danger-soft: rgba(239, 68, 68, 0.08);
+  --app-warning: #f59e0b;
+  --app-warning-soft: rgba(245, 158, 11, 0.08);
+  --app-frozen: #eab308;
+  --app-frozen-soft: rgba(234, 179, 8, 0.02);
+  --app-frozen-border: rgba(234, 179, 8, 0.12);
+  --app-input-bg: #f5f5f5;
+  --app-badge-inactive-bg: rgba(212, 212, 212, 0.2);
+  --app-badge-inactive-text: #b0b0b0;
+  --app-badge-inactive-dot: #d4d4d4;
+  --app-tab-selected-bg: #0a0a0a;
+  --app-tab-selected-text: #ffffff;
+  --app-status-pending-bg: rgba(245, 158, 11, 0.1);
+  --app-status-pending-text: #d97706;
+  --app-status-approved-bg: rgba(34, 197, 94, 0.1);
+  --app-status-approved-text: #16a34a;
+  --app-status-rejected-bg: rgba(239, 68, 68, 0.1);
+  --app-status-rejected-text: #dc2626;
+  --app-status-pending-badge-bg: rgba(245, 158, 11, 0.15);
+  --app-status-approved-badge-bg: rgba(34, 197, 94, 0.15);
+  --app-status-rejected-badge-bg: rgba(239, 68, 68, 0.15);
 }
 
 .dark {
@@ -76,6 +123,53 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(0.269 0 0);
   --sidebar-ring: oklch(0.439 0 0);
+
+  /* App semantic colors — dark */
+  --app-bg: #0a0a0a;
+  --app-card-bg: #161616;
+  --app-text: #f0f0f0;
+  --app-text-secondary: #a0a0a0;
+  --app-text-tertiary: #666666;
+  --app-text-muted: #888888;
+  --app-accent: #6b7aff;
+  --app-accent-hover: #5a68e6;
+  --app-accent-soft: rgba(107, 122, 255, 0.12);
+  --app-accent-soft-hover: rgba(107, 122, 255, 0.06);
+  --app-border: rgba(255, 255, 255, 0.08);
+  --app-border-medium: rgba(255, 255, 255, 0.1);
+  --app-border-strong: rgba(255, 255, 255, 0.14);
+  --app-border-dashed: rgba(255, 255, 255, 0.14);
+  --app-hover-bg: #1e1e1e;
+  --app-hover-bg-dark: #2a2a2a;
+  --app-dropdown-bg: #1a1a1a;
+  --app-dropdown-shadow: 0px 4px 16px rgba(0, 0, 0, 0.4);
+  --app-sidebar-bg: #111111;
+  --app-sidebar-border: #222222;
+  --app-logo-primary: #f0f0f0;
+  --app-success: #22c55e;
+  --app-success-soft: rgba(34, 197, 94, 0.15);
+  --app-danger: #ef4444;
+  --app-danger-soft: rgba(239, 68, 68, 0.12);
+  --app-warning: #f59e0b;
+  --app-warning-soft: rgba(245, 158, 11, 0.12);
+  --app-frozen: #eab308;
+  --app-frozen-soft: rgba(234, 179, 8, 0.06);
+  --app-frozen-border: rgba(234, 179, 8, 0.2);
+  --app-input-bg: #1e1e1e;
+  --app-badge-inactive-bg: rgba(80, 80, 80, 0.3);
+  --app-badge-inactive-text: #666666;
+  --app-badge-inactive-dot: #555555;
+  --app-tab-selected-bg: #f0f0f0;
+  --app-tab-selected-text: #0a0a0a;
+  --app-status-pending-bg: rgba(245, 158, 11, 0.12);
+  --app-status-pending-text: #fbbf24;
+  --app-status-approved-bg: rgba(34, 197, 94, 0.12);
+  --app-status-approved-text: #4ade80;
+  --app-status-rejected-bg: rgba(239, 68, 68, 0.12);
+  --app-status-rejected-text: #f87171;
+  --app-status-pending-badge-bg: rgba(245, 158, 11, 0.2);
+  --app-status-approved-badge-bg: rgba(34, 197, 94, 0.2);
+  --app-status-rejected-badge-bg: rgba(239, 68, 68, 0.2);
 }
 
 @theme inline {
@@ -140,7 +234,7 @@
   }
 
   .chat-input-placeholder::placeholder {
-    color: #7C7C7C !important;
+    color: var(--app-text-tertiary) !important;
     opacity: 1 !important;
     font-weight: 400 !important;
   }

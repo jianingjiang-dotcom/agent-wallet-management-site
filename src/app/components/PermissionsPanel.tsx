@@ -38,15 +38,15 @@ export default function PermissionsPanel({ permissions, onUpdate, disabled }: Pe
   };
 
   return (
-    <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[12px] p-6 mb-6 relative">
+    <div className="bg-[var(--app-card-bg)] border border-[var(--app-border)] rounded-[8px] p-6 mb-6 relative">
       {/* Header */}
       <div className="flex items-center gap-2 mb-1">
-        <Shield className="w-4 h-4 text-[#1F32D6]" strokeWidth={1.5} />
-        <h2 className="font-semibold text-[16px] text-[#0A0A0A]">
+        <Shield className="w-4 h-4 text-[var(--app-accent)]" strokeWidth={1.5} />
+        <h2 className="font-['Inter',sans-serif] font-semibold text-[16px] text-[var(--app-text)]">
           {t('permissions.title')}
         </h2>
       </div>
-      <p className="font-normal text-[13px] text-[#7C7C7C] mb-5">
+      <p className="font-['Inter',sans-serif] font-normal text-[13px] text-[var(--app-text-secondary)] mb-5">
         {t('permissions.desc')}
       </p>
 
@@ -59,15 +59,15 @@ export default function PermissionsPanel({ permissions, onUpdate, disabled }: Pe
           return (
             <div
               key={item.key}
-              className="flex items-center justify-between p-3 rounded-[8px] border border-[rgba(10,10,10,0.06)] bg-[#fafafa]"
+              className="flex items-center justify-between p-3 rounded-[8px] border border-[var(--app-border)] bg-[var(--app-hover-bg)]"
             >
               <div className="flex items-center gap-3">
-                <Icon className="w-4 h-4 text-[#1F32D6]" strokeWidth={1.5} />
+                <Icon className="w-4 h-4 text-[var(--app-accent)]" strokeWidth={1.5} />
                 <div>
-                  <div className="font-medium text-[14px] text-[#0A0A0A]">
+                  <div className="font-['Inter',sans-serif] font-medium text-[14px] text-[var(--app-text)]">
                     {t(item.labelKey)}
                   </div>
-                  <div className="font-normal text-[12px] text-[#7C7C7C]">
+                  <div className="font-['Inter',sans-serif] font-normal text-[12px] text-[var(--app-text-secondary)]">
                     {t(item.descKey)}
                   </div>
                 </div>
@@ -76,7 +76,7 @@ export default function PermissionsPanel({ permissions, onUpdate, disabled }: Pe
                 onClick={() => togglePermission(item.key)}
                 disabled={disabled}
                 className={`relative w-11 h-6 rounded-full transition-colors duration-300 ease-in-out ${
-                  isEnabled ? 'bg-[#22c55e]' : 'bg-[#EBEBEB]'
+                  isEnabled ? 'bg-[var(--app-success)]' : 'bg-[var(--app-badge-inactive-dot)]'
                 } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
                 <span
@@ -92,9 +92,9 @@ export default function PermissionsPanel({ permissions, onUpdate, disabled }: Pe
 
       {/* Disabled Overlay */}
       {disabled && (
-        <div className="absolute inset-0 bg-white/60 rounded-[12px] flex items-center justify-center z-10">
-          <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[8px] px-5 py-3 shadow-sm">
-            <span className="font-medium text-[14px] text-[#7C7C7C]">
+        <div className="absolute inset-0 bg-white/60 rounded-[8px] flex items-center justify-center z-10">
+          <div className="bg-[var(--app-card-bg)] border border-[var(--app-border)] rounded-[8px] px-5 py-3 shadow-sm">
+            <span className="font-['Inter',sans-serif] font-medium text-[14px] text-[var(--app-text-secondary)]">
               {t('permissions.needAgent')}
             </span>
           </div>
