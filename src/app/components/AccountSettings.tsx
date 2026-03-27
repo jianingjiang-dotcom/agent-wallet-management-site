@@ -185,7 +185,7 @@ export default function AccountSettings() {
   return (
     <div className="max-w-[640px] mx-auto space-y-[16px]">
       {/* Page header */}
-      <h1 className="font-semibold text-[18px] lg:text-[24px] text-[#0A0A0A]">
+      <h1 className="hidden lg:block font-semibold text-[24px] text-[#0A0A0A]">
         {t('account.title')}
       </h1>
 

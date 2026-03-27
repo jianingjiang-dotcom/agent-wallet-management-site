@@ -6,9 +6,9 @@ export default function Billing() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="font-semibold text-[18px] lg:text-[24px] text-[#0A0A0A] mb-1">{t('billing.title')}</h1>
-        <p className="font-normal text-[13px] lg:text-[15px] text-[#7C7C7C]">{t('billing.subtitle')}</p>
+      <div className="hidden lg:block mb-6">
+        <h1 className="font-semibold text-[24px] text-[#0A0A0A] mb-1">{t('billing.title')}</h1>
+        <p className="font-normal text-[15px] text-[#7C7C7C]">{t('billing.subtitle')}</p>
       </div>
 
       {/* Coming Soon Card */}
