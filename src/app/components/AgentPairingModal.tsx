@@ -151,13 +151,13 @@ ${buildCommand()}`;
           {/* Header */}
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-full bg-[rgba(79,94,255,0.1)] flex items-center justify-center">
-              <Link2 className="w-5 h-5 text-[#4f5eff]" />
+              <Link2 className="w-5 h-5 text-[#1F32D6]" />
             </div>
             <div>
-              <h2 className="font-['Inter',sans-serif] font-semibold text-[16px] text-[#0a0a0a]">
+              <h2 className="font-semibold text-[16px] text-[#0A0A0A]">
                 {t("agentPairing.title")}
               </h2>
-              <p className="font-['Inter',sans-serif] font-normal text-[12px] text-[#7c7c7c]">
+              <p className="font-normal text-[12px] text-[#7C7C7C]">
                 {t("agentPairing.subtitle")}
               </p>
             </div>
@@ -169,20 +169,20 @@ ${buildCommand()}`;
               <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-[rgba(34,197,94,0.1)] flex items-center justify-center">
                 <CheckCircle className="w-7 h-7 text-[#22c55e]" />
               </div>
-              <h3 className="font-['Inter',sans-serif] font-semibold text-[16px] text-[#0a0a0a] mb-1">
+              <h3 className="font-semibold text-[16px] text-[#0A0A0A] mb-1">
                 {t("agentPairing.success")}
               </h3>
-              <p className="font-['Inter',sans-serif] font-normal text-[12px] text-[#7c7c7c] mb-4">
+              <p className="font-normal text-[12px] text-[#7C7C7C] mb-4">
                 {t("agentPairing.successDesc")}
               </p>
               <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[8px] px-4 py-3 mb-4 inline-block">
-                <span className="font-['Inter',sans-serif] font-normal text-[11px] text-[#7c7c7c]">{t("agentPairing.agentId")}</span>
-                <span className="font-['JetBrains_Mono',monospace] text-[12px] text-[#0a0a0a] ml-2">{agentId}</span>
+                <span className="font-normal text-[11px] text-[#7C7C7C]">{t("agentPairing.agentId")}</span>
+                <span className="font-['JetBrains_Mono',monospace] text-[12px] text-[#0A0A0A] ml-2">{agentId}</span>
               </div>
               <div>
                 <button
                   onClick={handleDone}
-                  className="w-full bg-[#4f5eff] hover:bg-[#3d4dd9] h-[40px] rounded-[8px] font-['Inter',sans-serif] font-medium text-[14px] text-white transition-colors"
+                  className="w-full bg-[#1F32D6] hover:bg-[#1828AB] h-[40px] rounded-[8px] font-medium text-[14px] text-white transition-colors"
                 >
                   {t("agentPairing.done")}
                 </button>
@@ -191,8 +191,8 @@ ${buildCommand()}`;
           ) : phase === "waiting" ? (
             /* Waiting State */
             <div className="text-center py-8">
-              <Loader2 className="w-8 h-8 text-[#4f5eff] animate-spin mx-auto mb-3" />
-              <p className="font-['Inter',sans-serif] font-medium text-[14px] text-[#4F4F4F]">
+              <Loader2 className="w-8 h-8 text-[#1F32D6] animate-spin mx-auto mb-3" />
+              <p className="font-medium text-[14px] text-[#4F4F4F]">
                 {t("agentPairing.waiting")}
               </p>
             </div>
@@ -202,10 +202,10 @@ ${buildCommand()}`;
               <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[8px] mb-4 overflow-hidden">
                 {/* Header: timer left, actions right */}
                 <div className="flex items-center justify-between px-4 py-3">
-                  <span className="font-['Inter',sans-serif] text-[12px] leading-[16px]">
-                    <span className="text-[#7c7c7c]">{t("agentPairing.expiresIn")} </span>
+                  <span className="text-[12px] leading-[16px]">
+                    <span className="text-[#7C7C7C]">{t("agentPairing.expiresIn")} </span>
                     <span className={`font-semibold tabular-nums text-[14px] leading-[16px] ${
-                      timeRemaining < 300 ? "text-[#ef4444]" : "text-[#4f5eff]"
+                      timeRemaining < 300 ? "text-[#ef4444]" : "text-[#1F32D6]"
                     }`}>
                       {formatTime(timeRemaining)}
                     </span>
@@ -213,7 +213,7 @@ ${buildCommand()}`;
                   <div className="flex items-center gap-3">
                     <button
                       onClick={handleRegenerate}
-                      className="flex items-center gap-[6px] font-['Inter',sans-serif] font-normal text-[12px] leading-[16px] text-[#7c7c7c] hover:text-[#4f5eff] transition-colors"
+                      className="flex items-center gap-[6px] font-normal text-[12px] leading-[16px] text-[#7C7C7C] hover:text-[#1F32D6] transition-colors"
                     >
                       <RefreshCw className="w-3.5 h-3.5" />
                       {t("agentPairing.regenerate")}
@@ -221,8 +221,8 @@ ${buildCommand()}`;
                     <div className="w-px h-4 bg-[rgba(10,10,10,0.12)]" />
                     <button
                       onClick={() => handleCopy("token")}
-                      className={`flex items-center gap-[6px] font-['Inter',sans-serif] font-normal text-[12px] leading-[16px] transition-colors ${
-                        copied === "token" ? "text-[#26C165]" : "text-[#7c7c7c] hover:text-[#4f5eff]"
+                      className={`flex items-center gap-[6px] font-normal text-[12px] leading-[16px] transition-colors ${
+                        copied === "token" ? "text-[#26C165]" : "text-[#7C7C7C] hover:text-[#1F32D6]"
                       }`}
                     >
                       {copied === "token" ? (
@@ -238,9 +238,9 @@ ${buildCommand()}`;
                 <div className="border-t border-[rgba(10,10,10,0.08)]" />
 
                 {/* Prompt text block */}
-                <div className="bg-[#f5f5f7] rounded-b-[8px]">
+                <div className="bg-[#FAFAFA] rounded-b-[8px]">
                   <div className="p-4">
-                    <pre className="font-['Inter',sans-serif] font-normal text-[14px] text-[#333333] leading-[20px] whitespace-pre-wrap break-words">
+                    <pre className="font-normal text-[14px] text-[#0A0A0A] leading-[20px] whitespace-pre-wrap break-words">
                       {buildPrompt()}
                     </pre>
                   </div>
@@ -250,8 +250,8 @@ ${buildCommand()}`;
               {/* Copy full prompt button */}
               <button
                 onClick={() => handleCopy("prompt")}
-                className={`w-full flex items-center justify-center gap-2 h-[40px] rounded-[8px] font-['Inter',sans-serif] font-medium text-[14px] text-white transition-all shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)] ${
-                  copied === "prompt" ? "bg-[#22c55e] hover:bg-[#16a34a]" : "bg-[#4f5eff] hover:bg-[#3d4dd9]"
+                className={`w-full flex items-center justify-center gap-2 h-[40px] rounded-[8px] font-medium text-[14px] text-white transition-all shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)] ${
+                  copied === "prompt" ? "bg-[#22c55e] hover:bg-[#16a34a]" : "bg-[#1F32D6] hover:bg-[#1828AB]"
                 }`}
               >
                 {copied === "prompt" ? (
@@ -265,7 +265,7 @@ ${buildCommand()}`;
               {/* Simulate button (dev) */}
               <button
                 onClick={simulatePairing}
-                className="w-full mt-2 h-[32px] rounded-[8px] border border-dashed border-[rgba(10,10,10,0.15)] font-['Inter',sans-serif] font-normal text-[11px] text-[#7c7c7c] hover:bg-[#f5f5f5] transition-colors"
+                className="w-full mt-2 h-[32px] rounded-[8px] border border-dashed border-[rgba(10,10,10,0.15)] font-normal text-[11px] text-[#7C7C7C] hover:bg-[#F0F2FF] transition-colors"
               >
                 ⚡ Simulate Agent Connection
               </button>

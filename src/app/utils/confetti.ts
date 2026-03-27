@@ -19,7 +19,7 @@ interface Particle {
 }
 
 const palettes = [
-  ["#4f5eff", "#7B8AFF", "#A5AEFF"],
+  ["#1F32D6", "#7B8AFF", "#A5AEFF"],
   ["#22c55e", "#4ade80", "#86efac"],
   ["#f59e0b", "#fbbf24", "#fde68a"],
   ["#8b5cf6", "#a78bfa", "#c4b5fd"],

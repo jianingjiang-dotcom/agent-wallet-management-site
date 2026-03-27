@@ -340,7 +340,7 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
 
     // Refined palette — harmonious, celebratory, not garish
     const palettes = [
-      ["#4f5eff", "#7B8AFF", "#A5AEFF"], // brand blue
+      ["#1F32D6", "#7B8AFF", "#A5AEFF"], // brand blue
       ["#22c55e", "#4ade80", "#86efac"], // success green
       ["#f59e0b", "#fbbf24", "#fde68a"], // warm gold
       ["#8b5cf6", "#a78bfa", "#c4b5fd"], // purple
@@ -571,25 +571,25 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
                 }`}
                 style={{ transitionTimingFunction: "cubic-bezier(0.34, 1.56, 0.64, 1)" }}
               >
-                <CheckCircle className="w-7 h-7 sm:w-8 sm:h-8 text-[#22c55e]" />
+                <CheckCircle className="w-7 h-7 sm:w-8 sm:h-8 text-[#22c55e]" strokeWidth={1.5} />
               </div>
-              <h2 className="font-['Inter',sans-serif] font-semibold text-[20px] sm:text-[24px] leading-tight text-[#0a0a0a]">
+              <h2 className="font-semibold text-[20px] sm:text-[24px] leading-tight text-[#0A0A0A]">
                 {t("onboarding.success.title")}
               </h2>
             </div>
 
             {/* Wallet ID ↔ Agent ID relationship */}
             <div className="mb-6 sm:mb-8">
-              <div className="rounded-[12px] border border-[rgba(10,10,10,0.08)] bg-white shadow-[0_1px_3px_rgba(0,0,0,0.04)] overflow-hidden">
+              <div className="rounded-[8px] border border-[rgba(10,10,10,0.08)] bg-white shadow-[0_1px_3px_rgba(0,0,0,0.04)] overflow-hidden">
                 <div className="flex items-center gap-3 px-3.5 sm:px-4 py-3 sm:py-3.5">
                   <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-[8px] bg-[rgba(79,94,255,0.08)] flex items-center justify-center flex-shrink-0">
-                    <Shield className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#4f5eff]" />
+                    <Shield className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#1F32D6]" strokeWidth={1.5} />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <span className="font-['Inter',sans-serif] font-medium text-[11px] text-[#9a9a9a] uppercase tracking-wider block mb-0.5">
+                    <span className="font-medium text-[11px] text-[#7C7C7C] uppercase tracking-wider block mb-0.5">
                       {t("onboarding.success.walletId")}
                     </span>
-                    <code className="font-['JetBrains_Mono','SF_Mono','Consolas',monospace] text-[12px] sm:text-[13px] text-[#0a0a0a] break-words leading-snug">
+                    <code className="font-['JetBrains_Mono','SF_Mono','Consolas',monospace] text-[12px] sm:text-[13px] text-[#0A0A0A] break-words leading-snug">
                       {walletId}
                     </code>
                   </div>
@@ -598,23 +598,23 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
                   <div className="flex-1 h-px bg-[rgba(10,10,10,0.06)]" />
                   <div className="flex items-center gap-1.5 px-3">
                     <div className="w-5 h-5 rounded-full bg-[rgba(34,197,94,0.1)] flex items-center justify-center">
-                      <Link2 className="w-2.5 h-2.5 text-[#22c55e]" />
+                      <Link2 className="w-2.5 h-2.5 text-[#22c55e]" strokeWidth={1.5} />
                     </div>
-                    <span className="font-['Inter',sans-serif] font-medium text-[10px] text-[#22c55e]">
+                    <span className="font-medium text-[10px] text-[#22c55e]">
                       {t("onboarding.success.linked")}
                     </span>
                   </div>
                   <div className="flex-1 h-px bg-[rgba(10,10,10,0.06)]" />
                 </div>
                 <div className="flex items-center gap-3 px-3.5 sm:px-4 py-3 sm:py-3.5">
-                  <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-[8px] bg-[rgba(245,158,11,0.08)] flex items-center justify-center flex-shrink-0">
-                    <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#f59e0b]" />
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-[8px] bg-[rgba(31,50,214,0.08)] flex items-center justify-center flex-shrink-0">
+                    <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#1F32D6]" strokeWidth={1.5} />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <span className="font-['Inter',sans-serif] font-medium text-[11px] text-[#9a9a9a] uppercase tracking-wider block mb-0.5">
+                    <span className="font-medium text-[11px] text-[#7C7C7C] uppercase tracking-wider block mb-0.5">
                       {t("onboarding.success.agentId")}
                     </span>
-                    <code className="font-['JetBrains_Mono','SF_Mono','Consolas',monospace] text-[12px] sm:text-[13px] text-[#0a0a0a] break-words leading-snug">
+                    <code className="font-['JetBrains_Mono','SF_Mono','Consolas',monospace] text-[12px] sm:text-[13px] text-[#0A0A0A] break-words leading-snug">
                       {agentId}
                     </code>
                   </div>
@@ -632,9 +632,9 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
                 // Delay handleComplete so navigation settles first
                 setTimeout(() => handleComplete(), 100);
               }}
-              className="w-full bg-[#4f5eff] hover:bg-[#3d4dd9] h-[42px] sm:h-[44px] rounded-[8px] transition-colors shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)] relative overflow-hidden group"
+              className="w-full bg-[#1F32D6] hover:bg-[#1828AB] h-[42px] sm:h-[44px] rounded-[8px] transition-colors shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)] relative overflow-hidden group"
             >
-              <span className="font-['Inter',sans-serif] font-medium text-[13px] sm:text-[14px] text-white relative z-10">
+              <span className="font-medium text-[13px] sm:text-[14px] text-white relative z-10">
                 Try in Assistant
               </span>
               <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
@@ -650,27 +650,27 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
                 {/* Ticket icon */}
                 <div className="w-16 h-16 rounded-2xl bg-[rgba(79,94,255,0.08)] border border-[rgba(79,94,255,0.12)] flex items-center justify-center mb-5">
                   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M2 9V7C2 5.89543 2.89543 5 4 5H20C21.1046 5 22 5.89543 22 7V9C20.8954 9 20 9.89543 20 11C20 12.1046 20.8954 13 22 13V15C22 16.1046 21.1046 17 20 17H4C2.89543 17 2 16.1046 2 15V13C3.10457 13 4 12.1046 4 11C4 9.89543 3.10457 9 2 9Z" stroke="#4f5eff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M9 5V17" stroke="#4f5eff" strokeWidth="1.8" strokeLinecap="round" strokeDasharray="2.5 2.5"/>
+                    <path d="M2 9V7C2 5.89543 2.89543 5 4 5H20C21.1046 5 22 5.89543 22 7V9C20.8954 9 20 9.89543 20 11C20 12.1046 20.8954 13 22 13V15C22 16.1046 21.1046 17 20 17H4C2.89543 17 2 16.1046 2 15V13C3.10457 13 4 12.1046 4 11C4 9.89543 3.10457 9 2 9Z" stroke="#1F32D6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M9 5V17" stroke="#1F32D6" strokeWidth="1.8" strokeLinecap="round" strokeDasharray="2.5 2.5"/>
                   </svg>
                 </div>
 
                 {/* Title & subtitle */}
-                <h2 className="font-['Inter',sans-serif] font-semibold text-[22px] leading-[28px] text-[#0a0a0a] mb-2 text-center">
+                <h2 className="font-semibold text-[22px] leading-[28px] text-[#0A0A0A] mb-2 text-center">
                   {t("onboarding.inviteTitle")}
                 </h2>
-                <p className="font-['Inter',sans-serif] font-normal text-[14px] text-[#9a9a9a] mb-8 text-center">
+                <p className="font-normal text-[14px] text-[#7C7C7C] mb-8 text-center">
                   {t("onboarding.inviteDesc")}
                 </p>
 
                 {/* Input with COBO- prefix */}
                 <div className="w-full mb-2">
-                  <div className={`flex items-center w-full h-[52px] bg-white border rounded-[12px] overflow-hidden transition-colors ${
+                  <div className={`flex items-center w-full h-[52px] bg-white border rounded-[8px] overflow-hidden transition-colors ${
                     inviteError
-                      ? "border-[#ef4444] ring-2 ring-[rgba(239,68,68,0.15)]"
-                      : "border-[rgba(79,94,255,0.3)] focus-within:ring-2 focus-within:ring-[rgba(79,94,255,0.2)] focus-within:border-[#4f5eff]"
+                      ? "border-[#ef4444] shadow-[0px_2px_12px_0px_rgba(239,68,68,0.08)]"
+                      : "border-[#EBEBEB] focus-within:border-[#1F32D6] focus-within:shadow-[0px_2px_12px_0px_rgba(31,50,214,0.08)]"
                   }`}>
-                    <span className="font-['JetBrains_Mono','SF_Mono','Consolas',monospace] font-medium text-[16px] text-[#4f5eff] pl-4 pr-0.5 flex-shrink-0 select-none">
+                    <span className="font-['JetBrains_Mono','SF_Mono','Consolas',monospace] font-medium text-[16px] text-[#1F32D6] pl-4 pr-0.5 flex-shrink-0 select-none">
                       COBO-
                     </span>
                     <input
@@ -679,13 +679,13 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
                       onChange={(e) => { setInviteCode(e.target.value); setInviteError(""); }}
                       onKeyDown={(e) => { if (e.key === "Enter") handleInviteNext(); }}
                       placeholder="0000-0000"
-                      className="flex-1 h-full bg-transparent font-['JetBrains_Mono','SF_Mono','Consolas',monospace] font-normal text-[16px] text-[#0a0a0a] placeholder:text-[#c0c0c0] focus:outline-none pr-4"
+                      className="flex-1 h-full bg-transparent font-['JetBrains_Mono','SF_Mono','Consolas',monospace] font-normal text-[16px] text-[#0A0A0A] placeholder:text-[#7C7C7C] focus:outline-none pr-4"
                     />
                   </div>
                   {inviteError && (
                     <div className="flex items-center gap-1.5 mt-2 px-1">
-                      <AlertCircle className="w-3.5 h-3.5 text-[#ef4444] flex-shrink-0" />
-                      <span className="font-['Inter',sans-serif] font-normal text-[12px] text-[#ef4444]">
+                      <AlertCircle className="w-3.5 h-3.5 text-[#ef4444] flex-shrink-0" strokeWidth={1.5} />
+                      <span className="font-normal text-[12px] text-[#ef4444]">
                         {t(inviteError)}
                       </span>
                     </div>
@@ -696,10 +696,10 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
                 <button
                   onClick={handleInviteNext}
                   disabled={!inviteCode.trim() || inviteValidating}
-                  className="w-full flex items-center justify-center gap-2 h-[48px] rounded-[12px] font-['Inter',sans-serif] font-semibold text-[15px] transition-all disabled:opacity-40 disabled:cursor-not-allowed text-white bg-[#4f5eff] hover:bg-[#3d4dd9] mt-4"
+                  className="w-full flex items-center justify-center gap-2 h-[48px] rounded-[8px] font-semibold text-[15px] transition-all disabled:opacity-40 disabled:cursor-not-allowed text-white bg-[#1F32D6] hover:bg-[#1828AB] mt-4"
                 >
                   {inviteValidating ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <Loader2 className="w-4 h-4 animate-spin" strokeWidth={1.5} />
                   ) : (
                     t("onboarding.inviteNext")
                   )}
@@ -707,17 +707,17 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
 
                 {/* Get invitation code link */}
                 <div className="mt-4 text-center">
-                  <span className="font-['Inter',sans-serif] text-[13px] text-[#999]">
+                  <span className="text-[13px] text-[#999]">
                     {t("onboarding.noInviteCode")}{" "}
                   </span>
                   <a
                     href="https://cobo.com"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-0.5 font-['Inter',sans-serif] text-[13px] text-[#4f5eff] hover:text-[#3d4dd9] transition-colors"
+                    className="inline-flex items-center gap-0.5 text-[13px] text-[#1F32D6] hover:text-[#1828AB] transition-colors"
                   >
                     {t("onboarding.getInviteCode")}
-                    <ExternalLink className="w-3 h-3" />
+                    <ExternalLink className="w-3 h-3" strokeWidth={1.5} />
                   </a>
                 </div>
 
@@ -728,22 +728,22 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
             {/* ─── 1. Header ─── */}
             <div className="mb-6 pr-6 sm:pr-0">
               <h2
-                className="font-['Inter',sans-serif] font-semibold text-[24px] leading-[32px] text-[#0a0a0a]"
+                className="font-semibold text-[24px] leading-[32px] text-[#0A0A0A]"
               >
                 {t("onboarding.title")}
               </h2>
             </div>
             <div className="bg-[rgba(79,94,255,0.06)] border border-[rgba(79,94,255,0.15)] rounded-[8px] px-4 py-3 mb-4 flex items-center gap-2">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 flex-shrink-0">
-                <path d="M10 20C15.51 20 20 15.51 20 10C20 4.49 15.51 3.92528e-07 10 8.74228e-07C4.49 1.35593e-06 -1.35593e-06 4.49 -8.74228e-07 10C-3.92528e-07 15.51 4.49 20 10 20ZM10.75 14C10.75 14.41 10.41 14.75 10 14.75C9.59 14.75 9.25 14.41 9.25 14L9.25 9C9.25 8.59 9.59 8.25 10 8.25C10.41 8.25 10.75 8.59 10.75 9L10.75 14ZM9.08 5.62C9.13 5.49 9.2 5.39 9.29 5.29C9.39 5.2 9.5 5.13 9.62 5.08C9.74 5.03 9.87 5 10 5C10.13 5 10.26 5.03 10.38 5.08C10.5 5.13 10.61 5.2 10.71 5.29C10.8 5.39 10.87 5.49 10.92 5.62C10.97 5.74 11 5.87 11 6C11 6.13 10.97 6.26 10.92 6.38C10.87 6.5 10.8 6.61 10.71 6.71C10.61 6.8 10.5 6.87 10.38 6.92C10.14 7.02 9.86 7.02 9.62 6.92C9.5 6.87 9.39 6.8 9.29 6.71C9.2 6.61 9.13 6.5 9.08 6.38C9.03 6.26 9 6.13 9 6C9 5.87 9.03 5.74 9.08 5.62Z" fill="#4f5eff"/>
+                <path d="M10 20C15.51 20 20 15.51 20 10C20 4.49 15.51 3.92528e-07 10 8.74228e-07C4.49 1.35593e-06 -1.35593e-06 4.49 -8.74228e-07 10C-3.92528e-07 15.51 4.49 20 10 20ZM10.75 14C10.75 14.41 10.41 14.75 10 14.75C9.59 14.75 9.25 14.41 9.25 14L9.25 9C9.25 8.59 9.59 8.25 10 8.25C10.41 8.25 10.75 8.59 10.75 9L10.75 14ZM9.08 5.62C9.13 5.49 9.2 5.39 9.29 5.29C9.39 5.2 9.5 5.13 9.62 5.08C9.74 5.03 9.87 5 10 5C10.13 5 10.26 5.03 10.38 5.08C10.5 5.13 10.61 5.2 10.71 5.29C10.8 5.39 10.87 5.49 10.92 5.62C10.97 5.74 11 5.87 11 6C11 6.13 10.97 6.26 10.92 6.38C10.87 6.5 10.8 6.61 10.71 6.71C10.61 6.8 10.5 6.87 10.38 6.92C10.14 7.02 9.86 7.02 9.62 6.92C9.5 6.87 9.39 6.8 9.29 6.71C9.2 6.61 9.13 6.5 9.08 6.38C9.03 6.26 9 6.13 9 6C9 5.87 9.03 5.74 9.08 5.62Z" fill="#1F32D6"/>
               </svg>
-              <p className="font-['Inter',sans-serif] font-medium text-[14px] text-[#4f5eff] leading-[20px]">
+              <p className="font-medium text-[14px] text-[#1F32D6] leading-[20px]">
                 {t("onboarding.infoBanner")}{" "}
                 <a
                   href={DOC_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="underline underline-offset-2 hover:text-[#3d4dd9] transition-colors"
+                  className="underline underline-offset-2 hover:text-[#1828AB] transition-colors"
                 >
                   {t("onboarding.docLink")}
                 </a>
@@ -755,26 +755,26 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
               <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[8px] mb-4 overflow-hidden">
                 {/* Header: timer left, wallet limits right */}
                 <div className="flex items-center justify-between px-4 py-3 bg-white">
-                  <span className="font-['Inter',sans-serif] text-[12px] leading-[16px]">
-                    <span className="text-[#7c7c7c]">{t("onboarding.validTime")}: </span>
+                  <span className="text-[12px] leading-[16px]">
+                    <span className="text-[#7C7C7C]">{t("onboarding.validTime")}: </span>
                     <span className={`font-semibold tabular-nums text-[14px] leading-[16px] ${
-                      timeRemaining < 300 ? "text-[#ef4444]" : "text-[#4f5eff]"
+                      timeRemaining < 300 ? "text-[#ef4444]" : "text-[#1F32D6]"
                     }`}>
                       {formatTime(timeRemaining)}
                     </span>
                   </span>
                   <CollapsibleTrigger className="flex items-center gap-1.5 hover:opacity-80 transition-opacity text-left">
-                    <Shield className="w-3.5 h-3.5 text-[#7c7c7c] flex-shrink-0" />
-                    <span className="font-['Inter',sans-serif] font-medium text-[12px] leading-[16px] text-[#4F4F4F]">
+                    <Shield className="w-3.5 h-3.5 text-[#7C7C7C] flex-shrink-0" strokeWidth={1.5} />
+                    <span className="font-medium text-[12px] leading-[16px] text-[#4F4F4F]">
                       {t("onboarding.limits.walletTitle")}
                     </span>
-                    <span className="font-['Inter',sans-serif] font-normal text-[12px] leading-[16px] text-[#7c7c7c]">
+                    <span className="font-normal text-[12px] leading-[16px] text-[#7C7C7C]">
                       ${confirmedPerTx}/tx · ${confirmedDaily}/day
                     </span>
                     {limitsExpanded ? (
-                      <ChevronDown className="w-3.5 h-3.5 text-[#7c7c7c]" />
+                      <ChevronDown className="w-3.5 h-3.5 text-[#7C7C7C]" strokeWidth={1.5} />
                     ) : (
-                      <ChevronRight className="w-3.5 h-3.5 text-[#7c7c7c]" />
+                      <ChevronRight className="w-3.5 h-3.5 text-[#7C7C7C]" strokeWidth={1.5} />
                     )}
                   </CollapsibleTrigger>
                 </div>
@@ -783,13 +783,13 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
                 <CollapsibleContent>
                   <div className="border-t border-[rgba(10,10,10,0.08)]" />
                   <div className="px-4 pb-4 pt-3 bg-[rgba(79,94,255,0.02)]">
-                    <p className="font-['Inter',sans-serif] font-normal text-[12px] text-[#7c7c7c] mb-3">
+                    <p className="font-normal text-[12px] text-[#7C7C7C] mb-3">
                       {t("onboarding.limits.desc")}
                     </p>
 
                     {/* Per-Transaction Limit */}
                     <div className="mb-3">
-                      <div className="font-['Inter',sans-serif] font-medium text-[13px] text-[#4F4F4F] mb-2">
+                      <div className="font-medium text-[13px] text-[#4F4F4F] mb-2">
                         {t("onboarding.limits.perTx")}
                       </div>
                       <div className="flex items-center gap-2.5 flex-wrap">
@@ -801,9 +801,9 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
                               value={val}
                               checked={perTxLimit === val}
                               onChange={() => handleLimitChange("perTx", val)}
-                              className="w-4 h-4 text-[#4f5eff] border-[#EBEBEB] focus:ring-0 focus:ring-offset-0"
+                              className="w-4 h-4 text-[#1F32D6] border-[#EBEBEB] focus:ring-0 focus:ring-offset-0"
                             />
-                            <span className="ml-1.5 font-['Inter',sans-serif] font-normal text-[13px] text-[#0a0a0a]">
+                            <span className="ml-1.5 font-normal text-[13px] text-[#0A0A0A]">
                               ${val}
                             </span>
                           </label>
@@ -815,14 +815,14 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
                             value="custom"
                             checked={perTxLimit === "custom"}
                             onChange={() => handleLimitChange("perTx", "custom")}
-                            className="w-4 h-4 text-[#4f5eff] border-[#EBEBEB] focus:ring-0 focus:ring-offset-0"
+                            className="w-4 h-4 text-[#1F32D6] border-[#EBEBEB] focus:ring-0 focus:ring-offset-0"
                           />
-                          <span className="ml-1.5 font-['Inter',sans-serif] font-normal text-[13px] text-[#0a0a0a]">
+                          <span className="ml-1.5 font-normal text-[13px] text-[#0A0A0A]">
                             {t("onboarding.limits.others")}:
                           </span>
                         </label>
                         <div className="flex items-center">
-                          <span className="font-['Inter',sans-serif] font-normal text-[13px] text-[#7c7c7c] mr-1">
+                          <span className="font-normal text-[13px] text-[#7C7C7C] mr-1">
                             $
                           </span>
                           <input
@@ -831,7 +831,7 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
                             onChange={(e) => handleCustomChange("perTx", e.target.value)}
                             onFocus={() => { setPerTxLimit("custom"); }}
                             placeholder="0"
-                            className="w-16 bg-white border border-[#EBEBEB] rounded-[6px] px-2 py-1 font-['Inter',sans-serif] font-normal text-[13px] text-[#0a0a0a] focus:outline-none focus:border-[#4f5eff] focus:ring-1 focus:ring-[#4f5eff]"
+                            className="w-16 bg-white border border-[#EBEBEB] rounded-[6px] px-2 py-1 font-normal text-[13px] text-[#0A0A0A] focus:outline-none focus:border-[#1F32D6] focus:shadow-[0px_2px_12px_0px_rgba(31,50,214,0.08)]"
                           />
                         </div>
                       </div>
@@ -839,7 +839,7 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
 
                     {/* Daily Spending Limit */}
                     <div className="mb-3">
-                      <div className="font-['Inter',sans-serif] font-medium text-[13px] text-[#4F4F4F] mb-2">
+                      <div className="font-medium text-[13px] text-[#4F4F4F] mb-2">
                         {t("onboarding.limits.daily")}
                       </div>
                       <div className="flex items-center gap-2.5 flex-wrap">
@@ -851,9 +851,9 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
                               value={val}
                               checked={dailyLimit === val}
                               onChange={() => handleLimitChange("daily", val)}
-                              className="w-4 h-4 text-[#4f5eff] border-[#EBEBEB] focus:ring-0 focus:ring-offset-0"
+                              className="w-4 h-4 text-[#1F32D6] border-[#EBEBEB] focus:ring-0 focus:ring-offset-0"
                             />
-                            <span className="ml-1.5 font-['Inter',sans-serif] font-normal text-[13px] text-[#0a0a0a]">
+                            <span className="ml-1.5 font-normal text-[13px] text-[#0A0A0A]">
                               ${val}
                             </span>
                           </label>
@@ -865,14 +865,14 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
                             value="custom"
                             checked={dailyLimit === "custom"}
                             onChange={() => handleLimitChange("daily", "custom")}
-                            className="w-4 h-4 text-[#4f5eff] border-[#EBEBEB] focus:ring-0 focus:ring-offset-0"
+                            className="w-4 h-4 text-[#1F32D6] border-[#EBEBEB] focus:ring-0 focus:ring-offset-0"
                           />
-                          <span className="ml-1.5 font-['Inter',sans-serif] font-normal text-[13px] text-[#0a0a0a]">
+                          <span className="ml-1.5 font-normal text-[13px] text-[#0A0A0A]">
                             {t("onboarding.limits.others")}:
                           </span>
                         </label>
                         <div className="flex items-center">
-                          <span className="font-['Inter',sans-serif] font-normal text-[13px] text-[#7c7c7c] mr-1">
+                          <span className="font-normal text-[13px] text-[#7C7C7C] mr-1">
                             $
                           </span>
                           <input
@@ -881,7 +881,7 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
                             onChange={(e) => handleCustomChange("daily", e.target.value)}
                             onFocus={() => { setDailyLimit("custom"); }}
                             placeholder="0"
-                            className="w-16 bg-white border border-[#EBEBEB] rounded-[6px] px-2 py-1 font-['Inter',sans-serif] font-normal text-[13px] text-[#0a0a0a] focus:outline-none focus:border-[#4f5eff] focus:ring-1 focus:ring-[#4f5eff]"
+                            className="w-16 bg-white border border-[#EBEBEB] rounded-[6px] px-2 py-1 font-normal text-[13px] text-[#0A0A0A] focus:outline-none focus:border-[#1F32D6] focus:shadow-[0px_2px_12px_0px_rgba(31,50,214,0.08)]"
                           />
                         </div>
                       </div>
@@ -892,11 +892,11 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
                       <button
                         onClick={handleConfirmLimits}
                         disabled={regenerating || !hasActualChange}
-                        className="w-full bg-[#4f5eff] hover:bg-[#3d4dd9] h-[36px] rounded-[8px] transition-colors font-['Inter',sans-serif] font-medium text-[13px] text-white flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full bg-[#1F32D6] hover:bg-[#1828AB] h-[36px] rounded-[8px] transition-colors font-medium text-[13px] text-white flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {regenerating ? (
                           <>
-                            <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                            <RefreshCw className="w-3.5 h-3.5 animate-spin" strokeWidth={1.5} />
                             {t("onboarding.limits.regenerating")}
                           </>
                         ) : (
@@ -910,12 +910,12 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
                 <div className="border-t border-[rgba(10,10,10,0.08)]" />
                 {/* Code block */}
                 <div
-                  className={`relative bg-[#f5f5f7] rounded-b-[8px] transition-all duration-300 ${
+                  className={`relative bg-[#FAFAFA] rounded-b-[8px] transition-all duration-300 ${
                     regenerating ? "opacity-40" : "opacity-100"
                   }`}
                 >
                   <div className="p-4">
-                    <pre className="font-['Inter',sans-serif] font-normal text-[14px] text-[#333333] leading-[20px] whitespace-pre-wrap break-words">
+                    <pre className="font-normal text-[14px] text-[#0A0A0A] leading-[20px] whitespace-pre-wrap break-words">
                       {isFirstWallet && inviteCode ? (
                         (() => {
                           const text = buildPromptText();
@@ -942,10 +942,10 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
               <button
                 onClick={handleCopyPrompt}
                 disabled={regenerating || !!showPairingToast}
-                className={`w-full flex items-center justify-center gap-2 h-[38px] sm:h-[40px] rounded-[8px] font-['Inter',sans-serif] font-medium text-[13px] sm:text-[14px] transition-all shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)] disabled:opacity-50 text-white ${
+                className={`w-full flex items-center justify-center gap-2 h-[38px] sm:h-[40px] rounded-[8px] font-medium text-[13px] sm:text-[14px] transition-all shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1)] disabled:opacity-50 text-white ${
                   copiedType === "prompt"
                     ? "bg-[#22c55e] hover:bg-[#16a34a]"
-                    : "bg-[#4f5eff] hover:bg-[#3d4dd9]"
+                    : "bg-[#1F32D6] hover:bg-[#1828AB]"
                 }`}
               >
                 {copiedType === "prompt" ? (
@@ -965,18 +965,18 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
             {/* ─── Pairing overlay toast ─── */}
             {showPairingToast && (
               <div className="absolute inset-0 z-10 flex items-center justify-center rounded-xl pointer-events-none bg-white/40">
-                <div className="flex items-center gap-3 bg-white border border-[rgba(10,10,10,0.1)] rounded-[12px] px-5 py-3 shadow-lg pointer-events-auto">
+                <div className="flex items-center gap-3 bg-white border border-[rgba(10,10,10,0.1)] rounded-[8px] px-5 py-3 shadow-lg pointer-events-auto">
                   {showPairingToast === "done" ? (
                     <>
-                      <CheckCircle className="w-5 h-5 text-[#26C165]" />
-                      <span className="font-['Inter',sans-serif] font-medium text-[14px] text-[#0a0a0a]">
+                      <CheckCircle className="w-5 h-5 text-[#26C165]" strokeWidth={1.5} />
+                      <span className="font-medium text-[14px] text-[#0A0A0A]">
                         已完成配对
                       </span>
                     </>
                   ) : (
                     <>
-                      <Loader2 className="w-5 h-5 text-[#4f5eff] animate-spin" />
-                      <span className="font-['Inter',sans-serif] font-medium text-[14px] text-[#0a0a0a]">
+                      <Loader2 className="w-5 h-5 text-[#1F32D6] animate-spin" strokeWidth={1.5} />
+                      <span className="font-medium text-[14px] text-[#0A0A0A]">
                         配对中...
                       </span>
                     </>

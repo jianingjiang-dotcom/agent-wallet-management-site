@@ -148,7 +148,7 @@ export default function ApprovalPage({ initialTab = 'all', onPendingCountChange 
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-1 mb-6 border-b border-[var(--app-border)]">
+      <div className="flex items-center gap-1 mb-6 border-b border-[var(--app-border)] overflow-x-auto whitespace-nowrap">
         {tabs.map(tab => (
           <button
             key={tab.key}

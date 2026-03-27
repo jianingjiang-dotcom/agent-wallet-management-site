@@ -59,8 +59,8 @@ export default function SetupCommandCard({ command, onCopy, status, pairingPhase
     <div data-setup-card className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[12px] overflow-hidden transition-all duration-300">
       {/* Command area with overlay */}
       <div className="relative">
-        <div className="bg-[#f5f5f7] p-4">
-          <pre className="font-['Inter',sans-serif] font-normal text-[13px] text-[#333333] leading-[20px] whitespace-pre-wrap break-words">
+        <div className="bg-[#FAFAFA] p-4">
+          <pre className="font-normal text-[13px] text-[#0A0A0A] leading-[20px] whitespace-pre-wrap break-words">
             {command}
           </pre>
         </div>
@@ -93,7 +93,7 @@ export default function SetupCommandCard({ command, onCopy, status, pairingPhase
                     />
                   </svg>
                 </div>
-                <span className="text-[14px] leading-[20px] font-medium text-[#1C1C1C]">
+                <span className="text-[14px] leading-[20px] font-medium text-[#0A0A0A]">
                   {t('setupSuccess.title')}
                 </span>
               </>
@@ -108,10 +108,10 @@ export default function SetupCommandCard({ command, onCopy, status, pairingPhase
                     </svg>
                   ) : (
                     <svg className="animate-spin flex-shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none">
-                      <circle cx="12" cy="12" r="9" stroke="#4F5EFF" strokeWidth="1.25" strokeDasharray="14 42" strokeLinecap="round" />
+                      <circle cx="12" cy="12" r="9" stroke="#1F32D6" strokeWidth="1.25" strokeDasharray="14 42" strokeLinecap="round" />
                     </svg>
                   )}
-                  <span className={`text-[13px] leading-[18px] ${agentDone ? 'text-[#26C165] font-medium' : 'text-[#73798B]'}`}>
+                  <span className={`text-[13px] leading-[18px] ${agentDone ? 'text-[#26C165] font-medium' : 'text-[#4F4F4F]'}`}>
                     {agentDone ? t('setupPage.agentConnected') : t('setupPage.connectingAgent')}
                   </span>
                 </div>
@@ -120,9 +120,9 @@ export default function SetupCommandCard({ command, onCopy, status, pairingPhase
                 {(walletLoading || walletDone) && (
                   <div className="flex items-center gap-2" style={{ animation: 'fadeIn 0.3s ease-out forwards' }}>
                     <svg className="animate-spin flex-shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none">
-                      <circle cx="12" cy="12" r="9" stroke="#4F5EFF" strokeWidth="1.25" strokeDasharray="14 42" strokeLinecap="round" />
+                      <circle cx="12" cy="12" r="9" stroke="#1F32D6" strokeWidth="1.25" strokeDasharray="14 42" strokeLinecap="round" />
                     </svg>
-                    <span className="text-[13px] leading-[18px] text-[#73798B]">
+                    <span className="text-[13px] leading-[18px] text-[#4F4F4F]">
                       {t('setupPage.creatingWallet')}
                     </span>
                   </div>
@@ -142,8 +142,8 @@ export default function SetupCommandCard({ command, onCopy, status, pairingPhase
           <button
             onClick={handleCopy}
             disabled={copied || showOverlay}
-            className={`w-full flex items-center justify-center gap-2 h-[38px] rounded-[8px] font-['Inter',sans-serif] font-medium text-[13px] transition-all shadow-[0px_1px_3px_0px_rgba(0,0,0,0.06)] text-white ${
-              copied ? 'bg-[#22c55e]' : 'bg-[#4f5eff] hover:bg-[#3d4dd9] disabled:opacity-50'
+            className={`w-full flex items-center justify-center gap-2 h-[38px] rounded-[8px] font-medium text-[13px] transition-all shadow-[0px_1px_3px_0px_rgba(0,0,0,0.06)] text-white ${
+              copied ? 'bg-[#22c55e]' : 'bg-[#1F32D6] hover:bg-[#1828AB] disabled:opacity-50'
             }`}
           >
             {copied ? (

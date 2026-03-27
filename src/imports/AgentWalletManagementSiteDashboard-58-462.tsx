@@ -11,13 +11,13 @@ function CoboAgenticWallet() {
           <path d={svgPaths.p3456db00} fill="var(--fill-0, #0A0A0A)" id="Vector_4" />
           <path d={svgPaths.p5983200} fill="var(--fill-0, #0A0A0A)" id="Vector_5" />
           <path d={svgPaths.p35ddbb80} fill="var(--fill-0, #0A0A0A)" id="Vector_6" />
-          <path d={svgPaths.p192f4b80} fill="var(--fill-0, #4F5EFF)" id="Vector_7" />
-          <path d={svgPaths.p2c193100} fill="var(--fill-0, #4F5EFF)" id="Vector_8" />
-          <path d={svgPaths.p357a0d00} fill="var(--fill-0, #4F5EFF)" id="Vector_9" />
-          <path d={svgPaths.p26dee800} fill="var(--fill-0, #4F5EFF)" id="Vector_10" />
-          <path d={svgPaths.pf8ab380} fill="var(--fill-0, #4F5EFF)" id="Vector_11" />
-          <path d={svgPaths.p25b8a100} fill="var(--fill-0, #4F5EFF)" id="Vector_12" />
-          <path d={svgPaths.p1a427e00} fill="var(--fill-0, #4F5EFF)" id="Vector_13" />
+          <path d={svgPaths.p192f4b80} fill="var(--fill-0, #1F32D6)" id="Vector_7" />
+          <path d={svgPaths.p2c193100} fill="var(--fill-0, #1F32D6)" id="Vector_8" />
+          <path d={svgPaths.p357a0d00} fill="var(--fill-0, #1F32D6)" id="Vector_9" />
+          <path d={svgPaths.p26dee800} fill="var(--fill-0, #1F32D6)" id="Vector_10" />
+          <path d={svgPaths.pf8ab380} fill="var(--fill-0, #1F32D6)" id="Vector_11" />
+          <path d={svgPaths.p25b8a100} fill="var(--fill-0, #1F32D6)" id="Vector_12" />
+          <path d={svgPaths.p1a427e00} fill="var(--fill-0, #1F32D6)" id="Vector_13" />
           <path d={svgPaths.p37c6db00} fill="var(--fill-0, #0A0A0A)" id="Vector_14" />
           <path d={svgPaths.p16c2cc00} fill="var(--fill-0, #0A0A0A)" id="Vector_15" />
           <path d={svgPaths.p2ed1f700} fill="var(--fill-0, #0A0A0A)" id="Vector_16" />
@@ -81,7 +81,7 @@ function Margin() {
 
 function Tab() {
   return (
-    <div className="bg-[#4f5eff] h-[40px] relative rounded-[6px] shrink-0 w-full" data-name="Tab-2">
+    <div className="bg-[#1F32D6] h-[40px] relative rounded-[6px] shrink-0 w-full" data-name="Tab-2">
       <div className="flex flex-row items-center size-full">
         <div className="content-stretch flex items-center px-[12px] py-[10px] relative size-full">
           <Margin />
@@ -188,8 +188,8 @@ function User() {
     <div className="relative shrink-0 size-[20px]" data-name="User">
       <svg className="absolute block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
         <g id="User">
-          <path d={svgPaths.p2026e800} id="Vector" stroke="var(--stroke-0, #4F5EFF)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
-          <path d={svgPaths.p32ab0300} id="Vector_2" stroke="var(--stroke-0, #4F5EFF)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
+          <path d={svgPaths.p2026e800} id="Vector" stroke="var(--stroke-0, #1F32D6)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
+          <path d={svgPaths.p32ab0300} id="Vector_2" stroke="var(--stroke-0, #1F32D6)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
         </g>
       </svg>
     </div>
@@ -295,7 +295,7 @@ function Container1() {
 function TitleContainer() {
   return (
     <div className="content-stretch flex flex-col font-['Inter:Semi_Bold',sans-serif] font-semibold gap-[8px] items-start leading-[0] not-italic relative shrink-0 w-full" data-name="Title Container">
-      <div className="flex flex-col justify-center relative shrink-0 text-[#4f5eff] text-[12px] tracking-[1px] uppercase w-full">
+      <div className="flex flex-col justify-center relative shrink-0 text-[#1F32D6] text-[12px] tracking-[1px] uppercase w-full">
         <p className="leading-[normal]">For Agent Owners</p>
       </div>
       <div className="flex flex-col justify-center relative shrink-0 text-[#0a0a0a] text-[24px] w-full">
@@ -309,7 +309,7 @@ function StepNumberContainer() {
   return (
     <div className="bg-[rgba(79,94,255,0.08)] relative rounded-full shrink-0 size-[28px]" data-name="Step Number Container">
       <div className="content-stretch flex items-center justify-center overflow-clip px-[11px] py-[5px] relative rounded-full size-full">
-        <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[#4f5eff] text-[16px] text-center whitespace-nowrap">
+        <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[#1F32D6] text-[16px] text-center whitespace-nowrap">
           <p className="leading-[1.5]">1</p>
         </div>
       </div>
@@ -389,7 +389,7 @@ function StepNumberContainer1() {
   return (
     <div className="bg-[rgba(79,94,255,0.08)] relative rounded-full shrink-0 size-[28px]" data-name="Step Number Container">
       <div className="content-stretch flex items-center justify-center overflow-clip px-[11px] py-[5px] relative rounded-full size-full">
-        <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[#4f5eff] text-[16px] text-center whitespace-nowrap">
+        <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[#1F32D6] text-[16px] text-center whitespace-nowrap">
           <p className="leading-[1.5]">2</p>
         </div>
       </div>
@@ -473,7 +473,7 @@ function StepNumberContainer2() {
   return (
     <div className="bg-[rgba(79,94,255,0.08)] relative rounded-full shrink-0 size-[28px]" data-name="Step Number Container">
       <div className="content-stretch flex items-center justify-center overflow-clip px-[11px] py-[5px] relative rounded-full size-full">
-        <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[#4f5eff] text-[16px] text-center whitespace-nowrap">
+        <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[#1F32D6] text-[16px] text-center whitespace-nowrap">
           <p className="leading-[1.5]">3</p>
         </div>
       </div>
@@ -549,7 +549,7 @@ function UlAudList2() {
 
 function Button() {
   return (
-    <div className="bg-[#4f5eff] content-stretch flex h-[40px] items-center justify-center px-[24px] py-[5px] relative rounded-[8px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1),0px_1px_2px_0px_rgba(0,0,0,0.1)] shrink-0" data-name="button">
+    <div className="bg-[#1F32D6] content-stretch flex h-[40px] items-center justify-center px-[24px] py-[5px] relative rounded-[8px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1),0px_1px_2px_0px_rgba(0,0,0,0.1)] shrink-0" data-name="button">
       <p className="font-['Inter:Medium',sans-serif] font-medium leading-[1.5] not-italic relative shrink-0 text-[16px] text-center text-white whitespace-nowrap">Contact Technical Support</p>
     </div>
   );
@@ -625,10 +625,10 @@ function Icon2() {
     <div className="relative shrink-0 size-[20px]" data-name="Icon">
       <svg className="absolute block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
         <g id="Icon">
-          <path d={svgPaths.p25397b80} id="Vector" stroke="var(--stroke-0, #4F5EFF)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
-          <path d={svgPaths.p2c4f400} id="Vector_2" stroke="var(--stroke-0, #4F5EFF)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
-          <path d={svgPaths.p2241fff0} id="Vector_3" stroke="var(--stroke-0, #4F5EFF)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
-          <path d={svgPaths.pae3c380} id="Vector_4" stroke="var(--stroke-0, #4F5EFF)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
+          <path d={svgPaths.p25397b80} id="Vector" stroke="var(--stroke-0, #1F32D6)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
+          <path d={svgPaths.p2c4f400} id="Vector_2" stroke="var(--stroke-0, #1F32D6)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
+          <path d={svgPaths.p2241fff0} id="Vector_3" stroke="var(--stroke-0, #1F32D6)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
+          <path d={svgPaths.pae3c380} id="Vector_4" stroke="var(--stroke-0, #1F32D6)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
         </g>
       </svg>
     </div>
@@ -685,7 +685,7 @@ function Icon3() {
     <div className="relative shrink-0 size-[20px]" data-name="Icon">
       <svg className="absolute block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
         <g id="Icon">
-          <path d={svgPaths.p363df2c0} id="Vector" stroke="var(--stroke-0, #4F5EFF)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
+          <path d={svgPaths.p363df2c0} id="Vector" stroke="var(--stroke-0, #1F32D6)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
         </g>
       </svg>
     </div>
@@ -742,7 +742,7 @@ function Icon4() {
     <div className="relative shrink-0 size-[20px]" data-name="Icon">
       <svg className="absolute block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
         <g id="Icon">
-          <path d={svgPaths.p25fc4100} id="Vector" stroke="var(--stroke-0, #4F5EFF)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
+          <path d={svgPaths.p25fc4100} id="Vector" stroke="var(--stroke-0, #1F32D6)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
         </g>
       </svg>
     </div>
@@ -799,8 +799,8 @@ function Icon5() {
     <div className="relative shrink-0 size-[20px]" data-name="Icon">
       <svg className="absolute block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
         <g id="Icon">
-          <path d={svgPaths.p3c797180} id="Vector" stroke="var(--stroke-0, #4F5EFF)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
-          <path d={svgPaths.p3ac0b600} id="Vector_2" stroke="var(--stroke-0, #4F5EFF)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
+          <path d={svgPaths.p3c797180} id="Vector" stroke="var(--stroke-0, #1F32D6)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
+          <path d={svgPaths.p3ac0b600} id="Vector_2" stroke="var(--stroke-0, #1F32D6)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
         </g>
       </svg>
     </div>
@@ -910,7 +910,7 @@ function Container9() {
 }
 
 function Container16() {
-  return <div className="bg-[#4f5eff] rounded-full shrink-0 size-[8px]" data-name="Container" />;
+  return <div className="bg-[#1F32D6] rounded-full shrink-0 size-[8px]" data-name="Container" />;
 }
 
 function Container18() {
@@ -1034,7 +1034,7 @@ function Container21() {
 }
 
 function Container30() {
-  return <div className="bg-[#4f5eff] rounded-full shrink-0 size-[8px]" data-name="Container" />;
+  return <div className="bg-[#1F32D6] rounded-full shrink-0 size-[8px]" data-name="Container" />;
 }
 
 function Container32() {

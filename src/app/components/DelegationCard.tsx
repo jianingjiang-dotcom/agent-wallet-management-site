@@ -73,7 +73,7 @@ export default function DelegationCard({
   };
 
   return (
-    <div className={`bg-[var(--app-card-bg)] border rounded-[10px] transition-colors ${
+    <div className={`bg-[var(--app-card-bg)] border rounded-[8px] transition-colors ${
       isFrozen ? "border-[var(--app-frozen)] bg-[var(--app-frozen-soft)]" : "border-[var(--app-border)]"
     }`}>
       {/* Header */}
@@ -84,7 +84,7 @@ export default function DelegationCard({
         <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
           isFrozen ? "bg-[var(--app-frozen-border)]" : "bg-[var(--app-accent-soft)]"
         }`}>
-          <UserPlus className={`w-4 h-4 ${isFrozen ? "text-[var(--app-frozen)]" : "text-[var(--app-accent)]"}`} />
+          <UserPlus className={`w-4 h-4 ${isFrozen ? "text-[var(--app-frozen)]" : "text-[var(--app-accent)]"}`} strokeWidth={1.5} />
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 group/agentname">
@@ -102,7 +102,7 @@ export default function DelegationCard({
                   className="font-['Inter',sans-serif] font-medium text-[13px] text-[var(--app-text)] bg-transparent border-b border-[var(--app-accent)] outline-none py-0 px-0 w-[120px]"
                 />
                 <button onClick={handleSaveName} className="text-[var(--app-accent)] hover:text-[var(--app-accent-hover)] transition-colors p-0.5">
-                  <Check className="w-3.5 h-3.5" />
+                  <Check className="w-3.5 h-3.5" strokeWidth={1.5} />
                 </button>
               </div>
             ) : (
@@ -118,13 +118,13 @@ export default function DelegationCard({
                   }}
                   className="text-[var(--app-text-tertiary)] hover:text-[var(--app-accent)] transition-colors p-0.5 opacity-0 group-hover/agentname:opacity-100"
                 >
-                  <Pencil className="w-3 h-3" />
+                  <Pencil className="w-3 h-3" strokeWidth={1.5} />
                 </button>
               </>
             )}
             {isOriginAgent && (
               <span className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-[var(--app-accent-soft)] text-[var(--app-accent)]">
-                <Star className="w-2.5 h-2.5" />
+                <Star className="w-2.5 h-2.5" strokeWidth={1.5} />
                 <span className="font-['Inter',sans-serif] font-normal text-[9px]">{t("delegationCard.signer")}</span>
               </span>
             )}
@@ -143,9 +143,9 @@ export default function DelegationCard({
             {delegation.permissions.length} {t("delegationCard.permissions")}
           </span>
           {expanded ? (
-            <ChevronDown className="w-4 h-4 text-[var(--app-text-secondary)]" />
+            <ChevronDown className="w-4 h-4 text-[var(--app-text-secondary)]" strokeWidth={1.5} />
           ) : (
-            <ChevronRight className="w-4 h-4 text-[var(--app-text-secondary)]" />
+            <ChevronRight className="w-4 h-4 text-[var(--app-text-secondary)]" strokeWidth={1.5} />
           )}
         </div>
       </div>
@@ -186,7 +186,7 @@ export default function DelegationCard({
                 onClick={() => onUnfreeze(delegation.id)}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-[6px] bg-[var(--app-success-soft)] hover:bg-[var(--app-success-soft)] transition-colors"
               >
-                <Play className="w-3.5 h-3.5 text-[var(--app-success)]" />
+                <Play className="w-3.5 h-3.5 text-[var(--app-success)]" strokeWidth={1.5} />
                 <span className="font-['Inter',sans-serif] font-medium text-[11px] text-[#166534]">{t("delegation.resumeAction")}</span>
               </button>
             ) : (
@@ -194,7 +194,7 @@ export default function DelegationCard({
                 onClick={() => onFreeze(delegation.id)}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-[6px] bg-[var(--app-frozen-soft)] hover:bg-[var(--app-frozen-border)] transition-colors"
               >
-                <Pause className="w-3.5 h-3.5 text-[var(--app-frozen)]" />
+                <Pause className="w-3.5 h-3.5 text-[var(--app-frozen)]" strokeWidth={1.5} />
                 <span className="font-['Inter',sans-serif] font-medium text-[11px] text-[#92400e]">{t("delegation.pauseAction")}</span>
               </button>
             )}
@@ -202,7 +202,7 @@ export default function DelegationCard({
               onClick={() => setShowRevokeConfirm(true)}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-[6px] bg-[var(--app-danger-soft)] hover:bg-[var(--app-danger-soft)] transition-colors"
             >
-              <Trash2 className="w-3.5 h-3.5 text-[var(--app-danger)]" />
+              <Trash2 className="w-3.5 h-3.5 text-[var(--app-danger)]" strokeWidth={1.5} />
               <span className="font-['Inter',sans-serif] font-medium text-[11px] text-[#dc2626]">{t("delegation.revokeAction")}</span>
             </button>
           </div>
@@ -212,7 +212,7 @@ export default function DelegationCard({
       {/* Revoke Confirmation */}
       {showRevokeConfirm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-[var(--app-card-bg)] rounded-[12px] p-5 max-w-sm w-full shadow-xl">
+          <div className="bg-[var(--app-card-bg)] rounded-[8px] p-5 max-w-sm w-full shadow-xl">
             <h3 className="font-['Inter',sans-serif] font-semibold text-[16px] text-[var(--app-text)] mb-2">
               {t("delegation.revokeConfirmTitle")}
             </h3>

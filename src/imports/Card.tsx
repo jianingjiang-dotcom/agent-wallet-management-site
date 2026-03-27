@@ -13,13 +13,13 @@ function CoboAgenticWallet() {
           <path d={svgPaths.p2f540240} fill="var(--fill-0, #0A0A0A)" id="Vector_4" />
           <path d={svgPaths.p34feb700} fill="var(--fill-0, #0A0A0A)" id="Vector_5" />
           <path d={svgPaths.p19bb4d00} fill="var(--fill-0, #0A0A0A)" id="Vector_6" />
-          <path d={svgPaths.p1d862d80} fill="var(--fill-0, #4F5EFF)" id="Vector_7" />
-          <path d={svgPaths.pc8a4d00} fill="var(--fill-0, #4F5EFF)" id="Vector_8" />
-          <path d={svgPaths.p3dee7e70} fill="var(--fill-0, #4F5EFF)" id="Vector_9" />
-          <path d={svgPaths.p4c54400} fill="var(--fill-0, #4F5EFF)" id="Vector_10" />
-          <path d={svgPaths.pea8ab00} fill="var(--fill-0, #4F5EFF)" id="Vector_11" />
-          <path d={svgPaths.p1af1ca00} fill="var(--fill-0, #4F5EFF)" id="Vector_12" />
-          <path d={svgPaths.p273dfb80} fill="var(--fill-0, #4F5EFF)" id="Vector_13" />
+          <path d={svgPaths.p1d862d80} fill="var(--fill-0, #1F32D6)" id="Vector_7" />
+          <path d={svgPaths.pc8a4d00} fill="var(--fill-0, #1F32D6)" id="Vector_8" />
+          <path d={svgPaths.p3dee7e70} fill="var(--fill-0, #1F32D6)" id="Vector_9" />
+          <path d={svgPaths.p4c54400} fill="var(--fill-0, #1F32D6)" id="Vector_10" />
+          <path d={svgPaths.pea8ab00} fill="var(--fill-0, #1F32D6)" id="Vector_11" />
+          <path d={svgPaths.p1af1ca00} fill="var(--fill-0, #1F32D6)" id="Vector_12" />
+          <path d={svgPaths.p273dfb80} fill="var(--fill-0, #1F32D6)" id="Vector_13" />
           <path d={svgPaths.p3f114880} fill="var(--fill-0, #0A0A0A)" id="Vector_14" />
           <path d={svgPaths.p32df7100} fill="var(--fill-0, #0A0A0A)" id="Vector_15" />
           <path d={svgPaths.p3b768700} fill="var(--fill-0, #0A0A0A)" id="Vector_16" />
@@ -105,7 +105,7 @@ function InputEmail1() {
 function Container2() {
   return (
     <div className="content-stretch flex font-['Inter:Regular',sans-serif] font-normal items-start justify-between leading-[1.5] not-italic relative shrink-0 text-[14px] w-full whitespace-nowrap" data-name="Container">
-      <p className="relative shrink-0 text-[#4f5eff]">Forgot password?</p>
+      <p className="relative shrink-0 text-[#1F32D6]">Forgot password?</p>
       <p className="relative shrink-0 text-[#0a0a0a] text-right">Remember me</p>
     </div>
   );
@@ -123,7 +123,7 @@ function Div1() {
 
 function Button() {
   return (
-    <div className="bg-[#4f5eff] h-[40px] relative rounded-[8px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1),0px_1px_2px_0px_rgba(0,0,0,0.1)] shrink-0 w-full" data-name="button">
+    <div className="bg-[#1F32D6] h-[40px] relative rounded-[8px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1),0px_1px_2px_0px_rgba(0,0,0,0.1)] shrink-0 w-full" data-name="button">
       <div className="flex flex-row items-center justify-center size-full">
         <div className="content-stretch flex items-center justify-center px-[165px] py-[5px] relative size-full">
           <p className="font-['Inter:Medium',sans-serif] font-medium leading-[1.5] not-italic relative shrink-0 text-[16px] text-center text-white whitespace-nowrap">Sign In</p>
@@ -244,7 +244,7 @@ function Container4() {
     <div className="h-[24px] relative shrink-0 w-[382px]" data-name="Container">
       <p className="-translate-x-1/2 absolute font-['Inter:Regular',sans-serif] font-normal leading-[0] left-[191.4px] not-italic text-[#4f4f4f] text-[0px] text-[14px] text-center top-[-1px] whitespace-nowrap">
         <span className="leading-[1.5]">{`Don’t have an account? `}</span>
-        <span className="decoration-solid font-['Inter:Semi_Bold',sans-serif] font-semibold leading-[1.5] text-[#4f5eff] underline">Create one</span>
+        <span className="decoration-solid font-['Inter:Semi_Bold',sans-serif] font-semibold leading-[1.5] text-[#1F32D6] underline">Create one</span>
       </p>
     </div>
   );

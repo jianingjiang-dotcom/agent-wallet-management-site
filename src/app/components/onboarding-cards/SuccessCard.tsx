@@ -35,7 +35,7 @@ export default function SuccessCard({ walletId, agentId, onComplete, completed }
         >
           <CheckCircle className="w-6 h-6 text-[#22c55e]" />
         </div>
-        <h3 className="font-['Inter',sans-serif] font-semibold text-[18px] text-[#0a0a0a]">
+        <h3 className="font-semibold text-[18px] text-[#0A0A0A]">
           {t('onboarding.success.title')}
         </h3>
       </div>
@@ -44,13 +44,13 @@ export default function SuccessCard({ walletId, agentId, onComplete, completed }
       <div className="rounded-[12px] border border-[rgba(10,10,10,0.08)] bg-[#FAFAFA] overflow-hidden mb-4">
         <div className="flex items-center gap-3 px-3.5 py-3">
           <div className="w-8 h-8 rounded-[8px] bg-[rgba(79,94,255,0.08)] flex items-center justify-center flex-shrink-0">
-            <Shield className="w-3.5 h-3.5 text-[#4f5eff]" />
+            <Shield className="w-3.5 h-3.5 text-[#1F32D6]" />
           </div>
           <div className="min-w-0 flex-1">
-            <span className="font-['Inter',sans-serif] font-medium text-[10px] text-[#9a9a9a] uppercase tracking-wider block mb-0.5">
+            <span className="font-medium text-[10px] text-[#7C7C7C] uppercase tracking-wider block mb-0.5">
               {t('onboarding.success.walletId')}
             </span>
-            <code className="font-['JetBrains_Mono',monospace] text-[12px] text-[#0a0a0a] break-words leading-snug">
+            <code className="font-['JetBrains_Mono',monospace] text-[12px] text-[#0A0A0A] break-words leading-snug">
               {walletId}
             </code>
           </div>
@@ -61,21 +61,21 @@ export default function SuccessCard({ walletId, agentId, onComplete, completed }
             <div className="w-4 h-4 rounded-full bg-[rgba(34,197,94,0.1)] flex items-center justify-center">
               <Link2 className="w-2.5 h-2.5 text-[#22c55e]" />
             </div>
-            <span className="font-['Inter',sans-serif] font-medium text-[10px] text-[#22c55e]">
+            <span className="font-medium text-[10px] text-[#22c55e]">
               {t('onboarding.success.linked')}
             </span>
           </div>
           <div className="flex-1 h-px bg-[rgba(10,10,10,0.06)]" />
         </div>
         <div className="flex items-center gap-3 px-3.5 py-3">
-          <div className="w-8 h-8 rounded-[8px] bg-[rgba(245,158,11,0.08)] flex items-center justify-center flex-shrink-0">
-            <Zap className="w-3.5 h-3.5 text-[#f59e0b]" />
+          <div className="w-8 h-8 rounded-[8px] bg-[rgba(31,50,214,0.08)] flex items-center justify-center flex-shrink-0">
+            <Zap className="w-3.5 h-3.5 text-[#1F32D6]" />
           </div>
           <div className="min-w-0 flex-1">
-            <span className="font-['Inter',sans-serif] font-medium text-[10px] text-[#9a9a9a] uppercase tracking-wider block mb-0.5">
+            <span className="font-medium text-[10px] text-[#7C7C7C] uppercase tracking-wider block mb-0.5">
               {t('onboarding.success.agentId')}
             </span>
-            <code className="font-['JetBrains_Mono',monospace] text-[12px] text-[#0a0a0a] break-words leading-snug">
+            <code className="font-['JetBrains_Mono',monospace] text-[12px] text-[#0A0A0A] break-words leading-snug">
               {agentId}
             </code>
           </div>

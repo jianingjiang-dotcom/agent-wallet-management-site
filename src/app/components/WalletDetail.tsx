@@ -1,3 +1,4 @@
+import type { LucideIcon } from 'lucide-react';
 import {
   Shield,
   Plus,
@@ -7,6 +8,20 @@ import {
   UserPlus,
   ChevronDown,
   Download,
+  Wallet,
+  Send,
+  FileCode,
+  ToggleRight,
+  RefreshCw,
+  Settings,
+  AlertTriangle,
+  Clock,
+  CheckCircle,
+  Lock,
+  Snowflake,
+  Play,
+  XCircle,
+  Ban,
 } from 'lucide-react';
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -224,6 +239,7 @@ export default function WalletDetail({
             </div>
           )}
 
+
           {/* Agent count badge */}
           {hasDelegations ? (
             <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[var(--app-success-soft)] text-[var(--app-success)] font-['Inter',sans-serif] font-medium text-[12px]">
@@ -364,7 +380,7 @@ export default function WalletDetail({
             onClick={() => onDelegateAgent(wallet.id)}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] font-['Inter',sans-serif] font-medium text-[12px] text-[var(--app-accent)] border border-dashed border-[var(--app-border-dashed)] hover:bg-[var(--app-accent-soft-hover)] transition-colors"
           >
-            <Plus className="w-3.5 h-3.5" />
+            <Plus className="w-3.5 h-3.5" strokeWidth={1.5} />
             {t('walletDetail.delegateAgent')}
           </button>
         </div>
@@ -401,12 +417,15 @@ export default function WalletDetail({
               onClick={() => onDelegateAgent(wallet.id)}
               className="inline-flex items-center gap-2 px-4 py-2.5 rounded-[8px] font-['Inter',sans-serif] font-medium text-[13px] text-white bg-[var(--app-accent)] hover:bg-[var(--app-accent-hover)] transition-colors"
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="w-4 h-4" strokeWidth={1.5} />
               {t('walletDetail.delegateAgent')}
             </button>
           </div>
         )}
       </div>
+
+      {/* Activity Log */}
+      <ActivityLog t={t} walletCreatedAt={wallet.createdAt} />
 
       {/* Modals */}
       <DepositModal open={depositOpen} onClose={() => setDepositOpen(false)} wallet={wallet} />
@@ -417,6 +436,115 @@ export default function WalletDetail({
         assets={assets}
         preselectedToken={sendPreselect}
       />
+    </div>
+  );
+}
+
+// --- Activity Log Component ---
+
+interface LogEntry {
+  id: string;
+  actionType: string;
+  actor: 'user' | 'agent' | 'system';
+  labelKey: string;
+  detailKey: string;
+  status: 'success' | 'failed' | 'pending';
+  icon: LucideIcon;
+  iconColor: string;
+  minutesAgo: number;
+}
+
+const MOCK_LOGS: LogEntry[] = [
+  { id: '1',  actionType: 'wallet_created',      actor: 'system', labelKey: 'log.walletCreated',      detailKey: 'log.detail.walletCreated',      status: 'success', icon: Wallet,        iconColor: 'var(--app-accent)', minutesAgo: 4320 },
+  { id: '2',  actionType: 'agent_delegated',      actor: 'user',   labelKey: 'log.agentDelegated',      detailKey: 'log.detail.agentDelegated',      status: 'success', icon: UserPlus,      iconColor: 'var(--app-accent)', minutesAgo: 4310 },
+  { id: '3',  actionType: 'transfer_executed',    actor: 'agent',  labelKey: 'log.transferExecuted',    detailKey: 'log.detail.transferExecuted',    status: 'success', icon: Send,          iconColor: 'var(--app-success)', minutesAgo: 3600 },
+  { id: '4',  actionType: 'contract_called',      actor: 'agent',  labelKey: 'log.contractCalled',      detailKey: 'log.detail.contractCalled',      status: 'success', icon: FileCode,      iconColor: 'var(--app-success)', minutesAgo: 3000 },
+  { id: '5',  actionType: 'permission_updated',   actor: 'user',   labelKey: 'log.permissionUpdated',   detailKey: 'log.detail.permissionEnabled',   status: 'success', icon: ToggleRight,   iconColor: 'var(--app-accent)', minutesAgo: 2800 },
+  { id: '6',  actionType: 'swap_executed',         actor: 'agent',  labelKey: 'log.swapExecuted',        detailKey: 'log.detail.swapExecuted',        status: 'success', icon: RefreshCw,     iconColor: 'var(--app-success)', minutesAgo: 2400 },
+  { id: '7',  actionType: 'policy_updated',        actor: 'user',   labelKey: 'log.policyUpdated',       detailKey: 'log.detail.policyLimitUpdated',  status: 'success', icon: Settings,      iconColor: 'var(--app-accent)', minutesAgo: 2000 },
+  { id: '8',  actionType: 'policy_updated',        actor: 'user',   labelKey: 'log.policyUpdated',       detailKey: 'log.detail.dailyLimitUpdated',   status: 'success', icon: Settings,      iconColor: 'var(--app-accent)', minutesAgo: 1999 },
+  { id: '9',  actionType: 'transfer_rejected',     actor: 'system', labelKey: 'log.transferRejected',    detailKey: 'log.detail.transferRejected',    status: 'failed',  icon: AlertTriangle, iconColor: 'var(--app-danger)', minutesAgo: 1500 },
+  { id: '10', actionType: 'approval_requested',    actor: 'agent',  labelKey: 'log.approvalRequested',   detailKey: 'log.detail.approvalRequested',   status: 'pending', icon: Clock,         iconColor: 'var(--app-accent)', minutesAgo: 1200 },
+  { id: '11', actionType: 'approval_granted',      actor: 'user',   labelKey: 'log.approvalGranted',     detailKey: 'log.detail.approvalGranted',     status: 'success', icon: CheckCircle,   iconColor: 'var(--app-success)', minutesAgo: 1180 },
+  { id: '12', actionType: 'stake_executed',         actor: 'agent',  labelKey: 'log.stakeExecuted',       detailKey: 'log.detail.stakeExecuted',       status: 'success', icon: Lock,          iconColor: 'var(--app-success)', minutesAgo: 900  },
+  { id: '13', actionType: 'wallet_renamed',         actor: 'user',   labelKey: 'log.walletRenamed',       detailKey: 'log.detail.walletRenamed',       status: 'success', icon: Pencil,        iconColor: 'var(--app-text-secondary)', minutesAgo: 600  },
+  { id: '14', actionType: 'delegation_frozen',      actor: 'user',   labelKey: 'log.delegationFrozen',    detailKey: 'log.detail.delegationFrozen',    status: 'success', icon: Snowflake,     iconColor: 'var(--app-accent)', minutesAgo: 300  },
+  { id: '15', actionType: 'delegation_resumed',     actor: 'user',   labelKey: 'log.delegationResumed',   detailKey: 'log.detail.delegationResumed',   status: 'success', icon: Play,          iconColor: 'var(--app-success)', minutesAgo: 120  },
+  { id: '16', actionType: 'permission_updated',    actor: 'user',   labelKey: 'log.permissionUpdated',   detailKey: 'log.detail.permissionDisabled',  status: 'success', icon: ToggleRight,   iconColor: 'var(--app-accent)', minutesAgo: 60   },
+  { id: '17', actionType: 'approval_requested',    actor: 'agent',  labelKey: 'log.approvalRequested',   detailKey: 'log.detail.approvalRequested',   status: 'pending', icon: Clock,         iconColor: 'var(--app-accent)', minutesAgo: 30   },
+  { id: '18', actionType: 'approval_denied',        actor: 'user',   labelKey: 'log.approvalDenied',      detailKey: 'log.detail.approvalDenied',      status: 'success', icon: XCircle,       iconColor: 'var(--app-danger)', minutesAgo: 25   },
+  { id: '19', actionType: 'delegation_revoked',     actor: 'user',   labelKey: 'log.delegationRevoked',   detailKey: 'log.detail.delegationRevoked',   status: 'success', icon: Ban,           iconColor: 'var(--app-danger)', minutesAgo: 10   },
+];
+
+function formatTimeAgo(minutesAgo: number, baseDate: string): string {
+  const base = new Date(baseDate).getTime();
+  const ts = new Date(base + (4320 - minutesAgo) * 60000);
+  const month = String(ts.getMonth() + 1).padStart(2, '0');
+  const day = String(ts.getDate()).padStart(2, '0');
+  const hours = String(ts.getHours()).padStart(2, '0');
+  const mins = String(ts.getMinutes()).padStart(2, '0');
+  return `${month}-${day} ${hours}:${mins}`;
+}
+
+const STATUS_STYLES: Record<string, { bg: string; text: string }> = {
+  success: { bg: 'bg-[var(--app-success)]/10', text: 'text-[var(--app-success)]' },
+  failed:  { bg: 'bg-[var(--app-danger)]/10', text: 'text-[var(--app-danger)]' },
+  pending: { bg: 'bg-[var(--app-accent)]/10', text: 'text-[var(--app-accent)]' },
+};
+
+const ACTOR_STYLES: Record<string, { bg: string; text: string }> = {
+  user:   { bg: 'bg-[var(--app-accent)]/10', text: 'text-[var(--app-accent)]' },
+  agent:  { bg: 'bg-[var(--app-success)]/10', text: 'text-[var(--app-success)]' },
+  system: { bg: 'bg-[var(--app-text-secondary)]/10', text: 'text-[var(--app-text-secondary)]' },
+};
+
+function ActivityLog({ t, walletCreatedAt }: { t: (key: string) => string; walletCreatedAt: string }) {
+  return (
+    <div className="bg-[var(--app-card-bg)] border border-[var(--app-border)] rounded-[12px] p-5">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="font-semibold text-[16px] text-[var(--app-text)]">
+          {t('walletAgent.activityLog')}
+        </h2>
+        <span className="font-normal text-[12px] text-[var(--app-text-secondary)]">
+          {MOCK_LOGS.length} entries
+        </span>
+      </div>
+      <div className="divide-y divide-[var(--app-border)]">
+        {[...MOCK_LOGS].reverse().map((log) => {
+          const Icon = log.icon;
+          const statusStyle = STATUS_STYLES[log.status];
+          const actorStyle = ACTOR_STYLES[log.actor];
+          return (
+            <div key={log.id} className="flex items-start gap-3 py-3 first:pt-0 last:pb-0">
+              <div
+                className="w-8 h-8 rounded-[8px] flex items-center justify-center shrink-0 mt-0.5"
+                style={{ backgroundColor: `color-mix(in srgb, ${log.iconColor} 8%, transparent)` }}
+              >
+                <Icon className="w-4 h-4" style={{ color: log.iconColor }} strokeWidth={1.5} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="font-medium text-[13px] text-[var(--app-text)]">
+                    {t(log.labelKey)}
+                  </span>
+                  <span className={`inline-flex px-1.5 py-0.5 rounded-[6px] font-medium text-[10px] ${actorStyle.bg} ${actorStyle.text}`}>
+                    {t(`log.actor.${log.actor}`)}
+                  </span>
+                  <span className={`inline-flex px-1.5 py-0.5 rounded-[6px] font-medium text-[10px] ${statusStyle.bg} ${statusStyle.text}`}>
+                    {t(`log.status.${log.status}`)}
+                  </span>
+                </div>
+                <p className="font-normal text-[12px] text-[var(--app-text-secondary)] mt-0.5 truncate">
+                  {t(log.detailKey)}
+                </p>
+              </div>
+              <span className="font-['JetBrains_Mono','SF_Mono','Consolas',monospace] text-[11px] text-[var(--app-text-secondary)] shrink-0 mt-1">
+                {formatTimeAgo(log.minutesAgo, walletCreatedAt)}
+              </span>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

@@ -8,9 +8,9 @@ interface PairingStatusCardProps {
 }
 
 const phaseConfig: Record<Phase, { icon: 'spinner' | 'wifi' | 'settings' | 'check'; colorClass: string }> = {
-  waiting:     { icon: 'spinner',  colorClass: 'text-[#4f5eff]' },
-  connected:   { icon: 'wifi',     colorClass: 'text-[#4f5eff]' },
-  configuring: { icon: 'settings', colorClass: 'text-[#f59e0b]' },
+  waiting:     { icon: 'spinner',  colorClass: 'text-[#1F32D6]' },
+  connected:   { icon: 'wifi',     colorClass: 'text-[#1F32D6]' },
+  configuring: { icon: 'settings', colorClass: 'text-[#1F32D6]' },
   success:     { icon: 'check',    colorClass: 'text-[#22c55e]' },
 };
 
@@ -46,7 +46,7 @@ export default function PairingStatusCard({ phase }: PairingStatusCardProps) {
         }`}>
           {renderIcon()}
         </div>
-        <span className="font-['Inter',sans-serif] font-medium text-[14px] text-[#0a0a0a] transition-opacity duration-300">
+        <span className="font-medium text-[14px] text-[#0A0A0A] transition-opacity duration-300">
           {getPhaseText()}
         </span>
       </div>
@@ -61,7 +61,7 @@ export default function PairingStatusCard({ phase }: PairingStatusCardProps) {
               <div
                 key={p}
                 className={`h-1 rounded-full transition-all duration-500 ${
-                  i <= currentIdx ? 'bg-[#4f5eff] w-6' : 'bg-[#EBEBEB] w-4'
+                  i <= currentIdx ? 'bg-[#1F32D6] w-6' : 'bg-[#EBEBEB] w-4'
                 }`}
               />
             );

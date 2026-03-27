@@ -32,7 +32,7 @@ export default function OnboardingMessageRenderer({ data, callbacks }: Props) {
 
     case 'invite-code':
       return (
-        <div className="mt-3 animate-reveal-up">
+        <div className="mt-3 animate-reveal-up lg:pl-[20px]">
           <InviteCodeCard
             status={data.status === 'error' ? 'active' : data.status === 'disabled' ? 'disabled' : data.status}
             onVerify={callbacks.onInviteVerify}
@@ -44,7 +44,7 @@ export default function OnboardingMessageRenderer({ data, callbacks }: Props) {
 
     case 'setup-command':
       return (
-        <div className="mt-3 animate-reveal-up">
+        <div className="mt-3 animate-reveal-up lg:pl-[20px]">
           <SetupCommandCard
             command={data.payload?.command || ''}
             onCopy={callbacks.onCommandCopy}

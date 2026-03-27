@@ -57,7 +57,19 @@
       "Bash(grep -ohE \"rounded-\\\\[[0-9]+px\\\\]|rounded-\\(none|xs|sm|md|lg|xl|2xl|3xl|full\\)\" src/app/components/*.tsx src/app/components/**/*.tsx src/imports/*.tsx src/components/ui/*.tsx src/styles/*.css)",
       "Bash(sed -i '' 's/rounded-\\\\[4px\\\\]/rounded-[2px]/g' src/app/components/ui/checkbox.tsx)",
       "Bash(sed -i '' 's/rounded-\\\\[4px\\\\]/rounded-[6px]/g' src/app/components/WalletDetail.tsx)",
-      "Bash(xargs sed:*)"
+      "Bash(xargs sed:*)",
+      "Bash(npm run:*)",
+      "Bash(ls -la /Users/oliviatay/agent-wallet-management-site/src/assets/*.png)",
+      "Bash(ls \"/Users/oliviatay/Desktop/\"*cobo* \"/Users/oliviatay/Desktop/\"*Cobo* \"/Users/oliviatay/Desktop/\"*pact* \"/Users/oliviatay/Desktop/\"*Pact*)",
+      "Bash(git status:*)",
+      "Bash(python3:*)",
+      "Bash(npx --no-install tsc --noEmit --pretty)",
+      "Bash(./node_modules/.bin/tsc --noEmit)",
+      "Bash(node -e \"const ts = require\\(''typescript''\\); console.log\\(''found''\\)\")",
+      "Bash(npx --package typescript tsc --noEmit --jsx react-jsx --esModuleInterop --moduleResolution node --target es2020 --module es2020 --skipLibCheck src/app/components/ApprovalPage.tsx)",
+      "Bash(node -e \"const ts = require\\(''./node_modules/typescript''\\); const src = require\\(''fs''\\).readFileSync\\(''src/app/components/ApprovalPage.tsx'',''utf8''\\); const result = ts.transpileModule\\(src, {compilerOptions:{jsx:ts.JsxEmit.ReactJSX,target:ts.ScriptTarget.ES2020,module:ts.ModuleKind.ES2020}}\\); console.log\\(''OK - transpiled successfully''\\)\")",
+      "Bash(node_modules/.bin/tsc --noEmit)",
+      "Bash(npx --no-install tsc --noEmit)"
     ]
   }
 }

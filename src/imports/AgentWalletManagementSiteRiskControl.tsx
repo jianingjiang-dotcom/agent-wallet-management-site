@@ -11,13 +11,13 @@ function CoboAgenticWallet() {
           <path d={svgPaths.p3456db00} fill="var(--fill-0, #0A0A0A)" id="Vector_4" />
           <path d={svgPaths.p5983200} fill="var(--fill-0, #0A0A0A)" id="Vector_5" />
           <path d={svgPaths.p35ddbb80} fill="var(--fill-0, #0A0A0A)" id="Vector_6" />
-          <path d={svgPaths.p192f4b80} fill="var(--fill-0, #4F5EFF)" id="Vector_7" />
-          <path d={svgPaths.p2c193100} fill="var(--fill-0, #4F5EFF)" id="Vector_8" />
-          <path d={svgPaths.p357a0d00} fill="var(--fill-0, #4F5EFF)" id="Vector_9" />
-          <path d={svgPaths.p26dee800} fill="var(--fill-0, #4F5EFF)" id="Vector_10" />
-          <path d={svgPaths.pf8ab380} fill="var(--fill-0, #4F5EFF)" id="Vector_11" />
-          <path d={svgPaths.p25b8a100} fill="var(--fill-0, #4F5EFF)" id="Vector_12" />
-          <path d={svgPaths.p1a427e00} fill="var(--fill-0, #4F5EFF)" id="Vector_13" />
+          <path d={svgPaths.p192f4b80} fill="var(--fill-0, #1F32D6)" id="Vector_7" />
+          <path d={svgPaths.p2c193100} fill="var(--fill-0, #1F32D6)" id="Vector_8" />
+          <path d={svgPaths.p357a0d00} fill="var(--fill-0, #1F32D6)" id="Vector_9" />
+          <path d={svgPaths.p26dee800} fill="var(--fill-0, #1F32D6)" id="Vector_10" />
+          <path d={svgPaths.pf8ab380} fill="var(--fill-0, #1F32D6)" id="Vector_11" />
+          <path d={svgPaths.p25b8a100} fill="var(--fill-0, #1F32D6)" id="Vector_12" />
+          <path d={svgPaths.p1a427e00} fill="var(--fill-0, #1F32D6)" id="Vector_13" />
           <path d={svgPaths.p37c6db00} fill="var(--fill-0, #0A0A0A)" id="Vector_14" />
           <path d={svgPaths.p16c2cc00} fill="var(--fill-0, #0A0A0A)" id="Vector_15" />
           <path d={svgPaths.p2ed1f700} fill="var(--fill-0, #0A0A0A)" id="Vector_16" />
@@ -118,7 +118,7 @@ function Margin1() {
 
 function Tab1() {
   return (
-    <div className="bg-[#4f5eff] h-[40px] relative rounded-[6px] shrink-0 w-full" data-name="Tab-2">
+    <div className="bg-[#1F32D6] h-[40px] relative rounded-[6px] shrink-0 w-full" data-name="Tab-2">
       <div className="flex flex-row items-center size-full">
         <div className="content-stretch flex items-center px-[12px] py-[10px] relative size-full">
           <Margin1 />
@@ -188,8 +188,8 @@ function User() {
     <div className="relative shrink-0 size-[20px]" data-name="User">
       <svg className="absolute block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
         <g id="User">
-          <path d={svgPaths.p2026e800} id="Vector" stroke="var(--stroke-0, #4F5EFF)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
-          <path d={svgPaths.p32ab0300} id="Vector_2" stroke="var(--stroke-0, #4F5EFF)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
+          <path d={svgPaths.p2026e800} id="Vector" stroke="var(--stroke-0, #1F32D6)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
+          <path d={svgPaths.p32ab0300} id="Vector_2" stroke="var(--stroke-0, #1F32D6)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
         </g>
       </svg>
     </div>
@@ -297,7 +297,7 @@ function Icon2() {
     <div className="relative shrink-0 size-[20px]" data-name="Icon">
       <svg className="absolute block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
         <g id="Icon">
-          <path d={svgPaths.p25fc4100} id="Vector" stroke="var(--stroke-0, #4F5EFF)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
+          <path d={svgPaths.p25fc4100} id="Vector" stroke="var(--stroke-0, #1F32D6)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
         </g>
       </svg>
     </div>
@@ -362,10 +362,10 @@ function RefreshCw() {
     <div className="absolute left-0 size-[16px] top-[4px]" data-name="RefreshCw">
       <svg className="absolute block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
         <g id="RefreshCw">
-          <path d={svgPaths.p19987d80} id="Vector" stroke="var(--stroke-0, #4F5EFF)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
-          <path d="M14 2V5.33333H10.6667" id="Vector_2" stroke="var(--stroke-0, #4F5EFF)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
-          <path d={svgPaths.p2a3e9c80} id="Vector_3" stroke="var(--stroke-0, #4F5EFF)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
-          <path d="M5.33333 10.6667H2V14" id="Vector_4" stroke="var(--stroke-0, #4F5EFF)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
+          <path d={svgPaths.p19987d80} id="Vector" stroke="var(--stroke-0, #1F32D6)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
+          <path d="M14 2V5.33333H10.6667" id="Vector_2" stroke="var(--stroke-0, #1F32D6)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
+          <path d={svgPaths.p2a3e9c80} id="Vector_3" stroke="var(--stroke-0, #1F32D6)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
+          <path d="M5.33333 10.6667H2V14" id="Vector_4" stroke="var(--stroke-0, #1F32D6)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
         </g>
       </svg>
     </div>
@@ -377,7 +377,7 @@ function Button() {
     <div className="h-[24px] relative shrink-0 w-[136.031px]" data-name="button">
       <div className="bg-clip-padding border-0 border-[transparent] border-solid relative size-full">
         <RefreshCw />
-        <p className="-translate-x-1/2 absolute font-['Inter:Medium',sans-serif] font-medium leading-[1.5] left-[80.5px] not-italic text-[#4f5eff] text-[16px] text-center top-[-1px] whitespace-nowrap">Refresh Status</p>
+        <p className="-translate-x-1/2 absolute font-['Inter:Medium',sans-serif] font-medium leading-[1.5] left-[80.5px] not-italic text-[#1F32D6] text-[16px] text-center top-[-1px] whitespace-nowrap">Refresh Status</p>
       </div>
     </div>
   );
@@ -408,10 +408,10 @@ function Icon3() {
     <div className="relative shrink-0 size-[20px]" data-name="Icon">
       <svg className="absolute block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
         <g id="Icon">
-          <path d={svgPaths.p25397b80} id="Vector" stroke="var(--stroke-0, #4F5EFF)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
-          <path d={svgPaths.p2c4f400} id="Vector_2" stroke="var(--stroke-0, #4F5EFF)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
-          <path d={svgPaths.p2241fff0} id="Vector_3" stroke="var(--stroke-0, #4F5EFF)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
-          <path d={svgPaths.pae3c380} id="Vector_4" stroke="var(--stroke-0, #4F5EFF)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
+          <path d={svgPaths.p25397b80} id="Vector" stroke="var(--stroke-0, #1F32D6)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
+          <path d={svgPaths.p2c4f400} id="Vector_2" stroke="var(--stroke-0, #1F32D6)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
+          <path d={svgPaths.p2241fff0} id="Vector_3" stroke="var(--stroke-0, #1F32D6)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
+          <path d={svgPaths.pae3c380} id="Vector_4" stroke="var(--stroke-0, #1F32D6)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
         </g>
       </svg>
     </div>
@@ -437,7 +437,7 @@ function Switch1() {
 
 function SwitchOn() {
   return (
-    <div className="bg-[#4f5eff] col-1 content-stretch flex h-[16px] items-center justify-end ml-0 mt-0 px-[2px] relative rounded-full row-1 w-[28px]" data-name="Switch_On">
+    <div className="bg-[#1F32D6] col-1 content-stretch flex h-[16px] items-center justify-end ml-0 mt-0 px-[2px] relative rounded-full row-1 w-[28px]" data-name="Switch_On">
       <Switch1 />
     </div>
   );
@@ -528,10 +528,10 @@ function Icon4() {
     <div className="relative shrink-0 size-[20px]" data-name="Icon">
       <svg className="absolute block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
         <g id="Icon">
-          <path d={svgPaths.p25397b80} id="Vector" stroke="var(--stroke-0, #4F5EFF)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
-          <path d={svgPaths.p2c4f400} id="Vector_2" stroke="var(--stroke-0, #4F5EFF)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
-          <path d={svgPaths.p2241fff0} id="Vector_3" stroke="var(--stroke-0, #4F5EFF)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
-          <path d={svgPaths.pae3c380} id="Vector_4" stroke="var(--stroke-0, #4F5EFF)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
+          <path d={svgPaths.p25397b80} id="Vector" stroke="var(--stroke-0, #1F32D6)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
+          <path d={svgPaths.p2c4f400} id="Vector_2" stroke="var(--stroke-0, #1F32D6)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
+          <path d={svgPaths.p2241fff0} id="Vector_3" stroke="var(--stroke-0, #1F32D6)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
+          <path d={svgPaths.pae3c380} id="Vector_4" stroke="var(--stroke-0, #1F32D6)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.25" />
         </g>
       </svg>
     </div>
@@ -557,7 +557,7 @@ function Switch3() {
 
 function SwitchOn1() {
   return (
-    <div className="bg-[#4f5eff] col-1 content-stretch flex h-[16px] items-center justify-end ml-0 mt-0 px-[2px] relative rounded-full row-1 w-[28px]" data-name="Switch_On">
+    <div className="bg-[#1F32D6] col-1 content-stretch flex h-[16px] items-center justify-end ml-0 mt-0 px-[2px] relative rounded-full row-1 w-[28px]" data-name="Switch_On">
       <Switch3 />
     </div>
   );
@@ -679,7 +679,7 @@ function Button2() {
 
 function Button3() {
   return (
-    <div className="bg-[#4f5eff] flex-[1_0_0] h-[40px] min-h-px min-w-px relative rounded-[8px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1),0px_1px_2px_0px_rgba(0,0,0,0.1)]" data-name="button">
+    <div className="bg-[#1F32D6] flex-[1_0_0] h-[40px] min-h-px min-w-px relative rounded-[8px] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.1),0px_1px_2px_0px_rgba(0,0,0,0.1)]" data-name="button">
       <div className="flex flex-row items-center justify-center size-full">
         <div className="content-stretch flex items-center justify-center px-[24px] py-[5px] relative size-full">
           <p className="font-['Inter:Medium',sans-serif] font-medium leading-[1.5] not-italic relative shrink-0 text-[16px] text-center text-white whitespace-nowrap">Generate Security Report</p>
