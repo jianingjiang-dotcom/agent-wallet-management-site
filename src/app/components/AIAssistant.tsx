@@ -1142,7 +1142,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                 {!welcomeType && (
                   <div className="lg:hidden flex flex-wrap gap-2 mt-4 justify-center max-w-[340px] mx-auto">
                     {!hasWallets && (
-                      <button onClick={handleStartOnboarding} className="flex items-center gap-1.5 h-[36px] px-3.5 bg-[#EEF0FF] border border-transparent text-[#1F32D6] hover:bg-[#E2E5FF] text-[13px] font-medium rounded-full transition-colors animate-reveal-up" style={{ animationDuration: '0.4s', animationDelay: '300ms' }}>
+                      <button onClick={handleStartOnboarding} className="flex items-center gap-1.5 h-[36px] px-3.5 bg-[#EEF0FF] border border-transparent text-[#1F32D6] hover:bg-[#E2E5FF] text-[13px] font-medium rounded-full transition-colors">
                         <span className="text-[13px]">✨</span>
                         {t('onboarding.suggestion.createWallet')}
                       </button>
@@ -1158,7 +1158,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                       { emoji: '\uD83D\uDCB3', label: 'Permissions' },
                       { emoji: '\u26FD', label: 'Gas fees' },
                     ]).map((item, i) => (
-                      <button key={item.label} onClick={() => handleSendDirect(item.label)} className="flex items-center gap-1.5 h-[36px] px-3 bg-transparent hover:bg-[#F0F2FF] text-[13px] font-normal text-[#7C7C7C] rounded-full transition-colors border border-[#EBEBEB] animate-reveal-up" style={{ animationDuration: '0.4s', animationDelay: `${400 + i * 80}ms` }}>
+                      <button key={item.label} onClick={() => handleSendDirect(item.label)} className="flex items-center gap-1.5 h-[36px] px-3 bg-transparent hover:bg-[#F0F2FF] text-[13px] font-normal text-[#7C7C7C] rounded-full transition-colors border border-[#EBEBEB]">
                         <span className="text-[13px]">{item.emoji}</span>
                         {item.label}
                       </button>
@@ -1232,7 +1232,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                     {!welcomeType && (
                       <div className="flex flex-wrap gap-2 mt-[28px] justify-center max-w-[600px] mx-auto overflow-hidden max-h-[84px]">
                         {!hasWallets && (
-                          <button onClick={handleStartOnboarding} className="flex items-center gap-1.5 h-[36px] px-4 bg-[#EEF0FF] border border-transparent text-[#1F32D6] hover:bg-[#E2E5FF] text-sm font-medium rounded-full transition-colors animate-reveal-up" style={{ animationDuration: '0.4s', animationDelay: '300ms' }}>
+                          <button onClick={handleStartOnboarding} className="flex items-center gap-1.5 h-[36px] px-4 bg-[#EEF0FF] border border-transparent text-[#1F32D6] hover:bg-[#E2E5FF] text-sm font-medium rounded-full transition-colors">
                             <span className="text-[13px]">✨</span>
                             {t('onboarding.suggestion.createWallet')}
                           </button>
@@ -1248,7 +1248,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                           { emoji: '\uD83D\uDCB3', label: 'Permissions' },
                           { emoji: '\u26FD', label: 'Gas fees' },
                         ]).map((item, i) => (
-                          <button key={item.label} onClick={() => handleSendDirect(item.label)} className="flex items-center gap-1.5 h-[36px] px-4 bg-transparent hover:bg-[#F0F2FF] text-sm font-normal text-[#7C7C7C] rounded-full transition-colors border border-[#EBEBEB] animate-reveal-up" style={{ animationDuration: '0.4s', animationDelay: `${400 + i * 80}ms` }}>
+                          <button key={item.label} onClick={() => handleSendDirect(item.label)} className="flex items-center gap-1.5 h-[36px] px-4 bg-transparent hover:bg-[#F0F2FF] text-sm font-normal text-[#7C7C7C] rounded-full transition-colors border border-[#EBEBEB]">
                             <span className="text-[14px]">{item.emoji}</span>
                             {item.label}
                           </button>
