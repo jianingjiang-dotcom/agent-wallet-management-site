@@ -7,14 +7,14 @@ export default function Billing() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="font-semibold text-[24px] text-[#0A0A0A] mb-1">{t('billing.title')}</h1>
-        <p className="font-normal text-[15px] text-[#7C7C7C]">{t('billing.subtitle')}</p>
+        <h1 className="font-semibold text-[18px] lg:text-[24px] text-[#0A0A0A] mb-1">{t('billing.title')}</h1>
+        <p className="font-normal text-[13px] lg:text-[15px] text-[#7C7C7C]">{t('billing.subtitle')}</p>
       </div>
 
       {/* Coming Soon Card */}
       <div className="bg-white border border-[#EBEBEB] rounded-2xl p-6 sm:p-12 shadow-sm text-center">
-        <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-amber-100 to-orange-200 rounded-2xl mb-6">
-          <Calendar className="w-10 h-10 text-[#F5A623]" strokeWidth={1.5} />
+        <div className="inline-flex items-center justify-center w-14 h-14 lg:w-20 lg:h-20 bg-gradient-to-br from-amber-100 to-orange-200 rounded-xl lg:rounded-2xl mb-4 lg:mb-6">
+          <Calendar className="w-7 h-7 lg:w-10 lg:h-10 text-[#F5A623]" strokeWidth={1.5} />
         </div>
 
         <h2 className="text-[16px] font-semibold text-[#0A0A0A] mb-3">{t('billing.comingSoon')}</h2>
