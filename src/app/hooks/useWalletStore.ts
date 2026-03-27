@@ -82,10 +82,15 @@ function generateSolAddress(): string {
 }
 
 function generateDefaultAddresses(): WalletAddress[] {
-  return [
+  const addrs: WalletAddress[] = [
     { chain: 'EVM', address: generateEvmAddress() },
     { chain: 'SOL', address: generateSolAddress() },
   ];
+  // ~30% chance of a second EVM address
+  if (Math.random() < 0.3) {
+    addrs.push({ chain: 'EVM', address: generateEvmAddress() });
+  }
+  return addrs;
 }
 
 // --- Read/write helpers ---

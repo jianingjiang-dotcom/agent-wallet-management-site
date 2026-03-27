@@ -22,6 +22,9 @@ interface Message {
     amount: string;
     target: string;
     reason: string;
+    reasonKey?: string;
+    agentName?: string;
+    walletName?: string;
     status?: 'pending' | 'approved' | 'rejected';
   };
   onboardingData?: OnboardingData;
@@ -92,7 +95,11 @@ export default function AIAssistant() {
   // Check for startOnboarding URL param
   useEffect(() => {
     const startOnboarding = searchParams.get('startOnboarding');
-    if (startOnboarding === 'true' && !hasWallets && !onboarding.isOnboardingActive) {
+    if (startOnboarding === 'true' && !onboarding.isOnboardingActive) {
+      // Clear current chat and start fresh onboarding
+      setMessages([]);
+      setActiveChatId('current');
+      setWelcomeType(null);
       onboarding.startOnboarding();
       setSearchParams({}, { replace: true });
     }
@@ -326,13 +333,34 @@ export default function AIAssistant() {
   }, [searchParams, setSearchParams]);
 
   const handleApproval = (messageId: string, action: 'approved' | 'rejected') => {
+    let approvalInfo: Message['approvalData'] | undefined;
     setMessages((prev) =>
-      prev.map((msg) =>
-        msg.id === messageId && msg.approvalData
-          ? { ...msg, approvalData: { ...msg.approvalData, status: action } }
-          : msg
-      )
+      prev.map((msg) => {
+        if (msg.id === messageId && msg.approvalData) {
+          approvalInfo = msg.approvalData;
+          return { ...msg, approvalData: { ...msg.approvalData, status: action } };
+        }
+        return msg;
+      })
     );
+    // Append confirmation message from assistant
+    if (approvalInfo) {
+      const confirmMsg: Message = {
+        id: `confirm-${messageId}`,
+        role: 'assistant',
+        content: action === 'approved'
+          ? (language === 'zh'
+            ? `✅ 已批准 ${approvalInfo.agentName || 'Agent'} 的 ${approvalInfo.operation} 操作（${approvalInfo.amount}），交易将继续执行。`
+            : `✅ Approved ${approvalInfo.agentName || 'Agent'}'s ${approvalInfo.operation} (${approvalInfo.amount}). The transaction will proceed.`)
+          : (language === 'zh'
+            ? `❌ 已拒绝 ${approvalInfo.agentName || 'Agent'} 的 ${approvalInfo.operation} 操作（${approvalInfo.amount}），交易已取消。`
+            : `❌ Rejected ${approvalInfo.agentName || 'Agent'}'s ${approvalInfo.operation} (${approvalInfo.amount}). The transaction has been cancelled.`),
+        timestamp: new Date(),
+      };
+      setTimeout(() => {
+        setMessages(prev => [...prev, confirmMsg]);
+      }, 500);
+    }
   };
 
   const simulateAIResponse = (userMessage: string): string => {
@@ -554,25 +582,77 @@ Would you like me to help adjust your current Agent's limit settings?`;
         lowerInput.includes('我的钱包') || lowerInput.includes('钱包列表') || lowerInput.includes('查看钱包') || lowerInput.includes('展示钱包') || lowerInput.includes('显示钱包') || lowerInput.includes('所有钱包') ||
         lowerInput.includes('my wallet') || lowerInput.includes('wallet list') || lowerInput.includes('show wallet') || lowerInput.includes('list wallet') || lowerInput.includes('all wallet')
       );
-      const aiResponse: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: isWalletListQuery
-          ? (language === 'zh'
-            ? `您当前共有 ${wallets.length} 个钱包，以下是钱包列表：`
-            : `You currently have ${wallets.length} wallet${wallets.length > 1 ? 's' : ''}. Here's your wallet list:`)
-          : simulateAIResponse(inputValue),
-        timestamp: new Date(),
-        ...(isWalletListQuery ? { walletListData: true } : {}),
-      };
-      setMessages((prev) => [...prev, aiResponse]);
-      setChatSessions((prev) =>
-        prev.map((s) =>
-          s.id === currentSessionId
-            ? { ...s, messages: [...s.messages, aiResponse] }
-            : s
-        )
+
+      // Check if this should trigger an approval card (demo mode + transfer-related keywords)
+      const isApprovalTrigger = demoApproval && hasWallets && (
+        lowerInput.includes('转账') || lowerInput.includes('发送') || lowerInput.includes('transfer') || lowerInput.includes('send') ||
+        lowerInput.includes('swap') || lowerInput.includes('兑换')
       );
+
+      if (isApprovalTrigger) {
+        const firstWallet = wallets[0];
+        const walletDelegations = delegations.filter(d => d.walletId === firstWallet?.id);
+        const agentName = walletDelegations.length > 0 ? `Agent #${walletDelegations[0].agentId.slice(-4)}` : 'Agent #1';
+        const amounts = ['50 USDC', '120 USDC', '0.5 ETH', '200 USDT'];
+        const targets = ['0x7a3d...f82e', '0x4b2c...a91d', '0x1f9a...c3e7', '0x9d8e...b4f2'];
+        const idx = Math.floor(Math.random() * amounts.length);
+
+        // First: assistant explains the situation
+        const explainMsg: Message = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: language === 'zh'
+            ? `${agentName} 正在尝试执行一笔转账操作，但金额超出了设定的单笔限额，需要你的审批确认。`
+            : `${agentName} is attempting a transfer that exceeds the configured per-transaction limit. Your approval is required.`,
+          timestamp: new Date(),
+        };
+
+        // Then: the approval card
+        const approvalMsg: Message = {
+          id: (Date.now() + 2).toString(),
+          role: 'approval',
+          content: '',
+          timestamp: new Date(),
+          approvalData: {
+            operation: 'Transfer',
+            amount: amounts[idx],
+            target: targets[idx],
+            reason: language === 'zh' ? '超出单笔限额' : 'Exceeded single transaction limit',
+            reasonKey: 'approval.reason.singleLimit',
+            agentName,
+            walletName: firstWallet?.name || 'Wallet #1',
+            status: 'pending',
+          },
+        };
+
+        setMessages(prev => [...prev, explainMsg]);
+        setChatSessions(prev => prev.map(s => s.id === currentSessionId ? { ...s, messages: [...s.messages, explainMsg] } : s));
+
+        setTimeout(() => {
+          setMessages(prev => [...prev, approvalMsg]);
+          setChatSessions(prev => prev.map(s => s.id === currentSessionId ? { ...s, messages: [...s.messages, approvalMsg] } : s));
+        }, 800);
+      } else {
+        const aiResponse: Message = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: isWalletListQuery
+            ? (language === 'zh'
+              ? `您当前共有 ${wallets.length} 个钱包，以下是钱包列表：`
+              : `You currently have ${wallets.length} wallet${wallets.length > 1 ? 's' : ''}. Here's your wallet list:`)
+            : simulateAIResponse(inputValue),
+          timestamp: new Date(),
+          ...(isWalletListQuery ? { walletListData: true } : {}),
+        };
+        setMessages((prev) => [...prev, aiResponse]);
+        setChatSessions((prev) =>
+          prev.map((s) =>
+            s.id === currentSessionId
+              ? { ...s, messages: [...s.messages, aiResponse] }
+              : s
+          )
+        );
+      }
       setIsTyping(false);
     }, 1000 + Math.random() * 500);
   };
@@ -671,22 +751,22 @@ Would you like me to help adjust your current Agent's limit settings?`;
       <div className="px-2 pt-0 pb-[8px] flex flex-col gap-[2px]">
         <button
           onClick={handleNewChat}
-          className={`h-[36px] flex items-center gap-[8px] px-[8px] rounded-[8px] transition-colors text-[#0A0A0A] overflow-hidden w-full ${sidebarCollapsed ? '' : 'hover:bg-[#EDEEF3]'}`}
+          className={`h-[36px] flex items-center gap-[8px] px-[8px] rounded-[8px] transition-colors text-[var(--app-text)] overflow-hidden w-full ${sidebarCollapsed ? '' : 'hover:bg-[var(--app-hover-bg)]'}`}
           onMouseEnter={(e) => { if (sidebarCollapsed) { const rect = e.currentTarget.getBoundingClientRect(); setNavTooltip({ label: language === 'zh' ? '新对话' : 'New Chat', top: rect.top + rect.height / 2 }); } }}
           onMouseLeave={() => setNavTooltip(null)}
         >
-          <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'w-[36px] h-[36px] -m-[8px] rounded-[8px] hover:bg-[#EDEEF3] transition-colors' : ''}`}>
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0"><path d="M9.99999 18.3333C14.6024 18.3333 18.3333 14.6023 18.3333 9.99996C18.3333 5.39759 14.6024 1.66663 9.99999 1.66663C5.39762 1.66663 1.66666 5.39759 1.66666 9.99996C1.66666 14.6023 5.39762 18.3333 9.99999 18.3333Z" fill="#1C1C1C" stroke="#1C1C1C" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M6.66666 10H13.3333" stroke="white" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M10 6.66663V13.3333" stroke="white" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'w-[36px] h-[36px] -m-[8px] rounded-[8px] hover:bg-[var(--app-hover-bg)] transition-colors' : ''}`}>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0"><path d="M9.99999 18.3333C14.6024 18.3333 18.3333 14.6023 18.3333 9.99996C18.3333 5.39759 14.6024 1.66663 9.99999 1.66663C5.39762 1.66663 1.66666 5.39759 1.66666 9.99996C1.66666 14.6023 5.39762 18.3333 9.99999 18.3333Z" fill="currentColor" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M6.66666 10H13.3333" stroke="white" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M10 6.66663V13.3333" stroke="white" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </div>
           <span className={`font-['Inter',sans-serif] text-[14px] leading-[20px] font-normal whitespace-nowrap transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}>{t('ai.newChat')}</span>
         </button>
         <button
           onClick={() => { setShowSearchModal(true); setSearchQuery(''); }}
-          className={`h-[36px] flex items-center gap-[8px] px-[8px] rounded-[8px] transition-colors text-[#0A0A0A] overflow-hidden w-full ${sidebarCollapsed ? '' : 'hover:bg-[#EDEEF3]'}`}
+          className={`h-[36px] flex items-center gap-[8px] px-[8px] rounded-[8px] transition-colors text-[var(--app-text)] overflow-hidden w-full ${sidebarCollapsed ? '' : 'hover:bg-[var(--app-hover-bg)]'}`}
           onMouseEnter={(e) => { if (sidebarCollapsed) { const rect = e.currentTarget.getBoundingClientRect(); setNavTooltip({ label: language === 'zh' ? '搜索对话' : 'Search Chats', top: rect.top + rect.height / 2 }); } }}
           onMouseLeave={() => setNavTooltip(null)}
         >
-          <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'w-[36px] h-[36px] -m-[8px] rounded-[8px] hover:bg-[#EDEEF3] transition-colors' : ''}`}>
+          <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'w-[36px] h-[36px] -m-[8px] rounded-[8px] hover:bg-[var(--app-hover-bg)] transition-colors' : ''}`}>
             <Search className="w-[20px] h-[20px] shrink-0" strokeWidth={1.5} />
           </div>
           <span className={`font-['Inter',sans-serif] text-[14px] leading-[20px] font-normal whitespace-nowrap transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}>{language === 'zh' ? '搜索对话' : 'Search Chats'}</span>
@@ -695,22 +775,22 @@ Would you like me to help adjust your current Agent's limit settings?`;
           <>
             <button
               onClick={() => { if (!showWalletPage) { onShowWalletPage(); setActiveChatId('current'); } }}
-              className={`h-[36px] flex items-center gap-[8px] px-[8px] rounded-[8px] transition-colors overflow-hidden w-full ${sidebarCollapsed ? '' : 'hover:bg-[#EDEEF3]'} ${showWalletPage && !sidebarCollapsed ? 'bg-[#EDEEF3] text-[#1c1c1c]' : 'text-[#0A0A0A]'}`}
+              className={`h-[36px] flex items-center gap-[8px] px-[8px] rounded-[8px] transition-colors overflow-hidden w-full ${sidebarCollapsed ? '' : 'hover:bg-[var(--app-hover-bg)]'} ${showWalletPage && !sidebarCollapsed ? 'bg-[var(--app-hover-bg)] text-[var(--app-text)]' : 'text-[var(--app-text)]'}`}
               onMouseEnter={(e) => { if (sidebarCollapsed) { const rect = e.currentTarget.getBoundingClientRect(); setNavTooltip({ label: language === 'zh' ? '我的钱包' : 'My Wallets', top: rect.top + rect.height / 2 }); } }}
               onMouseLeave={() => setNavTooltip(null)}
             >
-              <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'w-[36px] h-[36px] -m-[8px] rounded-[8px] hover:bg-[#EDEEF3] transition-colors' : ''} ${showWalletPage && sidebarCollapsed ? 'bg-[#EDEEF3]' : ''}`}>
+              <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'w-[36px] h-[36px] -m-[8px] rounded-[8px] hover:bg-[var(--app-hover-bg)] transition-colors' : ''} ${showWalletPage && sidebarCollapsed ? 'bg-[var(--app-hover-bg)]' : ''}`}>
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0"><path d="M14.1667 11.6666H14.175" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M5.83333 5.83333H15.8333C16.2754 5.83333 16.6993 6.00893 17.0118 6.32149C17.3244 6.63405 17.5 7.05797 17.5 7.5V15.8333C17.5 16.2754 17.3244 16.6993 17.0118 17.0118C16.6993 17.3244 16.2754 17.5 15.8333 17.5H4.16667C3.72464 17.5 3.30072 17.3244 2.98816 17.0118C2.67559 16.6993 2.5 16.2754 2.5 15.8333V4.16667C2.5 3.72464 2.67559 3.30072 2.98816 2.98816C3.30072 2.67559 3.72464 2.5 4.16667 2.5H15.8333" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
               </div>
               <span className={`font-['Inter',sans-serif] text-[14px] leading-[20px] font-normal whitespace-nowrap transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}>{language === 'zh' ? '我的钱包' : 'My Wallets'}</span>
             </button>
             <button
               onClick={() => { if (!showApprovalPage) { setApprovalInitialTab('all'); onShowApprovalPage(); setActiveChatId('current'); } }}
-              className={`h-[36px] flex items-center gap-[8px] px-[8px] rounded-[8px] transition-colors overflow-hidden w-full ${sidebarCollapsed ? '' : 'hover:bg-[#EDEEF3]'} ${showApprovalPage && !sidebarCollapsed ? 'bg-[#EDEEF3] text-[#1c1c1c]' : 'text-[#0A0A0A]'}`}
+              className={`h-[36px] flex items-center gap-[8px] px-[8px] rounded-[8px] transition-colors overflow-hidden w-full ${sidebarCollapsed ? '' : 'hover:bg-[var(--app-hover-bg)]'} ${showApprovalPage && !sidebarCollapsed ? 'bg-[var(--app-hover-bg)] text-[var(--app-text)]' : 'text-[var(--app-text)]'}`}
               onMouseEnter={(e) => { if (sidebarCollapsed) { const rect = e.currentTarget.getBoundingClientRect(); setNavTooltip({ label: language === 'zh' ? '交易审批' : 'Approvals', top: rect.top + rect.height / 2 }); } }}
               onMouseLeave={() => setNavTooltip(null)}
             >
-              <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'w-[36px] h-[36px] -m-[8px] rounded-[8px] hover:bg-[#EDEEF3] transition-colors' : ''} ${showApprovalPage && sidebarCollapsed ? 'bg-[#EDEEF3]' : ''}`}>
+              <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'w-[36px] h-[36px] -m-[8px] rounded-[8px] hover:bg-[var(--app-hover-bg)] transition-colors' : ''} ${showApprovalPage && sidebarCollapsed ? 'bg-[var(--app-hover-bg)]' : ''}`}>
                 <div className="relative shrink-0">
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0"><path d="M16.6667 10.8333C16.6667 15 13.75 17.0833 10.2833 18.2916C10.1018 18.3532 9.90462 18.3502 9.72501 18.2833C6.25001 17.0833 3.33334 15 3.33334 10.8333V4.99997C3.33334 4.77895 3.42114 4.56699 3.57742 4.41071C3.7337 4.25443 3.94566 4.16663 4.16668 4.16663C5.83334 4.16663 7.91668 3.16663 9.36668 1.89997C9.54322 1.74913 9.7678 1.66626 10 1.66626C10.2322 1.66626 10.4568 1.74913 10.6333 1.89997C12.0917 3.17497 14.1667 4.16663 15.8333 4.16663C16.0544 4.16663 16.2663 4.25443 16.4226 4.41071C16.5789 4.56699 16.6667 4.77895 16.6667 4.99997V10.8333Z" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M7.5 10L9.16667 11.6667L12.5 8.33337" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
                   {demoApproval && pendingApprovalCount > 0 && (
@@ -733,33 +813,33 @@ Would you like me to help adjust your current Agent's limit settings?`;
       <div className={`flex-1 overflow-y-auto overflow-x-hidden px-2 flex flex-col gap-[2px] transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
         {chatSessions.length > 0 && (
           <div className="p-[8px]">
-            <span className="text-[14px] leading-[20px] font-normal text-[#73798B] opacity-50">
+            <span className="text-[14px] leading-[20px] font-normal text-[var(--app-text-muted)] opacity-50">
               {language === 'zh' ? '对话历史' : 'History'}
             </span>
           </div>
         )}
         {chatSessions.map((session) => (
-          <div key={session.id} className={`relative group rounded-[8px] transition-colors ${activeChatId === session.id ? 'bg-[#EDEEF3]' : 'hover:bg-[#EDEEF3]'}`}>
+          <div key={session.id} className={`relative group rounded-[8px] transition-colors ${activeChatId === session.id ? 'bg-[var(--app-hover-bg)]' : 'hover:bg-[var(--app-hover-bg)]'}`}>
             <button
               onClick={() => handleSwitchSession(session)}
               className={`w-full text-left px-[8px] py-[8px] pr-8 rounded-[8px] text-[14px] leading-[20px] font-normal truncate ${
                 activeChatId === session.id
-                  ? 'text-[#1c1c1c]'
-                  : 'text-[#1c1c1c]'
+                  ? 'text-[var(--app-text)]'
+                  : 'text-[var(--app-text)]'
               }`}
             >
               {session.title}
             </button>
             <button
               onClick={(e) => { e.stopPropagation(); setMenuOpenId(menuOpenId === session.id ? null : session.id); }}
-              className={`absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded transition-opacity text-[#73798B] hover:text-[#1c1c1c] ${
+              className={`absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded transition-opacity text-[var(--app-text-muted)] hover:text-[var(--app-text)] ${
                 activeChatId === session.id || menuOpenId === session.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
               }`}
             >
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 10.8333C10.4602 10.8333 10.8333 10.4602 10.8333 9.99996C10.8333 9.53972 10.4602 9.16663 10 9.16663C9.53977 9.16663 9.16667 9.53972 9.16667 9.99996C9.16667 10.4602 9.53977 10.8333 10 10.8333Z" fill="currentColor" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M15.8333 10.8333C16.2936 10.8333 16.6667 10.4602 16.6667 9.99996C16.6667 9.53972 16.2936 9.16663 15.8333 9.16663C15.3731 9.16663 15 9.53972 15 9.99996C15 10.4602 15.3731 10.8333 15.8333 10.8333Z" fill="currentColor" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M4.16666 10.8333C4.6269 10.8333 4.99999 10.4602 4.99999 9.99996C4.99999 9.53972 4.6269 9.16663 4.16666 9.16663C3.70642 9.16663 3.33333 9.53972 3.33333 9.99996C3.33333 10.4602 3.70642 10.8333 4.16666 10.8333Z" fill="currentColor" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </button>
             {menuOpenId === session.id && (
-              <div ref={menuRef} className="absolute right-0 top-full mt-1 bg-white rounded-lg shadow-lg border border-[#EBEBEB] py-1 z-50" style={{ minWidth: '150px' }}>
+              <div ref={menuRef} className="absolute right-0 top-full mt-1 bg-[var(--app-card-bg)] rounded-lg shadow-lg border border-[var(--app-border-medium)] py-1 z-50" style={{ minWidth: '150px' }}>
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
@@ -768,14 +848,14 @@ Would you like me to help adjust your current Agent's limit settings?`;
                     setToastMessage(language === 'zh' ? '复制成功' : 'Copied');
                     setTimeout(() => setToastMessage(null), 2000);
                   }}
-                  className="w-full text-left px-3 py-2 text-sm text-[#1c1c1c] hover:bg-[#FAFAFA] flex items-center gap-2"
+                  className="w-full text-left px-3 py-2 text-sm text-[var(--app-text)] hover:bg-[var(--app-hover-bg)] flex items-center gap-2"
                 >
                   <Copy style={{ width: '16px', height: '16px' }} />
                   {language === 'zh' ? '复制会话 ID' : 'Copy Session ID'}
                 </button>
                 <button
                   onClick={(e) => { e.stopPropagation(); setDeleteConfirmId(session.id); setMenuOpenId(null); }}
-                  className="w-full text-left px-3 py-2 text-sm text-red-500 hover:bg-[#FAFAFA] flex items-center gap-2"
+                  className="w-full text-left px-3 py-2 text-sm text-red-500 hover:bg-[var(--app-hover-bg)] flex items-center gap-2"
                 >
                   <Trash2 style={{ width: '14px', height: '14px' }} />
                   {language === 'zh' ? '删除' : 'Delete'}
@@ -793,12 +873,12 @@ Would you like me to help adjust your current Agent's limit settings?`;
   const searchModal = showSearchModal ? (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-[60]" onClick={() => setShowSearchModal(false)}>
       <div
-        className="bg-white rounded-[16px] shadow-2xl w-[680px] h-[440px] flex flex-col overflow-hidden"
+        className="bg-[var(--app-card-bg)] rounded-[16px] shadow-2xl w-[680px] h-[440px] flex flex-col overflow-hidden"
         onClick={e => e.stopPropagation()}
       >
         {/* Search input */}
-        <div className="flex items-center gap-3 px-[24px] py-[16px] border-b border-[#EBEBEB]">
-          <Search className="w-[20px] h-[20px] text-[#999] shrink-0" strokeWidth={1.5} />
+        <div className="flex items-center gap-3 px-[24px] py-[16px] border-b border-[var(--app-border-medium)]">
+          <Search className="w-[20px] h-[20px] text-[var(--app-text-muted)] shrink-0" strokeWidth={1.5} />
           <input
             ref={searchModalInputRef}
             autoFocus
@@ -806,11 +886,11 @@ Would you like me to help adjust your current Agent's limit settings?`;
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={language === 'zh' ? '搜索聊天...' : 'Search chats...'}
-            className="flex-1 text-[16px] bg-transparent text-[#0A0A0A] placeholder-[#999] focus:outline-none"
+            className="flex-1 text-[16px] bg-transparent text-[var(--app-text)] placeholder-[var(--app-text-muted)] focus:outline-none"
           />
           <button
             onClick={() => setShowSearchModal(false)}
-            className="w-[28px] h-[28px] flex items-center justify-center rounded-[6px] hover:bg-[#F5F5F5] transition-colors text-[#999]"
+            className="w-[28px] h-[28px] flex items-center justify-center rounded-[6px] hover:bg-[var(--app-hover-bg)] transition-colors text-[var(--app-text-muted)]"
           >
             <X className="w-[18px] h-[18px]" strokeWidth={1.5} />
           </button>
@@ -819,17 +899,17 @@ Would you like me to help adjust your current Agent's limit settings?`;
         {/* Results */}
         <div className="flex-1 overflow-y-auto py-2">
           <div className="px-5 pt-2 pb-1">
-            <span className="text-[12px] font-medium text-[#999]">{language === 'zh' ? '近期对话' : 'Recent Chats'}</span>
+            <span className="text-[12px] font-medium text-[var(--app-text-muted)]">{language === 'zh' ? '近期对话' : 'Recent Chats'}</span>
           </div>
           {/* All sessions flat list */}
           {filteredSessions.map((session) => (
             <button
               key={session.id}
               onClick={() => { handleSwitchSession(session); setShowSearchModal(false); }}
-              className="w-full flex items-center gap-3 px-5 py-3 hover:bg-[#F5F5F5] transition-colors"
+              className="w-full flex items-center gap-3 px-5 py-3 hover:bg-[var(--app-hover-bg)] transition-colors"
             >
-              <MessageCircle className="w-[20px] h-[20px] text-[#999] shrink-0" strokeWidth={1.5} />
-              <span className="text-[15px] text-[#0A0A0A] truncate">{session.title}</span>
+              <MessageCircle className="w-[20px] h-[20px] text-[var(--app-text-muted)] shrink-0" strokeWidth={1.5} />
+              <span className="text-[15px] text-[var(--app-text)] truncate">{session.title}</span>
             </button>
           ))}
         </div>
@@ -884,17 +964,17 @@ Would you like me to help adjust your current Agent's limit settings?`;
       {/* Delete confirmation dialog - rendered at top level */}
       {deleteConfirmId && (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-[60]" onClick={() => setDeleteConfirmId(null)}>
-          <div className="bg-white rounded-xl p-6 shadow-xl" style={{ maxWidth: '360px', width: '90%' }} onClick={e => e.stopPropagation()}>
-            <p className="text-base font-medium text-slate-900 mb-2">
+          <div className="bg-[var(--app-card-bg)] rounded-xl p-6 shadow-xl" style={{ maxWidth: '360px', width: '90%' }} onClick={e => e.stopPropagation()}>
+            <p className="text-base font-medium text-[var(--app-text)] mb-2">
               {language === 'zh' ? '删除对话历史？' : 'Delete conversation history?'}
             </p>
-            <p className="text-sm text-slate-500 mb-6">
+            <p className="text-sm text-[var(--app-text-tertiary)] mb-6">
               {language === 'zh' ? '确定要删除这条对话历史吗？此操作不可撤销。' : 'Are you sure you want to delete this conversation? This action cannot be undone.'}
             </p>
             <div className="flex gap-3 justify-end">
               <button
                 onClick={() => setDeleteConfirmId(null)}
-                className="px-4 py-2 text-sm text-slate-700 bg-[#FAFAFA] rounded-lg hover:bg-[#EDEEF3] transition-colors"
+                className="px-4 py-2 text-sm text-[var(--app-text-secondary)] bg-[var(--app-hover-bg)] rounded-lg hover:bg-[var(--app-hover-bg)] transition-colors"
               >
                 {language === 'zh' ? '取消' : 'Cancel'}
               </button>
@@ -925,7 +1005,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
 
       {/* Wallet page - shown when wallet sidebar item is active */}
       {showWalletPage && (
-        <div className="flex-1 flex flex-col bg-white overflow-y-auto min-h-0 relative">
+        <div className="flex-1 flex flex-col bg-[var(--app-card-bg)] overflow-y-auto min-h-0 relative">
           {/* Floating approval notification banner */}
           {demoApproval && hasWallets && pendingApprovalCount > 0 && !approvalBannerDismissed && (
             <div className="absolute top-0 left-0 right-0 z-10 flex justify-center px-6 pt-[24px] pointer-events-none">
@@ -934,7 +1014,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                   <div className="w-5 h-5 flex items-center justify-center">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.6667 10.8333C16.6667 15 13.75 17.0833 10.2833 18.2916C10.1018 18.3532 9.90461 18.3502 9.72499 18.2833C6.24999 17.0833 3.33333 15 3.33333 10.8333V4.99997C3.33333 4.77895 3.42113 4.56699 3.57741 4.41071C3.73369 4.25443 3.94565 4.16663 4.16666 4.16663C5.83333 4.16663 7.91666 3.16663 9.36666 1.89997C9.54321 1.74913 9.76779 1.66626 9.99999 1.66626C10.2322 1.66626 10.4568 1.74913 10.6333 1.89997C12.0917 3.17497 14.1667 4.16663 15.8333 4.16663C16.0543 4.16663 16.2663 4.25443 16.4226 4.41071C16.5789 4.56699 16.6667 4.77895 16.6667 4.99997V10.8333Z" stroke="#F97316" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M7.5 9.99992L9.16667 11.6666L12.5 8.33325" stroke="#F97316" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
                   </div>
-                  <span className="text-[14px] leading-[20px] text-[#1C1C1C] font-normal">
+                  <span className="text-[14px] leading-[20px] text-[var(--app-text)] font-normal">
                     {language === 'zh'
                       ? <>{pendingApprovalCount} 条审批待处理</>
                       : <>{pendingApprovalCount} pending approval{pendingApprovalCount > 1 ? 's' : ''}</>}
@@ -951,7 +1031,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
           )}
           <div className="w-full max-w-[864px] mx-auto px-[24px] py-[92px]">
             <WalletAgentPage
-              onSetupWallet={() => { onHideWalletPage(); }}
+              onSetupWallet={() => { onHideWalletPage(); setMessages([]); setActiveChatId('current'); setWelcomeType(null); onboarding.startOnboarding(); }}
               onClaimWallet={onClaimWallet}
               onDelegateWallet={onDelegateWallet}
             />
@@ -961,7 +1041,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
 
       {/* Approval page - shown when approval sidebar item is active */}
       {showApprovalPage && (
-        <div className="flex-1 flex flex-col bg-white overflow-y-auto min-h-0">
+        <div className="flex-1 flex flex-col bg-[var(--app-card-bg)] overflow-y-auto min-h-0">
           <div className="w-full max-w-[864px] mx-auto px-[24px] py-[92px]">
             <ApprovalPage key={approvalInitialTab} initialTab={approvalInitialTab} onPendingCountChange={setPendingApprovalCount} />
           </div>
@@ -970,7 +1050,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
 
       {/* Chat area - full height */}
       {!showWalletPage && !showApprovalPage && (
-      <div className="flex-1 flex flex-col bg-white overflow-hidden min-h-0">
+      <div className="flex-1 flex flex-col bg-[var(--app-card-bg)] overflow-hidden min-h-0">
         {/* Floating approval notification banner */}
         {demoApproval && hasWallets && pendingApprovalCount > 0 && !approvalBannerDismissed && (
           <div className="absolute top-0 left-0 right-0 z-10 flex justify-center px-6 pt-[24px] pointer-events-none">
@@ -979,7 +1059,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                 <div className="w-5 h-5 flex items-center justify-center">
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.6667 10.8333C16.6667 15 13.75 17.0833 10.2833 18.2916C10.1018 18.3532 9.90461 18.3502 9.72499 18.2833C6.24999 17.0833 3.33333 15 3.33333 10.8333V4.99997C3.33333 4.77895 3.42113 4.56699 3.57741 4.41071C3.73369 4.25443 3.94565 4.16663 4.16666 4.16663C5.83333 4.16663 7.91666 3.16663 9.36666 1.89997C9.54321 1.74913 9.76779 1.66626 9.99999 1.66626C10.2322 1.66626 10.4568 1.74913 10.6333 1.89997C12.0917 3.17497 14.1667 4.16663 15.8333 4.16663C16.0543 4.16663 16.2663 4.25443 16.4226 4.41071C16.5789 4.56699 16.6667 4.77895 16.6667 4.99997V10.8333Z" stroke="#F97316" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M7.5 9.99992L9.16667 11.6666L12.5 8.33325" stroke="#F97316" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
                 </div>
-                <span className="text-[14px] leading-[20px] text-[#1C1C1C] font-normal">
+                <span className="text-[14px] leading-[20px] text-[var(--app-text)] font-normal">
                   {language === 'zh'
                     ? <>{pendingApprovalCount} 条审批待处理</>
                     : <>{pendingApprovalCount} pending approval{pendingApprovalCount > 1 ? 's' : ''}</>}
@@ -1009,7 +1089,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
               {/* Onboarding messages */}
               {message.role === 'onboarding' && message.onboardingData ? (
                 <div className="flex items-start justify-start">
-                  <div className="bg-transparent text-slate-900 w-full min-w-0 overflow-hidden">
+                  <div className="bg-transparent text-[var(--app-text)] w-full min-w-0 overflow-hidden">
                     {!isGroupedWithPrev && renderAssistantHeader()}
                     {message.content && (
                       <div className="whitespace-pre-wrap break-words" style={{ fontSize: '15px', lineHeight: '25px' }}>
@@ -1037,7 +1117,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                             onClick={() => {
                               handleSendDirect(label);
                             }}
-                            className="w-fit px-[16px] py-[10px] rounded-[12px] border border-[#EDEEF3] bg-white hover:bg-[#F8F9FC] transition-all text-[14px] leading-[20px] font-normal text-[#1C1C1C]"
+                            className="w-fit px-[16px] py-[10px] rounded-[12px] border border-[var(--app-border-medium)] bg-[var(--app-card-bg)] hover:bg-[var(--app-hover-bg)] transition-all text-[14px] leading-[20px] font-normal text-[var(--app-text)]"
                           >
                             {label}
                           </button>
@@ -1048,41 +1128,65 @@ Would you like me to help adjust your current Agent's limit settings?`;
                 </div>
               ) : message.role === 'approval' && message.approvalData ? (
                 <div className="flex justify-center">
-                  <div className="bg-white border-2 border-yellow-300 rounded-xl p-4 w-full max-w-md shadow-sm">
-                    <div className="flex items-center mb-3">
-                      <AlertTriangle className="w-5 h-5 text-yellow-600 mr-2" />
-                      <h4 className="font-semibold text-slate-900">{t('ai.approvalRequest')}</h4>
+                  <div className="bg-[var(--app-card-bg)] border-2 border-[var(--app-warning)] rounded-xl p-4 w-full max-w-md shadow-sm">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center">
+                        <AlertTriangle className="w-5 h-5 text-[var(--app-warning)] mr-2" />
+                        <h4 className="font-semibold text-[var(--app-text)]">{t('ai.approvalRequest')}</h4>
+                      </div>
+                      {message.approvalData.status === 'pending' && (
+                        <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-amber-100 text-amber-600 animate-pulse">
+                          {language === 'zh' ? '待审批' : 'Pending'}
+                        </span>
+                      )}
                     </div>
+
+                    {/* Agent & Wallet info */}
+                    {(message.approvalData.agentName || message.approvalData.walletName) && (
+                      <div className="flex items-center gap-3 mb-3 text-[12px] text-[var(--app-text-secondary)]">
+                        {message.approvalData.agentName && (
+                          <span className="flex items-center gap-1">
+                            <Bot className="w-3 h-3" /> {message.approvalData.agentName}
+                          </span>
+                        )}
+                        {message.approvalData.walletName && (
+                          <span className="flex items-center gap-1">
+                            <Wallet className="w-3 h-3" /> {message.approvalData.walletName}
+                          </span>
+                        )}
+                      </div>
+                    )}
+
                     <div className="space-y-2 mb-4">
                       <div className="flex justify-between text-sm">
-                        <span className="text-slate-500">{t('ai.operation')}:</span>
-                        <span className="font-medium text-slate-900">{message.approvalData.operation}</span>
+                        <span className="text-[var(--app-text-secondary)]">{t('ai.operation')}:</span>
+                        <span className="font-medium text-[var(--app-text)]">{message.approvalData.operation}</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span className="text-slate-500">{t('ai.amount')}:</span>
-                        <span className="font-medium text-slate-900">{message.approvalData.amount}</span>
+                        <span className="text-[var(--app-text-secondary)]">{t('ai.amount')}:</span>
+                        <span className="font-medium text-[var(--app-text)]">{message.approvalData.amount}</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span className="text-slate-500">{t('ai.target')}:</span>
-                        <span className="font-medium text-slate-900 font-mono">{message.approvalData.target}</span>
+                        <span className="text-[var(--app-text-secondary)]">{t('ai.target')}:</span>
+                        <span className="font-medium text-[var(--app-text)] font-mono">{message.approvalData.target}</span>
                       </div>
-                      <div className="border-t border-[#EBEBEB] pt-2 mt-2">
-                        <span className="text-xs text-slate-500">{t('ai.reason')}: </span>
-                        <span className="text-xs text-yellow-700">{message.approvalData.reason}</span>
+                      <div className="border-t border-[var(--app-border)] pt-2 mt-2">
+                        <span className="text-xs text-[var(--app-text-secondary)]">{t('ai.reason')}: </span>
+                        <span className="text-xs text-amber-600">{message.approvalData.reasonKey ? t(message.approvalData.reasonKey) : message.approvalData.reason}</span>
                       </div>
                     </div>
                     {message.approvalData.status === 'pending' ? (
                       <div className="flex gap-2">
                         <button
                           onClick={() => handleApproval(message.id, 'approved')}
-                          className="flex-1 bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+                          className="flex-1 bg-[var(--app-accent)] hover:bg-[var(--app-accent-hover)] text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
                         >
                           <CheckCircle className="w-4 h-4" />
                           {t('ai.approve')}
                         </button>
                         <button
                           onClick={() => handleApproval(message.id, 'rejected')}
-                          className="flex-1 bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+                          className="flex-1 bg-[var(--app-card-bg)] border border-[var(--app-border-medium)] hover:bg-[var(--app-hover-bg)] text-[var(--app-text)] font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
                         >
                           <XCircle className="w-4 h-4" />
                           {t('ai.reject')}
@@ -1091,8 +1195,8 @@ Would you like me to help adjust your current Agent's limit settings?`;
                     ) : (
                       <div className={`text-center py-2 px-4 rounded-lg ${
                         message.approvalData.status === 'approved'
-                          ? 'bg-green-100 text-green-700'
-                          : 'bg-red-100 text-red-700'
+                          ? 'bg-[var(--app-status-approved-bg)] text-[var(--app-status-approved-text)]'
+                          : 'bg-[var(--app-status-rejected-bg)] text-[var(--app-status-rejected-text)]'
                       }`}>
                         <div className="flex items-center justify-center gap-2">
                           {message.approvalData.status === 'approved'
@@ -1107,7 +1211,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
               ) : (
                 <div className={`flex items-start ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                   {message.role === 'assistant' ? (
-                    <div className="bg-transparent text-slate-900 w-full min-w-0 overflow-hidden">
+                    <div className="bg-transparent text-[var(--app-text)] w-full min-w-0 overflow-hidden">
                       {!isGroupedWithPrev && renderAssistantHeader()}
                       <div className="whitespace-pre-wrap break-words" style={{ fontSize: '15px', lineHeight: '25px' }}>{message.content}</div>
                       {message.walletListData && wallets.length > 0 && (
@@ -1130,7 +1234,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                       )}
                     </div>
                   ) : (
-                    <div className="bg-[#F1F3FF] text-slate-900 max-w-[80%] rounded-[12px] px-4 py-3">
+                    <div className="bg-[#F1F3FF] text-[var(--app-text)] max-w-[80%] rounded-[12px] px-4 py-3">
                       <div className="whitespace-pre-wrap break-words" style={{ fontSize: '15px', lineHeight: '25px' }}>{message.content}</div>
                     </div>
                   )}
@@ -1142,11 +1246,11 @@ Would you like me to help adjust your current Agent's limit settings?`;
 
           {combinedTyping && (
             <div className="flex items-start">
-              <div className="bg-white border border-[#EBEBEB] rounded-2xl px-4 py-3">
+              <div className="bg-[var(--app-card-bg)] border border-[var(--app-border-medium)] rounded-2xl px-4 py-3">
                 <div className="flex space-x-1.5">
-                  <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                  <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                  <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                  <div className="w-2 h-2 bg-[var(--app-text-tertiary)] rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                  <div className="w-2 h-2 bg-[var(--app-text-tertiary)] rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                  <div className="w-2 h-2 bg-[var(--app-text-tertiary)] rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                 </div>
               </div>
             </div>
@@ -1184,7 +1288,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                   : {}
                 }
               >
-                  <div className="bg-white border border-[#EBEBEB] rounded-xl shadow-[0px_10px_20px_0px_rgba(0,0,0,0.04)] focus-within:border-[#4F5EFF] focus-within:shadow-[0px_10px_20px_0px_rgba(79,94,255,0.12)] transition-all flex flex-col">
+                  <div className="bg-[var(--app-card-bg)] border border-[#EBEBEB] rounded-xl shadow-[0px_10px_20px_0px_rgba(0,0,0,0.04)] focus-within:border-[#4F5EFF] focus-within:shadow-[0px_10px_20px_0px_rgba(79,94,255,0.12)] transition-all flex flex-col">
                     {inputExpanded && (
                       <textarea
                         ref={(el) => { if (el) { el.focus(); el.selectionStart = el.selectionEnd = el.value.length; } }}
@@ -1195,7 +1299,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                         }}
                         onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
                         placeholder={t('ai.inputPlaceholder')}
-                        className="w-full bg-transparent px-[16px] py-3 text-[15px] leading-[22px] text-slate-900 font-normal focus:outline-none resize-none chat-input-placeholder overflow-y-auto"
+                        className="w-full bg-transparent px-[16px] py-3 text-[15px] leading-[22px] text-[var(--app-text)] font-normal focus:outline-none resize-none chat-input-placeholder overflow-y-auto"
                         style={{ minHeight: '72px', maxHeight: '144px', height: '72px' }}
                         onInput={(e) => {
                           const el = e.currentTarget;
@@ -1207,13 +1311,35 @@ Would you like me to help adjust your current Agent's limit settings?`;
                     <div className={`flex items-center justify-between px-3 pb-3 ${!inputExpanded ? 'pt-3' : ''}`}>
                       <div className="flex items-center relative flex-1 min-w-0">
                         <div className="relative group shrink-0">
-                          <button onClick={() => fileInputRef.current?.click()} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] text-[#1C1C1C] hover:bg-[#F8F9FC] transition-colors">
+                          <button onClick={() => fileInputRef.current?.click()} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] text-[var(--app-text)] hover:bg-[#F8F9FC] transition-colors">
                             <Plus className="w-[18px] h-[18px]" strokeWidth={2} />
                           </button>
                           <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-[8px] px-[6px] py-[4px] bg-[#1C1C1C] text-white text-[12px] leading-[16px] rounded-[6px] whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
                             添加图片/附件
                           </div>
                         </div>
+                        {hasWallets && (
+                          <div className="relative group shrink-0">
+                            <button onClick={() => setShowWalletPicker(showWalletPicker === 'empty' ? null : 'empty')} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] text-[var(--app-text)] hover:bg-[#F8F9FC] transition-colors">
+                              <AtSign className="w-[18px] h-[18px]" strokeWidth={2} />
+                            </button>
+                          </div>
+                        )}
+                        {showWalletPicker === 'empty' && (
+                          <div ref={walletPickerRef} className="absolute bottom-full left-0 mb-2 bg-[var(--app-card-bg)] rounded-xl border border-[var(--app-border-medium)] shadow-lg py-1 z-50" style={{ minWidth: '200px' }}>
+                            <div className="px-3 py-2 text-[12px] font-medium text-[var(--app-text-muted)]">{language === 'zh' ? '选择钱包' : 'Select Wallet'}</div>
+                            {wallets.map(w => (
+                              <button
+                                key={w.id}
+                                onClick={() => handleSelectWallet(w.name)}
+                                className="w-full text-left px-3 py-2 text-[14px] text-[var(--app-text)] hover:bg-[var(--app-hover-bg)] transition-colors flex items-center gap-2"
+                              >
+                                <Wallet className="w-4 h-4 text-[#4f5eff]" strokeWidth={1.5} />
+                                {w.name}
+                              </button>
+                            ))}
+                          </div>
+                        )}
                         {!inputExpanded && (
                           <input
                             ref={(el) => { if (el && shouldFocusInputRef.current) { el.focus(); shouldFocusInputRef.current = false; } }}
@@ -1231,14 +1357,14 @@ Would you like me to help adjust your current Agent's limit settings?`;
                               }
                             }}
                             placeholder={t('ai.inputPlaceholder')}
-                            className="flex-1 min-w-0 bg-transparent px-[8px] text-[15px] leading-[22px] text-slate-900 font-normal focus:outline-none chat-input-placeholder"
+                            className="flex-1 min-w-0 bg-transparent px-[8px] text-[15px] leading-[22px] text-[var(--app-text)] font-normal focus:outline-none chat-input-placeholder"
                           />
                         )}
                       </div>
                       <button
                         onClick={handleSendMessage}
                         disabled={!inputValue.trim() || isTyping}
-                        className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] bg-[#4f5eff] hover:bg-[#3d4dd9] disabled:bg-slate-200 disabled:cursor-not-allowed text-white transition-all shrink-0"
+                        className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] bg-[#4f5eff] hover:bg-[#3d4dd9] disabled:bg-[var(--app-hover-bg)] disabled:cursor-not-allowed text-white transition-all shrink-0"
                       >
                         <ArrowUp className="w-[18px] h-[18px]" />
                       </button>
@@ -1270,7 +1396,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                       <button
                         key={label}
                         onClick={() => handleSendDirect(label)}
-                        className="w-fit px-[12px] py-[8px] md:px-[16px] md:py-[10px] rounded-[12px] border border-[#EDEEF3] bg-white hover:bg-[#F8F9FC] transition-all text-[13px] md:text-[14px] leading-[20px] font-normal text-[#73798B] text-left"
+                        className="w-fit px-[12px] py-[8px] md:px-[16px] md:py-[10px] rounded-[12px] border border-[var(--app-border-medium)] bg-[var(--app-card-bg)] hover:bg-[var(--app-hover-bg)] transition-all text-[13px] md:text-[14px] leading-[20px] font-normal text-[var(--app-text-muted)] text-left"
                       >
                         {label}
                       </button>
@@ -1284,9 +1410,9 @@ Would you like me to help adjust your current Agent's limit settings?`;
 
         {/* Input area - shown when messages exist */}
         {(displayMessages.length > 0 || combinedTyping) && (
-        <div className="bg-white px-6 pb-[8px] flex justify-center shrink-0 sticky bottom-0 z-10">
+        <div className="bg-[var(--app-card-bg)] px-6 pb-[8px] flex justify-center shrink-0 sticky bottom-0 z-10">
           <div className="w-full max-w-[744px]">
-          <div className="bg-white border border-[#EBEBEB] rounded-xl shadow-[0px_10px_20px_0px_rgba(0,0,0,0.04)] focus-within:border-[#4F5EFF] focus-within:shadow-[0px_10px_20px_0px_rgba(79,94,255,0.12)] transition-all flex flex-col">
+          <div className="bg-[var(--app-card-bg)] border border-[#EBEBEB] rounded-xl shadow-[0px_10px_20px_0px_rgba(0,0,0,0.04)] focus-within:border-[#4F5EFF] focus-within:shadow-[0px_10px_20px_0px_rgba(79,94,255,0.12)] transition-all flex flex-col">
             {inputExpanded && (
               <textarea
                 ref={(el) => { if (el) { el.focus(); el.selectionStart = el.selectionEnd = el.value.length; } }}
@@ -1297,7 +1423,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                 }}
                 onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
                 placeholder={t('ai.inputPlaceholder')}
-                className="w-full bg-transparent px-[16px] py-3 text-[15px] leading-[22px] text-slate-900 font-normal focus:outline-none resize-none chat-input-placeholder overflow-y-auto"
+                className="w-full bg-transparent px-[16px] py-3 text-[15px] leading-[22px] text-[var(--app-text)] font-normal focus:outline-none resize-none chat-input-placeholder overflow-y-auto"
                 style={{ minHeight: '72px', maxHeight: '144px', height: '72px' }}
                 onInput={(e) => {
                   const el = e.currentTarget;
@@ -1309,13 +1435,35 @@ Would you like me to help adjust your current Agent's limit settings?`;
             <div className={`flex items-center justify-between px-3 pb-3 ${!inputExpanded ? 'pt-3' : ''}`}>
               <div className="flex items-center relative flex-1 min-w-0">
                 <div className="relative group shrink-0">
-                  <button onClick={() => fileInputRef.current?.click()} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] text-[#1C1C1C] hover:bg-[#F8F9FC] transition-colors">
+                  <button onClick={() => fileInputRef.current?.click()} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] text-[var(--app-text)] hover:bg-[#F8F9FC] transition-colors">
                     <Plus className="w-[18px] h-[18px]" strokeWidth={2} />
                   </button>
                   <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-[8px] px-[6px] py-[4px] bg-[#1C1C1C] text-white text-[12px] leading-[16px] rounded-[6px] whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
                     添加图片/附件
                   </div>
                 </div>
+                {hasWallets && (
+                  <div className="relative group shrink-0">
+                    <button onClick={() => setShowWalletPicker(showWalletPicker === 'chat' ? null : 'chat')} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] text-[var(--app-text)] hover:bg-[#F8F9FC] transition-colors">
+                      <AtSign className="w-[18px] h-[18px]" strokeWidth={2} />
+                    </button>
+                  </div>
+                )}
+                {showWalletPicker === 'chat' && (
+                  <div ref={walletPickerRef} className="absolute bottom-full left-0 mb-2 bg-[var(--app-card-bg)] rounded-xl border border-[var(--app-border-medium)] shadow-lg py-1 z-50" style={{ minWidth: '200px' }}>
+                    <div className="px-3 py-2 text-[12px] font-medium text-[var(--app-text-muted)]">{language === 'zh' ? '选择钱包' : 'Select Wallet'}</div>
+                    {wallets.map(w => (
+                      <button
+                        key={w.id}
+                        onClick={() => handleSelectWallet(w.name)}
+                        className="w-full text-left px-3 py-2 text-[14px] text-[var(--app-text)] hover:bg-[var(--app-hover-bg)] transition-colors flex items-center gap-2"
+                      >
+                        <Wallet className="w-4 h-4 text-[#4f5eff]" strokeWidth={1.5} />
+                        {w.name}
+                      </button>
+                    ))}
+                  </div>
+                )}
                 {!inputExpanded && (
                   <input
                     ref={(el) => { if (el && shouldFocusInputRef.current) { el.focus(); shouldFocusInputRef.current = false; } }}
@@ -1332,20 +1480,20 @@ Would you like me to help adjust your current Agent's limit settings?`;
                       }
                     }}
                     placeholder={t('ai.inputPlaceholder')}
-                    className="flex-1 min-w-0 bg-transparent px-[8px] text-[15px] leading-[22px] text-slate-900 font-normal focus:outline-none chat-input-placeholder"
+                    className="flex-1 min-w-0 bg-transparent px-[8px] text-[15px] leading-[22px] text-[var(--app-text)] font-normal focus:outline-none chat-input-placeholder"
                   />
                 )}
               </div>
               <button
                 onClick={handleSendMessage}
                 disabled={!inputValue.trim() || isTyping}
-                className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] bg-[#4f5eff] hover:bg-[#3d4dd9] disabled:bg-slate-200 disabled:cursor-not-allowed text-white transition-all shrink-0"
+                className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] bg-[#4f5eff] hover:bg-[#3d4dd9] disabled:bg-[var(--app-hover-bg)] disabled:cursor-not-allowed text-white transition-all shrink-0"
               >
                 <ArrowUp className="w-[18px] h-[18px]" />
               </button>
             </div>
           </div>
-          <p className="text-center mt-2" style={{ fontSize: '12px', lineHeight: '16px', color: '#73798B' }}>
+          <p className="text-center mt-2" style={{ fontSize: '12px', lineHeight: '16px', color: 'var(--app-text-muted)' }}>
             {language === 'zh' ? 'AI 钱包助手也可能会犯错，请仔细核对回答的内容。' : 'AI Wallet Assistant may make mistakes. Please verify the responses carefully.'}
           </p>
           </div>

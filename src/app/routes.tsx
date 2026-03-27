@@ -1,4 +1,5 @@
 import { createBrowserRouter, Navigate } from "react-router";
+import { ThemeProvider } from "next-themes";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import DashboardLayout from "./components/DashboardLayout";
 import Login from "./components/Login";
@@ -7,21 +8,31 @@ import InviteCodePage from "./components/InviteCodePage";
 import AgentSetupPage from "./components/AgentSetupPage";
 import SetupSuccessPage from "./components/SetupSuccessPage";
 
+function AppProviders({ children }: { children: React.ReactNode }) {
+  return (
+    <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+      <LanguageProvider>
+        {children}
+      </LanguageProvider>
+    </ThemeProvider>
+  );
+}
+
 export const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      <LanguageProvider>
+      <AppProviders>
         <Login />
-      </LanguageProvider>
+      </AppProviders>
     ),
   },
   {
     path: "/login",
     element: (
-      <LanguageProvider>
+      <AppProviders>
         <Login />
-      </LanguageProvider>
+      </AppProviders>
     ),
   },
   {
@@ -39,9 +50,9 @@ export const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: (
-      <LanguageProvider>
+      <AppProviders>
         <DashboardLayout />
-      </LanguageProvider>
+      </AppProviders>
     ),
     children: [
       {
