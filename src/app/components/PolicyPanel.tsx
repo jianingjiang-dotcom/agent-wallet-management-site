@@ -108,7 +108,7 @@ export default function PolicyPanel({ policy, disabled }: PolicyPanelProps) {
           {advancedItems.map(({ icon: Icon, key }) => (
             <div key={key} className="flex items-center gap-2">
               <Icon className="w-3.5 h-3.5 text-[var(--app-accent)] shrink-0" strokeWidth={1.5} />
-              <span className="font-['Inter',sans-serif] font-normal text-[12px] text-[#4F4F4F]">
+              <span className="font-['Inter',sans-serif] font-normal text-[12px] text-[var(--app-text-secondary)]">
                 {t(key)}
               </span>
             </div>

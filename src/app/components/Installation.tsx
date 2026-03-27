@@ -52,10 +52,10 @@ const wallet = new AgentWallet({
           return (
             <div
               key={index}
-              className="bg-white border border-[#EBEBEB] rounded-2xl p-6 hover:shadow-md transition-shadow"
+              className="bg-[var(--app-card-bg)] border border-[var(--app-border-medium)] rounded-2xl p-6 hover:shadow-md transition-shadow"
             >
               <div className="flex items-start mb-4">
-                <div className="bg-[#1F32D6] p-3 rounded-xl mr-4 shadow-sm">
+                <div className="bg-[var(--app-accent)] p-3 rounded-xl mr-4 shadow-sm">
                   <Icon className="w-6 h-6 text-white" />
                 </div>
                 <div className="flex-1">
@@ -85,30 +85,30 @@ const wallet = new AgentWallet({
       </div>
 
       {/* Additional Resources */}
-      <div className="mt-8 bg-white border border-[#EBEBEB] rounded-2xl p-6 shadow-sm">
+      <div className="mt-8 bg-[var(--app-card-bg)] border border-[var(--app-border-medium)] rounded-2xl p-6 shadow-sm">
         <h2 className="text-xl font-semibold text-slate-900 mb-4">{t('install.additionalResources')}</h2>
         <div className="space-y-3">
           <a
             href="#"
-            className="block text-[#1F32D6] hover:text-[#1828AB] transition-colors font-medium"
+            className="block text-[var(--app-accent)] hover:text-[var(--app-accent-hover)] transition-colors font-medium"
           >
             {t('install.apiDocs')}
           </a>
           <a
             href="#"
-            className="block text-[#1F32D6] hover:text-[#1828AB] transition-colors font-medium"
+            className="block text-[var(--app-accent)] hover:text-[var(--app-accent-hover)] transition-colors font-medium"
           >
             {t('install.examples')}
           </a>
           <a
             href="#"
-            className="block text-[#1F32D6] hover:text-[#1828AB] transition-colors font-medium"
+            className="block text-[var(--app-accent)] hover:text-[var(--app-accent-hover)] transition-colors font-medium"
           >
             {t('install.faq')}
           </a>
           <a
             href="#"
-            className="block text-[#1F32D6] hover:text-[#1828AB] transition-colors font-medium"
+            className="block text-[var(--app-accent)] hover:text-[var(--app-accent-hover)] transition-colors font-medium"
           >
             {t('install.community')}
           </a>
@@ -116,12 +116,12 @@ const wallet = new AgentWallet({
       </div>
 
       {/* Support Banner */}
-      <div className="mt-6 bg-[#1F32D6] rounded-2xl p-6 text-center shadow-md">
+      <div className="mt-6 bg-[var(--app-accent)] rounded-2xl p-6 text-center shadow-md">
         <h3 className="text-xl font-semibold text-white mb-2">{t('install.needHelp')}</h3>
         <p className="text-[#C8CEFF] mb-4">
           {t('install.supportText')}
         </p>
-        <button className="bg-white text-[#1F32D6] px-6 py-2.5 rounded-xl font-medium hover:bg-[#EEF0FF] transition-colors shadow-sm">
+        <button className="bg-[var(--app-card-bg)] text-[var(--app-accent)] px-6 py-2.5 rounded-xl font-medium hover:bg-[var(--app-suggestion-bg)] transition-colors shadow-sm">
           {t('install.contactSupport')}
         </button>
       </div>

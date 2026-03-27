@@ -56,11 +56,11 @@ export default function SetupCommandCard({ command, onCopy, status, pairingPhase
   const walletDone = pairingPhase === 'done';
 
   return (
-    <div data-setup-card className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[12px] overflow-hidden transition-all duration-300">
+    <div data-setup-card className="bg-[var(--app-card-bg)] border border-[var(--app-border)] rounded-[12px] overflow-hidden transition-all duration-300">
       {/* Command area with overlay */}
       <div className="relative">
-        <div className="bg-[#FAFAFA] p-4">
-          <pre className="font-normal text-[13px] text-[#0A0A0A] leading-[20px] whitespace-pre-wrap break-words">
+        <div className="bg-[var(--app-bg)] p-4">
+          <pre className="font-normal text-[13px] text-[var(--app-text)] leading-[20px] whitespace-pre-wrap break-words">
             {command}
           </pre>
         </div>
@@ -93,7 +93,7 @@ export default function SetupCommandCard({ command, onCopy, status, pairingPhase
                     />
                   </svg>
                 </div>
-                <span className="text-[14px] leading-[20px] font-medium text-[#0A0A0A]">
+                <span className="text-[14px] leading-[20px] font-medium text-[var(--app-text)]">
                   {t('setupSuccess.title')}
                 </span>
               </>
@@ -135,7 +135,7 @@ export default function SetupCommandCard({ command, onCopy, status, pairingPhase
 
       {/* Copy button — hidden when done */}
       {!walletDone && (
-        <div className="relative p-3 bg-white">
+        <div className="relative p-3 bg-[var(--app-card-bg)]">
           {showOverlay && (
             <div className="absolute inset-0 z-10" style={{ background: 'rgba(255,255,255,0.6)' }} />
           )}
@@ -143,7 +143,7 @@ export default function SetupCommandCard({ command, onCopy, status, pairingPhase
             onClick={handleCopy}
             disabled={copied || showOverlay}
             className={`w-full flex items-center justify-center gap-2 h-[38px] rounded-[8px] font-medium text-[13px] transition-all shadow-[0px_1px_3px_0px_rgba(0,0,0,0.06)] text-white ${
-              copied ? 'bg-[#22c55e]' : 'bg-[#1F32D6] hover:bg-[#1828AB] disabled:opacity-50'
+              copied ? 'bg-[#22c55e]' : 'bg-[var(--app-accent)] hover:bg-[var(--app-accent-hover)] disabled:opacity-50'
             }`}
           >
             {copied ? (

@@ -77,7 +77,7 @@ export default function AgentSetupPage() {
   return (
     <div
       ref={containerRef}
-      className={`min-h-screen bg-[#FAFAFA] relative ${exiting ? 'animate-page-exit' : 'animate-page-enter'}`}
+      className={`min-h-screen bg-[var(--app-bg)] relative ${exiting ? 'animate-page-exit' : 'animate-page-enter'}`}
       onAnimationEnd={() => { if (exiting) navigate('/dashboard/chat?welcome=wallet-ready'); }}
     >
       {/* Success toast */}
@@ -119,8 +119,8 @@ export default function AgentSetupPage() {
       {/* Logo */}
       <div className="absolute top-0 left-0 px-6 py-[23px]">
         <span className="text-[18px] font-semibold leading-none whitespace-nowrap" style={{ fontFamily: "'Inter', sans-serif" }}>
-          <span className="text-[#0A0A0A]">Cobo </span>
-          <span className="text-[#1F32D6]">Pact</span>
+          <span className="text-[var(--app-text)]">Cobo </span>
+          <span className="text-[var(--app-accent)]">Pact</span>
         </span>
       </div>
 
@@ -129,10 +129,10 @@ export default function AgentSetupPage() {
         <div className="flex flex-col items-center w-[480px] gap-8 -mt-[120px]">
           {/* Title + subtitle — always visible, never changes */}
           <div className="flex flex-col items-center gap-3 w-full">
-            <h1 className="font-medium text-[28px] leading-[42px] text-center text-[#0A0A0A]">
+            <h1 className="font-medium text-[28px] leading-[42px] text-center text-[var(--app-text)]">
               {t('setupPage.title')}
             </h1>
-            <p className="text-[16px] leading-[26px] text-center text-[#4F4F4F]">
+            <p className="text-[16px] leading-[26px] text-center text-[var(--app-text-secondary)]">
               {t('setupPage.tellAgent')}
             </p>
           </div>
@@ -142,8 +142,8 @@ export default function AgentSetupPage() {
             {/* Dashed code block with overlay */}
             <div className="relative w-full">
               {/* Always-visible instruction text */}
-              <div className="w-full p-4 bg-white border border-dashed border-[#7C7C7C] rounded-[16px]">
-                <p className="text-[14px] leading-[20px] text-[#4F4F4F] whitespace-pre-line">
+              <div className="w-full p-4 bg-[var(--app-card-bg)] border border-dashed border-[var(--app-text-secondary)] rounded-[16px]">
+                <p className="text-[14px] leading-[20px] text-[var(--app-text-secondary)] whitespace-pre-line">
                   {instructionText}
                 </p>
               </div>
@@ -179,7 +179,7 @@ export default function AgentSetupPage() {
                           />
                         </svg>
                       </div>
-                      <span className="text-[16px] leading-[24px] font-medium text-[#0A0A0A]">
+                      <span className="text-[16px] leading-[24px] font-medium text-[var(--app-text)]">
                         {t('setupSuccess.title')}
                       </span>
                     </>
@@ -198,7 +198,7 @@ export default function AgentSetupPage() {
                             <circle cx="12" cy="12" r="9" stroke="#1F32D6" strokeWidth="1.25" strokeDasharray="14 42" strokeLinecap="round" />
                           </svg>
                         )}
-                        <span className={`text-[14px] leading-[20px] ${agentDone ? 'text-[#26C165] font-medium' : 'text-[#4F4F4F]'}`}>
+                        <span className={`text-[14px] leading-[20px] ${agentDone ? 'text-[#26C165] font-medium' : 'text-[var(--app-text-secondary)]'}`}>
                           {agentDone ? t('setupPage.agentConnected') : t('setupPage.connectingAgent')}
                         </span>
                       </div>
@@ -209,7 +209,7 @@ export default function AgentSetupPage() {
                           <svg className="animate-spin flex-shrink-0" width="20" height="20" viewBox="0 0 24 24" fill="none">
                             <circle cx="12" cy="12" r="9" stroke="#1F32D6" strokeWidth="1.25" strokeDasharray="14 42" strokeLinecap="round" />
                           </svg>
-                          <span className="text-[14px] leading-[20px] text-[#4F4F4F]">
+                          <span className="text-[14px] leading-[20px] text-[var(--app-text-secondary)]">
                             {t('setupPage.creatingWallet')}
                           </span>
                         </div>
@@ -233,10 +233,10 @@ export default function AgentSetupPage() {
                 disabled={showOverlay && !walletDone}
                 className={`w-full h-[54px] px-6 py-4 rounded-[16px] text-[16px] leading-[22px] font-medium text-white text-center transition-all duration-300 active:scale-[0.98] ${
                   walletDone
-                    ? 'bg-[#1F32D6] hover:bg-[#1828AB]'
+                    ? 'bg-[var(--app-accent)] hover:bg-[var(--app-accent-hover)]'
                     : copied
                       ? 'bg-[#22C55E]'
-                      : 'bg-[#1F32D6] hover:bg-[#1828AB] disabled:hover:bg-[#1F32D6]'
+                      : 'bg-[var(--app-accent)] hover:bg-[var(--app-accent-hover)] disabled:hover:bg-[var(--app-accent)]'
                 }`}
               >
                 {walletDone
@@ -252,7 +252,7 @@ export default function AgentSetupPage() {
                 href="https://www.cobo.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1 text-[14px] leading-[20px] font-medium text-[#1F32D6] underline hover:text-[#1828AB] transition-colors"
+                className="flex items-center gap-1 text-[14px] leading-[20px] font-medium text-[var(--app-accent)] underline hover:text-[var(--app-accent-hover)] transition-colors"
               >
                 {t('setupPage.helpLink')}
                 <svg width="16" height="16" viewBox="0 0 20 20" fill="none">

@@ -40,14 +40,14 @@ export default function SetupSuccessPage() {
   return (
     <div
       ref={containerRef}
-      className={`min-h-screen bg-[#FAFAFA] relative ${exiting ? 'animate-page-exit' : 'animate-page-enter'}`}
+      className={`min-h-screen bg-[var(--app-bg)] relative ${exiting ? 'animate-page-exit' : 'animate-page-enter'}`}
       onAnimationEnd={() => { if (exiting) navigate('/dashboard/chat?welcome=wallet-ready'); }}
     >
       {/* Logo */}
       <div className="absolute top-0 left-0 px-6 py-[23px]">
         <span className="text-[18px] font-semibold leading-none whitespace-nowrap" style={{ fontFamily: "'Inter', sans-serif" }}>
-          <span className="text-[#0A0A0A]">Cobo </span>
-          <span className="text-[#1F32D6]">Pact</span>
+          <span className="text-[var(--app-text)]">Cobo </span>
+          <span className="text-[var(--app-accent)]">Pact</span>
         </span>
       </div>
 
@@ -72,22 +72,22 @@ export default function SetupSuccessPage() {
         </div>
 
         {/* Title */}
-        <h1 className="font-medium text-[28px] leading-[42px] text-[#0A0A0A] text-center mb-6">
+        <h1 className="font-medium text-[28px] leading-[42px] text-[var(--app-text)] text-center mb-6">
           {t('setupSuccess.title')}
         </h1>
 
         {/* Wallet & Agent ID card */}
         {resultRef.current && (
-          <div className="w-[480px] max-w-full mb-10 p-5 bg-white rounded-[16px] border border-[#EBEBEB] shadow-[0px_2px_8px_rgba(0,0,0,0.04)]">
+          <div className="w-[480px] max-w-full mb-10 p-5 bg-[var(--app-card-bg)] rounded-[16px] border border-[var(--app-border-medium)] shadow-[0px_2px_8px_rgba(0,0,0,0.04)]">
             <div className="flex flex-col gap-3">
               <div className="flex items-center justify-between">
-                <span className="text-[14px] leading-[20px] text-[#4F4F4F]">Wallet ID</span>
-                <span className="text-[14px] leading-[20px] text-[#0A0A0A] font-mono font-medium">{resultRef.current.walletId}</span>
+                <span className="text-[14px] leading-[20px] text-[var(--app-text-secondary)]">Wallet ID</span>
+                <span className="text-[14px] leading-[20px] text-[var(--app-text)] font-mono font-medium">{resultRef.current.walletId}</span>
               </div>
-              <div className="w-full h-px bg-[#EBEBEB]" />
+              <div className="w-full h-px bg-[var(--app-border-medium)]" />
               <div className="flex items-center justify-between">
-                <span className="text-[14px] leading-[20px] text-[#4F4F4F]">Agent ID</span>
-                <span className="text-[14px] leading-[20px] text-[#0A0A0A] font-mono font-medium">{resultRef.current.agentId}</span>
+                <span className="text-[14px] leading-[20px] text-[var(--app-text-secondary)]">Agent ID</span>
+                <span className="text-[14px] leading-[20px] text-[var(--app-text)] font-mono font-medium">{resultRef.current.agentId}</span>
               </div>
             </div>
           </div>
@@ -96,7 +96,7 @@ export default function SetupSuccessPage() {
         {/* CTA Button */}
         <button
           onClick={handleGetStarted}
-          className="w-[480px] max-w-full h-[54px] px-6 py-4 bg-[#1F32D6] hover:bg-[#1828AB] rounded-[16px] text-[16px] leading-[22px] font-medium text-white text-center transition-all duration-150 active:scale-[0.98]"
+          className="w-[480px] max-w-full h-[54px] px-6 py-4 bg-[var(--app-accent)] hover:bg-[var(--app-accent-hover)] rounded-[16px] text-[16px] leading-[22px] font-medium text-white text-center transition-all duration-150 active:scale-[0.98]"
         >
           {t('setupSuccess.button')}
         </button>

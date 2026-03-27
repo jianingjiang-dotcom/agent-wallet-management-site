@@ -74,7 +74,7 @@ export default function InviteCodePage() {
 
   return (
     <div
-      className={`min-h-screen bg-[#FAFAFA] relative ${exiting ? 'animate-page-exit' : 'animate-page-enter'}`}
+      className={`min-h-screen bg-[var(--app-bg)] relative ${exiting ? 'animate-page-exit' : 'animate-page-enter'}`}
       onAnimationEnd={() => { if (exiting) navigate('/setup'); }}
     >
       {/* Toast */}
@@ -108,8 +108,8 @@ export default function InviteCodePage() {
       {/* Logo */}
       <div className="absolute top-0 left-0 px-6 py-[23px]">
         <span className="text-[18px] font-semibold leading-none whitespace-nowrap" style={{ fontFamily: "'Inter', sans-serif" }}>
-          <span className="text-[#0A0A0A]">Cobo </span>
-          <span className="text-[#1F32D6]">Pact</span>
+          <span className="text-[var(--app-text)]">Cobo </span>
+          <span className="text-[var(--app-accent)]">Pact</span>
         </span>
       </div>
 
@@ -118,10 +118,10 @@ export default function InviteCodePage() {
         <div className="flex flex-col items-center w-[480px] gap-8 -mt-[120px]">
           {/* Title + subtitle */}
           <div className="flex flex-col items-center gap-3 w-full">
-            <h1 className="font-medium text-[28px] leading-[42px] text-center text-[#0A0A0A]">
+            <h1 className="font-medium text-[28px] leading-[42px] text-center text-[var(--app-text)]">
               {t('invitePage.title')}
             </h1>
-            <p className="text-[16px] leading-[26px] text-center text-[#4F4F4F]">
+            <p className="text-[16px] leading-[26px] text-center text-[var(--app-text-secondary)]">
               {t('invitePage.subtitle')}
             </p>
           </div>
@@ -137,7 +137,7 @@ export default function InviteCodePage() {
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
                 placeholder={t('invitePage.placeholder')}
-                className="w-full h-[54px] px-6 py-4 bg-white border border-[#EBEBEB] rounded-[16px] text-[16px] leading-[22px] text-center text-[#0A0A0A] placeholder:text-[#7C7C7C] placeholder:uppercase focus:placeholder:text-transparent outline-none transition-colors"
+                className="w-full h-[54px] px-6 py-4 bg-[var(--app-card-bg)] border border-[var(--app-border-medium)] rounded-[16px] text-[16px] leading-[22px] text-center text-[var(--app-text)] placeholder:text-[var(--app-text-secondary)] placeholder:uppercase focus:placeholder:text-transparent outline-none transition-colors"
                 maxLength={9}
               />
             </div>
@@ -146,7 +146,7 @@ export default function InviteCodePage() {
             <button
               onClick={handleSubmit}
               disabled={!code.trim() || loading}
-              className="w-full h-[54px] px-6 py-4 bg-[#1F32D6] hover:bg-[#1828AB] disabled:opacity-50 disabled:cursor-not-allowed rounded-[16px] text-[16px] leading-[22px] font-medium text-white text-center transition-all duration-150 active:scale-[0.98]"
+              className="w-full h-[54px] px-6 py-4 bg-[var(--app-accent)] hover:bg-[var(--app-accent-hover)] disabled:opacity-50 disabled:cursor-not-allowed rounded-[16px] text-[16px] leading-[22px] font-medium text-white text-center transition-all duration-150 active:scale-[0.98]"
             >
               {loading ? (
                 <span className="inline-flex items-center gap-2">
@@ -161,13 +161,13 @@ export default function InviteCodePage() {
           </div>
 
           {/* Footer link */}
-          <p className="text-[16px] leading-[24px] text-center text-[#4F4F4F]">
+          <p className="text-[16px] leading-[24px] text-center text-[var(--app-text-secondary)]">
             {t('invitePage.noCode')}{' '}
             <a
               href="https://www.cobo.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[#1F32D6] hover:text-[#1828AB] transition-colors cursor-pointer"
+              className="text-[var(--app-accent)] hover:text-[var(--app-accent-hover)] transition-colors cursor-pointer"
             >
               {t('invitePage.getCode')}
             </a>

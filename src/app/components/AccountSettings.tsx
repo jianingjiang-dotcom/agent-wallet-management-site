@@ -42,20 +42,20 @@ function ConfirmModal({
   const btnColor =
     variant === 'danger'
       ? 'bg-red-600 hover:bg-red-700 text-white'
-      : 'bg-[#1F32D6] hover:bg-[#1828AB] text-white';
+      : 'bg-[var(--app-accent)] hover:bg-[var(--app-accent-hover)] text-white';
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* backdrop */}
       <div className="absolute inset-0 bg-black/40" onClick={onCancel} />
       {/* card */}
-      <div className="relative bg-white rounded-2xl p-6 w-[340px] shadow-xl space-y-4">
-        <h3 className="text-[18px] font-semibold text-[#0A0A0A]">{title}</h3>
-        <p className="text-[14px] text-[#7C7C7C] leading-relaxed">{desc}</p>
+      <div className="relative bg-[var(--app-card-bg)] rounded-2xl p-6 w-[340px] shadow-xl space-y-4">
+        <h3 className="text-[18px] font-semibold text-[var(--app-text)]">{title}</h3>
+        <p className="text-[14px] text-[var(--app-text-secondary)] leading-relaxed">{desc}</p>
         <div className="flex gap-3 pt-2">
           <button
             onClick={onCancel}
-            className="flex-1 h-[44px] rounded-[8px] border border-[#EBEBEB] text-[14px] font-medium text-[#0A0A0A] hover:bg-[#F0F2FF] transition-colors"
+            className="flex-1 h-[44px] rounded-[8px] border border-[var(--app-border-medium)] text-[14px] font-medium text-[var(--app-text)] hover:bg-[var(--app-hover-accent-bg)] transition-colors"
           >
             {/* Cancel */}
             {onCancel && 'Cancel'}
@@ -177,28 +177,28 @@ export default function AccountSettings({ compact = false }: { compact?: boolean
   return (
     <div className="w-full space-y-[24px] lg:space-y-[16px]">
       {/* Page header */}
-      <h1 className="hidden lg:block font-semibold text-[24px] text-[#0A0A0A]">
+      <h1 className="hidden lg:block font-semibold text-[24px] text-[var(--app-text)]">
         {t('account.title')}
       </h1>
 
       {/* Security banner */}
       {!secureBannerDismissed && (
-        <div className="bg-[#EEF0FF] border border-[#C8CEFF] rounded-[8px] lg:rounded-2xl p-3 lg:p-4 flex items-start gap-2.5 lg:gap-3">
-          <ShieldCheck className="w-4 h-4 lg:w-5 lg:h-5 text-[#1F32D6] flex-shrink-0 mt-0.5" strokeWidth={1.5} />
+        <div className="bg-[var(--app-security-banner-bg)] border border-[var(--app-security-banner-border)] rounded-[8px] lg:rounded-2xl p-3 lg:p-4 flex items-start gap-2.5 lg:gap-3">
+          <ShieldCheck className="w-4 h-4 lg:w-5 lg:h-5 text-[var(--app-accent)] flex-shrink-0 mt-0.5" strokeWidth={1.5} />
           <div className="flex-1 min-w-0">
-            <p className="text-[13px] lg:text-[14px] font-semibold text-[#0A0A0A]">{t('account.secureTitle')}</p>
-            <p className="font-normal text-[12px] lg:text-[13px] text-[#7C7C7C] mt-0.5">{t('account.secureDesc')}</p>
+            <p className="text-[13px] lg:text-[14px] font-semibold text-[var(--app-text)]">{t('account.secureTitle')}</p>
+            <p className="font-normal text-[12px] lg:text-[13px] text-[var(--app-text-secondary)] mt-0.5">{t('account.secureDesc')}</p>
             <div className="flex items-center gap-3 mt-2.5 lg:mt-3">
               <button
                 onClick={handleConnectBackup}
-                className="text-[13px] lg:text-[14px] font-medium text-[#1F32D6] hover:underline flex items-center gap-1"
+                className="text-[13px] lg:text-[14px] font-medium text-[var(--app-accent)] hover:underline flex items-center gap-1"
               >
                 {t('account.secureAction')}
                 <ChevronRight className="w-4 h-4" strokeWidth={1.5} />
               </button>
               <button
                 onClick={() => setSecureBannerDismissed(true)}
-                className="text-[13px] lg:text-[14px] font-medium text-[#7C7C7C] hover:text-[#0A0A0A]"
+                className="text-[13px] lg:text-[14px] font-medium text-[var(--app-text-secondary)] hover:text-[var(--app-text)]"
               >
                 {t('account.secureDismiss')}
               </button>
@@ -208,12 +208,12 @@ export default function AccountSettings({ compact = false }: { compact?: boolean
       )}
 
       {/* Profile card */}
-      <div className={compact ? 'space-y-4' : 'bg-white border border-[#EBEBEB] rounded-2xl p-5 shadow-sm space-y-4'}>
-        <h2 className="text-[16px] font-semibold text-[#0A0A0A]">{t('account.profile')}</h2>
+      <div className={compact ? 'space-y-4' : 'bg-[var(--app-card-bg)] border border-[var(--app-border-medium)] rounded-2xl p-5 shadow-sm space-y-4'}>
+        <h2 className="text-[16px] font-semibold text-[var(--app-text)]">{t('account.profile')}</h2>
 
         {/* Avatar + name row */}
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-[#1F32D6] rounded-full flex items-center justify-center text-[18px] font-bold text-white flex-shrink-0">
+          <div className="w-12 h-12 bg-[var(--app-accent)] rounded-full flex items-center justify-center text-[18px] font-bold text-white flex-shrink-0">
             {(user.name as string).charAt(0).toUpperCase()}
           </div>
 
@@ -228,31 +228,31 @@ export default function AccountSettings({ compact = false }: { compact?: boolean
                     setNameError('');
                   }}
                   className={`h-[36px] px-3 rounded-lg border text-[14px] flex-1 min-w-0 outline-none ${
-                    nameError ? 'border-red-400' : 'border-[#EBEBEB] focus:border-[#1F32D6]'
+                    nameError ? 'border-red-400' : 'border-[var(--app-border-medium)] focus:border-[var(--app-accent)]'
                   }`}
                 />
                 <button
                   onClick={handleSaveName}
-                  className="w-8 h-8 flex items-center justify-center rounded-lg bg-[#1F32D6] text-white hover:bg-[#1828AB] transition-colors"
+                  className="w-8 h-8 flex items-center justify-center rounded-lg bg-[var(--app-accent)] text-white hover:bg-[var(--app-accent-hover)] transition-colors"
                 >
                   <Check className="w-4 h-4" strokeWidth={1.5} />
                 </button>
                 <button
                   onClick={handleCancelName}
-                  className="w-8 h-8 flex items-center justify-center rounded-lg border border-[#EBEBEB] text-[#7C7C7C] hover:bg-[#F0F2FF] transition-colors"
+                  className="w-8 h-8 flex items-center justify-center rounded-lg border border-[var(--app-border-medium)] text-[var(--app-text-secondary)] hover:bg-[var(--app-hover-accent-bg)] transition-colors"
                 >
                   <X className="w-4 h-4" strokeWidth={1.5} />
                 </button>
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <span className="text-[14px] font-medium text-[#0A0A0A] truncate">
+                <span className="text-[14px] font-medium text-[var(--app-text)] truncate">
                   {nameValue}
                 </span>
                 {!compact && (
                   <button
                     onClick={() => setEditingName(true)}
-                    className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#F0F2FF] text-[#7C7C7C] hover:text-[#7C7C7C] transition-colors"
+                    className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[var(--app-hover-accent-bg)] text-[var(--app-text-secondary)] hover:text-[var(--app-text-secondary)] transition-colors"
                     title={t('account.editName')}
                   >
                     <Pencil className="w-3.5 h-3.5" strokeWidth={1.5} />
@@ -263,37 +263,37 @@ export default function AccountSettings({ compact = false }: { compact?: boolean
             {nameError && (
               <p className="text-[12px] text-red-500 mt-1">{nameError}</p>
             )}
-            <p className="text-[13px] text-[#7C7C7C] mt-0.5">{user.email}</p>
+            <p className="text-[13px] text-[var(--app-text-secondary)] mt-0.5">{user.email}</p>
           </div>
         </div>
 
         {/* Member since */}
-        <div className="text-[13px] text-[#7C7C7C] pt-1">
+        <div className="text-[13px] text-[var(--app-text-secondary)] pt-1">
           {t('account.memberSince')} {formatDate(user.createdAt)}
         </div>
       </div>
 
-      {compact && <div className="border-b border-[#EBEBEB]" />}
+      {compact && <div className="border-b border-[var(--app-border-medium)]" />}
 
       {/* Connected Accounts */}
       <div
-        className={`${compact ? '' : 'bg-white border border-[#EBEBEB] rounded-2xl p-5 shadow-sm'} space-y-3 transition-all ${
-          highlightProviders ? 'animate-pulse ring-2 ring-[#1F32D6]/40' : ''
+        className={`${compact ? '' : 'bg-[var(--app-card-bg)] border border-[var(--app-border-medium)] rounded-2xl p-5 shadow-sm'} space-y-3 transition-all ${
+          highlightProviders ? 'animate-pulse ring-2 ring-[var(--app-accent)]/40' : ''
         }`}
       >
         <div>
-          <h2 className="text-[16px] font-semibold text-[#0A0A0A]">
+          <h2 className="text-[16px] font-semibold text-[var(--app-text)]">
             {t('account.connectedAccounts')}
           </h2>
-          <p className="text-[13px] text-[#7C7C7C] mt-0.5">
+          <p className="text-[13px] text-[var(--app-text-secondary)] mt-0.5">
             {t('account.connectedAccountsDesc')}
           </p>
         </div>
 
         {/* Login method (read-only) */}
-        <div className="flex items-center justify-between py-3 border-t border-[#FAFAFA]">
+        <div className="flex items-center justify-between py-3 border-t border-[var(--app-bg)]">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-[#FAFAFA] flex items-center justify-center">
+            <div className="w-9 h-9 rounded-full bg-[var(--app-bg)] flex items-center justify-center">
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path
                   d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
@@ -314,8 +314,8 @@ export default function AccountSettings({ compact = false }: { compact?: boolean
               </svg>
             </div>
             <div>
-              <p className="text-[14px] font-medium text-[#0A0A0A]">{t('account.loginMethod')}</p>
-              <p className="text-[12px] text-[#7C7C7C]">{user.email}</p>
+              <p className="text-[14px] font-medium text-[var(--app-text)]">{t('account.loginMethod')}</p>
+              <p className="text-[12px] text-[var(--app-text-secondary)]">{user.email}</p>
             </div>
           </div>
           <span className="h-[28px] inline-flex items-center text-[12px] text-[#34A853] font-medium bg-[#E8F5E9] px-3 rounded-full">
@@ -324,19 +324,19 @@ export default function AccountSettings({ compact = false }: { compact?: boolean
         </div>
 
         {/* Telegram row */}
-        <div className="flex items-center justify-between py-3 border-t border-[#FAFAFA]">
+        <div className="flex items-center justify-between py-3 border-t border-[var(--app-bg)]">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-full bg-[#E3F2FD] flex items-center justify-center">
               <TelegramIcon className="w-5 h-5 text-[#0088cc]" />
             </div>
-            <p className="text-[14px] font-medium text-[#0A0A0A]">Telegram</p>
+            <p className="text-[14px] font-medium text-[var(--app-text)]">Telegram</p>
           </div>
           <button
             onClick={() => handleToggleProvider('telegram')}
             className={`h-[28px] text-[12px] font-medium px-3 rounded-full transition-colors ${
               providers.telegram
                 ? 'text-red-500 border border-red-200 hover:bg-red-50'
-                : 'text-[#1F32D6] border border-[#1F32D6]/30 hover:bg-[#F0F2FF]'
+                : 'text-[var(--app-accent)] border border-[var(--app-accent)]/30 hover:bg-[var(--app-hover-accent-bg)]'
             }`}
           >
             {providers.telegram ? t('account.unbind') : t('account.bind')}
@@ -344,19 +344,19 @@ export default function AccountSettings({ compact = false }: { compact?: boolean
         </div>
 
         {/* Discord row */}
-        <div className="flex items-center justify-between py-3 border-t border-[#FAFAFA]">
+        <div className="flex items-center justify-between py-3 border-t border-[var(--app-bg)]">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-full bg-[#EDE7F6] flex items-center justify-center">
               <DiscordIcon className="w-5 h-5 text-[#5865F2]" />
             </div>
-            <p className="text-[14px] font-medium text-[#0A0A0A]">Discord</p>
+            <p className="text-[14px] font-medium text-[var(--app-text)]">Discord</p>
           </div>
           <button
             onClick={() => handleToggleProvider('discord')}
             className={`h-[28px] text-[12px] font-medium px-3 rounded-full transition-colors ${
               providers.discord
                 ? 'text-red-500 border border-red-200 hover:bg-red-50'
-                : 'text-[#1F32D6] border border-[#1F32D6]/30 hover:bg-[#F0F2FF]'
+                : 'text-[var(--app-accent)] border border-[var(--app-accent)]/30 hover:bg-[var(--app-hover-accent-bg)]'
             }`}
           >
             {providers.discord ? t('account.unbind') : t('account.bind')}

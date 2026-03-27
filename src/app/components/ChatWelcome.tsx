@@ -66,14 +66,14 @@ export default function ChatWelcome({ variant }: ChatWelcomeProps) {
       {/* Subtitle */}
       {isFirst ? (
         <p
-          className="text-[#7C7C7C] text-[14px] leading-[21px] md:text-[16px] md:leading-[24px] animate-reveal-up"
+          className="text-[var(--app-text-secondary)] text-[14px] leading-[21px] md:text-[16px] md:leading-[24px] animate-reveal-up"
           style={{ maxWidth: '600px', animationDelay: '1100ms', animationDuration: '500ms' }}
         >
           {t('chat.welcome.firstWallet.subtitle')}
         </p>
       ) : (
         <p
-          className="text-[#0A0A0A] text-[14px] lg:text-[16px] leading-[21px] lg:leading-[24px] mt-1.5 animate-reveal-up"
+          className="text-[var(--app-text)] text-[14px] lg:text-[16px] leading-[21px] lg:leading-[24px] mt-1.5 animate-reveal-up"
           style={{ animationDuration: '0.5s', animationDelay: '150ms' }}
         >
           {language === 'zh' ? '有什么可以帮你的吗？' : 'How can I help you today?'}

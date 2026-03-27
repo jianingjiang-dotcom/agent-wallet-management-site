@@ -24,7 +24,7 @@ export default function SuccessCard({ walletId, agentId, onComplete, completed }
   }, []);
 
   return (
-    <div ref={containerRef} className="bg-white border border-[rgba(34,197,94,0.2)] rounded-[12px] p-5 relative overflow-hidden">
+    <div ref={containerRef} className="bg-[var(--app-card-bg)] border border-[rgba(34,197,94,0.2)] rounded-[12px] p-5 relative overflow-hidden">
       {/* Header */}
       <div className="text-center mb-4">
         <div
@@ -35,22 +35,22 @@ export default function SuccessCard({ walletId, agentId, onComplete, completed }
         >
           <CheckCircle className="w-6 h-6 text-[#22c55e]" />
         </div>
-        <h3 className="font-semibold text-[18px] text-[#0A0A0A]">
+        <h3 className="font-semibold text-[18px] text-[var(--app-text)]">
           {t('onboarding.success.title')}
         </h3>
       </div>
 
       {/* Wallet ↔ Agent */}
-      <div className="rounded-[12px] border border-[rgba(10,10,10,0.08)] bg-[#FAFAFA] overflow-hidden mb-4">
+      <div className="rounded-[12px] border border-[var(--app-border)] bg-[var(--app-bg)] overflow-hidden mb-4">
         <div className="flex items-center gap-3 px-3.5 py-3">
           <div className="w-8 h-8 rounded-[8px] bg-[rgba(79,94,255,0.08)] flex items-center justify-center flex-shrink-0">
-            <Shield className="w-3.5 h-3.5 text-[#1F32D6]" />
+            <Shield className="w-3.5 h-3.5 text-[var(--app-accent)]" />
           </div>
           <div className="min-w-0 flex-1">
-            <span className="font-medium text-[10px] text-[#7C7C7C] uppercase tracking-wider block mb-0.5">
+            <span className="font-medium text-[10px] text-[var(--app-text-secondary)] uppercase tracking-wider block mb-0.5">
               {t('onboarding.success.walletId')}
             </span>
-            <code className="font-['JetBrains_Mono',monospace] text-[12px] text-[#0A0A0A] break-words leading-snug">
+            <code className="font-['JetBrains_Mono',monospace] text-[12px] text-[var(--app-text)] break-words leading-snug">
               {walletId}
             </code>
           </div>
@@ -69,13 +69,13 @@ export default function SuccessCard({ walletId, agentId, onComplete, completed }
         </div>
         <div className="flex items-center gap-3 px-3.5 py-3">
           <div className="w-8 h-8 rounded-[8px] bg-[rgba(31,50,214,0.08)] flex items-center justify-center flex-shrink-0">
-            <Zap className="w-3.5 h-3.5 text-[#1F32D6]" />
+            <Zap className="w-3.5 h-3.5 text-[var(--app-accent)]" />
           </div>
           <div className="min-w-0 flex-1">
-            <span className="font-medium text-[10px] text-[#7C7C7C] uppercase tracking-wider block mb-0.5">
+            <span className="font-medium text-[10px] text-[var(--app-text-secondary)] uppercase tracking-wider block mb-0.5">
               {t('onboarding.success.agentId')}
             </span>
-            <code className="font-['JetBrains_Mono',monospace] text-[12px] text-[#0A0A0A] break-words leading-snug">
+            <code className="font-['JetBrains_Mono',monospace] text-[12px] text-[var(--app-text)] break-words leading-snug">
               {agentId}
             </code>
           </div>

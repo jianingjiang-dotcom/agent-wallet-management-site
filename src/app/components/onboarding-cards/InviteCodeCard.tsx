@@ -36,7 +36,7 @@ export default function InviteCodeCard({ status, onVerify, error, verifiedCode }
 
   if (status === 'completed') {
     return (
-      <div className="bg-white border border-[rgba(34,197,94,0.3)] rounded-[8px] p-4 transition-all duration-300">
+      <div className="bg-[var(--app-card-bg)] border border-[rgba(34,197,94,0.3)] rounded-[8px] p-4 transition-all duration-300">
         <div className="flex items-center gap-3 mb-3">
           <div className="w-8 h-8 rounded-full bg-[rgba(34,197,94,0.1)] flex items-center justify-center transition-transform duration-300 scale-100">
             <CheckCircle className="w-4 h-4 text-[#22c55e]" />
@@ -45,12 +45,12 @@ export default function InviteCodeCard({ status, onVerify, error, verifiedCode }
             {t('onboarding.chat.inviteVerified')}
           </span>
         </div>
-        <div className="rounded-[8px] bg-[#FAFAFA] border border-[rgba(10,10,10,0.06)] px-3.5 py-2.5 flex items-center justify-between">
+        <div className="rounded-[8px] bg-[var(--app-bg)] border border-[rgba(10,10,10,0.06)] px-3.5 py-2.5 flex items-center justify-between">
           <div>
             <div className="text-[11px] font-medium text-[#999] uppercase tracking-wider mb-0.5">
               {language === 'zh' ? '邀请码' : 'Invite Code'}
             </div>
-            <code className="font-['JetBrains_Mono',monospace] text-[13px] text-[#0A0A0A] font-medium">
+            <code className="font-['JetBrains_Mono',monospace] text-[13px] text-[var(--app-text)] font-medium">
               COBO-{verifiedCode}
             </code>
           </div>
@@ -69,9 +69,9 @@ export default function InviteCodeCard({ status, onVerify, error, verifiedCode }
 
   if (status === 'disabled') {
     return (
-      <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[8px] p-4 transition-all duration-300 opacity-50">
+      <div className="bg-[var(--app-card-bg)] border border-[var(--app-border)] rounded-[8px] p-4 transition-all duration-300 opacity-50">
         <div className="mb-3">
-          <div className="flex items-center w-full h-[48px] bg-[#FAFAFA] border border-[rgba(10,10,10,0.06)] rounded-[8px] overflow-hidden">
+          <div className="flex items-center w-full h-[48px] bg-[var(--app-bg)] border border-[rgba(10,10,10,0.06)] rounded-[8px] overflow-hidden">
             <span className="font-['JetBrains_Mono',monospace] font-medium text-[15px] text-[#999] pl-3.5 pr-0.5 flex-shrink-0 select-none">
               COBO-
             </span>
@@ -79,7 +79,7 @@ export default function InviteCodeCard({ status, onVerify, error, verifiedCode }
               type="text"
               disabled
               placeholder="0000-0000"
-              className="flex-1 h-full bg-transparent font-['JetBrains_Mono',monospace] font-normal text-[15px] text-[#999] placeholder:text-[#7C7C7C] focus:outline-none pr-3 cursor-not-allowed"
+              className="flex-1 h-full bg-transparent font-['JetBrains_Mono',monospace] font-normal text-[15px] text-[#999] placeholder:text-[var(--app-text-secondary)] focus:outline-none pr-3 cursor-not-allowed"
             />
           </div>
         </div>
@@ -93,15 +93,15 @@ export default function InviteCodeCard({ status, onVerify, error, verifiedCode }
   }
 
   return (
-    <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[8px] p-4 transition-all duration-300">
+    <div className="bg-[var(--app-card-bg)] border border-[var(--app-border)] rounded-[8px] p-4 transition-all duration-300">
       {/* Input */}
       <div className="mb-3">
-        <div className={`flex items-center w-full h-[44px] bg-white border rounded-[8px] overflow-hidden transition-colors ${
+        <div className={`flex items-center w-full h-[44px] bg-[var(--app-card-bg)] border rounded-[8px] overflow-hidden transition-colors ${
           error
             ? 'border-[#ef4444] shadow-[0px_2px_12px_0px_rgba(239,68,68,0.08)]'
-            : 'border-[#EBEBEB] focus-within:border-[#1F32D6] focus-within:shadow-[0px_2px_12px_0px_rgba(31,50,214,0.08)]'
+            : 'border-[var(--app-border-medium)] focus-within:border-[#1F32D6] focus-within:shadow-[0px_2px_12px_0px_rgba(31,50,214,0.08)]'
         }`}>
-          <span className="font-['JetBrains_Mono',monospace] font-medium text-[13px] lg:text-[15px] text-[#1F32D6] pl-3.5 pr-0.5 flex-shrink-0 select-none">
+          <span className="font-['JetBrains_Mono',monospace] font-medium text-[13px] lg:text-[15px] text-[var(--app-accent)] pl-3.5 pr-0.5 flex-shrink-0 select-none">
             COBO-
           </span>
           <input
@@ -111,7 +111,7 @@ export default function InviteCodeCard({ status, onVerify, error, verifiedCode }
             onKeyDown={(e) => { if (e.key === 'Enter') handleVerify(); }}
             placeholder="0000-0000"
             maxLength={9}
-            className="flex-1 h-full bg-transparent font-['JetBrains_Mono',monospace] font-normal text-[13px] lg:text-[15px] text-[#0A0A0A] placeholder:text-[#7C7C7C] focus:outline-none pr-3"
+            className="flex-1 h-full bg-transparent font-['JetBrains_Mono',monospace] font-normal text-[13px] lg:text-[15px] text-[var(--app-text)] placeholder:text-[var(--app-text-secondary)] focus:outline-none pr-3"
           />
         </div>
         {error && (
@@ -129,7 +129,7 @@ export default function InviteCodeCard({ status, onVerify, error, verifiedCode }
         <button
           onClick={handleVerify}
           disabled={!isCodeComplete || validating}
-          className="flex-1 flex items-center justify-center gap-2 h-[44px] rounded-[8px] font-medium text-[14px] transition-all disabled:opacity-40 disabled:cursor-not-allowed text-white bg-[#1F32D6] hover:bg-[#1828AB]"
+          className="flex-1 flex items-center justify-center gap-2 h-[44px] rounded-[8px] font-medium text-[14px] transition-all disabled:opacity-40 disabled:cursor-not-allowed text-white bg-[var(--app-accent)] hover:bg-[var(--app-accent-hover)]"
         >
           {validating ? (
             <Loader2 className="w-4 h-4 animate-spin" />
@@ -141,7 +141,7 @@ export default function InviteCodeCard({ status, onVerify, error, verifiedCode }
           href="https://cobo.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-0.5 text-[12px] text-[#1F32D6] hover:text-[#1828AB] transition-colors whitespace-nowrap"
+          className="inline-flex items-center gap-0.5 text-[12px] text-[var(--app-accent)] hover:text-[var(--app-accent-hover)] transition-colors whitespace-nowrap"
         >
           {t('onboarding.getInviteCode')}
           <ExternalLink className="w-3 h-3" />

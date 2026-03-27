@@ -98,7 +98,7 @@ export default function DepositModal({ open, onClose, wallet }: DepositModalProp
             )}
 
             {/* QR Code */}
-            <div className="p-4 bg-white rounded-[12px] mb-5">
+            <div className="p-4 bg-[var(--app-card-bg)] rounded-[12px] mb-5">
               <QRCodeSVG
                 value={currentAddress.address}
                 size={180}

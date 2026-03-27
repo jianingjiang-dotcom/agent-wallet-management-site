@@ -113,13 +113,13 @@ export default function WalletDelegationModal({
             {/* Header */}
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-full bg-[rgba(79,94,255,0.1)] flex items-center justify-center">
-                <Shield className="w-5 h-5 text-[#1F32D6]" />
+                <Shield className="w-5 h-5 text-[var(--app-accent)]" />
               </div>
               <div>
-                <h2 className="font-semibold text-[16px] text-[#0A0A0A]">
+                <h2 className="font-semibold text-[16px] text-[var(--app-text)]">
                   {t("walletDelegation.title")}
                 </h2>
-                <p className="font-normal text-[12px] text-[#7C7C7C]">
+                <p className="font-normal text-[12px] text-[var(--app-text-secondary)]">
                   {t("walletDelegation.subtitle")}
                 </p>
               </div>
@@ -130,23 +130,23 @@ export default function WalletDelegationModal({
                 <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-[rgba(34,197,94,0.1)] flex items-center justify-center">
                   <CheckCircle className="w-7 h-7 text-[#22c55e]" />
                 </div>
-                <h3 className="font-semibold text-[16px] text-[#0A0A0A] mb-1">
+                <h3 className="font-semibold text-[16px] text-[var(--app-text)] mb-1">
                   {t("walletDelegation.success")}
                 </h3>
-                <p className="font-normal text-[12px] text-[#7C7C7C] mb-4">
+                <p className="font-normal text-[12px] text-[var(--app-text-secondary)] mb-4">
                   {t("walletDelegation.successDesc")}
                 </p>
                 <button
                   onClick={onClose}
-                  className="w-full bg-[#1F32D6] hover:bg-[#1828AB] h-[40px] rounded-[8px] font-medium text-[14px] text-white transition-colors"
+                  className="w-full bg-[var(--app-accent)] hover:bg-[var(--app-accent-hover)] h-[40px] rounded-[8px] font-medium text-[14px] text-white transition-colors"
                 >
                   {t("agentPairing.done")}
                 </button>
               </div>
             ) : step === "delegating" ? (
               <div className="text-center py-8">
-                <Loader2 className="w-8 h-8 text-[#1F32D6] animate-spin mx-auto mb-3" />
-                <p className="font-medium text-[14px] text-[#4F4F4F]">
+                <Loader2 className="w-8 h-8 text-[var(--app-accent)] animate-spin mx-auto mb-3" />
+                <p className="font-medium text-[14px] text-[var(--app-text-secondary)]">
                   {t("walletDelegation.delegating")}
                 </p>
               </div>
@@ -154,20 +154,20 @@ export default function WalletDelegationModal({
               /* Configure permissions & policy */
               <div className="space-y-4">
                 {selectedAgent && (
-                  <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[8px] px-4 py-3 flex items-center gap-3">
+                  <div className="bg-[var(--app-card-bg)] border border-[var(--app-border)] rounded-[8px] px-4 py-3 flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-[rgba(79,94,255,0.1)] flex items-center justify-center">
-                      <UserPlus className="w-4 h-4 text-[#1F32D6]" />
+                      <UserPlus className="w-4 h-4 text-[var(--app-accent)]" />
                     </div>
                     <div>
-                      <div className="font-medium text-[13px] text-[#0A0A0A]">{selectedAgent.name}</div>
-                      <div className="font-['JetBrains_Mono',monospace] text-[10px] text-[#7C7C7C]">{selectedAgent.id}</div>
+                      <div className="font-medium text-[13px] text-[var(--app-text)]">{selectedAgent.name}</div>
+                      <div className="font-['JetBrains_Mono',monospace] text-[10px] text-[var(--app-text-secondary)]">{selectedAgent.id}</div>
                     </div>
                   </div>
                 )}
 
                 {/* Permissions */}
-                <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[8px] p-4">
-                  <h4 className="font-medium text-[13px] text-[#4F4F4F] mb-3">
+                <div className="bg-[var(--app-card-bg)] border border-[var(--app-border)] rounded-[8px] p-4">
+                  <h4 className="font-medium text-[13px] text-[var(--app-text-secondary)] mb-3">
                     {t("walletDelegation.configurePermissions")}
                   </h4>
                   <div className="space-y-2">
@@ -183,8 +183,8 @@ export default function WalletDelegationModal({
                             permissions.includes(key) ? "translate-x-4" : "translate-x-0.5"
                           }`} />
                         </div>
-                        <Icon className="w-4 h-4 text-[#7C7C7C]" />
-                        <span className="font-normal text-[13px] text-[#0A0A0A]">
+                        <Icon className="w-4 h-4 text-[var(--app-text-secondary)]" />
+                        <span className="font-normal text-[13px] text-[var(--app-text)]">
                           {t(`permissions.${key}`)}
                         </span>
                       </label>
@@ -193,36 +193,36 @@ export default function WalletDelegationModal({
                 </div>
 
                 {/* Policy */}
-                <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[8px] p-4">
-                  <h4 className="font-medium text-[13px] text-[#4F4F4F] mb-3">
+                <div className="bg-[var(--app-card-bg)] border border-[var(--app-border)] rounded-[8px] p-4">
+                  <h4 className="font-medium text-[13px] text-[var(--app-text-secondary)] mb-3">
                     {t("walletDelegation.configurePolicy")}
                   </h4>
                   <div className="space-y-3">
                     <div>
-                      <label className="font-normal text-[11px] text-[#7C7C7C] block mb-1">
+                      <label className="font-normal text-[11px] text-[var(--app-text-secondary)] block mb-1">
                         {t("policy.perTxLimit")}
                       </label>
                       <div className="flex items-center gap-2">
-                        <span className="text-[13px] text-[#7C7C7C]">$</span>
+                        <span className="text-[13px] text-[var(--app-text-secondary)]">$</span>
                         <input
                           type="number"
                           value={policy.singleTxLimit}
                           onChange={(e) => setPolicy({ ...policy, singleTxLimit: Number(e.target.value) || 0 })}
-                          className="w-20 bg-[#fafafa] border border-[rgba(10,10,10,0.12)] rounded-[6px] px-2 py-1.5 text-[13px] text-[#0A0A0A] focus:outline-none focus:border-[#1F32D6]"
+                          className="w-20 bg-[#fafafa] border border-[rgba(10,10,10,0.12)] rounded-[6px] px-2 py-1.5 text-[13px] text-[var(--app-text)] focus:outline-none focus:border-[#1F32D6]"
                         />
                       </div>
                     </div>
                     <div>
-                      <label className="font-normal text-[11px] text-[#7C7C7C] block mb-1">
+                      <label className="font-normal text-[11px] text-[var(--app-text-secondary)] block mb-1">
                         {t("policy.dailyLimitLabel")}
                       </label>
                       <div className="flex items-center gap-2">
-                        <span className="text-[13px] text-[#7C7C7C]">$</span>
+                        <span className="text-[13px] text-[var(--app-text-secondary)]">$</span>
                         <input
                           type="number"
                           value={policy.dailyLimit}
                           onChange={(e) => setPolicy({ ...policy, dailyLimit: Number(e.target.value) || 0 })}
-                          className="w-20 bg-[#fafafa] border border-[rgba(10,10,10,0.12)] rounded-[6px] px-2 py-1.5 text-[13px] text-[#0A0A0A] focus:outline-none focus:border-[#1F32D6]"
+                          className="w-20 bg-[#fafafa] border border-[rgba(10,10,10,0.12)] rounded-[6px] px-2 py-1.5 text-[13px] text-[var(--app-text)] focus:outline-none focus:border-[#1F32D6]"
                         />
                       </div>
                     </div>
@@ -231,9 +231,9 @@ export default function WalletDelegationModal({
                         type="checkbox"
                         checked={policy.approvalRequired}
                         onChange={(e) => setPolicy({ ...policy, approvalRequired: e.target.checked })}
-                        className="w-4 h-4 text-[#1F32D6] rounded focus:ring-0"
+                        className="w-4 h-4 text-[var(--app-accent)] rounded focus:ring-0"
                       />
-                      <span className="font-normal text-[12px] text-[#4F4F4F]">
+                      <span className="font-normal text-[12px] text-[var(--app-text-secondary)]">
                         {t("policy.approvalRequired")}
                       </span>
                     </label>
@@ -243,7 +243,7 @@ export default function WalletDelegationModal({
                 <button
                   onClick={handleConfirm}
                   disabled={permissions.length === 0}
-                  className="w-full bg-[#1F32D6] hover:bg-[#1828AB] h-[40px] rounded-[8px] font-medium text-[14px] text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-[var(--app-accent)] hover:bg-[var(--app-accent-hover)] h-[40px] rounded-[8px] font-medium text-[14px] text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {t("walletDelegation.confirm")}
                 </button>
@@ -253,7 +253,7 @@ export default function WalletDelegationModal({
               <div className="space-y-3">
                 {availableAgents.length > 0 ? (
                   <>
-                    <h4 className="font-medium text-[13px] text-[#4F4F4F]">
+                    <h4 className="font-medium text-[13px] text-[var(--app-text-secondary)]">
                       {t("walletDelegation.selectAgent")}
                     </h4>
                     <div className="space-y-2">
@@ -261,26 +261,26 @@ export default function WalletDelegationModal({
                         <button
                           key={agent.id}
                           onClick={() => handleSelectAgent(agent.id)}
-                          className="w-full bg-white border border-[rgba(10,10,10,0.08)] rounded-[8px] px-4 py-3 flex items-center gap-3 hover:border-[#1F32D6] hover:bg-[rgba(79,94,255,0.02)] transition-colors text-left"
+                          className="w-full bg-[var(--app-card-bg)] border border-[var(--app-border)] rounded-[8px] px-4 py-3 flex items-center gap-3 hover:border-[#1F32D6] hover:bg-[rgba(79,94,255,0.02)] transition-colors text-left"
                         >
                           <div className="w-8 h-8 rounded-full bg-[rgba(79,94,255,0.1)] flex items-center justify-center flex-shrink-0">
-                            <UserPlus className="w-4 h-4 text-[#1F32D6]" />
+                            <UserPlus className="w-4 h-4 text-[var(--app-accent)]" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <div className="font-medium text-[13px] text-[#0A0A0A]">{agent.name}</div>
-                            <div className="font-['JetBrains_Mono',monospace] text-[10px] text-[#7C7C7C] truncate">{agent.id}</div>
+                            <div className="font-medium text-[13px] text-[var(--app-text)]">{agent.name}</div>
+                            <div className="font-['JetBrains_Mono',monospace] text-[10px] text-[var(--app-text-secondary)] truncate">{agent.id}</div>
                           </div>
-                          <ChevronRight className="w-4 h-4 text-[#7C7C7C] flex-shrink-0" />
+                          <ChevronRight className="w-4 h-4 text-[var(--app-text-secondary)] flex-shrink-0" />
                         </button>
                       ))}
                     </div>
                   </>
                 ) : (
-                  <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[8px] p-4 text-center">
-                    <p className="font-medium text-[13px] text-[#7C7C7C] mb-1">
+                  <div className="bg-[var(--app-card-bg)] border border-[var(--app-border)] rounded-[8px] p-4 text-center">
+                    <p className="font-medium text-[13px] text-[var(--app-text-secondary)] mb-1">
                       {t("walletDelegation.noAgents")}
                     </p>
-                    <p className="font-normal text-[11px] text-[#7C7C7C]">
+                    <p className="font-normal text-[11px] text-[var(--app-text-secondary)]">
                       {t("walletDelegation.noAgentsDesc")}
                     </p>
                   </div>
@@ -290,35 +290,35 @@ export default function WalletDelegationModal({
                 {agents.filter(a => existingAgentIds.includes(a.id)).map((agent) => (
                   <div
                     key={agent.id}
-                    className="w-full bg-[#FAFAFA] border border-[rgba(10,10,10,0.06)] rounded-[8px] px-4 py-3 flex items-center gap-3 opacity-60"
+                    className="w-full bg-[var(--app-bg)] border border-[rgba(10,10,10,0.06)] rounded-[8px] px-4 py-3 flex items-center gap-3 opacity-60"
                   >
                     <div className="w-8 h-8 rounded-full bg-[rgba(10,10,10,0.05)] flex items-center justify-center flex-shrink-0">
-                      <UserPlus className="w-4 h-4 text-[#7C7C7C]" />
+                      <UserPlus className="w-4 h-4 text-[var(--app-text-secondary)]" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="font-medium text-[13px] text-[#7C7C7C]">{agent.name}</div>
-                      <div className="font-['JetBrains_Mono',monospace] text-[10px] text-[#7C7C7C] truncate">{agent.id}</div>
+                      <div className="font-medium text-[13px] text-[var(--app-text-secondary)]">{agent.name}</div>
+                      <div className="font-['JetBrains_Mono',monospace] text-[10px] text-[var(--app-text-secondary)] truncate">{agent.id}</div>
                     </div>
-                    <span className="font-normal text-[10px] text-[#7C7C7C]">
+                    <span className="font-normal text-[10px] text-[var(--app-text-secondary)]">
                       {t("walletDelegation.alreadyDelegated")}
                     </span>
                   </div>
                 ))}
 
                 {/* Pair new agent */}
-                <div className="border-t border-[rgba(10,10,10,0.08)] pt-3">
+                <div className="border-t border-[var(--app-border)] pt-3">
                   <button
                     onClick={() => setShowPairingModal(true)}
                     className="w-full border border-dashed border-[rgba(79,94,255,0.3)] rounded-[8px] px-4 py-3 flex items-center gap-3 hover:bg-[rgba(79,94,255,0.02)] transition-colors text-left"
                   >
                     <div className="w-8 h-8 rounded-full bg-[rgba(79,94,255,0.08)] flex items-center justify-center flex-shrink-0">
-                      <UserPlus className="w-4 h-4 text-[#1F32D6]" />
+                      <UserPlus className="w-4 h-4 text-[var(--app-accent)]" />
                     </div>
                     <div className="flex-1">
-                      <div className="font-medium text-[13px] text-[#1F32D6]">{t("walletDelegation.pairNew")}</div>
-                      <div className="font-normal text-[11px] text-[#7C7C7C]">{t("walletDelegation.pairNewDesc")}</div>
+                      <div className="font-medium text-[13px] text-[var(--app-accent)]">{t("walletDelegation.pairNew")}</div>
+                      <div className="font-normal text-[11px] text-[var(--app-text-secondary)]">{t("walletDelegation.pairNewDesc")}</div>
                     </div>
-                    <ChevronRight className="w-4 h-4 text-[#1F32D6] flex-shrink-0" />
+                    <ChevronRight className="w-4 h-4 text-[var(--app-accent)] flex-shrink-0" />
                   </button>
                 </div>
               </div>
