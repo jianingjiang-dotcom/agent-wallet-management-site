@@ -221,7 +221,7 @@ export default function AccountSettings() {
 
         {/* Avatar + name row */}
         <div className="flex items-center gap-4">
-          <div className="w-14 h-14 bg-gradient-to-br from-amber-200 to-orange-300 rounded-full flex items-center justify-center text-[22px] font-bold text-amber-700 flex-shrink-0">
+          <div className="w-12 h-12 bg-[#1F32D6] rounded-full flex items-center justify-center text-[18px] font-bold text-white flex-shrink-0">
             {(user.name as string).charAt(0).toUpperCase()}
           </div>
 
@@ -337,7 +337,7 @@ export default function AccountSettings() {
           </div>
           <button
             onClick={() => handleToggleProvider('telegram')}
-            className={`text-[13px] font-medium px-4 py-1.5 rounded-full transition-colors ${
+            className={`h-[28px] text-[12px] font-medium px-3 rounded-full transition-colors ${
               providers.telegram
                 ? 'text-red-500 border border-red-200 hover:bg-red-50'
                 : 'text-[#F5A623] border border-[#F5A623]/30 hover:bg-[#FFF8E1]'
@@ -357,7 +357,7 @@ export default function AccountSettings() {
           </div>
           <button
             onClick={() => handleToggleProvider('discord')}
-            className={`text-[13px] font-medium px-4 py-1.5 rounded-full transition-colors ${
+            className={`h-[28px] text-[12px] font-medium px-3 rounded-full transition-colors ${
               providers.discord
                 ? 'text-red-500 border border-red-200 hover:bg-red-50'
                 : 'text-[#F5A623] border border-[#F5A623]/30 hover:bg-[#FFF8E1]'
@@ -370,18 +370,12 @@ export default function AccountSettings() {
 
       {/* Sign Out section */}
       <div className="bg-white border border-[#EBEBEB] rounded-2xl p-5 shadow-sm">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-[16px] font-semibold text-[#0A0A0A]">{t('account.dangerZone')}</h2>
-          </div>
-          <button
-            onClick={() => setShowSignOutModal(true)}
-            className="flex items-center gap-2 text-[14px] font-medium text-red-500 border border-red-200 hover:bg-red-50 px-4 py-2 rounded-xl transition-colors"
-          >
-            <LogOut className="w-4 h-4" strokeWidth={1.5} />
-            {t('account.logout')}
-          </button>
-        </div>
+        <button
+          onClick={() => setShowSignOutModal(true)}
+          className="h-[44px] w-full rounded-[10px] border border-[#ef4444] text-[#ef4444] text-[14px] font-medium hover:bg-red-50 transition-colors"
+        >
+          {t('account.logout')}
+        </button>
       </div>
 
       {/* Unbind confirmation modal */}
