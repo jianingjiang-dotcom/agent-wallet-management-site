@@ -330,7 +330,7 @@ export default function DashboardLayout() {
             onClick={() => { setAccountMenuOpen(false); setMobileLangPanel(false); setMobileSettingsPage(null); }}
           />
           {/* Sheet — slides up, leaves gap at top */}
-          <div className="fixed top-[48px] bottom-0 left-0 right-0 z-[80] bg-white rounded-t-[20px] flex flex-col shadow-2xl animate-slide-up">
+          <div className="fixed bottom-0 left-0 right-0 z-[80] bg-white rounded-t-[20px] flex flex-col shadow-2xl animate-slide-up max-h-[85vh]">
           {/* Drag handle */}
           <div className="flex justify-center pt-3 pb-1 shrink-0">
             <div className="w-9 h-[5px] rounded-full bg-[#EBEBEB]" />
@@ -373,7 +373,7 @@ export default function DashboardLayout() {
               <div className="border-b border-[#EBEBEB]" />
 
               {/* Content */}
-              <div className="flex-1 overflow-y-auto px-5 pt-4 pb-8">
+              <div className="overflow-y-auto px-5 pt-4 pb-8">
                 {/* Nav items — open as sub-pages */}
                 <div className="space-y-0">
                   {navItems.map((item) => {
