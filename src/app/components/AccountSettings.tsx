@@ -195,11 +195,11 @@ export default function AccountSettings() {
           <ShieldCheck className="w-5 h-5 text-[#1F32D6] flex-shrink-0 mt-0.5" strokeWidth={1.5} />
           <div className="flex-1 min-w-0">
             <p className="text-[14px] font-semibold text-[#0A0A0A]">{t('account.secureTitle')}</p>
-            <p className="text-[13px] text-[#7C7C7C] mt-0.5">{t('account.secureDesc')}</p>
+            <p className="font-normal text-[13px] text-[#7C7C7C] mt-0.5">{t('account.secureDesc')}</p>
             <div className="flex items-center gap-3 mt-3">
               <button
                 onClick={handleConnectBackup}
-                className="text-[13px] font-medium text-[#1F32D6] hover:underline flex items-center gap-1"
+                className="text-[14px] font-medium text-[#1F32D6] hover:underline flex items-center gap-1"
               >
                 {t('account.secureAction')}
                 <ChevronRight className="w-4 h-4" strokeWidth={1.5} />
@@ -254,7 +254,7 @@ export default function AccountSettings() {
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <span className="text-[16px] font-medium text-[#0A0A0A] truncate">
+                <span className="text-[14px] font-medium text-[#0A0A0A] truncate">
                   {nameValue}
                 </span>
                 <button

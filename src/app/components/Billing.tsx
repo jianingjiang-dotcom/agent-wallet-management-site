@@ -18,7 +18,7 @@ export default function Billing() {
         </div>
 
         <h2 className="text-[16px] font-semibold text-[#0A0A0A] mb-3">{t('billing.comingSoon')}</h2>
-        <p className="text-[13px] text-[#7C7C7C] max-w-md mx-auto mb-6">
+        <p className="font-normal text-[13px] text-[#7C7C7C] max-w-md mx-auto mb-6">
           {t('billing.comingSoonDesc')}
         </p>
 
