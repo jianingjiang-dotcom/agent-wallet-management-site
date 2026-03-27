@@ -670,7 +670,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
           onMouseLeave={() => setNavTooltip(null)}
         >
           <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'w-[36px] h-[36px] -m-[8px] rounded-[8px] hover:bg-[#F0F2FF] transition-colors' : ''}`}>
-            <Plus className="w-[18px] h-[18px] text-[#0A0A0A]" strokeWidth={1.5} />
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="9" r="8.25" stroke="#0A0A0A" strokeWidth="1.25"/><path d="M9 5.5V12.5" stroke="#0A0A0A" strokeWidth="1.25" strokeLinecap="round"/><path d="M5.5 9H12.5" stroke="#0A0A0A" strokeWidth="1.25" strokeLinecap="round"/></svg>
           </div>
           <span className={`text-[14px] leading-[20px] font-normal whitespace-nowrap transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}>{t('ai.newChat')}</span>
         </button>
