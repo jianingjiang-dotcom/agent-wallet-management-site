@@ -62,12 +62,12 @@ export default function ChatWelcome({ variant }: ChatWelcomeProps) {
         }}
       >
         {isFirst ? (
-          <span className="text-[#0A0A0A]">
+          <span className="text-[var(--app-text)]">
             {t('chat.welcome.firstWallet.title')}
           </span>
         ) : (
           <>
-            <span className="text-[#0A0A0A]">
+            <span className="text-[var(--app-text)]">
               {language === 'zh' ? 'Hi buddy，欢迎使用 ' : 'Hi buddy, welcome to '}
             </span>
             <span className="shimmer-wrap">
@@ -79,7 +79,7 @@ export default function ChatWelcome({ variant }: ChatWelcomeProps) {
 
       {/* Subtitle */}
       <p
-        className={`text-[#73798B] ${isFirst ? 'animate-reveal-up' : ''}`}
+        className={`text-[var(--app-text-muted)] ${isFirst ? 'animate-reveal-up' : ''}`}
         style={{
           fontSize: '16px',
           lineHeight: '24px',

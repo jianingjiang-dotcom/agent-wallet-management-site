@@ -1,11 +1,9 @@
 import {
-  Wallet,
   Shield,
   Plus,
   Pencil,
   Check,
-  Copy,
-  CheckCircle,
+  MoreHorizontal,
   UserPlus,
   ChevronDown,
   Download,
@@ -13,11 +11,14 @@ import {
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Wallet as WalletType, WalletAddress, Delegation, Agent, Permission, Policy } from '../hooks/useWalletStore';
-import { getWalletAssets, getWalletTransactions, getWalletTotalBalance, formatUsdValue } from '../data/mockAssets';
+import { getWalletAssets, getWalletTransactions, formatUsdValue } from '../data/mockAssets';
 import DelegationCard from './DelegationCard';
 import BalanceOverview from './wallet/BalanceOverview';
 import AssetList from './wallet/AssetList';
 import TransactionHistory from './wallet/TransactionHistory';
+import TokenDetail from './wallet/TokenDetail';
+import DepositModal from './wallet/DepositModal';
+import SendModal from './wallet/SendModal';
 
 interface WalletDetailProps {
   wallet: WalletType;
@@ -61,9 +62,24 @@ export default function WalletDetail({
   const [selectedChain, setSelectedChain] = useState<string | null>(null);
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
 
-  // Wallet switcher
+  // Wallet switcher (merged with name)
   const [switcherOpen, setSwitcherOpen] = useState(false);
   const switcherRef = useRef<HTMLDivElement>(null);
+
+  // More menu ("..." button)
+  const [moreMenuOpen, setMoreMenuOpen] = useState(false);
+  const moreMenuRef = useRef<HTMLDivElement>(null);
+
+  // Tabbed panel
+  const [activeTab, setActiveTab] = useState<'assets' | 'transactions'>('assets');
+
+  // Token detail view
+  const [selectedToken, setSelectedToken] = useState<{ tokenId: string; chainId: string } | null>(null);
+
+  // Modals
+  const [depositOpen, setDepositOpen] = useState(false);
+  const [sendOpen, setSendOpen] = useState(false);
+  const [sendPreselect, setSendPreselect] = useState<{ tokenId: string; chainId: string } | undefined>(undefined);
 
   useEffect(() => {
     if (isEditingName && nameInputRef.current) {
@@ -77,6 +93,9 @@ export default function WalletDetail({
       if (switcherRef.current && !switcherRef.current.contains(e.target as Node)) {
         setSwitcherOpen(false);
       }
+      if (moreMenuRef.current && !moreMenuRef.current.contains(e.target as Node)) {
+        setMoreMenuOpen(false);
+      }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -86,6 +105,7 @@ export default function WalletDetail({
   useEffect(() => {
     setSelectedChain(null);
     setSelectedAddress(null);
+    setSelectedToken(null);
   }, [wallet.id]);
 
   const handleSaveName = () => {
@@ -107,12 +127,47 @@ export default function WalletDetail({
 
   const noop = () => {};
 
+  const handleOpenSend = (tokenId?: string, chainId?: string) => {
+    if (tokenId && chainId) {
+      setSendPreselect({ tokenId, chainId });
+    } else {
+      setSendPreselect(undefined);
+    }
+    setSendOpen(true);
+  };
+
+  // Token detail view
+  if (selectedToken) {
+    return (
+      <>
+        <TokenDetail
+          wallet={wallet}
+          tokenId={selectedToken.tokenId}
+          chainId={selectedToken.chainId}
+          assets={assets}
+          transactions={transactions}
+          onBack={() => setSelectedToken(null)}
+          onDeposit={() => setDepositOpen(true)}
+          onSend={(tokenId, chainId) => handleOpenSend(tokenId, chainId)}
+        />
+        <DepositModal open={depositOpen} onClose={() => setDepositOpen(false)} wallet={wallet} />
+        <SendModal
+          open={sendOpen}
+          onClose={() => setSendOpen(false)}
+          wallet={wallet}
+          assets={assets}
+          preselectedToken={sendPreselect}
+        />
+      </>
+    );
+  }
+
   return (
-    <div className="max-w-5xl mx-auto">
-      {/* Header: wallet name + switcher + action buttons */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3 min-w-0">
-          {/* Wallet name (editable) */}
+    <div className="max-w-5xl mx-auto px-4 sm:px-0">
+      {/* Header: wallet name/switcher + agent badge + more menu + action buttons */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-wrap">
+          {/* Wallet name = switcher trigger / inline edit */}
           {isEditingName ? (
             <div className="flex items-center gap-2">
               <input
@@ -124,95 +179,109 @@ export default function WalletDetail({
                   if (e.key === 'Enter') handleSaveName();
                   if (e.key === 'Escape') { setEditName(wallet.name); setIsEditingName(false); }
                 }}
-                className="font-['Inter',sans-serif] font-normal text-[24px] leading-[32px] text-[#0a0a0a] bg-transparent border-b-2 border-[#4f5eff] outline-none py-0 px-0 w-[240px]"
+                className="font-['Inter',sans-serif] font-normal text-[24px] leading-[32px] text-[var(--app-text)] bg-transparent border-b-2 border-[var(--app-accent)] outline-none py-0 px-0 w-[240px]"
               />
-              <button onClick={handleSaveName} className="text-[#4f5eff] hover:text-[#2837d0] transition-colors p-1">
+              <button onClick={handleSaveName} className="text-[var(--app-accent)] hover:text-[var(--app-accent-hover)] transition-colors p-1">
                 <Check className="w-5 h-5" />
               </button>
             </div>
           ) : (
-            <div className="flex items-center gap-2 group/name">
-              <h1 className="font-['Inter',sans-serif] font-normal text-[24px] leading-[32px] text-[#0a0a0a]">
-                {wallet.name}
-              </h1>
+            <div className="relative" ref={switcherRef}>
               <button
-                onClick={() => { setEditName(wallet.name); setIsEditingName(true); }}
-                className="text-[#b0b0b0] hover:text-[#4f5eff] transition-colors p-1"
+                onClick={() => setSwitcherOpen(!switcherOpen)}
+                className="flex items-center gap-1.5 group/switcher"
               >
-                <Pencil className="w-4 h-4" />
+                <h1 className="font-['Inter',sans-serif] font-normal text-[20px] sm:text-[24px] leading-[28px] sm:leading-[32px] text-[var(--app-text)]">
+                  {wallet.name}
+                </h1>
+                <ChevronDown className={`w-4 h-4 text-[var(--app-text-tertiary)] group-hover/switcher:text-[var(--app-text-secondary)] transition-all ${switcherOpen ? 'rotate-180' : ''}`} />
               </button>
-            </div>
-          )}
 
-          {/* Agent count badge */}
-          {hasDelegations ? (
-            <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#22c55e]/10 text-[#22c55e] font-['Inter',sans-serif] font-medium text-[12px]">
-              <div className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
-              {walletDelegations.length} {t('walletPage.agents')}
-            </span>
-          ) : (
-            <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#d4d4d4]/20 text-[#b0b0b0] font-['Inter',sans-serif] font-medium text-[12px]">
-              <div className="w-1.5 h-1.5 rounded-full bg-[#d4d4d4]" />
-              {t('delegation.noAgent')}
-            </span>
-          )}
-
-          {/* Wallet switcher — always visible */}
-          <div className="relative" ref={switcherRef}>
-            <button
-              onClick={() => setSwitcherOpen(!switcherOpen)}
-              className="flex items-center gap-1.5 px-2.5 py-1 rounded-[8px] font-['Inter',sans-serif] font-medium text-[12px] text-[#7c7c7c] border border-[rgba(10,10,10,0.1)] hover:bg-[#f5f5f5] hover:border-[rgba(10,10,10,0.15)] transition-colors"
-            >
-              <Wallet className="w-3.5 h-3.5" />
-              {t('walletDetail.switchWallet')}
-              <ChevronDown className={`w-3.5 h-3.5 transition-transform ${switcherOpen ? 'rotate-180' : ''}`} />
-            </button>
-            {switcherOpen && (
-              <div className="absolute top-full left-0 mt-1 w-[260px] bg-white border border-[rgba(10,10,10,0.1)] rounded-[10px] shadow-[0px_4px_16px_rgba(0,0,0,0.08)] z-20 py-1">
-                {wallets.map(w => {
-                  const balance = getWalletTotalBalance(w);
-                  return (
+              {switcherOpen && (
+                <div className="absolute top-full left-0 mt-2 w-[300px] bg-[var(--app-card-bg)] border border-[var(--app-border-medium)] rounded-[10px] shadow-[var(--app-dropdown-shadow)] z-20 py-1">
+                  {wallets.map(w => (
                     <button
                       key={w.id}
                       onClick={() => { onSwitchWallet(w.id); setSwitcherOpen(false); }}
                       className={`w-full text-left px-3 py-2.5 transition-colors ${
                         w.id === wallet.id
-                          ? 'bg-[rgba(79,94,255,0.04)]'
-                          : 'hover:bg-[#f5f5f5]'
+                          ? 'bg-[var(--app-accent-soft-hover)]'
+                          : 'hover:bg-[var(--app-hover-bg)]'
                       }`}
                     >
                       <div className={`font-['Inter',sans-serif] text-[13px] ${
-                        w.id === wallet.id ? 'text-[#4f5eff] font-medium' : 'text-[#0a0a0a] font-normal'
+                        w.id === wallet.id ? 'text-[var(--app-accent)] font-medium' : 'text-[var(--app-text)] font-normal'
                       }`}>
                         {w.name}
                       </div>
-                      <div className="font-['Inter',sans-serif] font-normal text-[11px] text-[#b0b0b0] mt-0.5">
-                        {formatUsdValue(balance)}
+                      <div className="font-['JetBrains_Mono',monospace] font-normal text-[11px] text-[var(--app-text-tertiary)] mt-0.5">
+                        {t('walletDetail.walletId')}: {w.id}
                       </div>
                     </button>
-                  );
-                })}
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Agent count badge */}
+          {hasDelegations ? (
+            <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[var(--app-success-soft)] text-[var(--app-success)] font-['Inter',sans-serif] font-medium text-[12px]">
+              <div className="w-1.5 h-1.5 rounded-full bg-[var(--app-success)]" />
+              {walletDelegations.length} {t('walletPage.agents')}
+            </span>
+          ) : (
+            <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[var(--app-badge-inactive-bg)] text-[var(--app-text-tertiary)] font-['Inter',sans-serif] font-medium text-[12px]">
+              <div className="w-1.5 h-1.5 rounded-full bg-[var(--app-badge-inactive-dot)]" />
+              {t('delegation.noAgent')}
+            </span>
+          )}
+
+          {/* More menu "..." */}
+          <div className="relative" ref={moreMenuRef}>
+            <button
+              onClick={() => setMoreMenuOpen(!moreMenuOpen)}
+              className="p-1.5 rounded-[6px] text-[var(--app-text-tertiary)] hover:text-[var(--app-text-secondary)] hover:bg-[var(--app-hover-bg)] transition-colors"
+            >
+              <MoreHorizontal className="w-4 h-4" />
+            </button>
+
+            {moreMenuOpen && (
+              <div className="absolute top-full left-0 mt-1 w-[180px] bg-[var(--app-card-bg)] border border-[var(--app-border-medium)] rounded-[10px] shadow-[var(--app-dropdown-shadow)] z-20 py-1">
+                <button
+                  onClick={() => {
+                    setEditName(wallet.name);
+                    setIsEditingName(true);
+                    setMoreMenuOpen(false);
+                  }}
+                  className="w-full text-left px-3 py-2 flex items-center gap-2 hover:bg-[var(--app-hover-bg)] transition-colors"
+                >
+                  <Pencil className="w-3.5 h-3.5 text-[var(--app-text-tertiary)]" />
+                  <span className="font-['Inter',sans-serif] text-[13px] text-[var(--app-text)]">
+                    {t('walletDetail.rename')}
+                  </span>
+                </button>
+                <button
+                  onClick={() => { onClaimWallet?.(); setMoreMenuOpen(false); }}
+                  className="w-full text-left px-3 py-2 flex items-center gap-2 hover:bg-[var(--app-hover-bg)] transition-colors"
+                >
+                  <Download className="w-3.5 h-3.5 text-[var(--app-text-tertiary)]" />
+                  <span className="font-['Inter',sans-serif] text-[13px] text-[var(--app-text)]">
+                    {t('walletPage.claimWallet')}
+                  </span>
+                </button>
+                <button
+                  onClick={() => { onSetupWallet?.(); setMoreMenuOpen(false); }}
+                  className="w-full text-left px-3 py-2 flex items-center gap-2 hover:bg-[var(--app-hover-bg)] transition-colors"
+                >
+                  <Plus className="w-3.5 h-3.5 text-[var(--app-text-tertiary)]" />
+                  <span className="font-['Inter',sans-serif] text-[13px] text-[var(--app-text)]">
+                    {t('walletPage.createNew')}
+                  </span>
+                </button>
               </div>
             )}
           </div>
-        </div>
-
-        {/* Action buttons */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={onClaimWallet || noop}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-[8px] font-['Inter',sans-serif] font-medium text-[12px] text-[#7c7c7c] border border-[rgba(10,10,10,0.1)] hover:bg-[#f5f5f5] transition-colors"
-          >
-            <Download className="w-3.5 h-3.5" />
-            {t('walletPage.claimWallet')}
-          </button>
-          <button
-            onClick={onSetupWallet || noop}
-            className="flex items-center gap-2 px-4 py-2 rounded-[8px] font-['Inter',sans-serif] font-medium text-[13px] text-white bg-[#4f5eff] hover:bg-[#3d4dd9] transition-colors"
-          >
-            <Plus className="w-4 h-4" />
-            {t('walletPage.createNew')}
-          </button>
         </div>
       </div>
 
@@ -225,31 +294,75 @@ export default function WalletDetail({
           onChainChange={setSelectedChain}
           selectedAddress={selectedAddress}
           onAddressChange={setSelectedAddress}
+          onDeposit={() => setDepositOpen(true)}
+          onSend={() => handleOpenSend()}
         />
       </div>
 
-      {/* [Card] Asset List */}
+      {/* [Card] Tabbed Panel: Assets + Transactions */}
       <div className="mb-6">
-        <AssetList
-          assets={assets}
-          selectedChain={selectedChain}
-          selectedAddress={selectedAddress}
-          walletAddresses={wallet.addresses}
-        />
+        <div className="bg-[var(--app-card-bg)] border border-[var(--app-border)] rounded-[12px] p-4 sm:p-5">
+          {/* Tab header */}
+          <div className="flex items-center gap-1 mb-4">
+            <button
+              onClick={() => setActiveTab('assets')}
+              className={`px-4 py-1.5 rounded-[8px] font-['Inter',sans-serif] font-medium text-[13px] transition-colors ${
+                activeTab === 'assets'
+                  ? 'bg-[var(--app-text)] text-white'
+                  : 'text-[var(--app-text-secondary)] hover:bg-[var(--app-hover-bg)]'
+              }`}
+            >
+              {t('walletDetail.assets')}
+            </button>
+            <button
+              onClick={() => setActiveTab('transactions')}
+              className={`px-4 py-1.5 rounded-[8px] font-['Inter',sans-serif] font-medium text-[13px] transition-colors ${
+                activeTab === 'transactions'
+                  ? 'bg-[var(--app-text)] text-white'
+                  : 'text-[var(--app-text-secondary)] hover:bg-[var(--app-hover-bg)]'
+              }`}
+            >
+              {t('walletDetail.transactions')}
+            </button>
+          </div>
+
+          {/* Tab content with max height + scroll */}
+          <div className="max-h-[480px] overflow-y-auto">
+            {activeTab === 'assets' ? (
+              <AssetList
+                assets={assets}
+                selectedChain={selectedChain}
+                selectedAddress={selectedAddress}
+                walletAddresses={wallet.addresses}
+                headless
+                onSelectToken={(tokenId, chainId) => setSelectedToken({ tokenId, chainId })}
+                onSendToken={(tokenId, chainId) => handleOpenSend(tokenId, chainId)}
+              />
+            ) : (
+              <TransactionHistory
+                transactions={transactions}
+                selectedChain={selectedChain}
+                selectedAddress={selectedAddress}
+                walletAddresses={wallet.addresses}
+                headless
+              />
+            )}
+          </div>
+        </div>
       </div>
 
       {/* [Card] Delegated Agents Section */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <Shield className="w-4 h-4 text-[#4f5eff]" />
-            <span className="font-['Inter',sans-serif] font-semibold text-[16px] text-[#0a0a0a]">
+            <Shield className="w-4 h-4 text-[var(--app-accent)]" />
+            <span className="font-['Inter',sans-serif] font-semibold text-[16px] text-[var(--app-text)]">
               {t('walletAgent.connectedAgent')}
             </span>
           </div>
           <button
             onClick={() => onDelegateAgent(wallet.id)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] font-['Inter',sans-serif] font-medium text-[12px] text-[#4f5eff] border border-dashed border-[rgba(79,94,255,0.3)] hover:bg-[rgba(79,94,255,0.04)] transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] font-['Inter',sans-serif] font-medium text-[12px] text-[var(--app-accent)] border border-dashed border-[var(--app-border-dashed)] hover:bg-[var(--app-accent-soft-hover)] transition-colors"
           >
             <Plus className="w-3.5 h-3.5" />
             {t('walletDetail.delegateAgent')}
@@ -274,19 +387,19 @@ export default function WalletDetail({
             ))}
           </div>
         ) : (
-          <div className="bg-white border border-dashed border-[rgba(10,10,10,0.12)] rounded-[12px] p-8 text-center">
-            <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-[rgba(79,94,255,0.08)] flex items-center justify-center">
-              <UserPlus className="w-6 h-6 text-[#4f5eff]" />
+          <div className="bg-[var(--app-card-bg)] border border-dashed border-[var(--app-border-dashed)] rounded-[12px] p-8 text-center">
+            <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-[var(--app-accent-soft)] flex items-center justify-center">
+              <UserPlus className="w-6 h-6 text-[var(--app-accent)]" />
             </div>
-            <p className="font-['Inter',sans-serif] font-medium text-[14px] text-[#7c7c7c] mb-1">
+            <p className="font-['Inter',sans-serif] font-medium text-[14px] text-[var(--app-text-secondary)] mb-1">
               {t('delegation.noAgent')}
             </p>
-            <p className="font-['Inter',sans-serif] font-normal text-[12px] text-[#b0b0b0] mb-4">
+            <p className="font-['Inter',sans-serif] font-normal text-[12px] text-[var(--app-text-tertiary)] mb-4">
               {t('walletDelegation.noAgentsDesc')}
             </p>
             <button
               onClick={() => onDelegateAgent(wallet.id)}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-[8px] font-['Inter',sans-serif] font-medium text-[13px] text-white bg-[#4f5eff] hover:bg-[#3d4dd9] transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-[8px] font-['Inter',sans-serif] font-medium text-[13px] text-white bg-[var(--app-accent)] hover:bg-[var(--app-accent-hover)] transition-colors"
             >
               <Plus className="w-4 h-4" />
               {t('walletDetail.delegateAgent')}
@@ -295,12 +408,14 @@ export default function WalletDetail({
         )}
       </div>
 
-      {/* [Card] Transaction History */}
-      <TransactionHistory
-        transactions={transactions}
-        selectedChain={selectedChain}
-        selectedAddress={selectedAddress}
-        walletAddresses={wallet.addresses}
+      {/* Modals */}
+      <DepositModal open={depositOpen} onClose={() => setDepositOpen(false)} wallet={wallet} />
+      <SendModal
+        open={sendOpen}
+        onClose={() => setSendOpen(false)}
+        wallet={wallet}
+        assets={assets}
+        preselectedToken={sendPreselect}
       />
     </div>
   );

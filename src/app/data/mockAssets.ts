@@ -99,9 +99,14 @@ export function getWalletAssets(wallet: Wallet): AssetPosition[] {
       // Possibly split across multiple addresses
       const addressBreakdown: { address: string; amount: number }[] = [];
       if (evmAddresses.length > 1 && rand() > 0.5) {
-        const ratio = 0.3 + rand() * 0.4;
-        addressBreakdown.push({ address: evmAddresses[0].address, amount: Math.round(amount * ratio * 10000) / 10000 });
-        addressBreakdown.push({ address: evmAddresses[1]?.address || evmAddresses[0].address, amount: Math.round(amount * (1 - ratio) * 10000) / 10000 });
+        let remaining = amount;
+        evmAddresses.forEach((addr, idx) => {
+          const isLast = idx === evmAddresses.length - 1;
+          const portion = isLast ? remaining : Math.round(amount * (0.2 + rand() * 0.4) * 10000) / 10000;
+          const actual = Math.min(portion, remaining);
+          addressBreakdown.push({ address: addr.address, amount: Math.round(actual * 10000) / 10000 });
+          remaining = Math.round((remaining - actual) * 10000) / 10000;
+        });
       }
 
       positions.push({
@@ -130,11 +135,25 @@ export function getWalletAssets(wallet: Wallet): AssetPosition[] {
         ? Math.round(rand() * 3000 * 100) / 100
         : Math.round(rand() * 10 * 10000) / 10000;
 
+      // Possibly split across multiple SOL addresses
+      const solBreakdown: { address: string; amount: number }[] = [];
+      if (solAddresses.length > 1 && rand() > 0.5) {
+        let remaining = amount;
+        solAddresses.forEach((addr, idx) => {
+          const isLast = idx === solAddresses.length - 1;
+          const portion = isLast ? remaining : Math.round(amount * (0.2 + rand() * 0.4) * 10000) / 10000;
+          const actual = Math.min(portion, remaining);
+          solBreakdown.push({ address: addr.address, amount: Math.round(actual * 10000) / 10000 });
+          remaining = Math.round((remaining - actual) * 10000) / 10000;
+        });
+      }
+
       positions.push({
         tokenId,
         chainId: 'solana',
         amount,
         usdValue: Math.round(amount * price * 100) / 100,
+        addressBreakdown: solBreakdown.length > 1 ? solBreakdown : undefined,
       });
     }
   }
@@ -286,4 +305,8 @@ export function formatTokenAmount(amount: number, tokenId: string): string {
   const isStable = tokenId === 'usdt' || tokenId === 'usdc' || tokenId === 'dai';
   const decimals = isStable ? 2 : 4;
   return amount.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+}
+
+export function getTokenPrice(tokenId: string): number {
+  return TOKEN_PRICES[tokenId] || 0;
 }
