@@ -15,9 +15,9 @@ export default function Gasless() {
         </p>
       </div>
 
-      <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[16px] flex flex-col items-center justify-center py-10 sm:py-20 px-8">
-        <div className="w-[72px] h-[72px] rounded-[16px] bg-[rgba(79,94,255,0.08)] border-2 border-[rgba(79,94,255,0.12)] flex items-center justify-center mb-6">
-          <Fuel className="w-9 h-9 text-[#1F32D6]" />
+      <div className="bg-white border border-[#EBEBEB] rounded-[16px] flex flex-col items-center justify-center py-8 lg:py-16 px-6">
+        <div className="w-[56px] h-[56px] lg:w-[72px] lg:h-[72px] rounded-[14px] bg-[#EEF0FF] flex items-center justify-center mb-5">
+          <Fuel className="w-7 h-7 lg:w-9 lg:h-9 text-[#1F32D6]" strokeWidth={1.5} />
         </div>
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[rgba(79,94,255,0.08)] mb-4">
           <span className="relative flex h-2 w-2">
@@ -28,10 +28,10 @@ export default function Gasless() {
             {t('gasAccount.comingSoonBadge')}
           </span>
         </div>
-        <h2 className="font-semibold text-[20px] text-[#0A0A0A] mb-2">
+        <h2 className="font-semibold text-[16px] text-[#0A0A0A] mb-2">
           {t('gasAccount.comingSoonTitle')}
         </h2>
-        <p className="font-normal text-[14px] text-[#7C7C7C] text-center max-w-md leading-relaxed">
+        <p className="font-normal text-[13px] text-[#7C7C7C] text-center max-w-md leading-relaxed">
           {t('gasAccount.comingSoonDesc')}
         </p>
       </div>
