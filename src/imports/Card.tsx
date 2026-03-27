@@ -55,7 +55,7 @@ function Mail() {
 function InputEmail() {
   return (
     <div className="bg-white h-[40px] relative rounded-[6px] shrink-0 w-full" data-name="Input_email">
-      <div className="flex flex-row items-center overflow-clip rounded-[inherit] size-full">
+      <div className="flex flex-row items-center overflow-clip rounded-[6px] size-full">
         <div className="content-stretch flex gap-[8px] items-center px-[16px] py-[8px] relative size-full">
           <Mail />
           <p className="font-['Inter:Regular',sans-serif] font-normal leading-[1.5] not-italic relative shrink-0 text-[#4f4f4f] text-[14px] whitespace-nowrap">your@email.com</p>
@@ -91,7 +91,7 @@ function Lock() {
 function InputEmail1() {
   return (
     <div className="bg-white h-[40px] relative rounded-[6px] shrink-0 w-full" data-name="Input_email">
-      <div className="flex flex-row items-center overflow-clip rounded-[inherit] size-full">
+      <div className="flex flex-row items-center overflow-clip rounded-[6px] size-full">
         <div className="content-stretch flex gap-[8px] items-center px-[16px] py-[8px] relative size-full">
           <Lock />
           <p className="font-['Inter:Regular',sans-serif] font-normal leading-[1.5] not-italic relative shrink-0 text-[#4f4f4f] text-[14px] whitespace-nowrap">••••••••</p>
@@ -168,7 +168,7 @@ function Or() {
 function ButtonGoogle() {
   return (
     <div className="bg-white flex-[1_0_0] h-[40px] min-h-px min-w-px relative rounded-[6px]" data-name="Button_google">
-      <div className="flex flex-row items-center justify-center overflow-clip rounded-[inherit] size-full">
+      <div className="flex flex-row items-center justify-center overflow-clip rounded-[6px] size-full">
         <div className="content-stretch flex items-center justify-center px-[16px] py-[8px] relative size-full">
           <div className="relative shrink-0 size-[20px]" data-name="icon_google">
             <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full" src={imgIconGoogle} />
@@ -183,7 +183,7 @@ function ButtonGoogle() {
 function ButtonGithub() {
   return (
     <div className="bg-white flex-[1_0_0] h-[40px] min-h-px min-w-px relative rounded-[6px]" data-name="Button_github">
-      <div className="flex flex-row items-center justify-center overflow-clip rounded-[inherit] size-full">
+      <div className="flex flex-row items-center justify-center overflow-clip rounded-[6px] size-full">
         <div className="content-stretch flex items-center justify-center px-[16px] py-[8px] relative size-full">
           <div className="relative shrink-0 size-[20px]" data-name="icon_github">
             <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full" src={imgIconGithub} />
@@ -210,7 +210,7 @@ function AppleLogoSvgrepoCom() {
 function ButtonApple() {
   return (
     <div className="bg-white flex-[1_0_0] h-[40px] min-h-px min-w-px relative rounded-[6px]" data-name="Button_apple">
-      <div className="flex flex-row items-center justify-center overflow-clip rounded-[inherit] size-full">
+      <div className="flex flex-row items-center justify-center overflow-clip rounded-[6px] size-full">
         <div className="content-stretch flex items-center justify-center px-[16px] py-[8px] relative size-full">
           <AppleLogoSvgrepoCom />
         </div>

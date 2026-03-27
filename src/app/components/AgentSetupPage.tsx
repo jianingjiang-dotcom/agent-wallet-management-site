@@ -142,7 +142,7 @@ export default function AgentSetupPage() {
             {/* Dashed code block with overlay */}
             <div className="relative w-full">
               {/* Always-visible instruction text */}
-              <div className="w-full p-4 bg-white border border-dashed border-[#B9BCC5] rounded-[14px]">
+              <div className="w-full p-4 bg-white border border-dashed border-[#B9BCC5] rounded-[16px]">
                 <p className="text-[14px] leading-[20px] text-[#73798B] whitespace-pre-line">
                   {instructionText}
                 </p>
@@ -151,7 +151,7 @@ export default function AgentSetupPage() {
               {/* Status overlay — covers the instruction text */}
               {showOverlay && (
                 <div
-                  className="absolute inset-0 rounded-[14px] flex flex-col items-center justify-center gap-3 z-10"
+                  className="absolute inset-0 rounded-[16px] flex flex-col items-center justify-center gap-3 z-10"
                   style={{
                     background: walletDone
                       ? 'rgba(255,255,255,0.95)'
@@ -224,14 +224,14 @@ export default function AgentSetupPage() {
             <div className="relative w-full flex flex-col items-center gap-6">
               {/* Grey mask over button area during progress (not when done) */}
               {showOverlay && !walletDone && (
-                <div className="absolute inset-0 z-10 rounded-[14px]" style={{ background: 'rgba(248,249,252,0.6)' }} />
+                <div className="absolute inset-0 z-10 rounded-[16px]" style={{ background: 'rgba(248,249,252,0.6)' }} />
               )}
 
               {/* Button */}
               <button
                 onClick={walletDone ? handleGetStarted : handleCopy}
                 disabled={showOverlay && !walletDone}
-                className={`w-full h-[54px] px-6 py-4 rounded-[14px] text-[16px] leading-[22px] font-medium text-white text-center transition-all duration-300 active:scale-[0.98] ${
+                className={`w-full h-[54px] px-6 py-4 rounded-[16px] text-[16px] leading-[22px] font-medium text-white text-center transition-all duration-300 active:scale-[0.98] ${
                   walletDone
                     ? 'bg-[#4F5EFF] hover:bg-[#3d4dd9]'
                     : copied

@@ -198,8 +198,8 @@ function User() {
 
 function Container() {
   return (
-    <div className="bg-[rgba(79,94,255,0.1)] content-stretch flex items-center justify-center p-[1.25px] relative rounded-[16777200px] shrink-0 size-[40px]" data-name="Container">
-      <div aria-hidden="true" className="absolute border-[1.25px] border-[rgba(79,94,255,0.2)] border-solid inset-0 pointer-events-none rounded-[16777200px]" />
+    <div className="bg-[rgba(79,94,255,0.1)] content-stretch flex items-center justify-center p-[1.25px] relative rounded-full shrink-0 size-[40px]" data-name="Container">
+      <div aria-hidden="true" className="absolute border-[1.25px] border-[rgba(79,94,255,0.2)] border-solid inset-0 pointer-events-none rounded-full" />
       <User />
     </div>
   );
@@ -307,13 +307,13 @@ function TitleContainer() {
 
 function StepNumberContainer() {
   return (
-    <div className="bg-[rgba(79,94,255,0.08)] relative rounded-[99px] shrink-0 size-[28px]" data-name="Step Number Container">
-      <div className="content-stretch flex items-center justify-center overflow-clip px-[11px] py-[5px] relative rounded-[inherit] size-full">
+    <div className="bg-[rgba(79,94,255,0.08)] relative rounded-full shrink-0 size-[28px]" data-name="Step Number Container">
+      <div className="content-stretch flex items-center justify-center overflow-clip px-[11px] py-[5px] relative rounded-full size-full">
         <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[#4f5eff] text-[16px] text-center whitespace-nowrap">
           <p className="leading-[1.5]">1</p>
         </div>
       </div>
-      <div aria-hidden="true" className="absolute border border-[rgba(79,94,255,0.2)] border-solid inset-0 pointer-events-none rounded-[99px]" />
+      <div aria-hidden="true" className="absolute border border-[rgba(79,94,255,0.2)] border-solid inset-0 pointer-events-none rounded-full" />
     </div>
   );
 }
@@ -387,13 +387,13 @@ function UlAudList() {
 
 function StepNumberContainer1() {
   return (
-    <div className="bg-[rgba(79,94,255,0.08)] relative rounded-[99px] shrink-0 size-[28px]" data-name="Step Number Container">
-      <div className="content-stretch flex items-center justify-center overflow-clip px-[11px] py-[5px] relative rounded-[inherit] size-full">
+    <div className="bg-[rgba(79,94,255,0.08)] relative rounded-full shrink-0 size-[28px]" data-name="Step Number Container">
+      <div className="content-stretch flex items-center justify-center overflow-clip px-[11px] py-[5px] relative rounded-full size-full">
         <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[#4f5eff] text-[16px] text-center whitespace-nowrap">
           <p className="leading-[1.5]">2</p>
         </div>
       </div>
-      <div aria-hidden="true" className="absolute border border-[rgba(79,94,255,0.2)] border-solid inset-0 pointer-events-none rounded-[99px]" />
+      <div aria-hidden="true" className="absolute border border-[rgba(79,94,255,0.2)] border-solid inset-0 pointer-events-none rounded-full" />
     </div>
   );
 }
@@ -471,13 +471,13 @@ function UlAudList1() {
 
 function StepNumberContainer2() {
   return (
-    <div className="bg-[rgba(79,94,255,0.08)] relative rounded-[99px] shrink-0 size-[28px]" data-name="Step Number Container">
-      <div className="content-stretch flex items-center justify-center overflow-clip px-[11px] py-[5px] relative rounded-[inherit] size-full">
+    <div className="bg-[rgba(79,94,255,0.08)] relative rounded-full shrink-0 size-[28px]" data-name="Step Number Container">
+      <div className="content-stretch flex items-center justify-center overflow-clip px-[11px] py-[5px] relative rounded-full size-full">
         <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[#4f5eff] text-[16px] text-center whitespace-nowrap">
           <p className="leading-[1.5]">3</p>
         </div>
       </div>
-      <div aria-hidden="true" className="absolute border border-[rgba(79,94,255,0.2)] border-solid inset-0 pointer-events-none rounded-[99px]" />
+      <div aria-hidden="true" className="absolute border border-[rgba(79,94,255,0.2)] border-solid inset-0 pointer-events-none rounded-full" />
     </div>
   );
 }
@@ -864,7 +864,7 @@ function Frame3() {
 }
 
 function Container11() {
-  return <div className="bg-[#00c950] rounded-[16777200px] shrink-0 size-[8px]" data-name="Container" />;
+  return <div className="bg-[#00c950] rounded-full shrink-0 size-[8px]" data-name="Container" />;
 }
 
 function Container12() {
@@ -910,7 +910,7 @@ function Container9() {
 }
 
 function Container16() {
-  return <div className="bg-[#4f5eff] rounded-[16777200px] shrink-0 size-[8px]" data-name="Container" />;
+  return <div className="bg-[#4f5eff] rounded-full shrink-0 size-[8px]" data-name="Container" />;
 }
 
 function Container18() {
@@ -972,7 +972,7 @@ function Container14() {
 }
 
 function Container23() {
-  return <div className="bg-[#00c950] rounded-[16777200px] shrink-0 size-[8px]" data-name="Container" />;
+  return <div className="bg-[#00c950] rounded-full shrink-0 size-[8px]" data-name="Container" />;
 }
 
 function Container25() {
@@ -1034,7 +1034,7 @@ function Container21() {
 }
 
 function Container30() {
-  return <div className="bg-[#4f5eff] rounded-[16777200px] shrink-0 size-[8px]" data-name="Container" />;
+  return <div className="bg-[#4f5eff] rounded-full shrink-0 size-[8px]" data-name="Container" />;
 }
 
 function Container32() {
@@ -1158,7 +1158,7 @@ function LanguageIconContainer() {
 function Button2() {
   return (
     <div className="absolute bg-white h-[40px] left-[983px] rounded-[6px] top-[30px] w-[97px]" data-name="Button">
-      <div className="content-stretch flex gap-[8px] items-center overflow-clip px-[16px] py-[8px] relative rounded-[inherit] size-full">
+      <div className="content-stretch flex gap-[8px] items-center overflow-clip px-[16px] py-[8px] relative rounded-[6px] size-full">
         <LanguageIconContainer />
         <p className="font-['Inter:Medium',sans-serif] font-medium leading-[1.5] not-italic relative shrink-0 text-[#1c1c1c] text-[14px] text-right whitespace-nowrap">English</p>
       </div>

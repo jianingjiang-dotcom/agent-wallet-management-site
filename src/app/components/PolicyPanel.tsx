@@ -63,7 +63,7 @@ export default function PolicyPanel({ policy, disabled }: PolicyPanelProps) {
       {/* Area A: Read-only metrics */}
       <div className="grid grid-cols-3 gap-3 mb-6">
         {/* Per-tx limit */}
-        <div className="bg-[var(--app-hover-bg)] rounded-[10px] p-4 text-center">
+        <div className="bg-[var(--app-hover-bg)] rounded-[8px] p-4 text-center">
           <div className="font-['Inter',sans-serif] font-semibold text-[22px] text-[var(--app-text)] mb-1">
             ${policy.singleTxLimit}
           </div>
@@ -73,7 +73,7 @@ export default function PolicyPanel({ policy, disabled }: PolicyPanelProps) {
         </div>
 
         {/* Daily limit */}
-        <div className="bg-[var(--app-hover-bg)] rounded-[10px] p-4 text-center">
+        <div className="bg-[var(--app-hover-bg)] rounded-[8px] p-4 text-center">
           <div className="font-['Inter',sans-serif] font-semibold text-[22px] text-[var(--app-text)] mb-1">
             ${policy.dailyLimit}
           </div>
@@ -83,7 +83,7 @@ export default function PolicyPanel({ policy, disabled }: PolicyPanelProps) {
         </div>
 
         {/* Approval status */}
-        <div className="bg-[var(--app-hover-bg)] rounded-[10px] p-4 text-center">
+        <div className="bg-[var(--app-hover-bg)] rounded-[8px] p-4 text-center">
           <div className={`font-['Inter',sans-serif] font-semibold text-[16px] mb-1 ${
             policy.approvalRequired ? 'text-[var(--app-success)]' : 'text-[var(--app-text-tertiary)]'
           }`}>
@@ -96,7 +96,7 @@ export default function PolicyPanel({ policy, disabled }: PolicyPanelProps) {
       </div>
 
       {/* Area B: Advanced config guide */}
-      <div className="rounded-[10px] bg-gradient-to-br from-[var(--app-accent-soft-hover)] to-[var(--app-accent-soft)] border border-[var(--app-accent-soft)] p-5">
+      <div className="rounded-[8px] bg-gradient-to-br from-[var(--app-accent-soft-hover)] to-[var(--app-accent-soft)] border border-[var(--app-accent-soft)] p-5">
         <h3 className="font-['Inter',sans-serif] font-semibold text-[14px] text-[var(--app-text)] mb-2">
           {t('policy.advancedTitle')}
         </h3>

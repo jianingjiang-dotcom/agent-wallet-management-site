@@ -175,7 +175,7 @@ ${buildCommand()}`;
               <p className="font-['Inter',sans-serif] font-normal text-[12px] text-[#7c7c7c] mb-4">
                 {t("agentPairing.successDesc")}
               </p>
-              <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[10px] px-4 py-3 mb-4 inline-block">
+              <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[8px] px-4 py-3 mb-4 inline-block">
                 <span className="font-['Inter',sans-serif] font-normal text-[11px] text-[#7c7c7c]">{t("agentPairing.agentId")}</span>
                 <span className="font-['JetBrains_Mono',monospace] text-[12px] text-[#0a0a0a] ml-2">{agentId}</span>
               </div>
@@ -199,7 +199,7 @@ ${buildCommand()}`;
           ) : (
             /* Idle State - Prompt card (onboarding style) */
             <div>
-              <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[10px] mb-4 overflow-hidden">
+              <div className="bg-white border border-[rgba(10,10,10,0.08)] rounded-[8px] mb-4 overflow-hidden">
                 {/* Header: timer left, actions right */}
                 <div className="flex items-center justify-between px-4 py-3">
                   <span className="font-['Inter',sans-serif] text-[12px] leading-[16px]">
@@ -238,7 +238,7 @@ ${buildCommand()}`;
                 <div className="border-t border-[rgba(10,10,10,0.08)]" />
 
                 {/* Prompt text block */}
-                <div className="bg-[#f5f5f7] rounded-b-[10px]">
+                <div className="bg-[#f5f5f7] rounded-b-[8px]">
                   <div className="p-4">
                     <pre className="font-['Inter',sans-serif] font-normal text-[14px] text-[#333333] leading-[20px] whitespace-pre-wrap break-words">
                       {buildPrompt()}

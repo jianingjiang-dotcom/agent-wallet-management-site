@@ -1400,7 +1400,7 @@ const translations = {
     "onboarding.chat.invitePromptNew": "好的！首先需要验证你的邀请码，请在下方输入：",
     "onboarding.chat.inviteVerifiedNew": "邀请码验证通过！复制以下指令发送给你的 Agent：",
     "onboarding.chat.walletDone": "🎉 钱包创建成功！你现在可以开始使用了。",
-    "onboarding.suggestion.createWallet": "帮我创建一个 Cobo Agentic Wallet",
+    "onboarding.suggestion.createWallet": "创建我的 Cobo Agent Wallet",
     "onboarding.card.disabled": "已在对话中输入",
 
     // Invitation Code

@@ -455,9 +455,34 @@
   }
   .dark-scrollbar::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.15);
-    border-radius: 3px;
+    border-radius: 2px;
   }
   .dark-scrollbar::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.25);
+  }
+}
+
+@layer base {
+  .brand-gradient {
+    font-family: 'Space Grotesk', sans-serif !important;
+  }
+  .font-space-grotesk {
+    font-family: 'Space Grotesk', sans-serif !important;
+  }
+}
+
+@media (min-width: 1184px) {
+  .logo-bar-collapsed {
+    display: none !important;
+  }
+}
+
+.logo-bar-wide {
+  display: none !important;
+}
+
+@media (min-width: 1184px) {
+  .logo-bar-wide {
+    display: block !important;
   }
 }

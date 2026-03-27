@@ -59,7 +59,7 @@ export default function PermissionsPanel({ permissions, onUpdate, disabled }: Pe
           return (
             <div
               key={item.key}
-              className="flex items-center justify-between p-3 rounded-[10px] border border-[var(--app-border)] bg-[var(--app-hover-bg)]"
+              className="flex items-center justify-between p-3 rounded-[8px] border border-[var(--app-border)] bg-[var(--app-hover-bg)]"
             >
               <div className="flex items-center gap-3">
                 <Icon className="w-4 h-4 text-[var(--app-accent)]" />
@@ -93,7 +93,7 @@ export default function PermissionsPanel({ permissions, onUpdate, disabled }: Pe
       {/* Disabled Overlay */}
       {disabled && (
         <div className="absolute inset-0 bg-white/60 rounded-[12px] flex items-center justify-center z-10">
-          <div className="bg-[var(--app-card-bg)] border border-[var(--app-border)] rounded-[10px] px-5 py-3 shadow-sm">
+          <div className="bg-[var(--app-card-bg)] border border-[var(--app-border)] rounded-[8px] px-5 py-3 shadow-sm">
             <span className="font-['Inter',sans-serif] font-medium text-[14px] text-[var(--app-text-secondary)]">
               {t('permissions.needAgent')}
             </span>

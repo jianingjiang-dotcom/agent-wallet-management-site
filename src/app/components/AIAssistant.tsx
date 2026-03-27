@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useSearchParams, useOutletContext } from 'react-router';
-import { ArrowUp, Plus, AtSign, AlertTriangle, CheckCircle, XCircle, Search, MoreHorizontal, Bot, Trash2, Sparkles, Wallet, ChevronRight, SquarePen, PanelLeftClose, X, MessageCircle, ClipboardCheck, Send, Users, Link, FileText, Settings, Clock } from 'lucide-react';
+import { ArrowUp, Plus, AtSign, AlertTriangle, CheckCircle, XCircle, Search, MoreHorizontal, Bot, Trash2, Sparkles, Wallet, ChevronRight, SquarePen, PanelLeftClose, X, MessageCircle, ClipboardCheck, Send, Users, Link, FileText, Settings, Clock, Copy } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useWalletStore } from '../hooks/useWalletStore';
 import { useOnboardingChat } from '../hooks/useOnboardingChat';
@@ -41,7 +41,7 @@ interface ChatSession {
 export default function AIAssistant() {
   const { t, language } = useLanguage();
   const { wallets, hasWallets, addWalletWithAgent, delegations, selectWallet } = useWalletStore();
-  const { onClaimWallet, onOpenWalletModal, onShowWalletPage, onHideWalletPage, showWalletPage, onDelegateWallet, onShowApprovalPage, onHideApprovalPage, showApprovalPage, sidebarCollapsed, demoApproval } = useOutletContext<{
+  const { onClaimWallet, onOpenWalletModal, onShowWalletPage, onHideWalletPage, showWalletPage, onDelegateWallet, onShowApprovalPage, onHideApprovalPage, showApprovalPage, sidebarCollapsed, demoApproval, setHasActiveChat } = useOutletContext<{
     onSetupWallet: () => void;
     onClaimWallet: () => void;
     onOpenWalletModal: () => void;
@@ -54,12 +54,15 @@ export default function AIAssistant() {
     showApprovalPage: boolean;
     sidebarCollapsed: boolean;
     demoApproval: boolean;
+    setHasActiveChat: (v: boolean) => void;
   }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const [pendingApprovalCount, setPendingApprovalCount] = useState(hasWallets ? 2 : 0);
   const [approvalBannerDismissed, setApprovalBannerDismissed] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
+  const [inputExpanded, setInputExpanded] = useState(false);
+  const shouldFocusInputRef = useRef(false);
   const [isTyping, setIsTyping] = useState(false);
   const [activeChatId, setActiveChatId] = useState<string>('current');
   const [chatTitle, setChatTitle] = useState<string>('');
@@ -69,6 +72,7 @@ export default function AIAssistant() {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchModalInputRef = useRef<HTMLInputElement>(null);
   const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [navTooltip, setNavTooltip] = useState<{ label: string; top: number } | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [welcomeType, setWelcomeType] = useState<'first-wallet' | null>(null);
@@ -82,6 +86,11 @@ export default function AIAssistant() {
 
   // Onboarding chat hook
   const onboarding = useOnboardingChat(!hasWallets);
+
+  // Notify layout whether we have an active chat (for divider visibility)
+  useEffect(() => {
+    setHasActiveChat(messages.length > 0);
+  }, [messages.length, setHasActiveChat]);
 
   // Check for startOnboarding URL param
   useEffect(() => {
@@ -119,18 +128,39 @@ export default function AIAssistant() {
         const allMsgs = onboardingMsgs;
         setMessages(allMsgs);
 
-        // Create session entry in sidebar
-        const sessionTitle = language === 'zh' ? '钱包创建' : 'Wallet Setup';
-        const newSessionId = 'onboarding-' + Date.now();
-        setActiveChatId(newSessionId);
-        setChatTitle(sessionTitle);
-        setChatSessions(prev => [
-          { id: newSessionId, title: sessionTitle, timestamp: new Date(), messages: allMsgs },
-          ...prev,
-        ]);
+        // Update existing session or create new one
+        const currentExists = chatSessions.some(s => s.id === activeChatId);
+        if (currentExists) {
+          // Already in a session — update its messages
+          setChatSessions(prev =>
+            prev.map(s =>
+              s.id === activeChatId
+                ? { ...s, messages: allMsgs }
+                : s
+            )
+          );
+        } else {
+          // Create session entry in sidebar
+          const sessionTitle = language === 'zh' ? '钱包创建' : 'Wallet Setup';
+          const newSessionId = 'onboarding-' + Date.now();
+          setActiveChatId(newSessionId);
+          setChatTitle(sessionTitle);
+          setChatSessions(prev => [
+            { id: newSessionId, title: sessionTitle, timestamp: new Date(), messages: allMsgs },
+            ...prev,
+          ]);
+        }
       }
     },
   };
+
+  // Auto-trigger onComplete when onboarding reaches 'success' step
+  useEffect(() => {
+    if (onboarding.currentStep === 'success' && onboarding.isOnboardingActive) {
+      onboardingCallbacks.onComplete();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [onboarding.currentStep]);
 
   // Merge onboarding messages for display
   const displayMessages: Message[] = onboarding.isOnboardingActive
@@ -150,7 +180,7 @@ export default function AIAssistant() {
   }, []);
 
   // Mock chat history data
-  const [chatSessions, setChatSessions] = useState<ChatSession[]>([
+  const [chatSessions, setChatSessions] = useState<ChatSession[]>(hasWallets ? [
     {
       id: '1',
       title: language === 'zh' ? 'Agent 安装配置' : 'Agent Installation',
@@ -196,7 +226,7 @@ export default function AIAssistant() {
         { id: '5-2', role: 'assistant', content: language === 'zh' ? '点击"创建钱包"按钮，选择链类型，设置权限规则即可完成创建。' : 'Click "Create Wallet", select chain type, and set permission rules to complete creation.', timestamp: new Date(Date.now() - 1209590000) },
       ],
     },
-  ]);
+  ] : []);
 
   const filteredSessions = chatSessions.filter(s =>
     s.title.toLowerCase().includes(searchQuery.toLowerCase())
@@ -506,7 +536,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
     // During onboarding invite-code step, intercept input as invite code attempt
     if (onboarding.isOnboardingActive && onboarding.currentStep === 'invite-code') {
       const raw = inputValue.trim();
-      setInputValue('');
+      setInputValue(''); setInputExpanded(false);
       await onboarding.handleInviteFromChat(raw);
       return;
     }
@@ -520,7 +550,17 @@ Would you like me to help adjust your current Agent's limit settings?`;
 
     let currentSessionId = activeChatId;
 
-    if (messages.length === 0) {
+    if (chatSessions.some(s => s.id === activeChatId)) {
+      // Already in an existing session — append message
+      setChatSessions((prev) =>
+        prev.map((s) =>
+          s.id === currentSessionId
+            ? { ...s, messages: [...s.messages, userMessage] }
+            : s
+        )
+      );
+    } else {
+      // New conversation — create session
       const title = inputValue.length > 20 ? inputValue.slice(0, 20) + '...' : inputValue;
       setChatTitle(title);
       const newSessionId = 'new-' + Date.now();
@@ -530,18 +570,10 @@ Would you like me to help adjust your current Agent's limit settings?`;
         { id: newSessionId, title, timestamp: new Date(), messages: [userMessage] },
         ...prev,
       ]);
-    } else {
-      setChatSessions((prev) =>
-        prev.map((s) =>
-          s.id === currentSessionId
-            ? { ...s, messages: [...s.messages, userMessage] }
-            : s
-        )
-      );
     }
 
     setMessages((prev) => [...prev, userMessage]);
-    setInputValue('');
+    setInputValue(''); setInputExpanded(false);
     setIsTyping(true);
 
     setTimeout(() => {
@@ -635,18 +667,31 @@ Would you like me to help adjust your current Agent's limit settings?`;
       timestamp: new Date(),
     };
 
-    const currentSessionId = activeChatId;
+    let currentSessionId = activeChatId;
 
-    setChatSessions((prev) =>
-      prev.map((s) =>
-        s.id === currentSessionId
-          ? { ...s, messages: [...s.messages, userMessage] }
-          : s
-      )
-    );
+    if (chatSessions.some(s => s.id === activeChatId)) {
+      // Already in an existing session — append message
+      setChatSessions((prev) =>
+        prev.map((s) =>
+          s.id === currentSessionId
+            ? { ...s, messages: [...s.messages, userMessage] }
+            : s
+        )
+      );
+    } else {
+      // New conversation — create session
+      const title = text.length > 20 ? text.slice(0, 20) + '...' : text;
+      const newSessionId = 'new-' + Date.now();
+      currentSessionId = newSessionId;
+      setActiveChatId(newSessionId);
+      setChatSessions((prev) => [
+        { id: newSessionId, title, timestamp: new Date(), messages: [userMessage] },
+        ...prev,
+      ]);
+    }
 
     setMessages((prev) => [...prev, userMessage]);
-    setInputValue('');
+    setInputValue(''); setInputExpanded(false);
     setIsTyping(true);
 
     setTimeout(() => {
@@ -682,11 +727,20 @@ Would you like me to help adjust your current Agent's limit settings?`;
     setMessages([]);
     setActiveChatId('current');
     setWelcomeType(null);
+    onboarding.resetOnboarding();
     if (showWalletPage || showApprovalPage) onHideWalletPage();
+    shouldFocusInputRef.current = true;
   };
 
   // Start the onboarding flow
   const handleStartOnboarding = () => {
+    const title = language === 'zh' ? '创建 Cobo Agent Wallet' : 'Create Cobo Agent Wallet';
+    const newSessionId = 'onboarding-' + Date.now();
+    setActiveChatId(newSessionId);
+    setChatSessions((prev) => [
+      { id: newSessionId, title, timestamp: new Date(), messages: [] },
+      ...prev,
+    ]);
     onboarding.startOnboarding();
   };
 
@@ -757,11 +811,13 @@ Would you like me to help adjust your current Agent's limit settings?`;
 
       {/* Session list */}
       <div className={`flex-1 overflow-y-auto overflow-x-hidden px-2 flex flex-col gap-[2px] transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
-        <div className="p-[8px]">
-          <span className="text-[14px] leading-[20px] font-normal text-[var(--app-text-muted)] opacity-50">
-            {language === 'zh' ? '对话历史' : 'History'}
-          </span>
-        </div>
+        {chatSessions.length > 0 && (
+          <div className="p-[8px]">
+            <span className="text-[14px] leading-[20px] font-normal text-[var(--app-text-muted)] opacity-50">
+              {language === 'zh' ? '对话历史' : 'History'}
+            </span>
+          </div>
+        )}
         {chatSessions.map((session) => (
           <div key={session.id} className={`relative group rounded-[8px] transition-colors ${activeChatId === session.id ? 'bg-[var(--app-hover-bg)]' : 'hover:bg-[var(--app-hover-bg)]'}`}>
             <button
@@ -783,7 +839,20 @@ Would you like me to help adjust your current Agent's limit settings?`;
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 10.8333C10.4602 10.8333 10.8333 10.4602 10.8333 9.99996C10.8333 9.53972 10.4602 9.16663 10 9.16663C9.53977 9.16663 9.16667 9.53972 9.16667 9.99996C9.16667 10.4602 9.53977 10.8333 10 10.8333Z" fill="currentColor" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M15.8333 10.8333C16.2936 10.8333 16.6667 10.4602 16.6667 9.99996C16.6667 9.53972 16.2936 9.16663 15.8333 9.16663C15.3731 9.16663 15 9.53972 15 9.99996C15 10.4602 15.3731 10.8333 15.8333 10.8333Z" fill="currentColor" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M4.16666 10.8333C4.6269 10.8333 4.99999 10.4602 4.99999 9.99996C4.99999 9.53972 4.6269 9.16663 4.16666 9.16663C3.70642 9.16663 3.33333 9.53972 3.33333 9.99996C3.33333 10.4602 3.70642 10.8333 4.16666 10.8333Z" fill="currentColor" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </button>
             {menuOpenId === session.id && (
-              <div ref={menuRef} className="absolute right-0 top-full mt-1 bg-[var(--app-card-bg)] rounded-lg shadow-lg border border-[var(--app-border-medium)] py-1 z-50" style={{ minWidth: '120px' }}>
+              <div ref={menuRef} className="absolute right-0 top-full mt-1 bg-[var(--app-card-bg)] rounded-lg shadow-lg border border-[var(--app-border-medium)] py-1 z-50" style={{ minWidth: '150px' }}>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    try { navigator.clipboard.writeText(session.id).catch(() => {}); } catch {}
+                    setMenuOpenId(null);
+                    setToastMessage(language === 'zh' ? '复制成功' : 'Copied');
+                    setTimeout(() => setToastMessage(null), 2000);
+                  }}
+                  className="w-full text-left px-3 py-2 text-sm text-[var(--app-text)] hover:bg-[var(--app-hover-bg)] flex items-center gap-2"
+                >
+                  <Copy style={{ width: '16px', height: '16px' }} />
+                  {language === 'zh' ? '复制会话 ID' : 'Copy Session ID'}
+                </button>
                 <button
                   onClick={(e) => { e.stopPropagation(); setDeleteConfirmId(session.id); setMenuOpenId(null); }}
                   className="w-full text-left px-3 py-2 text-sm text-red-500 hover:bg-[var(--app-hover-bg)] flex items-center gap-2"
@@ -850,11 +919,14 @@ Would you like me to help adjust your current Agent's limit settings?`;
 
   // Render a single message (shared between regular and onboarding messages)
   const renderAssistantHeader = () => (
-    <div style={{ fontSize: '16px', lineHeight: '24px', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-      <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: '#4f5eff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-        <Bot style={{ width: '12px', height: '12px', color: 'white' }} />
-      </div>
-      <span style={{ fontWeight: 600 }}>Cobo <span style={{ color: '#4f5eff' }}>Pact</span></span>
+    <div style={{ fontSize: '16px', lineHeight: '24px', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+      <svg width="18" height="18" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
+        <path d="M13.0909 5.81818L12.1818 3.81818L10.1818 2.90909L12.1818 2L13.0909 0L14 2L16 2.90909L14 3.81818L13.0909 5.81818ZM13.0909 16L12.1818 14L10.1818 13.0909L12.1818 12.1818L13.0909 10.1818L14 12.1818L16 13.0909L14 14L13.0909 16ZM5.81818 13.8182L4 9.81818L0 8L4 6.18182L5.81818 2.18182L7.63636 6.18182L11.6364 8L7.63636 9.81818L5.81818 13.8182Z" fill="#5564FF"/>
+      </svg>
+      <svg width="84" height="14" viewBox="0 0 108 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6.76805 17.4717C4.68805 17.4717 3.04005 16.8957 1.82405 15.7437C0.608049 14.5757 4.8846e-05 12.9117 4.8846e-05 10.7517V6.71974C4.8846e-05 4.55974 0.608049 2.90374 1.82405 1.75174C3.04005 0.583741 4.68805 -0.000258923 6.76805 -0.000258923C8.83205 -0.000258923 10.424 0.567741 11.544 1.70374C12.68 2.82374 13.2481 4.36774 13.2481 6.33574V6.47974H10.128V6.23974C10.128 5.24774 9.84805 4.43174 9.28805 3.79174C8.74405 3.15174 7.90405 2.83174 6.76805 2.83174C5.64805 2.83174 4.76805 3.17574 4.12805 3.86374C3.48805 4.55174 3.16805 5.48774 3.16805 6.67174V10.7997C3.16805 11.9677 3.48805 12.9037 4.12805 13.6077C4.76805 14.2957 5.64805 14.6397 6.76805 14.6397C7.90405 14.6397 8.74405 14.3197 9.28805 13.6797C9.84805 13.0237 10.128 12.2077 10.128 11.2317V10.7997H13.2481V11.1357C13.2481 13.1037 12.68 14.6557 11.544 15.7917C10.424 16.9117 8.83205 17.4717 6.76805 17.4717ZM21.1894 17.4717C20.0054 17.4717 18.9414 17.2317 17.9974 16.7517C17.0534 16.2717 16.3094 15.5757 15.7654 14.6637C15.2214 13.7517 14.9494 12.6557 14.9494 11.3757V10.9917C14.9494 9.71174 15.2214 8.61574 15.7654 7.70374C16.3094 6.79174 17.0534 6.09574 17.9974 5.61574C18.9414 5.13574 20.0054 4.89574 21.1894 4.89574C22.3734 4.89574 23.4374 5.13574 24.3814 5.61574C25.3254 6.09574 26.0694 6.79174 26.6134 7.70374C27.1574 8.61574 27.4294 9.71174 27.4294 10.9917V11.3757C27.4294 12.6557 27.1574 13.7517 26.6134 14.6637C26.0694 15.5757 25.3254 16.2717 24.3814 16.7517C23.4374 17.2317 22.3734 17.4717 21.1894 17.4717ZM21.1894 14.7837C22.1174 14.7837 22.8854 14.4877 23.4934 13.8957C24.1014 13.2877 24.4054 12.4237 24.4054 11.3037V11.0637C24.4054 9.94374 24.1014 9.08774 23.4934 8.49574C22.9014 7.88774 22.1334 7.58374 21.1894 7.58374C20.2614 7.58374 19.4934 7.88774 18.8854 8.49574C18.2774 9.08774 17.9734 9.94374 17.9734 11.0637V11.3037C17.9734 12.4237 18.2774 13.2877 18.8854 13.8957C19.4934 14.4877 20.2614 14.7837 21.1894 14.7837ZM36.9727 17.4717C35.9007 17.4717 35.0767 17.2877 34.5007 16.9197C33.9247 16.5517 33.5007 16.1437 33.2287 15.6957H32.7967V17.1357H29.8207V0.335741H32.8447V6.59974H33.2767C33.4527 6.31174 33.6847 6.03974 33.9727 5.78374C34.2767 5.52774 34.6687 5.31974 35.1487 5.15974C35.6447 4.98374 36.2527 4.89574 36.9727 4.89574C37.9327 4.89574 38.8207 5.13574 39.6367 5.61574C40.4527 6.07974 41.1087 6.76774 41.6047 7.67974C42.1007 8.59174 42.3487 9.69574 42.3487 10.9917V11.3757C42.3487 12.6717 42.1007 13.7757 41.6047 14.6877C41.1087 15.5997 40.4527 16.2957 39.6367 16.7757C38.8207 17.2397 37.9327 17.4717 36.9727 17.4717ZM36.0607 14.8317C36.9887 14.8317 37.7647 14.5357 38.3887 13.9437C39.0127 13.3357 39.3247 12.4557 39.3247 11.3037V11.0637C39.3247 9.91174 39.0127 9.03974 38.3887 8.44774C37.7807 7.83974 37.0047 7.53574 36.0607 7.53574C35.1327 7.53574 34.3567 7.83974 33.7327 8.44774C33.1087 9.03974 32.7967 9.91174 32.7967 11.0637V11.3037C32.7967 12.4557 33.1087 13.3357 33.7327 13.9437C34.3567 14.5357 35.1327 14.8317 36.0607 14.8317ZM50.3894 17.4717C49.2054 17.4717 48.1414 17.2317 47.1974 16.7517C46.2534 16.2717 45.5094 15.5757 44.9654 14.6637C44.4214 13.7517 44.1494 12.6557 44.1494 11.3757V10.9917C44.1494 9.71174 44.4214 8.61574 44.9654 7.70374C45.5094 6.79174 46.2534 6.09574 47.1974 5.61574C48.1414 5.13574 49.2054 4.89574 50.3894 4.89574C51.5734 4.89574 52.6374 5.13574 53.5814 5.61574C54.5254 6.09574 55.2694 6.79174 55.8134 7.70374C56.3574 8.61574 56.6294 9.71174 56.6294 10.9917V11.3757C56.6294 12.6557 56.3574 13.7517 55.8134 14.6637C55.2694 15.5757 54.5254 16.2717 53.5814 16.7517C52.6374 17.2317 51.5734 17.4717 50.3894 17.4717ZM50.3894 14.7837C51.3174 14.7837 52.0854 14.4877 52.6934 13.8957C53.3014 13.2877 53.6054 12.4237 53.6054 11.3037V11.0637C53.6054 9.94374 53.3014 9.08774 52.6934 8.49574C52.1014 7.88774 51.3334 7.58374 50.3894 7.58374C49.4614 7.58374 48.6934 7.88774 48.0854 8.49574C47.4774 9.08774 47.1734 9.94374 47.1734 11.0637V11.3037C47.1734 12.4237 47.4774 13.2877 48.0854 13.8957C48.6934 14.4877 49.4614 14.7837 50.3894 14.7837Z" fill="#1C1C1C"/>
+        <path d="M58.9247 17.1357V0.335741H65.8367C66.8927 0.335741 67.8207 0.551741 68.6207 0.983741C69.4367 1.39974 70.0687 1.99174 70.5167 2.75974C70.9807 3.52774 71.2127 4.43974 71.2127 5.49574V5.83174C71.2127 6.87174 70.9727 7.78374 70.4927 8.56774C70.0287 9.33574 69.3887 9.93574 68.5727 10.3677C67.7727 10.7837 66.8607 10.9917 65.8367 10.9917H62.0927V17.1357H58.9247ZM62.0927 8.11174H65.5247C66.2767 8.11174 66.8847 7.90374 67.3487 7.48774C67.8127 7.07174 68.0447 6.50374 68.0447 5.78374V5.54374C68.0447 4.82374 67.8127 4.25574 67.3487 3.83974C66.8847 3.42374 66.2767 3.21574 65.5247 3.21574H62.0927V8.11174ZM76.5667 17.4717C75.7187 17.4717 74.9587 17.3277 74.2867 17.0397C73.6147 16.7357 73.0787 16.3037 72.6787 15.7437C72.2947 15.1677 72.1027 14.4717 72.1027 13.6557C72.1027 12.8397 72.2947 12.1597 72.6787 11.6157C73.0787 11.0557 73.6227 10.6397 74.3107 10.3677C75.0147 10.0797 75.8147 9.93574 76.7107 9.93574H79.9747V9.26374C79.9747 8.70374 79.7987 8.24774 79.4467 7.89574C79.0947 7.52774 78.5347 7.34374 77.7667 7.34374C77.0147 7.34374 76.4547 7.51974 76.0867 7.87174C75.7187 8.20774 75.4787 8.64774 75.3667 9.19174L72.5827 8.25574C72.7747 7.64774 73.0787 7.09574 73.4947 6.59974C73.9267 6.08774 74.4947 5.67974 75.1987 5.37574C75.9187 5.05574 76.7907 4.89574 77.8147 4.89574C79.3827 4.89574 80.6227 5.28774 81.5347 6.07174C82.4467 6.85574 82.9027 7.99174 82.9027 9.47974V13.9197C82.9027 14.3997 83.1267 14.6397 83.5747 14.6397H84.5347V17.1357H82.5187C81.9267 17.1357 81.4387 16.9917 81.0547 16.7037C80.6707 16.4157 80.4787 16.0317 80.4787 15.5517V15.5277H80.0227C79.9587 15.7197 79.8147 15.9757 79.5907 16.2957C79.3667 16.5997 79.0147 16.8717 78.5347 17.1117C78.0547 17.3517 77.3987 17.4717 76.5667 17.4717ZM77.0947 15.0237C77.9427 15.0237 78.6307 14.7917 79.1587 14.3277C79.7027 13.8477 79.9747 13.2157 79.9747 12.4317V12.1917H76.9267C76.3667 12.1917 75.9267 12.3117 75.6067 12.5517C75.2867 12.7917 75.1267 13.1277 75.1267 13.5597C75.1267 13.9917 75.2947 14.3437 75.6307 14.6157C75.9667 14.8877 76.4547 15.0237 77.0947 15.0237ZM91.7033 17.4717C90.5513 17.4717 89.5033 17.2317 88.5593 16.7517C87.6313 16.2717 86.8953 15.5757 86.3513 14.6637C85.8073 13.7517 85.5353 12.6477 85.5353 11.3517V11.0157C85.5353 9.71974 85.8073 8.61574 86.3513 7.70374C86.8953 6.79174 87.6313 6.09574 88.5593 5.61574C89.5033 5.13574 90.5513 4.89574 91.7033 4.89574C92.8393 4.89574 93.8153 5.09574 94.6313 5.49574C95.4473 5.89574 96.1033 6.44774 96.5993 7.15174C97.1113 7.83974 97.4473 8.62374 97.6073 9.50374L94.6793 10.1277C94.6153 9.64774 94.4713 9.21574 94.2473 8.83174C94.0233 8.44774 93.7033 8.14374 93.2873 7.91974C92.8873 7.69574 92.3833 7.58374 91.7753 7.58374C91.1673 7.58374 90.6153 7.71974 90.1193 7.99174C89.6393 8.24774 89.2553 8.63974 88.9673 9.16774C88.6953 9.67974 88.5593 10.3117 88.5593 11.0637V11.3037C88.5593 12.0557 88.6953 12.6957 88.9673 13.2237C89.2553 13.7357 89.6393 14.1277 90.1193 14.3997C90.6153 14.6557 91.1673 14.7837 91.7753 14.7837C92.6873 14.7837 93.3753 14.5517 93.8393 14.0877C94.3193 13.6077 94.6233 12.9837 94.7513 12.2157L97.6793 12.9117C97.4713 13.7597 97.1113 14.5357 96.5993 15.2397C96.1033 15.9277 95.4473 16.4717 94.6313 16.8717C93.8153 17.2717 92.8393 17.4717 91.7033 17.4717ZM103.935 17.1357C103.151 17.1357 102.511 16.8957 102.015 16.4157C101.535 15.9197 101.295 15.2637 101.295 14.4477V7.72774H98.3194V5.23174H101.295V1.53574H104.319V5.23174H107.583V7.72774H104.319V13.9197C104.319 14.3997 104.543 14.6397 104.991 14.6397H107.295V17.1357H103.935Z" fill="#5564FF"/>
+      </svg>
     </div>
   );
 
@@ -862,6 +934,14 @@ Would you like me to help adjust your current Agent's limit settings?`;
     <>
       {/* Portal chat sessions into the layout sidebar */}
       {sidebarPortal && createPortal(chatSessionsSidebar, sidebarPortal)}
+
+      {/* Global toast message */}
+      {toastMessage && createPortal(
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[300] px-4 py-2 bg-[#1C1C1C] text-white text-[14px] leading-[20px] rounded-[8px] shadow-lg animate-reveal-up" style={{ animationDuration: '200ms' }}>
+          {toastMessage}
+        </div>,
+        document.body
+      )}
 
       {/* Nav tooltip - rendered via portal to avoid sidebar clipping */}
       {navTooltip && createPortal(
@@ -970,7 +1050,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
 
       {/* Chat area - full height */}
       {!showWalletPage && !showApprovalPage && (
-      <div className="flex-1 flex flex-col bg-[var(--app-card-bg)] overflow-hidden relative min-h-0">
+      <div className="flex-1 flex flex-col bg-[var(--app-card-bg)] overflow-hidden min-h-0">
         {/* Floating approval notification banner */}
         {demoApproval && hasWallets && pendingApprovalCount > 0 && !approvalBannerDismissed && (
           <div className="absolute top-0 left-0 right-0 z-10 flex justify-center px-6 pt-[24px] pointer-events-none">
@@ -1009,10 +1089,10 @@ Would you like me to help adjust your current Agent's limit settings?`;
               {/* Onboarding messages */}
               {message.role === 'onboarding' && message.onboardingData ? (
                 <div className="flex items-start justify-start">
-                  <div className="bg-transparent text-[var(--app-text)] w-full">
+                  <div className="bg-transparent text-[var(--app-text)] w-full min-w-0 overflow-hidden">
                     {!isGroupedWithPrev && renderAssistantHeader()}
                     {message.content && (
-                      <div className="whitespace-pre-wrap" style={{ fontSize: '16px', lineHeight: '24px' }}>
+                      <div className="whitespace-pre-wrap break-words" style={{ fontSize: '15px', lineHeight: '25px' }}>
                         {message.content}
                       </div>
                     )}
@@ -1024,9 +1104,9 @@ Would you like me to help adjust your current Agent's limit settings?`;
                     {message.onboardingData.step === 'setup-command' && message.onboardingData.payload?.pairingPhase === 'done' && (
                       <div className="flex flex-wrap gap-[10px] mt-4 justify-center">
                         {(language === 'zh' ? [
-                          '介绍 Cobo Pact 的产品能力',
-                          '如何完成首次钱包充值',
-                          '如何限制 Agent 每日花费',
+                          'Cobo Pact 能做什么？',
+                          '第一次如何给钱包充值？',
+                          '如何设置 Agent 的每日花费上限？',
                         ] : [
                           'Introduce Cobo Pact capabilities',
                           'How to make the first deposit',
@@ -1035,8 +1115,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                           <button
                             key={label}
                             onClick={() => {
-                              onboardingCallbacks.onComplete();
-                              setTimeout(() => handleSendDirect(label), 100);
+                              handleSendDirect(label);
                             }}
                             className="w-fit px-[16px] py-[10px] rounded-[12px] border border-[var(--app-border-medium)] bg-[var(--app-card-bg)] hover:bg-[var(--app-hover-bg)] transition-all text-[14px] leading-[20px] font-normal text-[var(--app-text)]"
                           >
@@ -1132,9 +1211,9 @@ Would you like me to help adjust your current Agent's limit settings?`;
               ) : (
                 <div className={`flex items-start ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                   {message.role === 'assistant' ? (
-                    <div className="bg-transparent text-[var(--app-text)] w-full">
+                    <div className="bg-transparent text-[var(--app-text)] w-full min-w-0 overflow-hidden">
                       {!isGroupedWithPrev && renderAssistantHeader()}
-                      <div className="whitespace-pre-wrap" style={{ fontSize: '16px', lineHeight: '24px' }}>{message.content}</div>
+                      <div className="whitespace-pre-wrap break-words" style={{ fontSize: '15px', lineHeight: '25px' }}>{message.content}</div>
                       {message.walletListData && wallets.length > 0 && (
                         <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
                           {wallets.map((w) => {
@@ -1155,8 +1234,8 @@ Would you like me to help adjust your current Agent's limit settings?`;
                       )}
                     </div>
                   ) : (
-                    <div className="bg-[var(--app-hover-bg)] text-[var(--app-text)] max-w-[80%] rounded-[10px] px-4 py-3">
-                      <div className="whitespace-pre-wrap" style={{ fontSize: '16px', lineHeight: '24px' }}>{message.content}</div>
+                    <div className="bg-[#F1F3FF] text-[var(--app-text)] max-w-[80%] rounded-[12px] px-4 py-3">
+                      <div className="whitespace-pre-wrap break-words" style={{ fontSize: '15px', lineHeight: '25px' }}>{message.content}</div>
                     </div>
                   )}
                 </div>
@@ -1183,7 +1262,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
 
         {/* Empty state — only when no messages AND onboarding not active */}
         {displayMessages.length === 0 && !combinedTyping && !onboarding.isOnboardingActive && (
-          <div className="flex-1 flex items-center justify-center px-6" style={{ marginTop: '-160px' }}>
+          <div className="absolute inset-0 flex items-center justify-center px-4 md:px-6 z-0" style={{ marginTop: '-15vh' }}>
             <div className="w-full max-w-[768px]">
 
               {/* Scenario C: No wallet, no welcome — CTA suggestion + other suggestions */}
@@ -1209,25 +1288,42 @@ Would you like me to help adjust your current Agent's limit settings?`;
                   : {}
                 }
               >
-                  <div className="bg-[var(--app-card-bg)] border border-[var(--app-border-medium)] rounded-xl shadow-[var(--app-dropdown-shadow)] flex flex-col">
-                    <textarea
-                      value={inputValue}
-                      onChange={(e) => setInputValue(e.target.value)}
-                      onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
-                      placeholder={t('ai.inputPlaceholder')}
-                      className="w-full bg-transparent p-3 text-[16px] leading-[24px] text-[var(--app-text)] focus:outline-none resize-none chat-input-placeholder overflow-y-auto"
-                      style={{ minHeight: '72px', maxHeight: '144px', height: '72px' }}
-                      onInput={(e) => { const el = e.currentTarget; el.style.height = '72px'; el.style.height = Math.min(el.scrollHeight, 144) + 'px'; }}
-                    />
-                    <div className="flex items-center justify-between px-3 pb-3">
-                      <div className="flex items-center gap-1 relative">
-                        <button onClick={() => fileInputRef.current?.click()} className="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] text-[var(--app-text-tertiary)] hover:bg-[var(--app-hover-bg)] transition-colors">
-                          <Plus className="w-5 h-5" strokeWidth={1.5} />
-                        </button>
-                        {hasWallets && (
-                          <button onClick={() => setShowWalletPicker(showWalletPicker === 'empty' ? null : 'empty')} className="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] text-[var(--app-text-tertiary)] hover:bg-[var(--app-hover-bg)] transition-colors">
-                            <AtSign className="w-5 h-5" strokeWidth={1.5} />
+                  <div className="bg-[var(--app-card-bg)] border border-[#EBEBEB] rounded-xl shadow-[0px_10px_20px_0px_rgba(0,0,0,0.04)] focus-within:border-[#4F5EFF] focus-within:shadow-[0px_10px_20px_0px_rgba(79,94,255,0.12)] transition-all flex flex-col">
+                    {inputExpanded && (
+                      <textarea
+                        ref={(el) => { if (el) { el.focus(); el.selectionStart = el.selectionEnd = el.value.length; } }}
+                        value={inputValue}
+                        onChange={(e) => {
+                          setInputValue(e.target.value);
+                          if (e.target.value === '') { shouldFocusInputRef.current = true; setInputExpanded(false); }
+                        }}
+                        onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
+                        placeholder={t('ai.inputPlaceholder')}
+                        className="w-full bg-transparent px-[16px] py-3 text-[15px] leading-[22px] text-[var(--app-text)] font-normal focus:outline-none resize-none chat-input-placeholder overflow-y-auto"
+                        style={{ minHeight: '72px', maxHeight: '144px', height: '72px' }}
+                        onInput={(e) => {
+                          const el = e.currentTarget;
+                          el.style.height = '72px';
+                          el.style.height = Math.min(el.scrollHeight, 144) + 'px';
+                        }}
+                      />
+                    )}
+                    <div className={`flex items-center justify-between px-3 pb-3 ${!inputExpanded ? 'pt-3' : ''}`}>
+                      <div className="flex items-center relative flex-1 min-w-0">
+                        <div className="relative group shrink-0">
+                          <button onClick={() => fileInputRef.current?.click()} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] text-[var(--app-text)] hover:bg-[#F8F9FC] transition-colors">
+                            <Plus className="w-[18px] h-[18px]" strokeWidth={2} />
                           </button>
+                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-[8px] px-[6px] py-[4px] bg-[#1C1C1C] text-white text-[12px] leading-[16px] rounded-[6px] whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
+                            添加图片/附件
+                          </div>
+                        </div>
+                        {hasWallets && (
+                          <div className="relative group shrink-0">
+                            <button onClick={() => setShowWalletPicker(showWalletPicker === 'empty' ? null : 'empty')} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] text-[var(--app-text)] hover:bg-[#F8F9FC] transition-colors">
+                              <AtSign className="w-[18px] h-[18px]" strokeWidth={2} />
+                            </button>
+                          </div>
                         )}
                         {showWalletPicker === 'empty' && (
                           <div ref={walletPickerRef} className="absolute bottom-full left-0 mb-2 bg-[var(--app-card-bg)] rounded-xl border border-[var(--app-border-medium)] shadow-lg py-1 z-50" style={{ minWidth: '200px' }}>
@@ -1244,34 +1340,54 @@ Would you like me to help adjust your current Agent's limit settings?`;
                             ))}
                           </div>
                         )}
+                        {!inputExpanded && (
+                          <input
+                            ref={(el) => { if (el && shouldFocusInputRef.current) { el.focus(); shouldFocusInputRef.current = false; } }}
+                            type="text"
+                            value={inputValue}
+                            onChange={(e) => setInputValue(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); }
+                            }}
+                            onInput={(e) => {
+                              const el = e.currentTarget;
+                              // Check if text would overflow by comparing scrollWidth
+                              if (el.scrollWidth > el.clientWidth) {
+                                setInputExpanded(true);
+                              }
+                            }}
+                            placeholder={t('ai.inputPlaceholder')}
+                            className="flex-1 min-w-0 bg-transparent px-[8px] text-[15px] leading-[22px] text-[var(--app-text)] font-normal focus:outline-none chat-input-placeholder"
+                          />
+                        )}
                       </div>
                       <button
                         onClick={handleSendMessage}
                         disabled={!inputValue.trim() || isTyping}
-                        className="w-[36px] h-[36px] flex items-center justify-center rounded-[10px] bg-[#4f5eff] hover:bg-[#3d4dd9] disabled:bg-[var(--app-hover-bg)] disabled:cursor-not-allowed text-white transition-all"
+                        className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] bg-[#4f5eff] hover:bg-[#3d4dd9] disabled:bg-[var(--app-hover-bg)] disabled:cursor-not-allowed text-white transition-all shrink-0"
                       >
-                        <ArrowUp className="w-5 h-5" />
+                        <ArrowUp className="w-[18px] h-[18px]" />
                       </button>
                     </div>
                   </div>
 
                 {/* Suggestions */}
                 {!welcomeType && (
-                  <div className="flex flex-wrap gap-[10px] mt-[32px] justify-center">
+                  <div className="flex flex-wrap gap-[12px] mt-[24px] md:mt-[32px] justify-center">
                     {/* CTA suggestion for no-wallet users */}
                     {!hasWallets && (
                       <button
                         onClick={handleStartOnboarding}
-                        className="w-fit px-[16px] py-[10px] rounded-[12px] bg-gradient-to-r from-[#4F5EFF] to-[#6C7AFF] hover:from-[#3d4dd9] hover:to-[#5b6aef] text-white text-[14px] leading-[20px] font-medium transition-all shadow-[0px_2px_8px_rgba(79,94,255,0.3)] hover:shadow-[0px_4px_16px_rgba(79,94,255,0.4)] flex items-center gap-1.5"
+                        className="w-fit px-[12px] py-[8px] md:px-[16px] md:py-[10px] rounded-[12px] bg-gradient-to-r from-[#4F5EFF] to-[#6C7AFF] hover:from-[#3d4dd9] hover:to-[#5b6aef] text-white text-[13px] md:text-[14px] leading-[20px] font-normal transition-all shadow-none hover:shadow-none flex items-center gap-1.5"
                       >
                         <Sparkles className="w-4 h-4" />
                         {t('onboarding.suggestion.createWallet')}
                       </button>
                     )}
                     {(language === 'zh' ? [
-                      '介绍 Cobo Pact 的产品能力',
-                      '如何完成首次钱包充值',
-                      '如何限制 Agent 每日花费',
+                      'Cobo Pact 能做什么？',
+                      '第一次如何给钱包充值？',
+                      '如何设置 Agent 的每日花费上限？',
                     ] : [
                       'Introduce Cobo Pact capabilities',
                       'How to make the first deposit',
@@ -1280,7 +1396,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                       <button
                         key={label}
                         onClick={() => handleSendDirect(label)}
-                        className="w-fit px-[16px] py-[10px] rounded-[12px] border border-[var(--app-border-medium)] bg-[var(--app-card-bg)] hover:bg-[var(--app-hover-bg)] transition-all text-[14px] leading-[20px] font-normal text-[var(--app-text)] text-left"
+                        className="w-fit px-[12px] py-[8px] md:px-[16px] md:py-[10px] rounded-[12px] border border-[var(--app-border-medium)] bg-[var(--app-card-bg)] hover:bg-[var(--app-hover-bg)] transition-all text-[13px] md:text-[14px] leading-[20px] font-normal text-[var(--app-text-muted)] text-left"
                       >
                         {label}
                       </button>
@@ -1296,25 +1412,42 @@ Would you like me to help adjust your current Agent's limit settings?`;
         {(displayMessages.length > 0 || combinedTyping) && (
         <div className="bg-[var(--app-card-bg)] px-6 pb-[8px] flex justify-center shrink-0 sticky bottom-0 z-10">
           <div className="w-full max-w-[744px]">
-          <div className="bg-[var(--app-card-bg)] border border-[var(--app-border-medium)] rounded-xl shadow-[var(--app-dropdown-shadow)] flex flex-col">
-            <textarea
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
-              placeholder={t('ai.inputPlaceholder')}
-              className="w-full bg-transparent p-3 text-[16px] leading-[24px] text-[var(--app-text)] focus:outline-none resize-none chat-input-placeholder overflow-y-auto"
-                      style={{ minHeight: '72px', maxHeight: '144px', height: '72px' }}
-                      onInput={(e) => { const el = e.currentTarget; el.style.height = '72px'; el.style.height = Math.min(el.scrollHeight, 144) + 'px'; }}
-            />
-            <div className="flex items-center justify-between px-3 pb-3">
-              <div className="flex items-center gap-1 relative">
-                <button onClick={() => fileInputRef.current?.click()} className="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] text-[var(--app-text-tertiary)] hover:bg-[var(--app-hover-bg)] transition-colors">
-                  <Plus className="w-5 h-5" strokeWidth={1.5} />
-                </button>
-                {hasWallets && (
-                  <button onClick={() => setShowWalletPicker(showWalletPicker === 'chat' ? null : 'chat')} className="w-[36px] h-[36px] flex items-center justify-center rounded-[8px] text-[var(--app-text-tertiary)] hover:bg-[var(--app-hover-bg)] transition-colors">
-                    <AtSign className="w-5 h-5" strokeWidth={1.5} />
+          <div className="bg-[var(--app-card-bg)] border border-[#EBEBEB] rounded-xl shadow-[0px_10px_20px_0px_rgba(0,0,0,0.04)] focus-within:border-[#4F5EFF] focus-within:shadow-[0px_10px_20px_0px_rgba(79,94,255,0.12)] transition-all flex flex-col">
+            {inputExpanded && (
+              <textarea
+                ref={(el) => { if (el) { el.focus(); el.selectionStart = el.selectionEnd = el.value.length; } }}
+                value={inputValue}
+                onChange={(e) => {
+                  setInputValue(e.target.value);
+                  if (e.target.value === '') { shouldFocusInputRef.current = true; setInputExpanded(false); }
+                }}
+                onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
+                placeholder={t('ai.inputPlaceholder')}
+                className="w-full bg-transparent px-[16px] py-3 text-[15px] leading-[22px] text-[var(--app-text)] font-normal focus:outline-none resize-none chat-input-placeholder overflow-y-auto"
+                style={{ minHeight: '72px', maxHeight: '144px', height: '72px' }}
+                onInput={(e) => {
+                  const el = e.currentTarget;
+                  el.style.height = '72px';
+                  el.style.height = Math.min(el.scrollHeight, 144) + 'px';
+                }}
+              />
+            )}
+            <div className={`flex items-center justify-between px-3 pb-3 ${!inputExpanded ? 'pt-3' : ''}`}>
+              <div className="flex items-center relative flex-1 min-w-0">
+                <div className="relative group shrink-0">
+                  <button onClick={() => fileInputRef.current?.click()} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] text-[var(--app-text)] hover:bg-[#F8F9FC] transition-colors">
+                    <Plus className="w-[18px] h-[18px]" strokeWidth={2} />
                   </button>
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-[8px] px-[6px] py-[4px] bg-[#1C1C1C] text-white text-[12px] leading-[16px] rounded-[6px] whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
+                    添加图片/附件
+                  </div>
+                </div>
+                {hasWallets && (
+                  <div className="relative group shrink-0">
+                    <button onClick={() => setShowWalletPicker(showWalletPicker === 'chat' ? null : 'chat')} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] text-[var(--app-text)] hover:bg-[#F8F9FC] transition-colors">
+                      <AtSign className="w-[18px] h-[18px]" strokeWidth={2} />
+                    </button>
+                  </div>
                 )}
                 {showWalletPicker === 'chat' && (
                   <div ref={walletPickerRef} className="absolute bottom-full left-0 mb-2 bg-[var(--app-card-bg)] rounded-xl border border-[var(--app-border-medium)] shadow-lg py-1 z-50" style={{ minWidth: '200px' }}>
@@ -1331,13 +1464,32 @@ Would you like me to help adjust your current Agent's limit settings?`;
                     ))}
                   </div>
                 )}
+                {!inputExpanded && (
+                  <input
+                    ref={(el) => { if (el && shouldFocusInputRef.current) { el.focus(); shouldFocusInputRef.current = false; } }}
+                    type="text"
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); }
+                    }}
+                    onInput={(e) => {
+                      const el = e.currentTarget;
+                      if (el.scrollWidth > el.clientWidth) {
+                        setInputExpanded(true);
+                      }
+                    }}
+                    placeholder={t('ai.inputPlaceholder')}
+                    className="flex-1 min-w-0 bg-transparent px-[8px] text-[15px] leading-[22px] text-[var(--app-text)] font-normal focus:outline-none chat-input-placeholder"
+                  />
+                )}
               </div>
               <button
                 onClick={handleSendMessage}
                 disabled={!inputValue.trim() || isTyping}
-                className="w-[36px] h-[36px] flex items-center justify-center rounded-[10px] bg-[#4f5eff] hover:bg-[#3d4dd9] disabled:bg-[var(--app-hover-bg)] disabled:cursor-not-allowed text-white transition-all"
+                className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] bg-[#4f5eff] hover:bg-[#3d4dd9] disabled:bg-[var(--app-hover-bg)] disabled:cursor-not-allowed text-white transition-all shrink-0"
               >
-                <ArrowUp className="w-5 h-5" />
+                <ArrowUp className="w-[18px] h-[18px]" />
               </button>
             </div>
           </div>
