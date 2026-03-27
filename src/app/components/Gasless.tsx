@@ -1,7 +1,7 @@
 import { Fuel } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
-export default function Gasless() {
+export default function Gasless({ compact = false }: { compact?: boolean }) {
   const { t } = useLanguage();
 
   return (
@@ -15,7 +15,7 @@ export default function Gasless() {
         </p>
       </div>
 
-      <div className="bg-white border border-[#EBEBEB] rounded-[16px] flex flex-col items-center justify-center py-8 lg:py-16 px-6">
+      <div className={`${compact ? '' : 'bg-white border border-[#EBEBEB] rounded-[16px] shadow-sm'} flex flex-col items-center justify-center py-8 lg:py-16 px-6`}>
         <div className="w-[56px] h-[56px] lg:w-[72px] lg:h-[72px] rounded-[14px] bg-[#EEF0FF] flex items-center justify-center mb-5">
           <Fuel className="w-7 h-7 lg:w-9 lg:h-9 text-[#1F32D6]" strokeWidth={1.5} />
         </div>

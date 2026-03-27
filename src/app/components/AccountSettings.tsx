@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router';
-import { Pencil, Check, X, LogOut, ShieldCheck, ChevronRight } from 'lucide-react';
+import { Pencil, Check, X, ShieldCheck, ChevronRight } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
 /* ── Inline SVG icons ── */
@@ -56,14 +55,14 @@ function ConfirmModal({
         <div className="flex gap-3 pt-2">
           <button
             onClick={onCancel}
-            className="flex-1 h-[44px] rounded-xl border border-[#EBEBEB] text-[14px] font-medium text-[#0A0A0A] hover:bg-[#F0F2FF] transition-colors"
+            className="flex-1 h-[44px] rounded-[8px] border border-[#EBEBEB] text-[14px] font-medium text-[#0A0A0A] hover:bg-[#F0F2FF] transition-colors"
           >
             {/* Cancel */}
             {onCancel && 'Cancel'}
           </button>
           <button
             onClick={onConfirm}
-            className={`flex-1 h-[44px] rounded-xl text-[14px] font-medium transition-colors ${btnColor}`}
+            className={`flex-1 h-[44px] rounded-[8px] text-[14px] font-medium transition-colors ${btnColor}`}
           >
             {confirmLabel}
           </button>
@@ -74,8 +73,7 @@ function ConfirmModal({
 }
 
 /* ── Main Component ── */
-export default function AccountSettings() {
-  const navigate = useNavigate();
+export default function AccountSettings({ compact = false }: { compact?: boolean }) {
   const { t } = useLanguage();
 
   const [user] = useState(() => {
@@ -103,7 +101,6 @@ export default function AccountSettings() {
   const [unbindTarget, setUnbindTarget] = useState<string | null>(null);
 
   // Sign-out confirmation
-  const [showSignOutModal, setShowSignOutModal] = useState(false);
 
   useEffect(() => {
     if (editingName && nameInputRef.current) {
@@ -163,11 +160,6 @@ export default function AccountSettings() {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('agent_wallet_current_user');
-    navigate('/login');
-  };
-
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -183,7 +175,7 @@ export default function AccountSettings() {
     : '';
 
   return (
-    <div className="max-w-[640px] mx-auto space-y-[16px]">
+    <div className="w-full space-y-[24px] lg:space-y-[16px]">
       {/* Page header */}
       <h1 className="hidden lg:block font-semibold text-[24px] text-[#0A0A0A]">
         {t('account.title')}
@@ -191,22 +183,22 @@ export default function AccountSettings() {
 
       {/* Security banner */}
       {!secureBannerDismissed && (
-        <div className="bg-[#EEF0FF] border border-[#C8CEFF] rounded-2xl p-4 flex items-start gap-3">
-          <ShieldCheck className="w-5 h-5 text-[#1F32D6] flex-shrink-0 mt-0.5" strokeWidth={1.5} />
+        <div className="bg-[#EEF0FF] border border-[#C8CEFF] rounded-[8px] lg:rounded-2xl p-3 lg:p-4 flex items-start gap-2.5 lg:gap-3">
+          <ShieldCheck className="w-4 h-4 lg:w-5 lg:h-5 text-[#1F32D6] flex-shrink-0 mt-0.5" strokeWidth={1.5} />
           <div className="flex-1 min-w-0">
-            <p className="text-[14px] font-semibold text-[#0A0A0A]">{t('account.secureTitle')}</p>
-            <p className="font-normal text-[13px] text-[#7C7C7C] mt-0.5">{t('account.secureDesc')}</p>
-            <div className="flex items-center gap-3 mt-3">
+            <p className="text-[13px] lg:text-[14px] font-semibold text-[#0A0A0A]">{t('account.secureTitle')}</p>
+            <p className="font-normal text-[12px] lg:text-[13px] text-[#7C7C7C] mt-0.5">{t('account.secureDesc')}</p>
+            <div className="flex items-center gap-3 mt-2.5 lg:mt-3">
               <button
                 onClick={handleConnectBackup}
-                className="text-[14px] font-medium text-[#1F32D6] hover:underline flex items-center gap-1"
+                className="text-[13px] lg:text-[14px] font-medium text-[#1F32D6] hover:underline flex items-center gap-1"
               >
                 {t('account.secureAction')}
                 <ChevronRight className="w-4 h-4" strokeWidth={1.5} />
               </button>
               <button
                 onClick={() => setSecureBannerDismissed(true)}
-                className="text-[13px] text-[#7C7C7C] hover:text-[#7C7C7C]"
+                className="text-[13px] lg:text-[14px] font-medium text-[#7C7C7C] hover:text-[#0A0A0A]"
               >
                 {t('account.secureDismiss')}
               </button>
@@ -216,7 +208,7 @@ export default function AccountSettings() {
       )}
 
       {/* Profile card */}
-      <div className="bg-white border border-[#EBEBEB] rounded-2xl p-5 shadow-sm space-y-4">
+      <div className={compact ? 'space-y-4' : 'bg-white border border-[#EBEBEB] rounded-2xl p-5 shadow-sm space-y-4'}>
         <h2 className="text-[16px] font-semibold text-[#0A0A0A]">{t('account.profile')}</h2>
 
         {/* Avatar + name row */}
@@ -226,7 +218,7 @@ export default function AccountSettings() {
           </div>
 
           <div className="flex-1 min-w-0">
-            {editingName ? (
+            {!compact && editingName ? (
               <div className="flex items-center gap-2">
                 <input
                   ref={nameInputRef}
@@ -257,13 +249,15 @@ export default function AccountSettings() {
                 <span className="text-[14px] font-medium text-[#0A0A0A] truncate">
                   {nameValue}
                 </span>
-                <button
-                  onClick={() => setEditingName(true)}
-                  className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#F0F2FF] text-[#7C7C7C] hover:text-[#7C7C7C] transition-colors"
-                  title={t('account.editName')}
-                >
-                  <Pencil className="w-3.5 h-3.5" strokeWidth={1.5} />
-                </button>
+                {!compact && (
+                  <button
+                    onClick={() => setEditingName(true)}
+                    className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#F0F2FF] text-[#7C7C7C] hover:text-[#7C7C7C] transition-colors"
+                    title={t('account.editName')}
+                  >
+                    <Pencil className="w-3.5 h-3.5" strokeWidth={1.5} />
+                  </button>
+                )}
               </div>
             )}
             {nameError && (
@@ -279,9 +273,11 @@ export default function AccountSettings() {
         </div>
       </div>
 
+      {compact && <div className="border-b border-[#EBEBEB]" />}
+
       {/* Connected Accounts */}
       <div
-        className={`bg-white border border-[#EBEBEB] rounded-2xl p-5 shadow-sm space-y-3 transition-all ${
+        className={`${compact ? '' : 'bg-white border border-[#EBEBEB] rounded-2xl p-5 shadow-sm'} space-y-3 transition-all ${
           highlightProviders ? 'animate-pulse ring-2 ring-[#1F32D6]/40' : ''
         }`}
       >
@@ -368,16 +364,6 @@ export default function AccountSettings() {
         </div>
       </div>
 
-      {/* Sign Out — desktop only (mobile has it in the menu card) */}
-      <div className="hidden lg:block bg-white border border-[#EBEBEB] rounded-2xl p-5 shadow-sm">
-        <button
-          onClick={() => setShowSignOutModal(true)}
-          className="h-[44px] w-full rounded-[10px] border border-[#ef4444] text-[#ef4444] text-[14px] font-medium hover:bg-red-50 transition-colors"
-        >
-          {t('account.logout')}
-        </button>
-      </div>
-
       {/* Unbind confirmation modal */}
       <ConfirmModal
         open={!!unbindTarget}
@@ -389,16 +375,6 @@ export default function AccountSettings() {
         variant="danger"
       />
 
-      {/* Sign out confirmation modal */}
-      <ConfirmModal
-        open={showSignOutModal}
-        title={t('account.signOutTitle')}
-        desc={t('account.signOutDesc')}
-        confirmLabel={t('account.signOutConfirm')}
-        onConfirm={handleLogout}
-        onCancel={() => setShowSignOutModal(false)}
-        variant="danger"
-      />
     </div>
   );
 }

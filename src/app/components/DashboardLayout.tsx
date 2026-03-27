@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { Outlet, useNavigate, Link, useLocation } from 'react-router';
-import { Wallet, LogOut, Menu, X, User, Fuel, ReceiptJapaneseYen, Settings, Globe, ChevronRight, Play, ChevronLeft } from 'lucide-react';
+import { Wallet, LogOut, Menu, X, User, Fuel, ReceiptJapaneseYen, Settings, Globe, ChevronRight, Play, ChevronLeft, Check } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useWalletStore } from '../hooks/useWalletStore';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -153,7 +153,7 @@ export default function DashboardLayout() {
         className={`
           fixed lg:sticky top-0 left-0 h-screen bg-[#FAFAFA] flex flex-col z-[60] border-r border-[#EBEBEB]
           transition-all duration-300 ease-in-out overflow-hidden
-          ${sidebarCollapsed ? 'w-[52px] bg-white' : 'w-[260px]'}
+          w-[260px] ${sidebarCollapsed ? 'lg:w-[56px] lg:bg-white' : ''}
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
           shadow-xl lg:shadow-none
         `}
@@ -185,9 +185,9 @@ export default function DashboardLayout() {
             onClick={() => { setAvatarTooltip(false); setAccountMenuOpen(!accountMenuOpen); setMobileLangPanel(false); }}
             onMouseEnter={() => { if (sidebarCollapsed && !accountMenuOpen) setAvatarTooltip(true); }}
             onMouseLeave={() => setAvatarTooltip(false)}
-            className={`w-full flex items-center gap-[12px] transition-all duration-300 ease-in-out rounded-none overflow-hidden py-[16px] ${sidebarCollapsed ? 'px-[8px]' : 'px-[16px] hover:bg-[#F0F2FF]'}`}
+            className={`w-full flex items-center gap-[12px] transition-all duration-300 ease-in-out rounded-none overflow-hidden py-[16px] ${sidebarCollapsed ? 'px-[9px]' : 'px-[16px] hover:bg-[#F0F2FF]'}`}
           >
-            <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'rounded-none p-[8px] -m-[8px] hover:bg-[#F0F2FF] transition-colors' : ''}`}>
+            <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'hover:bg-[#F0F2FF] transition-colors rounded-[8px]' : ''}`}>
               <div className="w-9 h-9 rounded-full bg-[#1F32D6] flex items-center justify-center shrink-0">
                 <span className="text-white text-[13px] font-semibold leading-none">{(user.name || 'A').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}</span>
               </div>
@@ -296,7 +296,7 @@ export default function DashboardLayout() {
             className="fixed z-[200] px-[6px] py-[4px] bg-[#0A0A0A] text-white text-[12px] leading-[16px] rounded-[6px] whitespace-nowrap pointer-events-none"
             style={sidebarCollapsed ? {
               top: `${14 + 18}px`,
-              left: `${52 + 8}px`,
+              left: `${56 + 8}px`,
               transform: 'translateY(-50%)',
             } : {
               top: `${14 + 36 + 8}px`,
@@ -362,9 +362,9 @@ export default function DashboardLayout() {
               </div>
               <div className="border-b border-[#EBEBEB]" />
               <div className="flex-1 overflow-y-auto p-5">
-                {mobileSettingsPage === 'gas' && <Gasless />}
-                {mobileSettingsPage === 'billing' && <Billing />}
-                {mobileSettingsPage === 'settings' && <AccountSettings />}
+                {mobileSettingsPage === 'gas' && <Gasless compact />}
+                {mobileSettingsPage === 'billing' && <Billing compact />}
+                {mobileSettingsPage === 'settings' && <AccountSettings compact />}
               </div>
             </>
           ) : !mobileLangPanel ? (
@@ -470,7 +470,7 @@ export default function DashboardLayout() {
                 >
                   <span className={`text-[15px] ${language === 'en' ? 'font-medium text-[#0A0A0A]' : 'font-normal text-[#7C7C7C]'}`}>English</span>
                   {language === 'en' && (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1F32D6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    <Check className="w-4 h-4 text-[#1F32D6]" strokeWidth={2.5} />
                   )}
                 </button>
                 <button
@@ -479,7 +479,7 @@ export default function DashboardLayout() {
                 >
                   <span className={`text-[15px] ${language === 'zh' ? 'font-medium text-[#0A0A0A]' : 'font-normal text-[#7C7C7C]'}`}>中文</span>
                   {language === 'zh' && (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1F32D6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    <Check className="w-4 h-4 text-[#1F32D6]" strokeWidth={2.5} />
                   )}
                 </button>
               </div>
@@ -587,7 +587,7 @@ export default function DashboardLayout() {
 
       {/* Logout Confirmation Modal */}
       {showLogoutConfirm && (
-        <div className="fixed inset-0 lg:left-[260px] bg-black/50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 lg:left-[260px] bg-black/50 flex items-center justify-center z-[70] p-4">
           <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl">
             <h3 className="text-xl font-semibold text-[#0A0A0A] mb-2">{language === 'zh' ? '确认退出' : 'Confirm Logout'}</h3>
             <p className="text-[#7C7C7C] mb-6">{language === 'zh' ? '确定要退出登录吗？您需要重新登录才能访问您的账户。' : "Are you sure you want to logout? You'll need to sign in again to access your account."}</p>

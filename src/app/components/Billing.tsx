@@ -1,7 +1,7 @@
 import { Clock, Calendar } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
-export default function Billing() {
+export default function Billing({ compact = false }: { compact?: boolean }) {
   const { t } = useLanguage();
 
   return (
@@ -12,7 +12,7 @@ export default function Billing() {
       </div>
 
       {/* Coming Soon Card */}
-      <div className="bg-white border border-[#EBEBEB] rounded-2xl p-6 sm:p-12 shadow-sm text-center">
+      <div className={`${compact ? '' : 'bg-white border border-[#EBEBEB] rounded-2xl shadow-sm'} p-6 sm:p-12 text-center`}>
         <div className="inline-flex items-center justify-center w-14 h-14 lg:w-20 lg:h-20 bg-[#EEF0FF] rounded-xl lg:rounded-2xl mb-4 lg:mb-6">
           <Calendar className="w-7 h-7 lg:w-10 lg:h-10 text-[#1F32D6]" strokeWidth={1.5} />
         </div>

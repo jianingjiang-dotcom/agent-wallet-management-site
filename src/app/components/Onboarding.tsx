@@ -580,7 +580,7 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
 
             {/* Wallet ID ↔ Agent ID relationship */}
             <div className="mb-6 sm:mb-8">
-              <div className="rounded-[12px] border border-[rgba(10,10,10,0.08)] bg-white shadow-[0_1px_3px_rgba(0,0,0,0.04)] overflow-hidden">
+              <div className="rounded-[8px] border border-[rgba(10,10,10,0.08)] bg-white shadow-[0_1px_3px_rgba(0,0,0,0.04)] overflow-hidden">
                 <div className="flex items-center gap-3 px-3.5 sm:px-4 py-3 sm:py-3.5">
                   <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-[8px] bg-[rgba(79,94,255,0.08)] flex items-center justify-center flex-shrink-0">
                     <Shield className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#1F32D6]" strokeWidth={1.5} />
@@ -665,10 +665,10 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
 
                 {/* Input with COBO- prefix */}
                 <div className="w-full mb-2">
-                  <div className={`flex items-center w-full h-[52px] bg-white border rounded-[12px] overflow-hidden transition-colors ${
+                  <div className={`flex items-center w-full h-[52px] bg-white border rounded-[8px] overflow-hidden transition-colors ${
                     inviteError
-                      ? "border-[#ef4444] ring-2 ring-[rgba(239,68,68,0.15)]"
-                      : "border-[rgba(79,94,255,0.3)] focus-within:ring-2 focus-within:ring-[rgba(79,94,255,0.2)] focus-within:border-[#1F32D6]"
+                      ? "border-[#ef4444] shadow-[0px_2px_12px_0px_rgba(239,68,68,0.08)]"
+                      : "border-[#EBEBEB] focus-within:border-[#1F32D6] focus-within:shadow-[0px_2px_12px_0px_rgba(31,50,214,0.08)]"
                   }`}>
                     <span className="font-['JetBrains_Mono','SF_Mono','Consolas',monospace] font-medium text-[16px] text-[#1F32D6] pl-4 pr-0.5 flex-shrink-0 select-none">
                       COBO-
@@ -696,7 +696,7 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
                 <button
                   onClick={handleInviteNext}
                   disabled={!inviteCode.trim() || inviteValidating}
-                  className="w-full flex items-center justify-center gap-2 h-[48px] rounded-[12px] font-semibold text-[15px] transition-all disabled:opacity-40 disabled:cursor-not-allowed text-white bg-[#1F32D6] hover:bg-[#1828AB] mt-4"
+                  className="w-full flex items-center justify-center gap-2 h-[48px] rounded-[8px] font-semibold text-[15px] transition-all disabled:opacity-40 disabled:cursor-not-allowed text-white bg-[#1F32D6] hover:bg-[#1828AB] mt-4"
                 >
                   {inviteValidating ? (
                     <Loader2 className="w-4 h-4 animate-spin" strokeWidth={1.5} />
@@ -831,7 +831,7 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
                             onChange={(e) => handleCustomChange("perTx", e.target.value)}
                             onFocus={() => { setPerTxLimit("custom"); }}
                             placeholder="0"
-                            className="w-16 bg-white border border-[#EBEBEB] rounded-[6px] px-2 py-1 font-normal text-[13px] text-[#0A0A0A] focus:outline-none focus:border-[#1F32D6] focus:ring-1 focus:ring-[#1F32D6]"
+                            className="w-16 bg-white border border-[#EBEBEB] rounded-[6px] px-2 py-1 font-normal text-[13px] text-[#0A0A0A] focus:outline-none focus:border-[#1F32D6] focus:shadow-[0px_2px_12px_0px_rgba(31,50,214,0.08)]"
                           />
                         </div>
                       </div>
@@ -881,7 +881,7 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
                             onChange={(e) => handleCustomChange("daily", e.target.value)}
                             onFocus={() => { setDailyLimit("custom"); }}
                             placeholder="0"
-                            className="w-16 bg-white border border-[#EBEBEB] rounded-[6px] px-2 py-1 font-normal text-[13px] text-[#0A0A0A] focus:outline-none focus:border-[#1F32D6] focus:ring-1 focus:ring-[#1F32D6]"
+                            className="w-16 bg-white border border-[#EBEBEB] rounded-[6px] px-2 py-1 font-normal text-[13px] text-[#0A0A0A] focus:outline-none focus:border-[#1F32D6] focus:shadow-[0px_2px_12px_0px_rgba(31,50,214,0.08)]"
                           />
                         </div>
                       </div>
@@ -965,7 +965,7 @@ caw --api-url ${API_URL} onboard provision${cmdSuffix} --token ${setupToken}`;
             {/* ─── Pairing overlay toast ─── */}
             {showPairingToast && (
               <div className="absolute inset-0 z-10 flex items-center justify-center rounded-xl pointer-events-none bg-white/40">
-                <div className="flex items-center gap-3 bg-white border border-[rgba(10,10,10,0.1)] rounded-[12px] px-5 py-3 shadow-lg pointer-events-auto">
+                <div className="flex items-center gap-3 bg-white border border-[rgba(10,10,10,0.1)] rounded-[8px] px-5 py-3 shadow-lg pointer-events-auto">
                   {showPairingToast === "done" ? (
                     <>
                       <CheckCircle className="w-5 h-5 text-[#26C165]" strokeWidth={1.5} />

@@ -103,7 +103,7 @@ export default function WalletLimitsCard({ status, onConfirm, confirmedPerTx, co
           onChange={(e) => onCustomChange(e.target.value)}
           onFocus={() => onSelect('custom')}
           placeholder="0"
-          className="w-16 bg-white border border-[#EBEBEB] rounded-[6px] px-2 py-1 font-normal text-[13px] text-[#0A0A0A] focus:outline-none focus:border-[#1F32D6] focus:ring-1 focus:ring-[#1F32D6]"
+          className="w-16 bg-white border border-[#EBEBEB] rounded-[6px] px-2 py-1 font-normal text-[13px] text-[#0A0A0A] focus:outline-none focus:border-[#1F32D6] focus:shadow-[0px_2px_12px_0px_rgba(31,50,214,0.08)]"
         />
       </div>
     </div>
