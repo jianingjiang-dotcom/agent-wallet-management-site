@@ -322,7 +322,7 @@ export default function AccountSettings() {
               <p className="text-[12px] text-[#7C7C7C]">{user.email}</p>
             </div>
           </div>
-          <span className="text-[12px] text-[#34A853] font-medium bg-[#E8F5E9] px-2 py-0.5 rounded-full">
+          <span className="h-[28px] inline-flex items-center text-[12px] text-[#34A853] font-medium bg-[#E8F5E9] px-3 rounded-full">
             {t('account.connected')}
           </span>
         </div>
@@ -340,7 +340,7 @@ export default function AccountSettings() {
             className={`h-[28px] text-[12px] font-medium px-3 rounded-full transition-colors ${
               providers.telegram
                 ? 'text-red-500 border border-red-200 hover:bg-red-50'
-                : 'text-[#F5A623] border border-[#F5A623]/30 hover:bg-[#FFF8E1]'
+                : 'text-[#1F32D6] border border-[#1F32D6]/30 hover:bg-[#F0F2FF]'
             }`}
           >
             {providers.telegram ? t('account.unbind') : t('account.bind')}
@@ -360,7 +360,7 @@ export default function AccountSettings() {
             className={`h-[28px] text-[12px] font-medium px-3 rounded-full transition-colors ${
               providers.discord
                 ? 'text-red-500 border border-red-200 hover:bg-red-50'
-                : 'text-[#F5A623] border border-[#F5A623]/30 hover:bg-[#FFF8E1]'
+                : 'text-[#1F32D6] border border-[#1F32D6]/30 hover:bg-[#F0F2FF]'
             }`}
           >
             {providers.discord ? t('account.unbind') : t('account.bind')}
