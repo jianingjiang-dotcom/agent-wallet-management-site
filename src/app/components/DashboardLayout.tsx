@@ -244,12 +244,10 @@ export default function DashboardLayout() {
                   className="flex items-center gap-[8px] px-[12px] py-[8px] rounded-[8px] hover:bg-[#F0F2FF] transition-colors w-full"
                 >
                   <Globe className="w-[18px] h-[18px] text-[#0A0A0A]" strokeWidth={1.5} />
-                  <span className="font-medium text-[13px] text-[#0A0A0A] mr-2">
+                  <span className="font-medium text-[13px] text-[#0A0A0A]">
                     {t('nav.language')}
                   </span>
-                  <div className="ml-auto">
-                    <LanguageSwitcher compact />
-                  </div>
+                  <span className="ml-auto text-[12px] text-[#7C7C7C]">{language === 'en' ? 'EN' : '中文'}</span>
                 </button>
 
                 {/* Logout */}
@@ -456,7 +454,7 @@ export default function DashboardLayout() {
               <div className="flex-1 overflow-y-auto px-5 pt-3 pb-8">
                 <button
                   onClick={() => { setLanguage('en'); setMobileLangPanel(false); setAccountMenuOpen(false); }}
-                  className="flex items-center justify-between w-full py-3.5 px-1 transition-colors hover:bg-[#FAFAFA] rounded-lg"
+                  className="flex items-center justify-between w-full py-3.5 px-1 transition-colors hover:bg-[#F0F2FF] rounded-lg"
                 >
                   <span className={`text-[15px] ${language === 'en' ? 'font-medium text-[#0A0A0A]' : 'font-normal text-[#7C7C7C]'}`}>English</span>
                   {language === 'en' && (
@@ -465,7 +463,7 @@ export default function DashboardLayout() {
                 </button>
                 <button
                   onClick={() => { setLanguage('zh'); setMobileLangPanel(false); setAccountMenuOpen(false); }}
-                  className="flex items-center justify-between w-full py-3.5 px-1 transition-colors hover:bg-[#FAFAFA] rounded-lg"
+                  className="flex items-center justify-between w-full py-3.5 px-1 transition-colors hover:bg-[#F0F2FF] rounded-lg"
                 >
                   <span className={`text-[15px] ${language === 'zh' ? 'font-medium text-[#0A0A0A]' : 'font-normal text-[#7C7C7C]'}`}>中文</span>
                   {language === 'zh' && (
