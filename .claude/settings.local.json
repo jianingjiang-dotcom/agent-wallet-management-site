@@ -59,7 +59,8 @@
       "Bash(sed -i '' 's/rounded-\\\\[4px\\\\]/rounded-[6px]/g' src/app/components/WalletDetail.tsx)",
       "Bash(xargs sed:*)",
       "Bash(npm run:*)",
-      "Bash(ls -la /Users/oliviatay/agent-wallet-management-site/src/assets/*.png)"
+      "Bash(ls -la /Users/oliviatay/agent-wallet-management-site/src/assets/*.png)",
+      "Bash(ls \"/Users/oliviatay/Desktop/\"*cobo* \"/Users/oliviatay/Desktop/\"*Cobo* \"/Users/oliviatay/Desktop/\"*pact* \"/Users/oliviatay/Desktop/\"*Pact*)"
     ]
   }
 }

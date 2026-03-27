@@ -453,23 +453,23 @@ export default function DashboardLayout() {
               </div>
               <div className="border-b border-[#EBEBEB]" />
 
-              <div className="flex-1 overflow-y-auto px-5 pt-5 pb-8 space-y-2">
+              <div className="flex-1 overflow-y-auto px-5 pt-3 pb-8">
                 <button
                   onClick={() => { setLanguage('en'); setMobileLangPanel(false); setAccountMenuOpen(false); }}
-                  className={`flex items-center justify-between w-full py-4 px-4 rounded-2xl transition-colors ${language === 'en' ? 'bg-[#F0F1FF]' : 'bg-[#FAFAFA] hover:bg-[#F0F2FF]'}`}
+                  className="flex items-center justify-between w-full py-3.5 px-1 transition-colors hover:bg-[#FAFAFA] rounded-lg"
                 >
-                  <span className={`font-medium text-[15px] ${language === 'en' ? 'text-[#1F32D6]' : 'text-[#0A0A0A]'}`}>English</span>
+                  <span className={`text-[15px] ${language === 'en' ? 'font-medium text-[#0A0A0A]' : 'font-normal text-[#7C7C7C]'}`}>English</span>
                   {language === 'en' && (
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F32D6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1F32D6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                   )}
                 </button>
                 <button
                   onClick={() => { setLanguage('zh'); setMobileLangPanel(false); setAccountMenuOpen(false); }}
-                  className={`flex items-center justify-between w-full py-4 px-4 rounded-2xl transition-colors ${language === 'zh' ? 'bg-[#F0F1FF]' : 'bg-[#FAFAFA] hover:bg-[#F0F2FF]'}`}
+                  className="flex items-center justify-between w-full py-3.5 px-1 transition-colors hover:bg-[#FAFAFA] rounded-lg"
                 >
-                  <span className={`font-medium text-[15px] ${language === 'zh' ? 'text-[#1F32D6]' : 'text-[#0A0A0A]'}`}>中文</span>
+                  <span className={`text-[15px] ${language === 'zh' ? 'font-medium text-[#0A0A0A]' : 'font-normal text-[#7C7C7C]'}`}>中文</span>
                   {language === 'zh' && (
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F32D6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1F32D6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                   )}
                 </button>
               </div>

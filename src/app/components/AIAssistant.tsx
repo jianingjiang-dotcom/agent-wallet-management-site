@@ -670,7 +670,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
           onMouseLeave={() => setNavTooltip(null)}
         >
           <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'w-[36px] h-[36px] -m-[8px] rounded-[8px] hover:bg-[#F0F2FF] transition-colors' : ''}`}>
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="9" r="8.25" stroke="#0A0A0A" strokeWidth="1.25"/><path d="M9 5.5V12.5" stroke="#0A0A0A" strokeWidth="1.25" strokeLinecap="round"/><path d="M5.5 9H12.5" stroke="#0A0A0A" strokeWidth="1.25" strokeLinecap="round"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="9" r="9" fill="#0A0A0A"/><path d="M9 5.5V12.5" stroke="white" strokeWidth="1.5" strokeLinecap="round"/><path d="M5.5 9H12.5" stroke="white" strokeWidth="1.5" strokeLinecap="round"/></svg>
           </div>
           <span className={`text-[14px] leading-[20px] font-normal whitespace-nowrap transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}>{t('ai.newChat')}</span>
         </button>
@@ -1148,15 +1148,15 @@ Would you like me to help adjust your current Agent's limit settings?`;
                       </button>
                     )}
                     {(language === 'zh' ? [
-                      { emoji: '\uD83D\uDCE6', label: '安装 Agent' },
-                      { emoji: '\uD83D\uDD12', label: '安全策略' },
-                      { emoji: '\uD83D\uDCB3', label: '转账权限' },
-                      { emoji: '\u26FD', label: 'Gas 优化' },
+                      { emoji: '🔧', label: '配置 Agent' },
+                      { emoji: '🛡️', label: '设置限额' },
+                      { emoji: '📋', label: '查看策略' },
+                      { emoji: '⛽', label: 'Gas 管理' },
                     ] : [
-                      { emoji: '\uD83D\uDCE6', label: 'Install Agent' },
-                      { emoji: '\uD83D\uDD12', label: 'Security' },
-                      { emoji: '\uD83D\uDCB3', label: 'Permissions' },
-                      { emoji: '\u26FD', label: 'Gas fees' },
+                      { emoji: '🔧', label: 'Setup Agent' },
+                      { emoji: '🛡️', label: 'Set limits' },
+                      { emoji: '📋', label: 'View policies' },
+                      { emoji: '⛽', label: 'Manage gas' },
                     ]).map((item, i) => (
                       <button key={item.label} onClick={() => handleSendDirect(item.label)} className="flex items-center gap-1.5 h-[36px] px-3 bg-transparent hover:bg-[#F0F2FF] text-[13px] font-normal text-[#7C7C7C] rounded-full transition-colors border border-[#EBEBEB]">
                         <span className="text-[13px]">{item.emoji}</span>
@@ -1238,15 +1238,15 @@ Would you like me to help adjust your current Agent's limit settings?`;
                           </button>
                         )}
                         {(language === 'zh' ? [
-                          { emoji: '\uD83D\uDCE6', label: '安装 Agent' },
-                          { emoji: '\uD83D\uDD12', label: '安全策略' },
-                          { emoji: '\uD83D\uDCB3', label: '转账权限' },
-                          { emoji: '\u26FD', label: 'Gas 优化' },
+                          { emoji: '🔧', label: '配置 Agent' },
+                          { emoji: '🛡️', label: '设置限额' },
+                          { emoji: '📋', label: '查看策略' },
+                          { emoji: '⛽', label: 'Gas 管理' },
                         ] : [
-                          { emoji: '\uD83D\uDCE6', label: 'Install Agent' },
-                          { emoji: '\uD83D\uDD12', label: 'Security' },
-                          { emoji: '\uD83D\uDCB3', label: 'Permissions' },
-                          { emoji: '\u26FD', label: 'Gas fees' },
+                          { emoji: '🔧', label: 'Setup Agent' },
+                          { emoji: '🛡️', label: 'Set limits' },
+                          { emoji: '📋', label: 'View policies' },
+                          { emoji: '⛽', label: 'Manage gas' },
                         ]).map((item, i) => (
                           <button key={item.label} onClick={() => handleSendDirect(item.label)} className="flex items-center gap-1.5 h-[36px] px-4 bg-transparent hover:bg-[#F0F2FF] text-sm font-normal text-[#7C7C7C] rounded-full transition-colors border border-[#EBEBEB]">
                             <span className="text-[14px]">{item.emoji}</span>
