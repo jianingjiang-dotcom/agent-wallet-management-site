@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useSearchParams, useOutletContext } from 'react-router';
-import { ArrowUp, Plus, AtSign, AlertTriangle, CheckCircle, XCircle, Search, MoreHorizontal, Bot, Trash2, Sparkles, Wallet, ChevronRight, SquarePen, PanelLeftClose, X, MessageCircle, ClipboardCheck, Send, Users, Link, FileText, Settings, Clock, History, Copy } from 'lucide-react';
+import { ArrowUp, Plus, AlertTriangle, CheckCircle, XCircle, Search, MoreHorizontal, Bot, Trash2, Sparkles, Wallet, ChevronRight, SquarePen, PanelLeftClose, X, MessageCircle, ClipboardCheck, Send, Users, Link, FileText, Settings, Clock, History, Copy } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useWalletStore } from '../hooks/useWalletStore';
 import { useOnboardingChat } from '../hooks/useOnboardingChat';
@@ -11,6 +11,8 @@ import WalletAgentPage from './WalletAgentPage';
 import WalletCard from './WalletCard';
 import OnboardingMessageRenderer from './onboarding-cards/OnboardingMessageRenderer';
 import type { OnboardingData, OnboardingCallbacks } from './onboarding-cards/OnboardingMessageRenderer';
+import { useMentionAutocomplete } from '../hooks/useMentionAutocomplete';
+import WalletMentionDropdown from './WalletMentionDropdown';
 
 interface Message {
   id: string;
@@ -79,12 +81,31 @@ export default function AIAssistant() {
   const [welcomeType, setWelcomeType] = useState<'first-wallet' | null>(null);
   const [approvalInitialTab, setApprovalInitialTab] = useState<'all' | 'pending'>('all');
   const [sidebarPortal, setSidebarPortal] = useState<HTMLElement | null>(null);
-  const [showWalletPicker, setShowWalletPicker] = useState<'empty' | 'chat' | null>(null);
   const [mobileHistoryOpen, setMobileHistoryOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
-  const walletPickerRef = useRef<HTMLDivElement>(null);
+
+  // Mention autocomplete hook
+  const mention = useMentionAutocomplete(wallets, inputValue, setInputValue);
+  const walletNames = wallets.map(w => w.name);
+  const textareaOverlayRef = useRef<HTMLDivElement>(null);
+
+  const renderHighlightedText = (text: string): React.ReactNode => {
+    if (!walletNames.length || !text) return text;
+    const escaped = walletNames.map(n => n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+    const pattern = new RegExp(`(@(?:${escaped.join('|')}))(?=\\s|$)`, 'g');
+    const parts: React.ReactNode[] = [];
+    let lastIndex = 0;
+    let match;
+    while ((match = pattern.exec(text)) !== null) {
+      if (match.index > lastIndex) parts.push(text.slice(lastIndex, match.index));
+      parts.push(<span key={match.index} className="text-[var(--app-accent)] font-medium">{match[1]}</span>);
+      lastIndex = pattern.lastIndex;
+    }
+    if (lastIndex < text.length) parts.push(text.slice(lastIndex));
+    return parts.length > 0 ? <>{parts}</> : text;
+  };
 
   // Onboarding chat hook
   const onboarding = useOnboardingChat(!hasWallets);
@@ -294,23 +315,6 @@ export default function AIAssistant() {
     }
   }, [menuOpenId]);
 
-  // Close wallet picker on click outside
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (walletPickerRef.current && !walletPickerRef.current.contains(e.target as Node)) {
-        setShowWalletPicker(null);
-      }
-    };
-    if (showWalletPicker) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
-    }
-  }, [showWalletPicker]);
-
-  const handleSelectWallet = (walletName: string) => {
-    setInputValue(prev => prev + `@${walletName} `);
-    setShowWalletPicker(null);
-  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -1306,23 +1310,28 @@ Would you like me to help adjust your current Agent's limit settings?`;
                   >
                     <div className="bg-[var(--app-card-bg)] border border-[var(--app-border-medium)] rounded-[8px] shadow-[0px_2px_8px_0px_rgba(0,0,0,0.04)] focus-within:border-[#1F32D6] focus-within:shadow-[0px_2px_12px_0px_rgba(31,50,214,0.08)] transition-all flex flex-col">
                       {inputExpanded && (
-                        <textarea
-                          ref={(el) => { if (el) { el.focus(); el.selectionStart = el.selectionEnd = el.value.length; } }}
-                          value={inputValue}
-                          onChange={(e) => {
-                            setInputValue(e.target.value);
-                            if (e.target.value === '') { shouldFocusInputRef.current = true; setInputExpanded(false); }
-                          }}
-                          onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
-                          placeholder={t('ai.inputPlaceholder')}
-                          className="w-full bg-transparent px-[16px] py-3 text-[14px] leading-[22px] lg:text-[16px] lg:leading-[24px] text-[var(--app-text)] font-normal focus:outline-none resize-none chat-input-placeholder overflow-y-auto"
-                          style={{ minHeight: '72px', maxHeight: '144px', height: '72px' }}
-                          onInput={(e) => {
-                            const el = e.currentTarget;
-                            el.style.height = '72px';
-                            el.style.height = Math.min(el.scrollHeight, 144) + 'px';
-                          }}
-                        />
+                        <div className="relative">
+                          <div ref={textareaOverlayRef} className="absolute inset-0 px-[16px] py-3 text-[14px] leading-[22px] lg:text-[16px] lg:leading-[24px] text-[var(--app-text)] font-normal pointer-events-none overflow-hidden whitespace-pre-wrap break-words">{renderHighlightedText(inputValue)}</div>
+                          <textarea
+                            ref={(el) => { if (el) { mention.registerInput(el); el.focus(); el.selectionStart = el.selectionEnd = el.value.length; } }}
+                            value={inputValue}
+                            onChange={(e) => {
+                              setInputValue(e.target.value);
+                              mention.detectMention(e.target.value, e.target.selectionStart ?? e.target.value.length);
+                              if (e.target.value === '') { shouldFocusInputRef.current = true; setInputExpanded(false); }
+                            }}
+                            onKeyDown={(e) => { if (mention.handleKeyDown(e)) return; if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
+                            placeholder={t('ai.inputPlaceholder')}
+                            className="relative w-full bg-transparent px-[16px] py-3 text-[14px] leading-[22px] lg:text-[16px] lg:leading-[24px] text-transparent font-normal focus:outline-none resize-none chat-input-placeholder overflow-y-auto"
+                            style={{ minHeight: '72px', maxHeight: '144px', height: '72px', caretColor: 'var(--app-text)' }}
+                            onInput={(e) => {
+                              const el = e.currentTarget;
+                              el.style.height = '72px';
+                              el.style.height = Math.min(el.scrollHeight, 144) + 'px';
+                            }}
+                            onScroll={(e) => { if (textareaOverlayRef.current) textareaOverlayRef.current.scrollTop = e.currentTarget.scrollTop; }}
+                          />
+                        </div>
                       )}
                       <div className={`flex items-center justify-between px-3 pb-3 ${!inputExpanded ? 'pt-3' : ''}`}>
                         <div className="flex items-center relative flex-1 min-w-0">
@@ -1334,22 +1343,35 @@ Would you like me to help adjust your current Agent's limit settings?`;
                               添加图片/附件
                             </div>
                           </div>
+                          <WalletMentionDropdown
+                            wallets={mention.filteredWallets}
+                            highlightedIndex={mention.highlightedIndex}
+                            onSelect={mention.selectMention}
+                            onHover={mention.setHighlightedIndex}
+                            visible={mention.mentionActive && hasWallets}
+                            language={language}
+                          />
                           {!inputExpanded && (
-                            <input
-                              ref={(el) => { if (el && shouldFocusInputRef.current) { el.focus(); shouldFocusInputRef.current = false; } }}
-                              type="text"
-                              value={inputValue}
-                              onChange={(e) => setInputValue(e.target.value)}
-                              onKeyDown={(e) => {
-                                if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); }
-                              }}
-                              onInput={(e) => {
-                                const el = e.currentTarget;
-                                if (el.scrollWidth > el.clientWidth) { setInputExpanded(true); }
-                              }}
-                              placeholder={t('ai.inputPlaceholder')}
-                              className="flex-1 min-w-0 bg-transparent px-[8px] text-[14px] leading-[20px] lg:text-[16px] lg:leading-[24px] text-[var(--app-text)] font-normal focus:outline-none chat-input-placeholder"
-                            />
+                            <div className="relative flex-1 min-w-0">
+                              <div className="absolute inset-0 flex items-center px-[8px] text-[14px] leading-[20px] lg:text-[16px] lg:leading-[24px] text-[var(--app-text)] font-normal pointer-events-none overflow-hidden whitespace-nowrap">{renderHighlightedText(inputValue)}</div>
+                              <input
+                                ref={(el) => { if (el && shouldFocusInputRef.current) { el.focus(); shouldFocusInputRef.current = false; } if (el) mention.registerInput(el); }}
+                                type="text"
+                                value={inputValue}
+                                onChange={(e) => { setInputValue(e.target.value); mention.detectMention(e.target.value, e.target.selectionStart ?? e.target.value.length); }}
+                                onKeyDown={(e) => {
+                                  if (mention.handleKeyDown(e)) return;
+                                  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); }
+                                }}
+                                onInput={(e) => {
+                                  const el = e.currentTarget;
+                                  if (el.scrollWidth > el.clientWidth) { setInputExpanded(true); }
+                                }}
+                                placeholder={t('ai.inputPlaceholder')}
+                                className="w-full bg-transparent px-[8px] text-[14px] leading-[20px] lg:text-[16px] lg:leading-[24px] text-transparent font-normal focus:outline-none chat-input-placeholder"
+                                style={{ caretColor: 'var(--app-text)' }}
+                              />
+                            </div>
                           )}
                         </div>
                         <button
@@ -1403,23 +1425,28 @@ Would you like me to help adjust your current Agent's limit settings?`;
               <div className="w-full max-w-[768px]">
                   <div className="bg-[var(--app-card-bg)] border border-[var(--app-border-medium)] rounded-[8px] shadow-[0px_2px_8px_0px_rgba(0,0,0,0.04)] focus-within:border-[#1F32D6] focus-within:shadow-[0px_2px_12px_0px_rgba(31,50,214,0.08)] transition-all flex flex-col">
                     {inputExpanded && (
-                      <textarea
-                        ref={(el) => { if (el) { el.focus(); el.selectionStart = el.selectionEnd = el.value.length; } }}
-                        value={inputValue}
-                        onChange={(e) => {
-                          setInputValue(e.target.value);
-                          if (e.target.value === '') { shouldFocusInputRef.current = true; setInputExpanded(false); }
-                        }}
-                        onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
-                        placeholder={t('ai.inputPlaceholder')}
-                        className="w-full bg-transparent px-[16px] py-3 text-[14px] leading-[22px] lg:text-[16px] lg:leading-[24px] text-[var(--app-text)] font-normal focus:outline-none resize-none chat-input-placeholder overflow-y-auto"
-                        style={{ minHeight: '72px', maxHeight: '144px', height: '72px' }}
-                        onInput={(e) => {
-                          const el = e.currentTarget;
-                          el.style.height = '72px';
-                          el.style.height = Math.min(el.scrollHeight, 144) + 'px';
-                        }}
-                      />
+                      <div className="relative">
+                        <div ref={textareaOverlayRef} className="absolute inset-0 px-[16px] py-3 text-[14px] leading-[22px] lg:text-[16px] lg:leading-[24px] text-[var(--app-text)] font-normal pointer-events-none overflow-hidden whitespace-pre-wrap break-words">{renderHighlightedText(inputValue)}</div>
+                        <textarea
+                          ref={(el) => { if (el) { mention.registerInput(el); el.focus(); el.selectionStart = el.selectionEnd = el.value.length; } }}
+                          value={inputValue}
+                          onChange={(e) => {
+                            setInputValue(e.target.value);
+                            mention.detectMention(e.target.value, e.target.selectionStart ?? e.target.value.length);
+                            if (e.target.value === '') { shouldFocusInputRef.current = true; setInputExpanded(false); }
+                          }}
+                          onKeyDown={(e) => { if (mention.handleKeyDown(e)) return; if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
+                          placeholder={t('ai.inputPlaceholder')}
+                          className="relative w-full bg-transparent px-[16px] py-3 text-[14px] leading-[22px] lg:text-[16px] lg:leading-[24px] text-transparent font-normal focus:outline-none resize-none chat-input-placeholder overflow-y-auto"
+                          style={{ minHeight: '72px', maxHeight: '144px', height: '72px', caretColor: 'var(--app-text)' }}
+                          onInput={(e) => {
+                            const el = e.currentTarget;
+                            el.style.height = '72px';
+                            el.style.height = Math.min(el.scrollHeight, 144) + 'px';
+                          }}
+                          onScroll={(e) => { if (textareaOverlayRef.current) textareaOverlayRef.current.scrollTop = e.currentTarget.scrollTop; }}
+                        />
+                      </div>
                     )}
                     <div className={`flex items-center justify-between px-3 pb-3 ${!inputExpanded ? 'pt-3' : ''}`}>
                       <div className="flex items-center relative flex-1 min-w-0">
@@ -1431,46 +1458,37 @@ Would you like me to help adjust your current Agent's limit settings?`;
                             添加图片/附件
                           </div>
                         </div>
-                        {hasWallets && (
-                          <div className="relative group shrink-0">
-                            <button onClick={() => setShowWalletPicker(showWalletPicker === 'empty' ? null : 'empty')} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] text-[var(--app-text)] hover:bg-[#F8F9FC] transition-colors">
-                              <AtSign className="w-[18px] h-[18px]" strokeWidth={2} />
-                            </button>
-                          </div>
-                        )}
-                        {showWalletPicker === 'empty' && (
-                          <div ref={walletPickerRef} className="absolute bottom-full left-0 mb-2 bg-[var(--app-card-bg)] rounded-xl border border-[var(--app-border-medium)] shadow-lg py-1 z-50" style={{ minWidth: '200px' }}>
-                            <div className="px-3 py-2 text-[12px] font-medium text-[var(--app-text-muted)]">{language === 'zh' ? '选择钱包' : 'Select Wallet'}</div>
-                            {wallets.map(w => (
-                              <button
-                                key={w.id}
-                                onClick={() => handleSelectWallet(w.name)}
-                                className="w-full text-left px-3 py-2 text-[14px] text-[var(--app-text)] hover:bg-[var(--app-hover-bg)] transition-colors flex items-center gap-2"
-                              >
-                                <Wallet className="w-4 h-4 text-[#4f5eff]" strokeWidth={1.5} />
-                                {w.name}
-                              </button>
-                            ))}
-                          </div>
-                        )}
+                        <WalletMentionDropdown
+                          wallets={mention.filteredWallets}
+                          highlightedIndex={mention.highlightedIndex}
+                          onSelect={mention.selectMention}
+                          onHover={mention.setHighlightedIndex}
+                          visible={mention.mentionActive && hasWallets}
+                          language={language}
+                        />
                         {!inputExpanded && (
-                          <input
-                            ref={(el) => { if (el && shouldFocusInputRef.current) { el.focus(); shouldFocusInputRef.current = false; } }}
-                            type="text"
-                            value={inputValue}
-                            onChange={(e) => setInputValue(e.target.value)}
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); }
-                            }}
-                            onInput={(e) => {
-                              const el = e.currentTarget;
-                              if (el.scrollWidth > el.clientWidth) {
-                                setInputExpanded(true);
-                              }
-                            }}
-                            placeholder={t('ai.inputPlaceholder')}
-                            className="flex-1 min-w-0 bg-transparent px-[8px] text-[14px] leading-[20px] lg:text-[16px] lg:leading-[24px] text-[var(--app-text)] font-normal focus:outline-none chat-input-placeholder"
-                          />
+                          <div className="relative flex-1 min-w-0">
+                            <div className="absolute inset-0 flex items-center px-[8px] text-[14px] leading-[20px] lg:text-[16px] lg:leading-[24px] text-[var(--app-text)] font-normal pointer-events-none overflow-hidden whitespace-nowrap">{renderHighlightedText(inputValue)}</div>
+                            <input
+                              ref={(el) => { if (el && shouldFocusInputRef.current) { el.focus(); shouldFocusInputRef.current = false; } if (el) mention.registerInput(el); }}
+                              type="text"
+                              value={inputValue}
+                              onChange={(e) => { setInputValue(e.target.value); mention.detectMention(e.target.value, e.target.selectionStart ?? e.target.value.length); }}
+                              onKeyDown={(e) => {
+                                if (mention.handleKeyDown(e)) return;
+                                if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); }
+                              }}
+                              onInput={(e) => {
+                                const el = e.currentTarget;
+                                if (el.scrollWidth > el.clientWidth) {
+                                  setInputExpanded(true);
+                                }
+                              }}
+                              placeholder={t('ai.inputPlaceholder')}
+                              className="w-full bg-transparent px-[8px] text-[14px] leading-[20px] lg:text-[16px] lg:leading-[24px] text-transparent font-normal focus:outline-none chat-input-placeholder"
+                              style={{ caretColor: 'var(--app-text)' }}
+                            />
+                          </div>
                         )}
                       </div>
                       <button
@@ -1526,23 +1544,28 @@ Would you like me to help adjust your current Agent's limit settings?`;
           <div className="w-full max-w-[768px]">
           <div className="bg-[var(--app-card-bg)] border border-[var(--app-border-medium)] rounded-[8px] shadow-[0px_2px_8px_0px_rgba(0,0,0,0.04)] focus-within:border-[#1F32D6] focus-within:shadow-[0px_2px_12px_0px_rgba(31,50,214,0.08)] transition-all flex flex-col">
             {inputExpanded && (
-              <textarea
-                ref={(el) => { if (el) { el.focus(); el.selectionStart = el.selectionEnd = el.value.length; } }}
-                value={inputValue}
-                onChange={(e) => {
-                  setInputValue(e.target.value);
-                  if (e.target.value === '') { shouldFocusInputRef.current = true; setInputExpanded(false); }
-                }}
-                onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
-                placeholder={t('ai.inputPlaceholder')}
-                className="w-full bg-transparent px-[16px] py-3 text-[14px] leading-[22px] lg:text-[16px] lg:leading-[24px] text-[var(--app-text)] font-normal focus:outline-none resize-none chat-input-placeholder overflow-y-auto"
-                style={{ minHeight: '72px', maxHeight: '144px', height: '72px' }}
-                onInput={(e) => {
-                  const el = e.currentTarget;
-                  el.style.height = '72px';
-                  el.style.height = Math.min(el.scrollHeight, 144) + 'px';
-                }}
-              />
+              <div className="relative">
+                <div ref={textareaOverlayRef} className="absolute inset-0 px-[16px] py-3 text-[14px] leading-[22px] lg:text-[16px] lg:leading-[24px] text-[var(--app-text)] font-normal pointer-events-none overflow-hidden whitespace-pre-wrap break-words">{renderHighlightedText(inputValue)}</div>
+                <textarea
+                  ref={(el) => { if (el) { mention.registerInput(el); el.focus(); el.selectionStart = el.selectionEnd = el.value.length; } }}
+                  value={inputValue}
+                  onChange={(e) => {
+                    setInputValue(e.target.value);
+                    mention.detectMention(e.target.value, e.target.selectionStart ?? e.target.value.length);
+                    if (e.target.value === '') { shouldFocusInputRef.current = true; setInputExpanded(false); }
+                  }}
+                  onKeyDown={(e) => { if (mention.handleKeyDown(e)) return; if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
+                  placeholder={t('ai.inputPlaceholder')}
+                  className="relative w-full bg-transparent px-[16px] py-3 text-[14px] leading-[22px] lg:text-[16px] lg:leading-[24px] text-transparent font-normal focus:outline-none resize-none chat-input-placeholder overflow-y-auto"
+                  style={{ minHeight: '72px', maxHeight: '144px', height: '72px', caretColor: 'var(--app-text)' }}
+                  onInput={(e) => {
+                    const el = e.currentTarget;
+                    el.style.height = '72px';
+                    el.style.height = Math.min(el.scrollHeight, 144) + 'px';
+                  }}
+                  onScroll={(e) => { if (textareaOverlayRef.current) textareaOverlayRef.current.scrollTop = e.currentTarget.scrollTop; }}
+                />
+              </div>
             )}
             <div className={`flex items-center justify-between px-3 pb-3 ${!inputExpanded ? 'pt-3' : ''}`}>
               <div className="flex items-center relative flex-1 min-w-0">
@@ -1554,46 +1577,37 @@ Would you like me to help adjust your current Agent's limit settings?`;
                     添加图片/附件
                   </div>
                 </div>
-                {hasWallets && (
-                  <div className="relative group shrink-0">
-                    <button onClick={() => setShowWalletPicker(showWalletPicker === 'chat' ? null : 'chat')} className="w-[32px] h-[32px] flex items-center justify-center rounded-[8px] text-[var(--app-text)] hover:bg-[#F8F9FC] transition-colors">
-                      <AtSign className="w-[18px] h-[18px]" strokeWidth={2} />
-                    </button>
-                  </div>
-                )}
-                {showWalletPicker === 'chat' && (
-                  <div ref={walletPickerRef} className="absolute bottom-full left-0 mb-2 bg-[var(--app-card-bg)] rounded-xl border border-[var(--app-border-medium)] shadow-lg py-1 z-50" style={{ minWidth: '200px' }}>
-                    <div className="px-3 py-2 text-[12px] font-medium text-[var(--app-text-muted)]">{language === 'zh' ? '选择钱包' : 'Select Wallet'}</div>
-                    {wallets.map(w => (
-                      <button
-                        key={w.id}
-                        onClick={() => handleSelectWallet(w.name)}
-                        className="w-full text-left px-3 py-2 text-[14px] text-[var(--app-text)] hover:bg-[var(--app-hover-bg)] transition-colors flex items-center gap-2"
-                      >
-                        <Wallet className="w-4 h-4 text-[#4f5eff]" strokeWidth={1.5} />
-                        {w.name}
-                      </button>
-                    ))}
-                  </div>
-                )}
+                <WalletMentionDropdown
+                  wallets={mention.filteredWallets}
+                  highlightedIndex={mention.highlightedIndex}
+                  onSelect={mention.selectMention}
+                  onHover={mention.setHighlightedIndex}
+                  visible={mention.mentionActive && hasWallets}
+                  language={language}
+                />
                 {!inputExpanded && (
-                  <input
-                    ref={(el) => { if (el && shouldFocusInputRef.current) { el.focus(); shouldFocusInputRef.current = false; } }}
-                    type="text"
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); }
-                    }}
-                    onInput={(e) => {
-                      const el = e.currentTarget;
-                      if (el.scrollWidth > el.clientWidth) {
-                        setInputExpanded(true);
-                      }
-                    }}
-                    placeholder={t('ai.inputPlaceholder')}
-                    className="flex-1 min-w-0 bg-transparent px-[8px] text-[14px] leading-[20px] lg:text-[16px] lg:leading-[24px] text-[var(--app-text)] font-normal focus:outline-none chat-input-placeholder"
-                  />
+                  <div className="relative flex-1 min-w-0">
+                    <div className="absolute inset-0 flex items-center px-[8px] text-[14px] leading-[20px] lg:text-[16px] lg:leading-[24px] text-[var(--app-text)] font-normal pointer-events-none overflow-hidden whitespace-nowrap">{renderHighlightedText(inputValue)}</div>
+                    <input
+                      ref={(el) => { if (el && shouldFocusInputRef.current) { el.focus(); shouldFocusInputRef.current = false; } if (el) mention.registerInput(el); }}
+                      type="text"
+                      value={inputValue}
+                      onChange={(e) => { setInputValue(e.target.value); mention.detectMention(e.target.value, e.target.selectionStart ?? e.target.value.length); }}
+                      onKeyDown={(e) => {
+                        if (mention.handleKeyDown(e)) return;
+                        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); }
+                      }}
+                      onInput={(e) => {
+                        const el = e.currentTarget;
+                        if (el.scrollWidth > el.clientWidth) {
+                          setInputExpanded(true);
+                        }
+                      }}
+                      placeholder={t('ai.inputPlaceholder')}
+                      className="w-full bg-transparent px-[8px] text-[14px] leading-[20px] lg:text-[16px] lg:leading-[24px] text-transparent font-normal focus:outline-none chat-input-placeholder"
+                      style={{ caretColor: 'var(--app-text)' }}
+                    />
+                  </div>
                 )}
               </div>
               <button
