@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { CheckCircle, XCircle, Clock, Wallet, Bot } from 'lucide-react';
+import { CheckCircle, XCircle, Clock, Wallet, Bot, Shield, ExternalLink } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
 type ApprovalStatus = 'pending' | 'approved' | 'rejected';
 type TabFilter = 'all' | 'pending' | 'approved' | 'rejected';
+type RecordType = 'transaction' | 'pact';
 
 interface ApprovalRecord {
   id: string;
@@ -15,6 +16,8 @@ interface ApprovalRecord {
   status: ApprovalStatus;
   timestamp: Date;
   reasonKey: string;
+  type?: RecordType;
+  pactId?: string;
 }
 
 const mockRecords: ApprovalRecord[] = [
@@ -73,9 +76,35 @@ const mockRecords: ApprovalRecord[] = [
     timestamp: new Date(Date.now() - 259200000),
     reasonKey: 'approval.reason.dailyLimit',
   },
+  {
+    id: 'pact-r1',
+    walletName: 'Wallet #1',
+    agentName: 'DeFi Trading Agent',
+    operation: 'Pact',
+    amount: '—',
+    target: '—',
+    status: 'pending',
+    timestamp: new Date(Date.now() - 1800000),
+    reasonKey: 'pact.approvalRequest',
+    type: 'pact',
+    pactId: 'pact-001',
+  },
+  {
+    id: 'pact-r2',
+    walletName: 'Wallet #2',
+    agentName: 'Yield Optimizer',
+    operation: 'Pact',
+    amount: '—',
+    target: '—',
+    status: 'pending',
+    timestamp: new Date(Date.now() - 600000),
+    reasonKey: 'pact.approvalRequest',
+    type: 'pact',
+    pactId: 'pact-002',
+  },
 ];
 
-export default function ApprovalPage({ initialTab = 'all', onPendingCountChange }: { initialTab?: TabFilter; onPendingCountChange?: (count: number) => void }) {
+export default function ApprovalPage({ initialTab = 'all', onPendingCountChange, onOpenPactChat }: { initialTab?: TabFilter; onPendingCountChange?: (count: number) => void; onOpenPactChat?: (pactId: string) => void }) {
   const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<TabFilter>(initialTab);
   const [records, setRecords] = useState<ApprovalRecord[]>(mockRecords);
@@ -187,6 +216,12 @@ export default function ApprovalPage({ initialTab = 'all', onPendingCountChange 
                     {statusIcon(record.status)}
                     {statusLabel(record.status)}
                   </div>
+                  {record.type === 'pact' && (
+                    <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-[var(--app-pact-badge-bg)] text-[var(--app-pact-badge-text)]">
+                      <Shield className="w-3 h-3" strokeWidth={1.5} />
+                      Pact
+                    </div>
+                  )}
                   <span className="text-[12px] text-[var(--app-text-tertiary)]">{formatTime(record.timestamp)}</span>
                 </div>
                 <span className="text-[14px] font-semibold text-[var(--app-text)]">{record.amount}</span>
@@ -221,7 +256,17 @@ export default function ApprovalPage({ initialTab = 'all', onPendingCountChange 
                 {t('approval.trigger')}: {t(record.reasonKey)}
               </div>
 
-              {record.status === 'pending' && (
+              {record.status === 'pending' && record.type === 'pact' && record.pactId ? (
+                <div className="flex gap-2 pt-1">
+                  <button
+                    onClick={() => onOpenPactChat?.(record.pactId!)}
+                    className="flex-1 h-[36px] bg-[var(--app-accent)] hover:bg-[var(--app-accent-hover)] text-white text-[13px] font-medium rounded-lg transition-colors flex items-center justify-center gap-1.5"
+                  >
+                    <ExternalLink className="w-4 h-4" strokeWidth={1.5} />
+                    {t('pact.banner.viewInChat')}
+                  </button>
+                </div>
+              ) : record.status === 'pending' && (
                 <div className="flex gap-2 pt-1">
                   <button
                     onClick={() => handleApprove(record.id)}
