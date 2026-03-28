@@ -94,6 +94,14 @@
   --app-shadow-sm: 0px 1px 3px rgba(0, 0, 0, 0.04);
   --app-security-banner-bg: #EEF0FF;
   --app-security-banner-border: #C8CEFF;
+  --app-approval-banner-bg: #FEF1E8;
+  --app-approval-banner-text: #9A3412;
+  --app-approval-banner-accent: #F97316;
+  --app-approval-banner-accent-hover: #FF9500;
+  --app-pact-card-border: rgba(79, 94, 255, 0.3);
+  --app-pact-card-highlight: rgba(79, 94, 255, 0.05);
+  --app-pact-badge-bg: rgba(79, 94, 255, 0.1);
+  --app-pact-badge-text: #4f5eff;
 }
 
 .dark {
@@ -186,6 +194,14 @@
   --app-shadow-sm: 0px 1px 3px rgba(0, 0, 0, 0.2);
   --app-security-banner-bg: #1a1a2e;
   --app-security-banner-border: #3a3a5e;
+  --app-approval-banner-bg: rgba(249, 115, 22, 0.12);
+  --app-approval-banner-text: #FDBA74;
+  --app-approval-banner-accent: #FB923C;
+  --app-approval-banner-accent-hover: #FDBA74;
+  --app-pact-card-border: rgba(107, 122, 255, 0.35);
+  --app-pact-card-highlight: rgba(107, 122, 255, 0.08);
+  --app-pact-badge-bg: rgba(107, 122, 255, 0.15);
+  --app-pact-badge-text: #8b9aff;
 }
 
 @theme inline {

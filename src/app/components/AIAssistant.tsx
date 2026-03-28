@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useSearchParams, useOutletContext } from 'react-router';
-import { ArrowUp, Plus, AlertTriangle, CheckCircle, XCircle, Search, MoreHorizontal, Bot, Trash2, Sparkles, Wallet, ChevronRight, SquarePen, PanelLeftClose, X, MessageCircle, ClipboardCheck, Send, Users, Link, FileText, Settings, Clock, History, Copy } from 'lucide-react';
+import { ArrowUp, Plus, AlertTriangle, CheckCircle, XCircle, Search, MoreHorizontal, Bot, Trash2, Sparkles, Wallet, ChevronRight, SquarePen, PanelLeftClose, X, MessageCircle, ClipboardCheck, Send, Users, Link, FileText, Settings, Clock, History, Copy, Shield } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useWalletStore } from '../hooks/useWalletStore';
 import { useOnboardingChat } from '../hooks/useOnboardingChat';
@@ -13,6 +13,10 @@ import OnboardingMessageRenderer from './onboarding-cards/OnboardingMessageRende
 import type { OnboardingData, OnboardingCallbacks } from './onboarding-cards/OnboardingMessageRenderer';
 import { useMentionAutocomplete } from '../hooks/useMentionAutocomplete';
 import WalletMentionDropdown from './WalletMentionDropdown';
+import PactMessageRenderer from './pact-cards/PactMessageRenderer';
+import type { PactCallbacks } from './pact-cards/PactMessageRenderer';
+import { MOCK_PACTS } from '../data/mockPacts';
+import type { PactApproval } from '../data/mockPacts';
 
 interface Message {
   id: string;
@@ -31,6 +35,17 @@ interface Message {
   };
   onboardingData?: OnboardingData;
   walletListData?: boolean;
+  pactApprovalData?: {
+    pactId: string;
+    status: 'pending' | 'approved' | 'rejected' | 'modified';
+  };
+  pactModifyData?: {
+    pactId: string;
+    step: 'select-what' | 'input-values' | 'confirm';
+    selections?: string[];
+    modifications?: Record<string, string>;
+    status: 'active' | 'completed';
+  };
 }
 
 interface ChatSession {
@@ -82,6 +97,9 @@ export default function AIAssistant() {
   const [approvalInitialTab, setApprovalInitialTab] = useState<'all' | 'pending'>('all');
   const [sidebarPortal, setSidebarPortal] = useState<HTMLElement | null>(null);
   const [mobileHistoryOpen, setMobileHistoryOpen] = useState(false);
+  const [mockPacts, setMockPacts] = useState<PactApproval[]>(MOCK_PACTS);
+  const [pactBannerExpanded, setPactBannerExpanded] = useState(false);
+  const pendingPactCount = mockPacts.filter(p => p.status === 'pending').length;
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -204,6 +222,30 @@ export default function AIAssistant() {
 
   // Mock chat history data
   const [chatSessions, setChatSessions] = useState<ChatSession[]>(hasWallets ? [
+    {
+      id: 'pact-session-001',
+      title: 'Pact: DeFi Trading Agent',
+      timestamp: new Date(Date.now() - 1800000),
+      messages: [
+        { id: 'ps1-1', role: 'assistant' as const, content: language === 'zh'
+          ? 'DeFi Trading Agent 请求对 Wallet #1 执行代币转账和兑换操作的授权。协议包含单笔限额 $500、每日限额 $2,000，超过 $200 的交易需要你手动确认。协议有效期 30 天，仅限在 Ethereum 和 Polygon 上操作 USDC 和 USDT。'
+          : 'DeFi Trading Agent is requesting permission to perform token transfers and swaps on Wallet #1. The agreement includes a per-transaction limit of $500, a daily limit of $2,000, and transactions exceeding $200 will require your manual confirmation. The agreement is valid for 30 days and is limited to USDC and USDT on Ethereum and Polygon.',
+          timestamp: new Date(Date.now() - 1800000) },
+        { id: 'ps1-2', role: 'approval' as const, content: '', timestamp: new Date(Date.now() - 1799000), pactApprovalData: { pactId: 'pact-001', status: 'pending' as const } },
+      ],
+    },
+    {
+      id: 'pact-session-002',
+      title: 'Pact: Yield Optimizer',
+      timestamp: new Date(Date.now() - 600000),
+      messages: [
+        { id: 'ps2-1', role: 'assistant' as const, content: language === 'zh'
+          ? 'Yield Optimizer 请求对 Wallet #2 执行质押和智能合约调用的授权。单笔限额 $1,000，每日限额 $5,000，超过 $800 的质押操作需要你审批。协议有效期 7 天，仅限在 Ethereum 上操作 ETH 和 stETH。'
+          : 'Yield Optimizer is requesting permission to stake tokens and call smart contracts on Wallet #2. The per-transaction limit is $1,000 with a daily limit of $5,000. Staking operations over $800 will require your approval. The agreement is valid for 7 days on Ethereum only, limited to ETH and stETH.',
+          timestamp: new Date(Date.now() - 600000) },
+        { id: 'ps2-2', role: 'approval' as const, content: '', timestamp: new Date(Date.now() - 599000), pactApprovalData: { pactId: 'pact-002', status: 'pending' as const } },
+      ],
+    },
     {
       id: '1',
       title: language === 'zh' ? 'Agent 安装配置' : 'Agent Installation',
@@ -368,6 +410,193 @@ export default function AIAssistant() {
         setMessages(prev => [...prev, confirmMsg]);
       }, 500);
     }
+  };
+
+  // ─── Pact approval handlers ───
+
+  const openPactApprovalChat = (pactId: string) => {
+    const pact = mockPacts.find(p => p.id === pactId);
+    if (!pact) return;
+
+    // Hide other pages, show chat
+    onHideWalletPage();
+    onHideApprovalPage();
+
+    const sessionId = `pact-${pactId}-${Date.now()}`;
+    const explainMsg: Message = {
+      id: `${sessionId}-explain`,
+      role: 'assistant',
+      content: pact.summary[language],
+      timestamp: new Date(),
+    };
+    const cardMsg: Message = {
+      id: `${sessionId}-card`,
+      role: 'approval',
+      content: '',
+      timestamp: new Date(),
+      pactApprovalData: { pactId, status: 'pending' },
+    };
+
+    const newSession: ChatSession = {
+      id: sessionId,
+      title: `Pact: ${pact.agentName}`,
+      timestamp: new Date(),
+      messages: [explainMsg, cardMsg],
+    };
+
+    setChatSessions(prev => [newSession, ...prev]);
+    setMessages([explainMsg, cardMsg]);
+    setActiveChatId(sessionId);
+    setHasActiveChat(true);
+    setPactBannerExpanded(false);
+  };
+
+  const handlePactApproval = (pactId: string, action: 'approved' | 'rejected') => {
+    const pact = mockPacts.find(p => p.id === pactId);
+    // Update card status in messages
+    setMessages(prev => prev.map(msg => {
+      if (msg.pactApprovalData?.pactId === pactId) {
+        return { ...msg, pactApprovalData: { ...msg.pactApprovalData, status: action } };
+      }
+      return msg;
+    }));
+    // Update mock pact status
+    setMockPacts(prev => prev.map(p => p.id === pactId ? { ...p, status: action } : p));
+
+    // Append confirmation
+    const confirmMsg: Message = {
+      id: `pact-confirm-${pactId}-${Date.now()}`,
+      role: 'assistant',
+      content: action === 'approved'
+        ? (language === 'zh'
+          ? `✅ 已批准 ${pact?.agentName || 'Agent'} 的 Pact 请求。Agent 现在可以在约定范围内操作钱包。`
+          : `✅ Approved ${pact?.agentName || 'Agent'}'s Pact request. The agent can now operate within the agreed boundaries.`)
+        : (language === 'zh'
+          ? `❌ 已拒绝 ${pact?.agentName || 'Agent'} 的 Pact 请求。Agent 将不会获得请求的权限。`
+          : `❌ Rejected ${pact?.agentName || 'Agent'}'s Pact request. The agent will not receive the requested permissions.`),
+      timestamp: new Date(),
+    };
+    setTimeout(() => {
+      setMessages(prev => [...prev, confirmMsg]);
+    }, 500);
+  };
+
+  const handlePactModify = (pactId: string) => {
+    const aiMsg: Message = {
+      id: `pact-modify-ai-${pactId}-${Date.now()}`,
+      role: 'assistant',
+      content: language === 'zh'
+        ? '请选择你想修改的内容，然后指定新的值。'
+        : 'Please select what you\'d like to modify, then specify the new values.',
+      timestamp: new Date(),
+    };
+    const modifyMsg: Message = {
+      id: `pact-modify-step1-${pactId}-${Date.now()}`,
+      role: 'approval',
+      content: '',
+      timestamp: new Date(),
+      pactModifyData: { pactId, step: 'select-what', status: 'active' },
+    };
+    setMessages(prev => [...prev, aiMsg, modifyMsg]);
+  };
+
+  const handlePactModifySelections = (pactId: string, selections: string[]) => {
+    // Mark step1 as completed
+    setMessages(prev => prev.map(msg => {
+      if (msg.pactModifyData?.pactId === pactId && msg.pactModifyData.step === 'select-what') {
+        return { ...msg, pactModifyData: { ...msg.pactModifyData, status: 'completed' as const } };
+      }
+      return msg;
+    }));
+
+    const aiMsg: Message = {
+      id: `pact-modify-ai2-${pactId}-${Date.now()}`,
+      role: 'assistant',
+      content: language === 'zh'
+        ? '请为你选择的修改项指定新的值。'
+        : 'Please specify the new values for your selected modifications.',
+      timestamp: new Date(),
+    };
+    const step2Msg: Message = {
+      id: `pact-modify-step2-${pactId}-${Date.now()}`,
+      role: 'approval',
+      content: '',
+      timestamp: new Date(),
+      pactModifyData: { pactId, step: 'input-values', selections, status: 'active' },
+    };
+    setTimeout(() => {
+      setMessages(prev => [...prev, aiMsg, step2Msg]);
+    }, 300);
+  };
+
+  const handlePactModifyValues = (pactId: string, modifications: Record<string, string>) => {
+    // Mark step2 as completed
+    setMessages(prev => prev.map(msg => {
+      if (msg.pactModifyData?.pactId === pactId && msg.pactModifyData.step === 'input-values') {
+        return { ...msg, pactModifyData: { ...msg.pactModifyData, status: 'completed' as const } };
+      }
+      return msg;
+    }));
+
+    const aiMsg: Message = {
+      id: `pact-modify-ai3-${pactId}-${Date.now()}`,
+      role: 'assistant',
+      content: language === 'zh'
+        ? '以下是修改前后的对比，请确认。'
+        : 'Here is a comparison of the changes. Please confirm.',
+      timestamp: new Date(),
+    };
+    const step3Msg: Message = {
+      id: `pact-modify-step3-${pactId}-${Date.now()}`,
+      role: 'approval',
+      content: '',
+      timestamp: new Date(),
+      pactModifyData: { pactId, step: 'confirm', modifications, status: 'active' },
+    };
+    setTimeout(() => {
+      setMessages(prev => [...prev, aiMsg, step3Msg]);
+    }, 300);
+  };
+
+  const handlePactModifyConfirm = (pactId: string) => {
+    const pact = mockPacts.find(p => p.id === pactId);
+    // Mark step3 as completed
+    setMessages(prev => prev.map(msg => {
+      if (msg.pactModifyData?.pactId === pactId && msg.pactModifyData.step === 'confirm') {
+        return { ...msg, pactModifyData: { ...msg.pactModifyData, status: 'completed' as const } };
+      }
+      return msg;
+    }));
+    // Update original pact card to modified status
+    setMessages(prev => prev.map(msg => {
+      if (msg.pactApprovalData?.pactId === pactId) {
+        return { ...msg, pactApprovalData: { ...msg.pactApprovalData, status: 'modified' as const } };
+      }
+      return msg;
+    }));
+    // Update mock pact
+    setMockPacts(prev => prev.map(p => p.id === pactId ? { ...p, status: 'modified' } : p));
+
+    const confirmMsg: Message = {
+      id: `pact-modified-confirm-${pactId}-${Date.now()}`,
+      role: 'assistant',
+      content: language === 'zh'
+        ? `✅ 已批准修改后的 Pact。${pact?.agentName || 'Agent'} 现在可以在更新后的约定范围内操作钱包。`
+        : `✅ Modified Pact approved. ${pact?.agentName || 'Agent'} can now operate within the updated boundaries.`,
+      timestamp: new Date(),
+    };
+    setTimeout(() => {
+      setMessages(prev => [...prev, confirmMsg]);
+    }, 500);
+  };
+
+  const pactCallbacks: PactCallbacks = {
+    onApprove: (pactId) => handlePactApproval(pactId, 'approved'),
+    onReject: (pactId) => handlePactApproval(pactId, 'rejected'),
+    onModify: handlePactModify,
+    onSelectModifications: handlePactModifySelections,
+    onSubmitValues: handlePactModifyValues,
+    onConfirmModified: handlePactModifyConfirm,
   };
 
   const simulateAIResponse = (userMessage: string): string => {
@@ -590,13 +819,44 @@ Would you like me to help adjust your current Agent's limit settings?`;
         lowerInput.includes('my wallet') || lowerInput.includes('wallet list') || lowerInput.includes('show wallet') || lowerInput.includes('list wallet') || lowerInput.includes('all wallet')
       );
 
+      // Check if this should trigger a Pact approval card
+      const isPactTrigger = demoApproval && hasWallets && (
+        lowerInput.includes('pact') || lowerInput.includes('协议') || lowerInput.includes('授权协议') || lowerInput.includes('pact审批') || lowerInput.includes('审批')
+      );
+
       // Check if this should trigger an approval card (demo mode + transfer-related keywords)
-      const isApprovalTrigger = demoApproval && hasWallets && (
+      const isApprovalTrigger = !isPactTrigger && demoApproval && hasWallets && (
         lowerInput.includes('转账') || lowerInput.includes('发送') || lowerInput.includes('transfer') || lowerInput.includes('send') ||
         lowerInput.includes('swap') || lowerInput.includes('兑换')
       );
 
-      if (isApprovalTrigger) {
+      if (isPactTrigger) {
+        // Pick a random pending pact or fallback to first
+        const pendingPacts = mockPacts.filter(p => p.status === 'pending');
+        const pact = pendingPacts.length > 0 ? pendingPacts[Math.floor(Math.random() * pendingPacts.length)] : mockPacts[0];
+
+        const explainMsg: Message = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: pact.summary[language],
+          timestamp: new Date(),
+        };
+        const cardMsg: Message = {
+          id: (Date.now() + 2).toString(),
+          role: 'approval',
+          content: '',
+          timestamp: new Date(),
+          pactApprovalData: { pactId: pact.id, status: 'pending' },
+        };
+
+        setMessages(prev => [...prev, explainMsg]);
+        setChatSessions(prev => prev.map(s => s.id === currentSessionId ? { ...s, messages: [...s.messages, explainMsg] } : s));
+
+        setTimeout(() => {
+          setMessages(prev => [...prev, cardMsg]);
+          setChatSessions(prev => prev.map(s => s.id === currentSessionId ? { ...s, messages: [...s.messages, cardMsg] } : s));
+        }, 800);
+      } else if (isApprovalTrigger) {
         const firstWallet = wallets[0];
         const walletDelegations = delegations.filter(d => d.walletId === firstWallet?.id);
         const agentName = walletDelegations.length > 0 ? `Agent #${walletDelegations[0].agentId.slice(-4)}` : 'Agent #1';
@@ -763,7 +1023,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
           onMouseLeave={() => setNavTooltip(null)}
         >
           <div className={`shrink-0 flex items-center justify-center ${sidebarCollapsed ? 'rounded-[8px] hover:bg-[var(--app-hover-accent-bg)] transition-colors' : ''}`}>
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0"><path d="M9.99999 18.3333C14.6024 18.3333 18.3333 14.6023 18.3333 9.99996C18.3333 5.39759 14.6024 1.66663 9.99999 1.66663C5.39762 1.66663 1.66666 5.39759 1.66666 9.99996C1.66666 14.6023 5.39762 18.3333 9.99999 18.3333Z" fill="currentColor" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M6.66666 10H13.3333" stroke="white" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M10 6.66663V13.3333" stroke="white" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0"><path d="M9.99999 18.3333C14.6024 18.3333 18.3333 14.6023 18.3333 9.99996C18.3333 5.39759 14.6024 1.66663 9.99999 1.66663C5.39762 1.66663 1.66666 5.39759 1.66666 9.99996C1.66666 14.6023 5.39762 18.3333 9.99999 18.3333Z" fill="currentColor" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M6.66666 10H13.3333" className="stroke-[var(--app-card-bg)]" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M10 6.66663V13.3333" className="stroke-[var(--app-card-bg)]" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </div>
           <span className={`text-[14px] leading-[20px] font-normal whitespace-nowrap transition-opacity duration-300 ease-in-out ${sidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}>{t('ai.newChat')}</span>
         </button>
@@ -930,7 +1190,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
       <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
         <path d="M13.0909 5.81818L12.1818 3.81818L10.1818 2.90909L12.1818 2L13.0909 0L14 2L16 2.90909L14 3.81818L13.0909 5.81818ZM13.0909 16L12.1818 14L10.1818 13.0909L12.1818 12.1818L13.0909 10.1818L14 12.1818L16 13.0909L14 14L13.0909 16ZM5.81818 13.8182L4 9.81818L0 8L4 6.18182L5.81818 2.18182L7.63636 6.18182L11.6364 8L7.63636 9.81818L5.81818 13.8182Z" fill="#1F32D6"/>
       </svg>
-      <span style={{ fontWeight: 600, color: '#0A0A0A', fontSize: '14px' }}>Cobo Agentic Wallet</span>
+      <span style={{ fontWeight: 600, color: 'var(--app-text)', fontSize: '14px' }}>Cobo Agentic Wallet</span>
     </div>
   );
 
@@ -1011,23 +1271,23 @@ Would you like me to help adjust your current Agent's limit settings?`;
       {showWalletPage && (
         <div className="flex-1 flex flex-col bg-[var(--app-card-bg)] overflow-y-auto min-h-0 relative">
           {/* Floating approval notification banner */}
-          {demoApproval && hasWallets && pendingApprovalCount > 0 && !approvalBannerDismissed && (
+          {demoApproval && hasWallets && (pendingApprovalCount > 0 || pendingPactCount > 0) && !approvalBannerDismissed && (
             <div className="absolute top-0 left-0 right-0 z-10 flex justify-center px-6 pt-[24px] pointer-events-none">
-              <div className="w-full max-w-[768px] flex items-center justify-between px-4 py-3 rounded-[8px] bg-[#FEF1E8] pointer-events-auto">
+              <div className="w-full max-w-[768px] flex items-center justify-between px-4 py-3 rounded-[8px] bg-[var(--app-approval-banner-bg)] pointer-events-auto">
                 <div className="flex items-center gap-2">
-                  <div className="w-[18px] h-[18px] flex items-center justify-center">
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.6667 10.8333C16.6667 15 13.75 17.0833 10.2833 18.2916C10.1018 18.3532 9.90461 18.3502 9.72499 18.2833C6.24999 17.0833 3.33333 15 3.33333 10.8333V4.99997C3.33333 4.77895 3.42113 4.56699 3.57741 4.41071C3.73369 4.25443 3.94565 4.16663 4.16666 4.16663C5.83333 4.16663 7.91666 3.16663 9.36666 1.89997C9.54321 1.74913 9.76779 1.66626 9.99999 1.66626C10.2322 1.66626 10.4568 1.74913 10.6333 1.89997C12.0917 3.17497 14.1667 4.16663 15.8333 4.16663C16.0543 4.16663 16.2663 4.25443 16.4226 4.41071C16.5789 4.56699 16.6667 4.77895 16.6667 4.99997V10.8333Z" stroke="#F97316" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M7.5 9.99992L9.16667 11.6666L12.5 8.33325" stroke="#F97316" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  <div className="w-[18px] h-[18px] flex items-center justify-center text-[var(--app-approval-banner-accent)]">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.6667 10.8333C16.6667 15 13.75 17.0833 10.2833 18.2916C10.1018 18.3532 9.90461 18.3502 9.72499 18.2833C6.24999 17.0833 3.33333 15 3.33333 10.8333V4.99997C3.33333 4.77895 3.42113 4.56699 3.57741 4.41071C3.73369 4.25443 3.94565 4.16663 4.16666 4.16663C5.83333 4.16663 7.91666 3.16663 9.36666 1.89997C9.54321 1.74913 9.76779 1.66626 9.99999 1.66626C10.2322 1.66626 10.4568 1.74913 10.6333 1.89997C12.0917 3.17497 14.1667 4.16663 15.8333 4.16663C16.0543 4.16663 16.2663 4.25443 16.4226 4.41071C16.5789 4.56699 16.6667 4.77895 16.6667 4.99997V10.8333Z" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M7.5 9.99992L9.16667 11.6666L12.5 8.33325" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
                   </div>
                   <span className="text-[14px] leading-[20px] text-[var(--app-text)] font-normal">
                     {language === 'zh'
-                      ? <>{pendingApprovalCount} 条审批待处理</>
-                      : <>{pendingApprovalCount} pending approval{pendingApprovalCount > 1 ? 's' : ''}</>}
-                  </span><button onClick={() => { setApprovalInitialTab('pending'); onShowApprovalPage(); }} className="text-[14px] leading-[20px] text-[#F97316] hover:text-[#FF9500] transition-colors font-normal cursor-pointer">
+                      ? <>{pendingApprovalCount + pendingPactCount} 条审批待处理</>
+                      : <>{pendingApprovalCount + pendingPactCount} pending approval{(pendingApprovalCount + pendingPactCount) > 1 ? 's' : ''}</>}
+                  </span><button onClick={() => { setApprovalInitialTab('pending'); onShowApprovalPage(); }} className="text-[14px] leading-[20px] text-[var(--app-approval-banner-accent)] hover:text-[var(--app-approval-banner-accent-hover)] transition-colors font-normal cursor-pointer">
                     {language === 'zh' ? '立即查看' : 'View now'}
                   </button>
                 </div>
                 <button onClick={(e) => { e.stopPropagation(); setApprovalBannerDismissed(true); }} className="cursor-pointer relative group p-[2px] -m-[2px]" title={language === 'zh' ? '关闭提示' : 'Close tip'}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F97316" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover:stroke-[#FF9500] transition-colors"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--app-approval-banner-accent)] group-hover:text-[var(--app-approval-banner-accent-hover)] transition-colors"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
                   <span className="absolute top-[calc(100%-2px+16px)] left-1/2 -translate-x-1/2 px-[6px] py-[4px] text-[12px] leading-[16px] font-normal text-white bg-[#0A0A0A] rounded-[6px] whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">{language === 'zh' ? '关闭提示' : 'Close tip'}</span>
                 </button>
               </div>
@@ -1047,7 +1307,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
       {showApprovalPage && (
         <div className="flex-1 flex flex-col bg-[var(--app-card-bg)] overflow-y-auto min-h-0">
           <div className="w-full max-w-[864px] mx-auto px-[24px] py-[92px]">
-            <ApprovalPage key={approvalInitialTab} initialTab={approvalInitialTab} onPendingCountChange={setPendingApprovalCount} />
+            <ApprovalPage key={approvalInitialTab} initialTab={approvalInitialTab} onPendingCountChange={setPendingApprovalCount} onOpenPactChat={openPactApprovalChat} />
           </div>
         </div>
       )}
@@ -1056,31 +1316,61 @@ Would you like me to help adjust your current Agent's limit settings?`;
       {!showWalletPage && !showApprovalPage && (
       <div className="flex-1 flex flex-col bg-[var(--app-card-bg)] overflow-hidden min-h-0">
         {/* Floating approval notification banner */}
-        {demoApproval && hasWallets && pendingApprovalCount > 0 && !approvalBannerDismissed && (
+        {demoApproval && hasWallets && (pendingApprovalCount > 0 || pendingPactCount > 0) && !approvalBannerDismissed && (
           <div className="absolute top-0 left-0 right-0 z-10 flex justify-center px-6 pt-[24px] pointer-events-none">
-            <div className="w-full max-w-[768px] flex items-center justify-between px-4 py-3 rounded-[8px] bg-[#FEF1E8] pointer-events-auto">
-              <div className="flex items-center gap-2">
-                <div className="w-5 h-5 flex items-center justify-center">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.6667 10.8333C16.6667 15 13.75 17.0833 10.2833 18.2916C10.1018 18.3532 9.90461 18.3502 9.72499 18.2833C6.24999 17.0833 3.33333 15 3.33333 10.8333V4.99997C3.33333 4.77895 3.42113 4.56699 3.57741 4.41071C3.73369 4.25443 3.94565 4.16663 4.16666 4.16663C5.83333 4.16663 7.91666 3.16663 9.36666 1.89997C9.54321 1.74913 9.76779 1.66626 9.99999 1.66626C10.2322 1.66626 10.4568 1.74913 10.6333 1.89997C12.0917 3.17497 14.1667 4.16663 15.8333 4.16663C16.0543 4.16663 16.2663 4.25443 16.4226 4.41071C16.5789 4.56699 16.6667 4.77895 16.6667 4.99997V10.8333Z" stroke="#F97316" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M7.5 9.99992L9.16667 11.6666L12.5 8.33325" stroke="#F97316" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            <div className="w-full max-w-[768px] pointer-events-auto">
+              <div className="flex items-center justify-between px-4 py-3 rounded-[8px] bg-[var(--app-approval-banner-bg)]">
+                <div className="flex items-center gap-2">
+                  <div className="w-5 h-5 flex items-center justify-center text-[var(--app-approval-banner-accent)]">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.6667 10.8333C16.6667 15 13.75 17.0833 10.2833 18.2916C10.1018 18.3532 9.90461 18.3502 9.72499 18.2833C6.24999 17.0833 3.33333 15 3.33333 10.8333V4.99997C3.33333 4.77895 3.42113 4.56699 3.57741 4.41071C3.73369 4.25443 3.94565 4.16663 4.16666 4.16663C5.83333 4.16663 7.91666 3.16663 9.36666 1.89997C9.54321 1.74913 9.76779 1.66626 9.99999 1.66626C10.2322 1.66626 10.4568 1.74913 10.6333 1.89997C12.0917 3.17497 14.1667 4.16663 15.8333 4.16663C16.0543 4.16663 16.2663 4.25443 16.4226 4.41071C16.5789 4.56699 16.6667 4.77895 16.6667 4.99997V10.8333Z" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/><path d="M7.5 9.99992L9.16667 11.6666L12.5 8.33325" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  </div>
+                  <span className="text-[14px] leading-[20px] text-[var(--app-text)] font-normal">
+                    {language === 'zh'
+                      ? <>{pendingApprovalCount + pendingPactCount} 条审批待处理</>
+                      : <>{pendingApprovalCount + pendingPactCount} pending approval{(pendingApprovalCount + pendingPactCount) > 1 ? 's' : ''}</>}
+                  </span>
+                  {pendingPactCount > 0 && (
+                    <button onClick={() => setPactBannerExpanded(!pactBannerExpanded)} className="text-[14px] leading-[20px] text-[var(--app-approval-banner-accent)] hover:text-[var(--app-approval-banner-accent-hover)] transition-colors font-normal cursor-pointer">
+                      {pactBannerExpanded
+                        ? (language === 'zh' ? '收起' : 'Collapse')
+                        : (language === 'zh' ? '展开' : 'Expand')}
+                    </button>
+                  )}
+                  <button onClick={() => { setApprovalInitialTab('pending'); onShowApprovalPage(); }} className="text-[14px] leading-[20px] text-[var(--app-approval-banner-accent)] hover:text-[var(--app-approval-banner-accent-hover)] transition-colors font-normal cursor-pointer">
+                    {language === 'zh' ? '立即查看' : 'View now'}
+                  </button>
                 </div>
-                <span className="text-[14px] leading-[20px] text-[var(--app-text)] font-normal">
-                  {language === 'zh'
-                    ? <>{pendingApprovalCount} 条审批待处理</>
-                    : <>{pendingApprovalCount} pending approval{pendingApprovalCount > 1 ? 's' : ''}</>}
-                </span><button onClick={() => { setApprovalInitialTab('pending'); onShowApprovalPage(); }} className="text-[14px] leading-[20px] text-[#F97316] hover:text-[#FF9500] transition-colors font-normal cursor-pointer">
-                  {language === 'zh' ? '立即查看' : 'View now'}
+                <button onClick={(e) => { e.stopPropagation(); setApprovalBannerDismissed(true); }} className="cursor-pointer relative group p-[2px] -m-[2px]">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--app-approval-banner-accent)] group-hover:text-[var(--app-approval-banner-accent-hover)] transition-colors"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
                 </button>
               </div>
-              <button onClick={(e) => { e.stopPropagation(); setApprovalBannerDismissed(true); }} className="cursor-pointer relative group p-[2px] -m-[2px]">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F97316" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover:stroke-[#FF9500] transition-colors"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-                <span className="absolute top-[calc(100%-2px+16px)] left-1/2 -translate-x-1/2 px-[6px] py-[4px] text-[12px] leading-[16px] font-normal text-white bg-[#0A0A0A] rounded-[6px] whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">{language === 'zh' ? '关闭提示' : 'Close tip'}</span>
-              </button>
+              {/* Expanded pact list */}
+              {pactBannerExpanded && pendingPactCount > 0 && (
+                <div className="mt-1 rounded-[8px] bg-[var(--app-card-bg)] border border-[var(--app-border)] shadow-lg overflow-hidden">
+                  {mockPacts.filter(p => p.status === 'pending').map((pact) => (
+                    <div key={pact.id} className="flex items-center justify-between px-4 py-2.5 border-b border-[var(--app-border)] last:border-b-0 hover:bg-[var(--app-hover-bg)] transition-colors">
+                      <div className="flex items-center gap-2 text-[13px] min-w-0">
+                        <Shield className="w-3.5 h-3.5 text-[var(--app-pact-badge-text)] shrink-0" strokeWidth={1.5} />
+                        <span className="text-[var(--app-text)] truncate">{pact.agentName}</span>
+                        <span className="text-[var(--app-text-tertiary)]">→</span>
+                        <span className="text-[var(--app-text-secondary)] truncate">{pact.walletName}</span>
+                      </div>
+                      <button
+                        onClick={() => openPactApprovalChat(pact.id)}
+                        className="text-[12px] text-[var(--app-accent)] hover:text-[var(--app-accent-hover)] font-medium cursor-pointer shrink-0 ml-2"
+                      >
+                        {t('pact.banner.view')}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         )}
         {/* Messages area */}
         {(displayMessages.length > 0 || combinedTyping) && (
-        <div className="flex-1 overflow-y-auto px-4 lg:px-6 pb-6 flex flex-col items-center" style={{ gap: '24px', paddingTop: demoApproval && hasWallets && pendingApprovalCount > 0 && !approvalBannerDismissed ? '92px' : '24px' }}>
+        <div className="flex-1 overflow-y-auto px-4 lg:px-6 pb-6 flex flex-col items-center" style={{ gap: '24px', paddingTop: demoApproval && hasWallets && (pendingApprovalCount > 0 || pendingPactCount > 0) && !approvalBannerDismissed ? '92px' : '24px' }}>
           <div className="w-full max-w-[768px] flex-1" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
 
           {displayMessages.map((message, msgIndex) => {
@@ -1130,6 +1420,17 @@ Would you like me to help adjust your current Agent's limit settings?`;
                     )}
                   </div>
                 </div>
+              ) : message.role === 'approval' && (message.pactApprovalData || message.pactModifyData) ? (
+                <div className="flex justify-center">
+                  <div className="w-full max-w-md">
+                    <PactMessageRenderer
+                      pactApprovalData={message.pactApprovalData}
+                      pactModifyData={message.pactModifyData}
+                      pact={mockPacts.find(p => p.id === (message.pactApprovalData?.pactId || message.pactModifyData?.pactId))}
+                      callbacks={pactCallbacks}
+                    />
+                  </div>
+                </div>
               ) : message.role === 'approval' && message.approvalData ? (
                 <div className="flex justify-center">
                   <div className="bg-[var(--app-card-bg)] border-2 border-[var(--app-warning)] rounded-[8px] p-4 w-full max-w-md shadow-sm">
@@ -1139,7 +1440,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                         <h4 className="font-semibold text-[var(--app-text)]">{t('ai.approvalRequest')}</h4>
                       </div>
                       {message.approvalData.status === 'pending' && (
-                        <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-amber-100 text-amber-600 animate-pulse">
+                        <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-[var(--app-status-pending-bg)] text-[var(--app-status-pending-text)] animate-pulse">
                           {language === 'zh' ? '待审批' : 'Pending'}
                         </span>
                       )}
@@ -1176,7 +1477,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                       </div>
                       <div className="border-t border-[var(--app-border)] pt-2 mt-2">
                         <span className="text-xs text-[var(--app-text-secondary)]">{t('ai.reason')}: </span>
-                        <span className="text-xs text-amber-600">{message.approvalData.reasonKey ? t(message.approvalData.reasonKey) : message.approvalData.reason}</span>
+                        <span className="text-xs text-[var(--app-status-pending-text)]">{message.approvalData.reasonKey ? t(message.approvalData.reasonKey) : message.approvalData.reason}</span>
                       </div>
                     </div>
                     {message.approvalData.status === 'pending' ? (
@@ -1646,7 +1947,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
         <div className="px-3 pt-3 pb-2">
           <button
             onClick={() => { handleNewChat(); setMobileHistoryOpen(false); }}
-            className="w-full h-[40px] flex items-center justify-center gap-2 rounded-[8px] bg-[#0A0A0A] text-white text-[14px] font-medium transition-colors hover:bg-[#0A0A0A]"
+            className="w-full h-[40px] flex items-center justify-center gap-2 rounded-[8px] bg-[var(--app-text)] text-[var(--app-card-bg)] text-[14px] font-medium transition-colors hover:opacity-90"
           >
             <Plus className="w-[16px] h-[16px]" strokeWidth={1.5} />
             {language === 'zh' ? '新对话' : 'New Chat'}
@@ -1655,7 +1956,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
         {/* Search */}
         <div className="px-3 pb-2">
           <div className="flex items-center gap-2 px-3 h-[36px] rounded-[8px] bg-[var(--app-bg)]">
-            <Search className="w-[16px] h-[16px] text-[#999] shrink-0" strokeWidth={1.5} />
+            <Search className="w-[16px] h-[16px] text-[var(--app-text-tertiary)] shrink-0" strokeWidth={1.5} />
             <input
               type="text"
               value={searchQuery}
