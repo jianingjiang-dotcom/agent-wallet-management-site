@@ -13,23 +13,26 @@ export interface PolicyWhen {
   target_in?: PolicyTarget[];
 }
 
+export interface RollingLimit {
+  tx_count_gt?: number;
+  amount_usd_gt?: string;
+}
+
 export interface PolicyDenyIf {
   amount_usd_gt?: string;
   usage_limits?: {
-    rolling_24h?: {
-      tx_count_gt?: number;
-      amount_usd_gt?: string;
-    };
+    rolling_24h?: RollingLimit;
+    rolling_7d?: RollingLimit;
+    rolling_30d?: RollingLimit;
   };
 }
 
 export interface PolicyReviewIf {
   amount_usd_gt?: string;
   usage_limits?: {
-    rolling_24h?: {
-      tx_count_gt?: number;
-      amount_usd_gt?: string;
-    };
+    rolling_24h?: RollingLimit;
+    rolling_7d?: RollingLimit;
+    rolling_30d?: RollingLimit;
   };
 }
 
@@ -63,13 +66,16 @@ export interface PactSpec {
   duration_seconds: number;
   completion_conditions: PactCompletionCondition[];
   resource_scope: PactResourceScope;
-  program?: string;
+  execution_plan?: string;
+  program?: string; // deprecated, kept for backward compat
 }
 
 export interface PactApproval {
   id: string;
   name: string;
   intent: string;
+  originalIntent?: string;
+  context?: { channel: string; target: string };
   pactSpec: PactSpec;
   agentName: string;
   walletName: string;
@@ -85,6 +91,7 @@ export const MOCK_PACTS: PactApproval[] = [
     id: 'pact-001',
     name: 'WETH Unwrap + ETH→USDC Swap (Sepolia)',
     intent: 'Unwrap all WETH to ETH, then swap 0.05 ETH to USDC via Uniswap V3 on Sepolia',
+    originalIntent: '用户: 帮我把 WETH 全部换成 ETH\n用户: 然后用 0.05 个 ETH 去换 USDC，在 Sepolia 上用 Uniswap',
     agentName: 'DeFi Trading Agent',
     walletName: 'Wallet #1',
     requestedAt: new Date(Date.now() - 1000 * 60 * 30),
@@ -173,6 +180,7 @@ Step 2: Swap exactly 0.05 ETH → USDC through Uniswap V3 SwapRouter on Sepolia,
     id: 'pact-002',
     name: 'Aave V3 Yield Optimization',
     intent: 'Supply USDC to Aave V3 lending pool and manage collateral position on Ethereum mainnet',
+    originalIntent: '用户: 帮我把 USDC 存到 Aave V3 里赚收益\n用户: 在以太坊主网上操作，最多存 1 万 USDC',
     agentName: 'Yield Optimizer',
     walletName: 'Wallet #2',
     requestedAt: new Date(Date.now() - 1000 * 60 * 10),
@@ -260,6 +268,192 @@ Supply up to 10,000 USDC into Aave V3 lending pool on Ethereum mainnet. Monitor 
 - Maximum 20 transactions total
 - Maximum $50,000 total volume
 - Pact expires after 7 days`,
+    },
+  },
+  {
+    id: 'pact-003',
+    name: 'Base ETH Weekly DCA (3 months)',
+    intent: 'DCA $500/week into ETH on Base via Uniswap V3 for 3 months, max $550 per swap, max $600/day',
+    originalIntent: '用户: 帮我每周在 Base 上用 Uniswap 买 500 USDC 的 ETH\n用户: 搞 3 个月，每次最多 550 刀，每天最多 600 刀',
+    context: { channel: 'telegram', target: '8255855061' },
+    agentName: 'DCA Agent',
+    walletName: 'Wallet #1',
+    requestedAt: new Date(Date.now() - 1000 * 60 * 5),
+    status: 'pending',
+    summary: {
+      en: 'Weekly DCA: swap ~$500 USDC to ETH via Uniswap V3 on Base every Monday for 3 months.',
+      zh: '每周定投：每周一通过 Base 上的 Uniswap V3 将约 $500 USDC 兑换为 ETH，持续 3 个月。',
+    },
+    pactSpec: {
+      permissions: ['write:contract_call', 'read:wallet'],
+      policies: [
+        {
+          name: 'allow-uniswap-dca',
+          type: 'contract_call',
+          rules: {
+            effect: 'allow',
+            when: {
+              chain_in: ['BASE_ETH'],
+              target_in: [
+                {
+                  chain_id: 'BASE_ETH',
+                  contract_addr: '0x2626664c2603336E57B271c5C0b26F421741e481',
+                },
+              ],
+            },
+            review_if: {
+              amount_usd_gt: '500',
+            },
+          },
+        },
+        {
+          name: 'deny-uniswap-over-limit',
+          type: 'contract_call',
+          rules: {
+            effect: 'deny',
+            when: {
+              chain_in: ['BASE_ETH'],
+              target_in: [
+                {
+                  chain_id: 'BASE_ETH',
+                  contract_addr: '0x2626664c2603336E57B271c5C0b26F421741e481',
+                },
+              ],
+            },
+            deny_if: {
+              amount_usd_gt: '550',
+              usage_limits: {
+                rolling_24h: { amount_usd_gt: '600', tx_count_gt: 3 },
+                rolling_7d: { amount_usd_gt: '700' },
+                rolling_30d: { amount_usd_gt: '2500' },
+              },
+            },
+          },
+        },
+      ],
+      duration_seconds: 7776000,
+      completion_conditions: [
+        { type: 'tx_count', threshold: '12' },
+        { type: 'amount_spent_usd', threshold: '6000' },
+      ],
+      resource_scope: {
+        wallet_id: 'be61bcf2-d22a-4966-981f-35276c82659b',
+      },
+      execution_plan: `# Summary
+Weekly DCA: swap ~$500 USDC to ETH via Uniswap V3 on Base every Monday for 3 months.
+
+# Contract Operations
+- Protocol: Uniswap V3 SwapRouter
+- Chain: Base (BASE_ETH)
+- Contract: \`0x2626664c2603336E57B271c5C0b26F421741e481\`
+- Function: \`exactInputSingle(ExactInputSingleParams)\`
+- Token path: USDC → WETH
+
+# Risk Controls
+- Max per swap: $550 USD (hard deny)
+- Review if single swap > $500 USD
+- Max daily: $600 USD (rolling 24h)
+- Max weekly: $700 USD (rolling 7d)
+- Slippage tolerance: 0.5%
+
+# Schedule
+Every Monday at ~10:00 UTC, 90 days from activation.
+
+# Exit Conditions
+After 12 swaps OR $6,000 total USD spent OR 90 days elapsed.`,
+    },
+  },
+  {
+    id: 'pact-004',
+    name: 'Base ETH Weekly DCA (3 months)',
+    intent: 'DCA $500/week into ETH on Base via Uniswap V3 for 3 months, max $550 per swap, max $600/day',
+    originalIntent: '用户: 帮我每周在 Base 上用 Uniswap 买 500 USDC 的 ETH\n用户: 搞 3 个月，每次最多 550 刀，每天最多 600 刀',
+    context: { channel: 'telegram', target: '8255855061' },
+    agentName: 'DCA Agent',
+    walletName: 'Wallet #1',
+    requestedAt: new Date(Date.now() - 1000 * 60 * 2),
+    status: 'pending',
+    summary: {
+      en: 'Weekly DCA: swap ~$500 USDC to ETH via Uniswap V3 on Base every Monday for 3 months.',
+      zh: '每周定投：每周一通过 Base 上的 Uniswap V3 将约 $500 USDC 兑换为 ETH，持续 3 个月。',
+    },
+    pactSpec: {
+      permissions: ['write:contract_call', 'read:wallet'],
+      policies: [
+        {
+          name: 'allow-uniswap-dca',
+          type: 'contract_call',
+          rules: {
+            effect: 'allow',
+            when: {
+              chain_in: ['BASE_ETH'],
+              target_in: [
+                {
+                  chain_id: 'BASE_ETH',
+                  contract_addr: '0x2626664c2603336E57B271c5C0b26F421741e481',
+                },
+              ],
+            },
+            review_if: {
+              amount_usd_gt: '500',
+            },
+          },
+        },
+        {
+          name: 'deny-uniswap-over-limit',
+          type: 'contract_call',
+          rules: {
+            effect: 'deny',
+            when: {
+              chain_in: ['BASE_ETH'],
+              target_in: [
+                {
+                  chain_id: 'BASE_ETH',
+                  contract_addr: '0x2626664c2603336E57B271c5C0b26F421741e481',
+                },
+              ],
+            },
+            deny_if: {
+              amount_usd_gt: '550',
+              usage_limits: {
+                rolling_24h: { amount_usd_gt: '600', tx_count_gt: 3 },
+                rolling_7d: { amount_usd_gt: '700' },
+                rolling_30d: { amount_usd_gt: '2500' },
+              },
+            },
+          },
+        },
+      ],
+      duration_seconds: 7776000,
+      completion_conditions: [
+        { type: 'tx_count', threshold: '12' },
+        { type: 'amount_spent_usd', threshold: '6000' },
+      ],
+      resource_scope: {
+        wallet_id: 'be61bcf2-d22a-4966-981f-35276c82659b',
+      },
+      execution_plan: `# Summary
+Weekly DCA: swap ~$500 USDC to ETH via Uniswap V3 on Base every Monday for 3 months.
+
+# Contract Operations
+- Protocol: Uniswap V3 SwapRouter
+- Chain: Base (BASE_ETH)
+- Contract: \`0x2626664c2603336E57B271c5C0b26F421741e481\`
+- Function: \`exactInputSingle(ExactInputSingleParams)\`
+- Token path: USDC → WETH
+
+# Risk Controls
+- Max per swap: $550 USD (hard deny)
+- Review if single swap > $500 USD
+- Max daily: $600 USD (rolling 24h)
+- Max weekly: $700 USD (rolling 7d)
+- Slippage tolerance: 0.5%
+
+# Schedule
+Every Monday at ~10:00 UTC, 90 days from activation.
+
+# Exit Conditions
+After 12 swaps OR $6,000 total USD spent OR 90 days elapsed.`,
     },
   },
 ];

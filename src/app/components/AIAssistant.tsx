@@ -247,6 +247,30 @@ export default function AIAssistant() {
       ],
     },
     {
+      id: 'pact-session-003',
+      title: 'Pact: Base ETH Weekly DCA',
+      timestamp: new Date(Date.now() - 300000),
+      messages: [
+        { id: 'ps3-1', role: 'assistant' as const, content: language === 'zh'
+          ? 'DCA Agent 请求在 Base 上通过 Uniswap V3 每周定投约 $500 USDC 兑换 ETH，持续 3 个月。单笔最高 $550，24h 限额 $600，7d 限额 $700。来源：Telegram。'
+          : 'DCA Agent is requesting a weekly DCA of ~$500 USDC to ETH via Uniswap V3 on Base for 3 months. Max $550 per swap, $600/day, $700/week. Source: Telegram.',
+          timestamp: new Date(Date.now() - 300000) },
+        { id: 'ps3-2', role: 'approval' as const, content: '', timestamp: new Date(Date.now() - 299000), pactApprovalData: { pactId: 'pact-003', status: 'pending' as const } },
+      ],
+    },
+    {
+      id: 'pact-session-004',
+      title: 'Pact: Base ETH Weekly DCA (Full Spec)',
+      timestamp: new Date(Date.now() - 120000),
+      messages: [
+        { id: 'ps4-1', role: 'assistant' as const, content: language === 'zh'
+          ? 'DCA Agent 通过 Telegram 提交了一个新的 Pact 请求：每周在 Base 上通过 Uniswap V3 定投约 $500 USDC 兑换 ETH，持续 3 个月。包含完整的风控规则和执行计划。'
+          : 'DCA Agent submitted a new Pact request via Telegram: weekly DCA of ~$500 USDC to ETH via Uniswap V3 on Base for 3 months. Includes full risk controls and execution plan.',
+          timestamp: new Date(Date.now() - 120000) },
+        { id: 'ps4-2', role: 'approval' as const, content: '', timestamp: new Date(Date.now() - 119000), pactApprovalData: { pactId: 'pact-004', status: 'pending' as const } },
+      ],
+    },
+    {
       id: '1',
       title: language === 'zh' ? 'Agent 安装配置' : 'Agent Installation',
       timestamp: new Date(Date.now() - 3600000),
