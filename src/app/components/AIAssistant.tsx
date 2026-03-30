@@ -224,24 +224,24 @@ export default function AIAssistant() {
   const [chatSessions, setChatSessions] = useState<ChatSession[]>(hasWallets ? [
     {
       id: 'pact-session-001',
-      title: 'Pact: DeFi Trading Agent',
+      title: 'Pact: WETH Unwrap + ETH→USDC Swap',
       timestamp: new Date(Date.now() - 1800000),
       messages: [
         { id: 'ps1-1', role: 'assistant' as const, content: language === 'zh'
-          ? 'DeFi Trading Agent 请求对 Wallet #1 执行代币转账和兑换操作的授权。协议包含单笔限额 $500、每日限额 $2,000，超过 $200 的交易需要你手动确认。协议有效期 30 天，仅限在 Ethereum 和 Polygon 上操作 USDC 和 USDT。'
-          : 'DeFi Trading Agent is requesting permission to perform token transfers and swaps on Wallet #1. The agreement includes a per-transaction limit of $500, a daily limit of $2,000, and transactions exceeding $200 will require your manual confirmation. The agreement is valid for 30 days and is limited to USDC and USDT on Ethereum and Polygon.',
+          ? 'DeFi Trading Agent 请求在 Sepolia 上执行 WETH 解包和 ETH→USDC 兑换操作。单笔金额限制 $200，24h 内最多 1 笔 swap 交易，协议有效期 1 小时，最多执行 2 笔交易。'
+          : 'DeFi Trading Agent is requesting to unwrap WETH and swap ETH to USDC on Sepolia. Per-swap limit of $200, max 1 swap in 24h rolling window. The pact expires after 1 hour with a maximum of 2 transactions.',
           timestamp: new Date(Date.now() - 1800000) },
         { id: 'ps1-2', role: 'approval' as const, content: '', timestamp: new Date(Date.now() - 1799000), pactApprovalData: { pactId: 'pact-001', status: 'pending' as const } },
       ],
     },
     {
       id: 'pact-session-002',
-      title: 'Pact: Yield Optimizer',
+      title: 'Pact: Aave V3 Yield Optimization',
       timestamp: new Date(Date.now() - 600000),
       messages: [
         { id: 'ps2-1', role: 'assistant' as const, content: language === 'zh'
-          ? 'Yield Optimizer 请求对 Wallet #2 执行质押和智能合约调用的授权。单笔限额 $1,000，每日限额 $5,000，超过 $800 的质押操作需要你审批。协议有效期 7 天，仅限在 Ethereum 上操作 ETH 和 stETH。'
-          : 'Yield Optimizer is requesting permission to stake tokens and call smart contracts on Wallet #2. The per-transaction limit is $1,000 with a daily limit of $5,000. Staking operations over $800 will require your approval. The agreement is valid for 7 days on Ethereum only, limited to ETH and stETH.',
+          ? 'Yield Optimizer 请求在 Ethereum 上向 Aave V3 借贷池供应 USDC 并管理抵押品头寸。单笔转账限额 $5,000，24h 累计限额 $10,000，超过 $1,000 的转账需人工审核。协议有效期 7 天。'
+          : 'Yield Optimizer is requesting to supply USDC to Aave V3 lending pool and manage collateral position on Ethereum. Single transfer limit $5,000, 24h rolling limit $10,000, transfers over $1,000 require human review. Pact valid for 7 days.',
           timestamp: new Date(Date.now() - 600000) },
         { id: 'ps2-2', role: 'approval' as const, content: '', timestamp: new Date(Date.now() - 599000), pactApprovalData: { pactId: 'pact-002', status: 'pending' as const } },
       ],
@@ -423,10 +423,14 @@ export default function AIAssistant() {
     onHideApprovalPage();
 
     const sessionId = `pact-${pactId}-${Date.now()}`;
+    // Use program summary or intent as the explanation
+    const summaryText = pact.pactSpec.program
+      ? pact.pactSpec.program.split('\n').filter(l => l.trim() && !l.trim().startsWith('# Summary')).find(l => !l.trim().startsWith('#'))?.trim() || pact.intent
+      : pact.summary?.[language as 'en' | 'zh'] || pact.intent;
     const explainMsg: Message = {
       id: `${sessionId}-explain`,
       role: 'assistant',
-      content: pact.summary[language],
+      content: summaryText,
       timestamp: new Date(),
     };
     const cardMsg: Message = {
@@ -439,7 +443,7 @@ export default function AIAssistant() {
 
     const newSession: ChatSession = {
       id: sessionId,
-      title: `Pact: ${pact.agentName}`,
+      title: `Pact: ${pact.name}`,
       timestamp: new Date(),
       messages: [explainMsg, cardMsg],
     };
@@ -501,10 +505,10 @@ export default function AIAssistant() {
   };
 
   const handlePactModifySelections = (pactId: string, selections: string[]) => {
-    // Mark step1 as completed
+    // Mark step1 as completed, store selections for display
     setMessages(prev => prev.map(msg => {
       if (msg.pactModifyData?.pactId === pactId && msg.pactModifyData.step === 'select-what') {
-        return { ...msg, pactModifyData: { ...msg.pactModifyData, status: 'completed' as const } };
+        return { ...msg, pactModifyData: { ...msg.pactModifyData, status: 'completed' as const, selections } };
       }
       return msg;
     }));
@@ -530,10 +534,10 @@ export default function AIAssistant() {
   };
 
   const handlePactModifyValues = (pactId: string, modifications: Record<string, string>) => {
-    // Mark step2 as completed
+    // Mark step2 as completed, store modifications for display
     setMessages(prev => prev.map(msg => {
       if (msg.pactModifyData?.pactId === pactId && msg.pactModifyData.step === 'input-values') {
-        return { ...msg, pactModifyData: { ...msg.pactModifyData, status: 'completed' as const } };
+        return { ...msg, pactModifyData: { ...msg.pactModifyData, status: 'completed' as const, modifications } };
       }
       return msg;
     }));
@@ -835,10 +839,13 @@ Would you like me to help adjust your current Agent's limit settings?`;
         const pendingPacts = mockPacts.filter(p => p.status === 'pending');
         const pact = pendingPacts.length > 0 ? pendingPacts[Math.floor(Math.random() * pendingPacts.length)] : mockPacts[0];
 
+        const pactSummaryText = pact.pactSpec.program
+          ? pact.pactSpec.program.split('\n').filter(l => l.trim() && !l.trim().startsWith('# Summary')).find(l => !l.trim().startsWith('#'))?.trim() || pact.intent
+          : pact.summary?.[language as 'en' | 'zh'] || pact.intent;
         const explainMsg: Message = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
-          content: pact.summary[language],
+          content: pactSummaryText,
           timestamp: new Date(),
         };
         const cardMsg: Message = {
@@ -1282,9 +1289,7 @@ Would you like me to help adjust your current Agent's limit settings?`;
                     {language === 'zh'
                       ? <>{pendingApprovalCount + pendingPactCount} 条审批待处理</>
                       : <>{pendingApprovalCount + pendingPactCount} pending approval{(pendingApprovalCount + pendingPactCount) > 1 ? 's' : ''}</>}
-                  </span><button onClick={() => { setApprovalInitialTab('pending'); onShowApprovalPage(); }} className="text-[14px] leading-[20px] text-[var(--app-approval-banner-accent)] hover:text-[var(--app-approval-banner-accent-hover)] transition-colors font-normal cursor-pointer">
-                    {language === 'zh' ? '立即查看' : 'View now'}
-                  </button>
+                  </span>
                 </div>
                 <button onClick={(e) => { e.stopPropagation(); setApprovalBannerDismissed(true); }} className="cursor-pointer relative group p-[2px] -m-[2px]" title={language === 'zh' ? '关闭提示' : 'Close tip'}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--app-approval-banner-accent)] group-hover:text-[var(--app-approval-banner-accent-hover)] transition-colors"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
@@ -1336,35 +1341,34 @@ Would you like me to help adjust your current Agent's limit settings?`;
                         : (language === 'zh' ? '展开' : 'Expand')}
                     </button>
                   )}
-                  <button onClick={() => { setApprovalInitialTab('pending'); onShowApprovalPage(); }} className="text-[14px] leading-[20px] text-[var(--app-approval-banner-accent)] hover:text-[var(--app-approval-banner-accent-hover)] transition-colors font-normal cursor-pointer">
-                    {language === 'zh' ? '立即查看' : 'View now'}
-                  </button>
                 </div>
                 <button onClick={(e) => { e.stopPropagation(); setApprovalBannerDismissed(true); }} className="cursor-pointer relative group p-[2px] -m-[2px]">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--app-approval-banner-accent)] group-hover:text-[var(--app-approval-banner-accent-hover)] transition-colors"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
                 </button>
               </div>
-              {/* Expanded pact list */}
-              {pactBannerExpanded && pendingPactCount > 0 && (
-                <div className="mt-1 rounded-[8px] bg-[var(--app-card-bg)] border border-[var(--app-border)] shadow-lg overflow-hidden">
-                  {mockPacts.filter(p => p.status === 'pending').map((pact) => (
-                    <div key={pact.id} className="flex items-center justify-between px-4 py-2.5 border-b border-[var(--app-border)] last:border-b-0 hover:bg-[var(--app-hover-bg)] transition-colors">
-                      <div className="flex items-center gap-2 text-[13px] min-w-0">
-                        <Shield className="w-3.5 h-3.5 text-[var(--app-pact-badge-text)] shrink-0" strokeWidth={1.5} />
-                        <span className="text-[var(--app-text)] truncate">{pact.agentName}</span>
-                        <span className="text-[var(--app-text-tertiary)]">→</span>
-                        <span className="text-[var(--app-text-secondary)] truncate">{pact.walletName}</span>
+              {/* Expanded pact list with smooth animation */}
+              <div className={`grid transition-all duration-300 ease-in-out ${pactBannerExpanded && pendingPactCount > 0 ? 'grid-rows-[1fr] opacity-100 mt-1' : 'grid-rows-[0fr] opacity-0 mt-0'}`}>
+                <div className="overflow-hidden">
+                  <div className="rounded-[8px] bg-[var(--app-card-bg)] border border-[var(--app-border)] shadow-lg overflow-hidden">
+                    {mockPacts.filter(p => p.status === 'pending').map((pact) => (
+                      <div key={pact.id} className="flex items-center justify-between px-4 py-2.5 border-b border-[var(--app-border)] last:border-b-0 hover:bg-[var(--app-hover-bg)] transition-colors">
+                        <div className="flex items-center gap-2 text-[13px] min-w-0">
+                          <Shield className="w-3.5 h-3.5 text-[var(--app-pact-badge-text)] shrink-0" strokeWidth={1.5} />
+                          <span className="text-[var(--app-text)] truncate">{pact.name}</span>
+                          <span className="text-[var(--app-text-tertiary)]">·</span>
+                          <span className="text-[var(--app-text-secondary)] truncate">{pact.agentName}</span>
+                        </div>
+                        <button
+                          onClick={() => openPactApprovalChat(pact.id)}
+                          className="text-[12px] text-[var(--app-accent)] hover:text-[var(--app-accent-hover)] font-medium cursor-pointer shrink-0 ml-2"
+                        >
+                          {t('pact.banner.view')}
+                        </button>
                       </div>
-                      <button
-                        onClick={() => openPactApprovalChat(pact.id)}
-                        className="text-[12px] text-[var(--app-accent)] hover:text-[var(--app-accent-hover)] font-medium cursor-pointer shrink-0 ml-2"
-                      >
-                        {t('pact.banner.view')}
-                      </button>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              )}
+              </div>
             </div>
           </div>
         )}
@@ -1421,8 +1425,8 @@ Would you like me to help adjust your current Agent's limit settings?`;
                   </div>
                 </div>
               ) : message.role === 'approval' && (message.pactApprovalData || message.pactModifyData) ? (
-                <div className="flex justify-center">
-                  <div className="w-full max-w-md">
+                <div className="flex justify-start">
+                  <div className="w-full lg:pl-[20px]">
                     <PactMessageRenderer
                       pactApprovalData={message.pactApprovalData}
                       pactModifyData={message.pactModifyData}

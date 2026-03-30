@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { CheckCircle, Shield } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
-import type { PactApproval, PactPermission } from '../../data/mockPacts';
+import type { PactApproval, PactPolicy } from '../../data/mockPacts';
 
 type ModifyStep = 'select-what' | 'input-values' | 'confirm';
 
@@ -9,19 +9,42 @@ interface PactModifyCardProps {
   pact: PactApproval;
   step: ModifyStep;
   cardStatus: 'active' | 'completed';
-  // Step 1
   onSelectModifications?: (pactId: string, selections: string[]) => void;
-  // Step 2
   onSubmitValues?: (pactId: string, modifications: Record<string, string>) => void;
-  // Step 3
   onConfirmModified?: (pactId: string) => void;
-  // For step 2: what was selected in step 1
   selections?: string[];
-  // For step 3: the modifications from step 2
   modifications?: Record<string, string>;
 }
 
-const ALL_PERMISSIONS: PactPermission[] = ['transfer', 'swap', 'stake', 'contract_call'];
+// ── Helper: extract limits from real policy structures ──
+
+function getAmountUsdLimit(policies: PactPolicy[]): string {
+  for (const p of policies) {
+    if (p.rules.deny_if?.amount_usd_gt) return p.rules.deny_if.amount_usd_gt;
+  }
+  return '—';
+}
+
+function get24hTxCountLimit(policies: PactPolicy[]): string {
+  for (const p of policies) {
+    const r24h = p.rules.deny_if?.usage_limits?.rolling_24h;
+    if (r24h?.tx_count_gt !== undefined) return String(r24h.tx_count_gt);
+  }
+  return '—';
+}
+
+function get24hAmountLimit(policies: PactPolicy[]): string {
+  for (const p of policies) {
+    const r24h = p.rules.deny_if?.usage_limits?.rolling_24h;
+    if (r24h?.amount_usd_gt) return r24h.amount_usd_gt;
+  }
+  return '—';
+}
+
+function getTxCountThreshold(pact: PactApproval): string {
+  const cc = pact.pactSpec.completion_conditions.find(c => c.type === 'tx_count');
+  return cc ? cc.threshold : '—';
+}
 
 export default function PactModifyCard({
   pact, step, cardStatus,
@@ -36,15 +59,16 @@ export default function PactModifyCard({
   const [freeText, setFreeText] = useState('');
 
   // Step 2 state
-  const [perTxLimit, setPerTxLimit] = useState('');
-  const [dailyLimit, setDailyLimit] = useState('');
+  const [amountLimit, setAmountLimit] = useState('');
+  const [txCountLimit24h, setTxCountLimit24h] = useState('');
+  const [amountLimit24h, setAmountLimit24h] = useState('');
+  const [txCountMax, setTxCountMax] = useState('');
   const [duration, setDuration] = useState('');
-  const [customPerTx, setCustomPerTx] = useState('');
-  const [customDaily, setCustomDaily] = useState('');
+  const [customAmountLimit, setCustomAmountLimit] = useState('');
+  const [customTxCount24h, setCustomTxCount24h] = useState('');
+  const [customAmountLimit24h, setCustomAmountLimit24h] = useState('');
+  const [customTxCountMax, setCustomTxCountMax] = useState('');
   const [customDuration, setCustomDuration] = useState('');
-  const [selectedPermissions, setSelectedPermissions] = useState<Set<PactPermission>>(
-    new Set(spec.permissions)
-  );
   const [additionalNotes, setAdditionalNotes] = useState('');
 
   const toggleCheck = (key: string) => {
@@ -55,53 +79,87 @@ export default function PactModifyCard({
     });
   };
 
-  const togglePermission = (p: PactPermission) => {
-    setSelectedPermissions(prev => {
-      const next = new Set(prev);
-      if (next.has(p)) next.delete(p); else next.add(p);
-      return next;
-    });
-  };
-
-  // Extract current limits from policies for display
-  const getCurrentPerTxLimit = () => {
-    for (const p of spec.policies) {
-      for (const rule of p.deny_if || []) {
-        const match = rule.match(/^amount\s*>\s*(\d+)/);
-        if (match) return match[1];
-      }
-    }
-    return '—';
-  };
-
-  const getCurrentDailyLimit = () => {
-    for (const p of spec.policies) {
-      for (const rule of p.deny_if || []) {
-        const match = rule.match(/^daily_total\s*>\s*(\d+)/);
-        if (match) return match[1];
-      }
-    }
-    return '—';
-  };
-
+  const currentAmountLimit = getAmountUsdLimit(spec.policies);
+  const currentTxCount24h = get24hTxCountLimit(spec.policies);
+  const currentAmountLimit24h = get24hAmountLimit(spec.policies);
+  const currentTxCountMax = getTxCountThreshold(pact);
   const currentDays = Math.round(spec.duration_seconds / (24 * 60 * 60));
+  const currentDurationDisplay = spec.duration_seconds < 86400
+    ? (language === 'zh' ? `${Math.round(spec.duration_seconds / 3600)} 小时` : `${Math.round(spec.duration_seconds / 3600)}h`)
+    : (language === 'zh' ? `${currentDays} 天` : `${currentDays} days`);
 
   const modifyOptions = [
-    { key: 'perTxLimit', label: t('pact.modify.adjustPerTxLimit'), detail: `(${language === 'zh' ? '当前' : 'Current'}: $${getCurrentPerTxLimit()})` },
-    { key: 'dailyLimit', label: t('pact.modify.adjustDailyLimit'), detail: `(${language === 'zh' ? '当前' : 'Current'}: $${getCurrentDailyLimit()})` },
-    { key: 'permissions', label: t('pact.modify.modifyPermissions') },
-    { key: 'tokens', label: t('pact.modify.changeTokens') },
-    { key: 'duration', label: t('pact.modify.shortenDuration'), detail: `(${language === 'zh' ? '当前' : 'Current'}: ${currentDays} ${language === 'zh' ? '天' : 'days'})` },
-    { key: 'freeText', label: t('pact.modify.freeText') },
-  ];
+    { key: 'amountLimit', label: t('pact.modify.adjustAmountLimit'), detail: `(${language === 'zh' ? '当前' : 'Current'}: $${currentAmountLimit})`, show: currentAmountLimit !== '—' },
+    { key: 'txCount24h', label: t('pact.modify.adjust24hTxCount'), detail: `(${language === 'zh' ? '当前' : 'Current'}: ${currentTxCount24h})`, show: currentTxCount24h !== '—' },
+    { key: 'amountLimit24h', label: t('pact.modify.adjust24hAmount'), detail: `(${language === 'zh' ? '当前' : 'Current'}: $${currentAmountLimit24h})`, show: currentAmountLimit24h !== '—' },
+    { key: 'permissions', label: t('pact.modify.modifyPermissions'), show: true },
+    { key: 'targets', label: t('pact.modify.changeTargets'), show: true },
+    { key: 'duration', label: t('pact.modify.shortenDuration'), detail: `(${language === 'zh' ? '当前' : 'Current'}: ${currentDurationDisplay})`, show: true },
+    { key: 'txCountMax', label: t('pact.modify.adjustMaxTxCount'), detail: `(${language === 'zh' ? '当前' : 'Current'}: ${currentTxCountMax})`, show: currentTxCountMax !== '—' },
+    { key: 'freeText', label: t('pact.modify.freeText'), show: true },
+  ].filter(o => o.show);
 
   // ─── Completed state ───
   if (cardStatus === 'completed') {
-    const stepLabel = step === 'select-what'
-      ? (language === 'zh' ? '已选择修改项' : 'Modifications selected')
-      : step === 'input-values'
-      ? (language === 'zh' ? '修改值已提交' : 'Values submitted')
-      : (language === 'zh' ? '修改已确认' : 'Modifications confirmed');
+    if (step === 'select-what' && selections.length > 0) {
+      const selectedLabels = selections
+        .filter(s => !s.startsWith('freeText:'))
+        .map(s => {
+          const opt = modifyOptions.find(o => o.key === s);
+          return opt?.label || s;
+        });
+      const freeTextEntry = selections.find(s => s.startsWith('freeText:'));
+      const freeTextContent = freeTextEntry ? freeTextEntry.replace('freeText:', '') : '';
+
+      return (
+        <div className="bg-[var(--app-card-bg)] border border-[var(--app-border)] rounded-[12px] p-4 transition-all duration-300">
+          <div className="text-[13px] leading-[20px] text-[var(--app-text)]">
+            {language === 'zh' ? '用户希望修改以下内容：' : 'User wants to modify:'}
+          </div>
+          <ul className="mt-2 space-y-1">
+            {selectedLabels.map((label, i) => (
+              <li key={i} className="flex items-center gap-2 text-[13px] text-[var(--app-text-secondary)]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[var(--app-accent)] shrink-0" />
+                {label}
+              </li>
+            ))}
+            {freeTextContent && (
+              <li className="flex items-start gap-2 text-[13px] text-[var(--app-text-secondary)]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[var(--app-accent)] shrink-0 mt-1.5" />
+                {freeTextContent}
+              </li>
+            )}
+          </ul>
+        </div>
+      );
+    }
+
+    if (step === 'input-values' && modifications && Object.keys(modifications).length > 0) {
+      const items: { label: string; value: string }[] = [];
+      if (modifications.amountLimit) items.push({ label: t('pact.modify.amountLimitLabel'), value: `$${modifications.amountLimit}` });
+      if (modifications.txCount24h) items.push({ label: t('pact.modify.txCount24hLabel'), value: modifications.txCount24h });
+      if (modifications.amountLimit24h) items.push({ label: t('pact.modify.amountLimit24hLabel'), value: `$${modifications.amountLimit24h}` });
+      if (modifications.txCountMax) items.push({ label: t('pact.modify.txCountMaxLabel'), value: modifications.txCountMax });
+      if (modifications.duration) items.push({ label: t('pact.modify.durationLabel'), value: `${modifications.duration} ${language === 'zh' ? '天' : 'days'}` });
+      if (modifications.permissions) items.push({ label: t('pact.modify.permissionsLabel'), value: modifications.permissions });
+      if (modifications.notes) items.push({ label: t('pact.modify.freeTextLabel'), value: modifications.notes });
+
+      return (
+        <div className="bg-[var(--app-card-bg)] border border-[var(--app-border)] rounded-[12px] p-4 transition-all duration-300">
+          <div className="text-[13px] leading-[20px] text-[var(--app-text)] mb-2">
+            {language === 'zh' ? '用户提交的修改建议：' : 'User submitted modifications:'}
+          </div>
+          <div className="space-y-1.5">
+            {items.map(({ label, value }) => (
+              <div key={label} className="flex items-center justify-between text-[13px]">
+                <span className="text-[var(--app-text-secondary)]">{label}</span>
+                <span className="text-[var(--app-text)] font-medium font-['JetBrains_Mono',monospace]">{value}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
 
     return (
       <div className="bg-[var(--app-card-bg)] border border-[rgba(34,197,94,0.3)] rounded-[12px] p-4 transition-all duration-300">
@@ -109,7 +167,9 @@ export default function PactModifyCard({
           <div className="w-8 h-8 rounded-full bg-[rgba(34,197,94,0.1)] flex items-center justify-center">
             <CheckCircle className="w-4 h-4 text-[#22c55e]" />
           </div>
-          <span className="font-medium text-[13px] text-[#22c55e]">{stepLabel}</span>
+          <span className="font-medium text-[13px] text-[#22c55e]">
+            {language === 'zh' ? '修改已确认并批准' : 'Modifications confirmed and approved'}
+          </span>
         </div>
       </div>
     );
@@ -152,7 +212,6 @@ export default function PactModifyCard({
           ))}
         </div>
 
-        {/* Free text area shown when freeText is checked */}
         {checked.has('freeText') && (
           <textarea
             value={freeText}
@@ -183,24 +242,24 @@ export default function PactModifyCard({
 
   // ─── Step 2: Input values ───
   if (step === 'input-values') {
-    const getEffectivePerTx = () => perTxLimit === 'custom' ? customPerTx || '0' : perTxLimit;
-    const getEffectiveDaily = () => dailyLimit === 'custom' ? customDaily || '0' : dailyLimit;
-    const getEffectiveDuration = () => duration === 'custom' ? customDuration || '0' : duration;
+    const getEffective = (value: string, custom: string) => value === 'custom' ? custom || '0' : value;
 
     const handleSubmit = () => {
       const mods: Record<string, string> = {};
-      if (selections.includes('perTxLimit') && getEffectivePerTx()) mods.perTxLimit = getEffectivePerTx();
-      if (selections.includes('dailyLimit') && getEffectiveDaily()) mods.dailyLimit = getEffectiveDaily();
-      if (selections.includes('duration') && getEffectiveDuration()) mods.duration = getEffectiveDuration();
-      if (selections.includes('permissions')) mods.permissions = Array.from(selectedPermissions).join(',');
+      if (selections.includes('amountLimit') && getEffective(amountLimit, customAmountLimit)) mods.amountLimit = getEffective(amountLimit, customAmountLimit);
+      if (selections.includes('txCount24h') && getEffective(txCountLimit24h, customTxCount24h)) mods.txCount24h = getEffective(txCountLimit24h, customTxCount24h);
+      if (selections.includes('amountLimit24h') && getEffective(amountLimit24h, customAmountLimit24h)) mods.amountLimit24h = getEffective(amountLimit24h, customAmountLimit24h);
+      if (selections.includes('txCountMax') && getEffective(txCountMax, customTxCountMax)) mods.txCountMax = getEffective(txCountMax, customTxCountMax);
+      if (selections.includes('duration') && getEffective(duration, customDuration)) mods.duration = getEffective(duration, customDuration);
+      if (selections.includes('permissions')) mods.permissions = spec.permissions.join(', ');
       if (additionalNotes.trim()) mods.notes = additionalNotes.trim();
       onSubmitValues?.(pact.id, mods);
     };
 
-    const RadioGroup = ({ name, options, value, onSelect, customValue, onCustomChange, unit }: {
+    const RadioGroup = ({ name, options, value, onSelect, customValue, onCustomChange, unit, prefix }: {
       name: string; options: string[]; value: string;
       onSelect: (v: string) => void; customValue: string; onCustomChange: (v: string) => void;
-      unit?: string;
+      unit?: string; prefix?: string;
     }) => (
       <div className="flex items-center gap-2.5 flex-wrap">
         {options.map((val) => (
@@ -211,7 +270,9 @@ export default function PactModifyCard({
               onChange={() => onSelect(val)}
               className="w-4 h-4 text-[var(--app-accent)] border-[var(--app-border-medium)] focus:ring-0 focus:ring-offset-0"
             />
-            <span className="ml-1.5 font-normal text-[13px] text-[var(--app-text)]">{unit === 'days' ? val + (language === 'zh' ? '天' : 'd') : `$${val}`}</span>
+            <span className="ml-1.5 font-normal text-[13px] text-[var(--app-text)]">
+              {prefix || ''}{unit === 'days' ? val + (language === 'zh' ? '天' : 'd') : val}
+            </span>
           </label>
         ))}
         <label className="flex items-center cursor-pointer">
@@ -226,7 +287,7 @@ export default function PactModifyCard({
           </span>
         </label>
         <div className="flex items-center">
-          {unit !== 'days' && <span className="font-normal text-[13px] text-[var(--app-text-secondary)] mr-1">$</span>}
+          {prefix && <span className="font-normal text-[13px] text-[var(--app-text-secondary)] mr-1">{prefix}</span>}
           <input
             type="number" value={customValue}
             onChange={(e) => onCustomChange(e.target.value)}
@@ -246,26 +307,56 @@ export default function PactModifyCard({
         </div>
 
         <div className="space-y-4 mb-4">
-          {selections.includes('perTxLimit') && (
+          {selections.includes('amountLimit') && (
             <div>
               <div className="font-medium text-[13px] text-[var(--app-text-secondary)] mb-2">
-                {t('pact.modify.perTxLimit')}
+                {t('pact.modify.amountLimitLabel')}
               </div>
               <RadioGroup
-                name="perTxLimit" options={['100', '300', '500']} value={perTxLimit}
-                onSelect={setPerTxLimit} customValue={customPerTx} onCustomChange={(v) => { setCustomPerTx(v); setPerTxLimit('custom'); }}
+                name="amountLimit" options={['100', '200', '500']} value={amountLimit}
+                onSelect={setAmountLimit} customValue={customAmountLimit}
+                onCustomChange={(v) => { setCustomAmountLimit(v); setAmountLimit('custom'); }}
+                prefix="$"
               />
             </div>
           )}
 
-          {selections.includes('dailyLimit') && (
+          {selections.includes('txCount24h') && (
             <div>
               <div className="font-medium text-[13px] text-[var(--app-text-secondary)] mb-2">
-                {t('pact.modify.dailyLimit')}
+                {t('pact.modify.txCount24hLabel')}
               </div>
               <RadioGroup
-                name="dailyLimit" options={['500', '1000', '2000']} value={dailyLimit}
-                onSelect={setDailyLimit} customValue={customDaily} onCustomChange={(v) => { setCustomDaily(v); setDailyLimit('custom'); }}
+                name="txCount24h" options={['1', '3', '5', '10']} value={txCountLimit24h}
+                onSelect={setTxCountLimit24h} customValue={customTxCount24h}
+                onCustomChange={(v) => { setCustomTxCount24h(v); setTxCountLimit24h('custom'); }}
+              />
+            </div>
+          )}
+
+          {selections.includes('amountLimit24h') && (
+            <div>
+              <div className="font-medium text-[13px] text-[var(--app-text-secondary)] mb-2">
+                {t('pact.modify.amountLimit24hLabel')}
+              </div>
+              <RadioGroup
+                name="amountLimit24h" options={['1000', '5000', '10000']} value={amountLimit24h}
+                onSelect={setAmountLimit24h} customValue={customAmountLimit24h}
+                onCustomChange={(v) => { setCustomAmountLimit24h(v); setAmountLimit24h('custom'); }}
+                prefix="$"
+              />
+            </div>
+          )}
+
+          {selections.includes('txCountMax') && (
+            <div>
+              <div className="font-medium text-[13px] text-[var(--app-text-secondary)] mb-2">
+                {t('pact.modify.txCountMaxLabel')}
+              </div>
+              <RadioGroup
+                name="txCountMax" options={['1', '2', '5', '10']} value={txCountMax}
+                onSelect={setTxCountMax} customValue={customTxCountMax}
+                onCustomChange={(v) => { setCustomTxCountMax(v); setTxCountMax('custom'); }}
               />
             </div>
           )}
@@ -276,8 +367,9 @@ export default function PactModifyCard({
                 {t('pact.modify.durationLabel')}
               </div>
               <RadioGroup
-                name="duration" options={['7', '14', '30']} value={duration}
-                onSelect={setDuration} customValue={customDuration} onCustomChange={(v) => { setCustomDuration(v); setDuration('custom'); }}
+                name="duration" options={['1', '7', '14', '30']} value={duration}
+                onSelect={setDuration} customValue={customDuration}
+                onCustomChange={(v) => { setCustomDuration(v); setDuration('custom'); }}
                 unit="days"
               />
             </div>
@@ -288,27 +380,35 @@ export default function PactModifyCard({
               <div className="font-medium text-[13px] text-[var(--app-text-secondary)] mb-2">
                 {t('pact.modify.permissionsLabel')}
               </div>
-              <div className="flex flex-wrap gap-2">
-                {ALL_PERMISSIONS.map((p) => (
-                  <label key={p} className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-[6px] border cursor-pointer transition-colors text-[12px] ${
-                    selectedPermissions.has(p)
-                      ? 'bg-[var(--app-pact-card-highlight)] border-[var(--app-pact-card-border)] text-[var(--app-pact-badge-text)]'
-                      : 'border-[var(--app-border)] text-[var(--app-text-secondary)]'
-                  }`}>
-                    <input
-                      type="checkbox"
-                      checked={selectedPermissions.has(p)}
-                      onChange={() => togglePermission(p)}
-                      className="w-3.5 h-3.5 text-[var(--app-accent)] border-[var(--app-border-medium)] rounded focus:ring-0 focus:ring-offset-0"
-                    />
-                    {t(`pact.permission.${p}`)}
-                  </label>
-                ))}
+              <div className="text-[12px] text-[var(--app-text-tertiary)] mb-2">
+                {language === 'zh' ? '当前权限：' : 'Current permissions: '}{spec.permissions.join(', ')}
               </div>
+              <textarea
+                value={additionalNotes}
+                onChange={(e) => setAdditionalNotes(e.target.value)}
+                placeholder={language === 'zh' ? '描述你希望的权限变更...' : 'Describe desired permission changes...'}
+                className="w-full px-3 py-2 bg-[var(--app-card-bg)] border border-[var(--app-border-medium)] rounded-[8px] text-[13px] text-[var(--app-text)] placeholder:text-[var(--app-text-tertiary)] resize-none focus:outline-none focus:border-[var(--app-accent)] focus:shadow-[0px_2px_12px_0px_rgba(31,50,214,0.08)]"
+                rows={2}
+              />
             </div>
           )}
 
-          {selections.some(s => s.startsWith('freeText')) && (
+          {selections.includes('targets') && (
+            <div>
+              <div className="font-medium text-[13px] text-[var(--app-text-secondary)] mb-2">
+                {t('pact.modify.targetsLabel')}
+              </div>
+              <textarea
+                value={additionalNotes}
+                onChange={(e) => setAdditionalNotes(e.target.value)}
+                placeholder={language === 'zh' ? '描述你希望的合约/链范围变更...' : 'Describe desired contract/chain scope changes...'}
+                className="w-full px-3 py-2 bg-[var(--app-card-bg)] border border-[var(--app-border-medium)] rounded-[8px] text-[13px] text-[var(--app-text)] placeholder:text-[var(--app-text-tertiary)] resize-none focus:outline-none focus:border-[var(--app-accent)] focus:shadow-[0px_2px_12px_0px_rgba(31,50,214,0.08)]"
+                rows={2}
+              />
+            </div>
+          )}
+
+          {selections.some(s => s.startsWith('freeText')) && !selections.includes('permissions') && !selections.includes('targets') && (
             <div>
               <div className="font-medium text-[13px] text-[var(--app-text-secondary)] mb-2">
                 {t('pact.modify.freeTextLabel')}
@@ -337,24 +437,42 @@ export default function PactModifyCard({
   // ─── Step 3: Confirm modifications ───
   if (step === 'confirm') {
     const formatDuration = (seconds: number) => {
-      const d = Math.round(seconds / (24 * 60 * 60));
+      if (seconds < 86400) {
+        const h = Math.round(seconds / 3600);
+        return `${h} ${language === 'zh' ? '小时' : 'hours'}`;
+      }
+      const d = Math.round(seconds / 86400);
       return `${d} ${language === 'zh' ? '天' : 'days'}`;
     };
 
     const diffItems: { label: string; before: string; after: string }[] = [];
 
-    if (modifications.perTxLimit) {
+    if (modifications.amountLimit) {
       diffItems.push({
-        label: t('pact.modify.perTxLimit'),
-        before: `$${getCurrentPerTxLimit()}`,
-        after: `$${modifications.perTxLimit}`,
+        label: t('pact.modify.amountLimitLabel'),
+        before: `$${currentAmountLimit}`,
+        after: `$${modifications.amountLimit}`,
       });
     }
-    if (modifications.dailyLimit) {
+    if (modifications.txCount24h) {
       diffItems.push({
-        label: t('pact.modify.dailyLimit'),
-        before: `$${getCurrentDailyLimit()}`,
-        after: `$${modifications.dailyLimit}`,
+        label: t('pact.modify.txCount24hLabel'),
+        before: currentTxCount24h,
+        after: modifications.txCount24h,
+      });
+    }
+    if (modifications.amountLimit24h) {
+      diffItems.push({
+        label: t('pact.modify.amountLimit24hLabel'),
+        before: `$${currentAmountLimit24h}`,
+        after: `$${modifications.amountLimit24h}`,
+      });
+    }
+    if (modifications.txCountMax) {
+      diffItems.push({
+        label: t('pact.modify.txCountMaxLabel'),
+        before: currentTxCountMax,
+        after: modifications.txCountMax,
       });
     }
     if (modifications.duration) {
@@ -367,8 +485,8 @@ export default function PactModifyCard({
     if (modifications.permissions) {
       diffItems.push({
         label: t('pact.modify.permissionsLabel'),
-        before: spec.permissions.map(p => t(`pact.permission.${p}`)).join(', '),
-        after: modifications.permissions.split(',').map(p => t(`pact.permission.${p}`)).join(', '),
+        before: spec.permissions.join(', '),
+        after: modifications.permissions,
       });
     }
     if (modifications.notes) {

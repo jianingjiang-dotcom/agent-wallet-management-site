@@ -1,114 +1,265 @@
-export type PactPermission = 'transfer' | 'swap' | 'stake' | 'contract_call';
+// ── Permission: "scope:action" format (e.g. "write:contract_call", "read:wallet") ──
+export type PactPermission = string;
+
+// ── Policy structures matching real Pact JSON ──
+
+export interface PolicyTarget {
+  chain_id: string;
+  contract_addr: string;
+}
+
+export interface PolicyWhen {
+  chain_in?: string[];
+  target_in?: PolicyTarget[];
+}
+
+export interface PolicyDenyIf {
+  amount_usd_gt?: string;
+  usage_limits?: {
+    rolling_24h?: {
+      tx_count_gt?: number;
+      amount_usd_gt?: string;
+    };
+  };
+}
+
+export interface PolicyReviewIf {
+  amount_usd_gt?: string;
+  usage_limits?: {
+    rolling_24h?: {
+      tx_count_gt?: number;
+      amount_usd_gt?: string;
+    };
+  };
+}
+
+export interface PolicyRules {
+  effect: 'allow' | 'deny';
+  when?: PolicyWhen;
+  deny_if?: PolicyDenyIf;
+  review_if?: PolicyReviewIf;
+}
 
 export interface PactPolicy {
-  effect: 'allow' | 'deny';
-  action: string;
-  deny_if?: string[];
-  review_if?: string[];
+  name: string;
+  type: string;
+  rules: PolicyRules;
 }
 
 export interface PactCompletionCondition {
-  type: 'max_transactions' | 'total_amount';
-  value: number;
-  unit?: string;
+  type: string;
+  threshold: string;
 }
 
 export interface PactResourceScope {
-  chains: string[];
-  tokens: string[];
+  wallet_id: string;
+  chains?: string[];
+  tokens?: string[];
 }
 
 export interface PactSpec {
-  id: string;
   permissions: PactPermission[];
   policies: PactPolicy[];
   duration_seconds: number;
   completion_conditions: PactCompletionCondition[];
   resource_scope: PactResourceScope;
+  program?: string;
 }
 
 export interface PactApproval {
   id: string;
+  name: string;
+  intent: string;
   pactSpec: PactSpec;
   agentName: string;
   walletName: string;
   requestedAt: Date;
   status: 'pending' | 'approved' | 'rejected' | 'modified';
-  summary: { en: string; zh: string };
+  summary?: { en: string; zh: string };
 }
+
+// ── Mock data ──
 
 export const MOCK_PACTS: PactApproval[] = [
   {
     id: 'pact-001',
+    name: 'WETH Unwrap + ETH→USDC Swap (Sepolia)',
+    intent: 'Unwrap all WETH to ETH, then swap 0.05 ETH to USDC via Uniswap V3 on Sepolia',
     agentName: 'DeFi Trading Agent',
     walletName: 'Wallet #1',
-    requestedAt: new Date(Date.now() - 1000 * 60 * 30), // 30 mins ago
+    requestedAt: new Date(Date.now() - 1000 * 60 * 30),
     status: 'pending',
-    summary: {
-      en: 'DeFi Trading Agent is requesting permission to perform token transfers and swaps on Wallet #1. The agreement includes a per-transaction limit of $500, a daily limit of $2,000, and transactions exceeding $200 will require your manual confirmation. The agreement is valid for 30 days and is limited to USDC and USDT on Ethereum and Polygon.',
-      zh: 'DeFi Trading Agent 请求对 Wallet #1 执行代币转账和兑换操作的授权。协议包含单笔限额 $500、每日限额 $2,000，超过 $200 的交易需要你手动确认。协议有效期 30 天，仅限在 Ethereum 和 Polygon 上操作 USDC 和 USDT。',
-    },
     pactSpec: {
-      id: 'pact-spec-001',
-      permissions: ['transfer', 'swap'],
+      permissions: ['write:contract_call', 'read:wallet'],
       policies: [
         {
-          effect: 'allow',
-          action: 'transfer',
-          deny_if: ['amount > 500', 'daily_total > 2000'],
-          review_if: ['amount > 200'],
+          name: 'allow-weth-withdraw',
+          type: 'contract_call',
+          rules: {
+            effect: 'allow',
+            when: {
+              chain_in: ['SETH'],
+              target_in: [
+                {
+                  chain_id: 'SETH',
+                  contract_addr: '0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14',
+                },
+              ],
+            },
+          },
         },
         {
-          effect: 'allow',
-          action: 'swap',
-          deny_if: ['amount > 500', 'daily_total > 2000'],
-          review_if: ['amount > 200'],
+          name: 'deny-swap-over-limit',
+          type: 'contract_call',
+          rules: {
+            effect: 'deny',
+            when: {
+              chain_in: ['SETH'],
+              target_in: [
+                {
+                  chain_id: 'SETH',
+                  contract_addr: '0x3bFA4769FB09eefC5a80d6E87c3B9C650f7Ae48E',
+                },
+              ],
+            },
+            deny_if: {
+              amount_usd_gt: '200',
+              usage_limits: {
+                rolling_24h: {
+                  tx_count_gt: 1,
+                },
+              },
+            },
+          },
         },
       ],
-      duration_seconds: 30 * 24 * 60 * 60, // 30 days
+      duration_seconds: 3600,
       completion_conditions: [
-        { type: 'total_amount', value: 10000, unit: 'USDC' },
+        { type: 'tx_count', threshold: '2' },
       ],
       resource_scope: {
-        chains: ['Ethereum', 'Polygon'],
-        tokens: ['USDC', 'USDT'],
+        wallet_id: 'be61bcf2-d4e0-4b8f-b3ab-12a7c9e8f456',
+        chains: ['Sepolia'],
+        tokens: ['WETH', 'ETH', 'USDC'],
       },
+      program: `# Summary
+Step 1: Unwrap all WETH (≈0.1 WETH) to native ETH via WETH contract's withdraw function.
+Step 2: Swap exactly 0.05 ETH → USDC through Uniswap V3 SwapRouter on Sepolia, accepting ≥ 95% of quoted output.
+
+# Contract Operations
+1. **WETH.withdraw(amount)**
+   - Contract: \`0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14\` (Sepolia WETH)
+   - Action: Unwrap WETH → ETH
+   - Amount: Full balance (~0.1 WETH)
+
+2. **SwapRouter.exactInputSingle(params)**
+   - Contract: \`0x3bFA4769FB09eefC5a80d6E87c3B9C650f7Ae48E\` (Uniswap V3 Router)
+   - Action: Swap ETH → USDC
+   - Input: 0.05 ETH
+   - Min Output: 95% of quoted USDC amount
+   - Fee Tier: 3000 (0.3%)
+
+# Risk Controls
+- Per-swap USD limit: $200
+- Rolling 24h transaction cap: 1 swap operation
+- Only whitelisted contracts on Sepolia chain
+
+# Exit Conditions
+- Maximum 2 transactions total
+- Pact expires after 1 hour`,
     },
   },
   {
     id: 'pact-002',
+    name: 'Aave V3 Yield Optimization',
+    intent: 'Supply USDC to Aave V3 lending pool and manage collateral position on Ethereum mainnet',
     agentName: 'Yield Optimizer',
     walletName: 'Wallet #2',
-    requestedAt: new Date(Date.now() - 1000 * 60 * 10), // 10 mins ago
+    requestedAt: new Date(Date.now() - 1000 * 60 * 10),
     status: 'pending',
-    summary: {
-      en: 'Yield Optimizer is requesting permission to stake tokens and call smart contracts on Wallet #2. The per-transaction limit is $1,000 with a daily limit of $5,000. Staking operations over $800 will require your approval. The agreement is valid for 7 days on Ethereum only, limited to ETH and stETH.',
-      zh: 'Yield Optimizer 请求对 Wallet #2 执行质押和智能合约调用的授权。单笔限额 $1,000，每日限额 $5,000，超过 $800 的质押操作需要你审批。协议有效期 7 天，仅限在 Ethereum 上操作 ETH 和 stETH。',
-    },
     pactSpec: {
-      id: 'pact-spec-002',
-      permissions: ['stake', 'contract_call'],
+      permissions: ['write:contract_call', 'write:transfer', 'read:wallet'],
       policies: [
         {
-          effect: 'allow',
-          action: 'stake',
-          deny_if: ['amount > 1000', 'daily_total > 5000'],
-          review_if: ['amount > 800'],
+          name: 'allow-aave-supply',
+          type: 'contract_call',
+          rules: {
+            effect: 'allow',
+            when: {
+              chain_in: ['ETH'],
+              target_in: [
+                {
+                  chain_id: 'ETH',
+                  contract_addr: '0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2',
+                },
+              ],
+            },
+          },
         },
         {
-          effect: 'allow',
-          action: 'contract_call',
-          deny_if: ['daily_total > 5000'],
+          name: 'deny-large-transfer',
+          type: 'transfer',
+          rules: {
+            effect: 'deny',
+            deny_if: {
+              amount_usd_gt: '5000',
+              usage_limits: {
+                rolling_24h: {
+                  amount_usd_gt: '10000',
+                },
+              },
+            },
+          },
+        },
+        {
+          name: 'review-medium-transfer',
+          type: 'transfer',
+          rules: {
+            effect: 'allow',
+            review_if: {
+              amount_usd_gt: '1000',
+              usage_limits: {
+                rolling_24h: {
+                  tx_count_gt: 5,
+                },
+              },
+            },
+          },
         },
       ],
-      duration_seconds: 7 * 24 * 60 * 60, // 7 days
+      duration_seconds: 7 * 24 * 60 * 60,
       completion_conditions: [
-        { type: 'max_transactions', value: 50 },
+        { type: 'tx_count', threshold: '20' },
+        { type: 'total_amount_usd', threshold: '50000' },
       ],
       resource_scope: {
+        wallet_id: '4a92d7c1-8f3e-4d56-b912-7e3c8a1f5d09',
         chains: ['Ethereum'],
-        tokens: ['ETH', 'stETH'],
+        tokens: ['USDC', 'aUSDC', 'ETH'],
       },
+      program: `# Summary
+Supply up to 10,000 USDC into Aave V3 lending pool on Ethereum mainnet. Monitor and rebalance the position to maintain optimal health factor above 1.5.
+
+# Contract Operations
+1. **USDC.approve(spender, amount)**
+   - Contract: \`0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48\` (USDC)
+   - Action: Approve Aave Pool to spend USDC
+
+2. **Pool.supply(asset, amount, onBehalfOf, referralCode)**
+   - Contract: \`0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2\` (Aave V3 Pool)
+   - Action: Supply USDC to earn yield
+   - Amount: Up to 10,000 USDC
+
+# Risk Controls
+- Single transfer limit: $5,000
+- Rolling 24h transfer cap: $10,000
+- Transfers over $1,000 require human review
+- More than 5 transactions in 24h require human review
+
+# Exit Conditions
+- Maximum 20 transactions total
+- Maximum $50,000 total volume
+- Pact expires after 7 days`,
     },
   },
 ];
